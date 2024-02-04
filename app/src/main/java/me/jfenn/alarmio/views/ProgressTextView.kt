@@ -17,6 +17,10 @@ import io.reactivex.disposables.Disposable
 import me.jfenn.alarmio.interfaces.Subscribblable
 import me.jfenn.androidutils.DimenUtils
 
+import kotlin.math.cos
+import kotlin.math.min
+import kotlin.math.sin
+
 
 /**
  * Display a progress circle with text in
@@ -176,9 +180,9 @@ class ProgressTextView : View, Subscribblable {
     }
 
     override fun onDraw(canvas: Canvas) {
-        val size = Math.min(canvas.width, canvas.height)
+        val size = min(width, height)
         val sidePadding = padding * 3
-        canvas.drawCircle((size / 2).toFloat(), (size / 2).toFloat(), (size / 2 - sidePadding).toFloat(), if (maxProgress in 1..(progress - 1)) linePaint else backgroundPaint)
+        canvas.drawCircle((size / 2).toFloat(), (size / 2).toFloat(), (size / 2 - sidePadding).toFloat(), if (maxProgress in 1 until progress) linePaint else backgroundPaint)
 
         if (maxProgress > 0) {
             val angle = 360f * progress / maxProgress
@@ -188,9 +192,9 @@ class ProgressTextView : View, Subscribblable {
             path.arcTo(RectF(sidePadding.toFloat(), sidePadding.toFloat(), (size - sidePadding).toFloat(), (size - sidePadding).toFloat()), -90f, angle, true)
             canvas.drawPath(path, linePaint)
 
-            canvas.drawCircle(size / 2 + Math.cos((angle - 90) * Math.PI / 180).toFloat() * (size / 2 - sidePadding), size / 2 + Math.sin((angle - 90) * Math.PI / 180).toFloat() * (size / 2 - sidePadding), (2 * padding).toFloat(), circlePaint)
+            canvas.drawCircle(size / 2 + cos((angle - 90) * Math.PI / 180).toFloat() * (size / 2 - sidePadding), size / 2 + sin((angle - 90) * Math.PI / 180).toFloat() * (size / 2 - sidePadding), (2 * padding).toFloat(), circlePaint)
             if (referenceProgress != 0L)
-                canvas.drawCircle(size / 2 + Math.cos((referenceAngle - 90) * Math.PI / 180).toFloat() * (size / 2 - sidePadding), size / 2 + Math.sin((referenceAngle - 90) * Math.PI / 180).toFloat() * (size / 2 - sidePadding), (2 * padding).toFloat(), referenceCirclePaint)
+                canvas.drawCircle(size / 2 + cos((referenceAngle - 90) * Math.PI / 180).toFloat() * (size / 2 - sidePadding), size / 2 + sin((referenceAngle - 90) * Math.PI / 180).toFloat() * (size / 2 - sidePadding), (2 * padding).toFloat(), referenceCirclePaint)
         }
 
         text?.let { str ->

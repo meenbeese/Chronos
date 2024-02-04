@@ -139,19 +139,19 @@ class DaySwitch : View, View.OnClickListener, Subscribblable {
                 clippedTextPaint.textSize = textPaint.textSize
             }
 
-            canvas.drawText(str, (canvas.width / 2).toFloat(), canvas.height / 2 - (textPaint.descent() + textPaint.ascent()) / 2, textPaint)
+            canvas.drawText(str, (width / 2).toFloat(), height / 2 - (textPaint.descent() + textPaint.ascent()) / 2, textPaint)
         }
 
         val circlePath = Path()
-        circlePath.addCircle((canvas.width / 2).toFloat(), (canvas.height / 2).toFloat(), checked * DimenUtils.dpToPx(18f), Path.Direction.CW)
+        circlePath.addCircle((width / 2).toFloat(), (height / 2).toFloat(), checked * DimenUtils.dpToPx(18f), Path.Direction.CW)
         circlePath.close()
 
         canvas.drawPath(circlePath, accentPaint)
 
         text?.let { str ->
-            canvas.drawText(str, (canvas.width / 2).toFloat(), canvas.height / 2 - (textPaint.descent() + textPaint.ascent()) / 2, textPaint)
+            canvas.drawText(str, (width / 2).toFloat(), height / 2 - (textPaint.descent() + textPaint.ascent()) / 2, textPaint)
             canvas.clipPath(circlePath)
-            canvas.drawText(str, (canvas.width / 2).toFloat(), canvas.height / 2 - (textPaint.descent() + textPaint.ascent()) / 2, clippedTextPaint)
+            canvas.drawText(str, (width / 2).toFloat(), height / 2 - (textPaint.descent() + textPaint.ascent()) / 2, clippedTextPaint)
         }
     }
 

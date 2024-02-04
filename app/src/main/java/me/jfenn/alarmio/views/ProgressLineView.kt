@@ -82,10 +82,10 @@ class ProgressLineView : View, Subscribblable {
         if (drawnProgress != progress)
             drawnProgress = (drawnProgress * 4 + progress) / 5
 
-        canvas.drawRect(0f, 0f, canvas.width.toFloat(), canvas.height.toFloat(), backgroundPaint)
-        canvas.drawRect(0f, 0f, canvas.width * drawnProgress, canvas.height.toFloat(), linePaint)
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), backgroundPaint)
+        canvas.drawRect(0f, 0f, width * drawnProgress, height.toFloat(), linePaint)
 
-        if ((drawnProgress - progress) * canvas.width != 0f)
+        if ((drawnProgress - progress) * width != 0f)
             postInvalidate()
     }
 }
