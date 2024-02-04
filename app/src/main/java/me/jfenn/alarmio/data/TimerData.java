@@ -9,7 +9,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.Nullable;
+
 import me.jfenn.alarmio.receivers.TimerReceiver;
+
 
 public class TimerData implements Parcelable {
 

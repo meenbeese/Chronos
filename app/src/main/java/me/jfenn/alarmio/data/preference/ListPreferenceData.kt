@@ -9,11 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+
 import com.afollestad.aesthetic.Aesthetic
+
 import me.jfenn.alarmio.R
 import me.jfenn.alarmio.data.PreferenceData
+
 
 abstract class ListPreferenceData(private val preference: PreferenceData, private val title: Int) : BasePreferenceData<ListPreferenceData.ViewHolder>() {
 

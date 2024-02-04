@@ -11,9 +11,12 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 
 import com.afollestad.aesthetic.Aesthetic
+
 import io.reactivex.disposables.Disposable
+
 import me.jfenn.alarmio.interfaces.Subscribblable
 import me.jfenn.androidutils.DimenUtils
+
 
 /**
  * Display a progress circle with text in

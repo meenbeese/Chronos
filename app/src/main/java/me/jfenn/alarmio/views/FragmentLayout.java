@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+
 public class FragmentLayout extends FrameLayout {
 
     private Rect tempRect, windowRect;

@@ -17,16 +17,18 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
+
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AestheticActivity;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 import io.reactivex.disposables.Disposable;
+
 import me.jfenn.alarmio.Alarmio;
 import me.jfenn.alarmio.R;
 import me.jfenn.alarmio.data.AlarmData;
@@ -39,6 +41,7 @@ import me.jfenn.alarmio.utils.FormatUtils;
 import me.jfenn.alarmio.utils.ImageUtils;
 import me.jfenn.slideactionview.SlideActionListener;
 import me.jfenn.slideactionview.SlideActionView;
+
 
 public class AlarmActivity extends AestheticActivity implements SlideActionListener {
 

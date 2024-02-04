@@ -5,15 +5,17 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import me.jfenn.alarmio.R;
 import me.jfenn.alarmio.adapters.TimeZonesAdapter;
+
 
 public class TimeZoneChooserDialog extends AestheticDialog {
 

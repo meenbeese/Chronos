@@ -2,10 +2,14 @@ package me.jfenn.alarmio.views
 
 import android.content.Context
 import android.util.AttributeSet
+
 import com.afollestad.aesthetic.Aesthetic
+
 import io.reactivex.disposables.Disposable
+
 import me.jfenn.alarmio.interfaces.Subscribblable
 import me.jfenn.slideactionview.SlideActionView
+
 
 /**
  * A SlideActionView extension class that implements

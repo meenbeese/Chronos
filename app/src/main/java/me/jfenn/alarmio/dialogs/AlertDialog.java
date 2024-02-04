@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import me.jfenn.alarmio.R;
 
+
 public class AlertDialog extends AestheticDialog implements View.OnClickListener {
 
     private String title, content;

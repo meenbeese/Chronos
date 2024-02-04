@@ -7,12 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.widget.CompoundButtonCompat
+
 import com.afollestad.aesthetic.Aesthetic
+
 import me.jfenn.alarmio.R
 import me.jfenn.alarmio.data.PreferenceData
+
 
 /**
  * Allow the user to choose from a simple boolean

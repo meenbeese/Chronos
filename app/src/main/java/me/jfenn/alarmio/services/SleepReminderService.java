@@ -13,19 +13,21 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 import me.jfenn.alarmio.Alarmio;
 import me.jfenn.alarmio.R;
 import me.jfenn.alarmio.data.AlarmData;
 import me.jfenn.alarmio.data.PreferenceData;
 import me.jfenn.alarmio.utils.FormatUtils;
+
 
 public class SleepReminderService extends Service {
 

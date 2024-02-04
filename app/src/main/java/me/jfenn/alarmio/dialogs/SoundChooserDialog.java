@@ -9,13 +9,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.afollestad.aesthetic.Aesthetic;
-import com.google.android.material.tabs.TabLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.viewpager.widget.ViewPager;
+
+import com.afollestad.aesthetic.Aesthetic;
+import com.google.android.material.tabs.TabLayout;
+
 import me.jfenn.alarmio.Alarmio;
 import me.jfenn.alarmio.R;
 import me.jfenn.alarmio.adapters.SimplePagerAdapter;
@@ -25,6 +26,7 @@ import me.jfenn.alarmio.fragments.sound.FileSoundChooserFragment;
 import me.jfenn.alarmio.fragments.sound.RadioSoundChooserFragment;
 import me.jfenn.alarmio.fragments.sound.RingtoneSoundChooserFragment;
 import me.jfenn.alarmio.interfaces.SoundChooserListener;
+
 
 public class SoundChooserDialog extends DialogFragment implements SoundChooserListener {
 

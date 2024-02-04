@@ -7,20 +7,20 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
-import android.os.Build
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.StringRes
+
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.widget.CompoundButtonCompat
+
 import com.afollestad.aesthetic.Aesthetic
 
 import me.jfenn.alarmio.R
-import me.jfenn.alarmio.data.PreferenceData
 import me.jfenn.alarmio.dialogs.AlertDialog
+
 
 /**
  * A preference item allowing the user to grant the

@@ -9,9 +9,12 @@ import android.view.animation.AnticipateOvershootInterpolator
 import android.view.animation.DecelerateInterpolator
 
 import com.afollestad.aesthetic.Aesthetic
+
 import io.reactivex.disposables.Disposable
+
 import me.jfenn.alarmio.interfaces.Subscribblable
 import me.jfenn.androidutils.DimenUtils
+
 
 class DaySwitch : View, View.OnClickListener, Subscribblable {
 

@@ -4,9 +4,12 @@ import android.content.Context
 import android.util.AttributeSet
 
 import com.afollestad.aesthetic.Aesthetic
+
 import io.reactivex.disposables.Disposable
+
 import me.jfenn.alarmio.interfaces.Subscribblable
 import me.jfenn.sunrisesunsetview.SunriseSunsetView
+
 
 /**
  * A SunriseView extension class that implements

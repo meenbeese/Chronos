@@ -5,6 +5,7 @@ import android.content.Intent
 import me.jfenn.alarmio.activities.FileChooserActivity
 import me.jfenn.alarmio.data.PreferenceData
 
+
 /**
  * A preference item that allows the user to select
  * an image from a file (the resulting preference

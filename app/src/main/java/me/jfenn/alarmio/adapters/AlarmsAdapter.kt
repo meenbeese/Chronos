@@ -18,6 +18,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.ViewCompat
@@ -26,7 +27,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
+
 import com.afollestad.aesthetic.Aesthetic
+
 import me.jfenn.alarmio.Alarmio
 import me.jfenn.alarmio.R
 import me.jfenn.alarmio.data.AlarmData
@@ -40,8 +43,10 @@ import me.jfenn.alarmio.views.ProgressLineView
 import me.jfenn.androidutils.DimenUtils
 import me.jfenn.timedatepickers.dialogs.PickerDialog
 import me.jfenn.timedatepickers.views.LinearTimePickerView
+
 import java.util.*
 import java.util.concurrent.TimeUnit
+
 
 /**
  * View adapter for the "alarms" list; displays all timers and

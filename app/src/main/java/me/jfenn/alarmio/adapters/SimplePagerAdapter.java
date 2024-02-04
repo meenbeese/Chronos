@@ -4,8 +4,10 @@ import android.content.Context;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+
 import me.jfenn.alarmio.fragments.BasePagerFragment;
 import me.jfenn.alarmio.interfaces.FragmentInstantiator;
+
 
 public class SimplePagerAdapter extends FragmentStatePagerAdapter {
 

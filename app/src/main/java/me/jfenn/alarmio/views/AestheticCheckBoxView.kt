@@ -4,11 +4,16 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.AttributeSet
+
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.core.widget.CompoundButtonCompat
+
 import com.afollestad.aesthetic.Aesthetic
+
 import io.reactivex.disposables.Disposable
+
 import me.jfenn.alarmio.interfaces.Subscribblable
+
 
 /**
  * An AppCompatCheckBox extension class that

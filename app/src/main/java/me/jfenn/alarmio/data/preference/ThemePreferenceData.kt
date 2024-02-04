@@ -11,10 +11,13 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
+
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.core.content.ContextCompat
+
 import com.afollestad.aesthetic.Aesthetic
+
 import me.jfenn.alarmio.Alarmio
 import me.jfenn.alarmio.R
 import me.jfenn.alarmio.data.PreferenceData
@@ -23,7 +26,9 @@ import me.jfenn.alarmio.utils.FormatUtils
 import me.jfenn.sunrisesunsetview.SunriseSunsetView
 import me.jfenn.timedatepickers.dialogs.PickerDialog
 import me.jfenn.timedatepickers.views.LinearTimePickerView
+
 import java.util.*
+
 
 const val HOUR_LENGTH = 3600000L
 

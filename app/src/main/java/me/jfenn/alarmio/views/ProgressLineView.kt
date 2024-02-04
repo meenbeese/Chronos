@@ -8,8 +8,11 @@ import android.util.AttributeSet
 import android.view.View
 
 import com.afollestad.aesthetic.Aesthetic
+
 import io.reactivex.disposables.Disposable
+
 import me.jfenn.alarmio.interfaces.Subscribblable
+
 
 /**
  * Display a progress line, with a given foreground/background

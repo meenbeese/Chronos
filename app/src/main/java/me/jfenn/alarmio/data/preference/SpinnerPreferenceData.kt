@@ -9,10 +9,14 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
+
 import androidx.appcompat.widget.AppCompatSpinner
+
 import com.afollestad.aesthetic.Aesthetic
+
 import me.jfenn.alarmio.R
 import me.jfenn.alarmio.data.PreferenceData
+
 
 /**
  * Allow the user to choose from one of a range

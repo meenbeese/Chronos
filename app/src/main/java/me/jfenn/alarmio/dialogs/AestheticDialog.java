@@ -3,9 +3,10 @@ package me.jfenn.alarmio.dialogs;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatDialog;
+
 import com.afollestad.aesthetic.Aesthetic;
 
-import androidx.appcompat.app.AppCompatDialog;
 
 public abstract class AestheticDialog extends AppCompatDialog {
 

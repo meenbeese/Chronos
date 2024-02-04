@@ -8,18 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import me.jfenn.alarmio.R;
 import me.jfenn.alarmio.adapters.SoundsAdapter;
 import me.jfenn.alarmio.data.SoundData;
 import me.jfenn.alarmio.fragments.BasePagerFragment;
 import me.jfenn.alarmio.interfaces.SoundChooserListener;
+
 
 public class AlarmSoundChooserFragment extends BaseSoundChooserFragment {
 

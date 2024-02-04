@@ -3,7 +3,9 @@ package me.jfenn.alarmio.data.preference
 import me.jfenn.alarmio.data.PreferenceData
 import me.jfenn.alarmio.dialogs.TimeChooserDialog
 import me.jfenn.alarmio.utils.FormatUtils
+
 import java.util.concurrent.TimeUnit
+
 
 /**
  * A preference item that holds / displays a time value.

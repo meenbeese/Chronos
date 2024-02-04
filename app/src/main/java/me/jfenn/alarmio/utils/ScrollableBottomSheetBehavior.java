@@ -5,9 +5,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 public class ScrollableBottomSheetBehavior<V extends View> extends BottomSheetBehavior<V> {
 

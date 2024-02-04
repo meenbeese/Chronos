@@ -12,16 +12,18 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 
-import java.util.List;
-
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+
+import java.util.List;
+
 import me.jfenn.alarmio.Alarmio;
 import me.jfenn.alarmio.R;
 import me.jfenn.alarmio.activities.MainActivity;
 import me.jfenn.alarmio.data.TimerData;
 import me.jfenn.alarmio.receivers.TimerReceiver;
 import me.jfenn.alarmio.utils.FormatUtils;
+
 
 public class TimerService extends Service {
 

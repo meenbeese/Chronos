@@ -2,13 +2,15 @@ package me.jfenn.alarmio.fragments.sound;
 
 import android.content.Context;
 
+import androidx.annotation.Nullable;
+
 import java.lang.ref.WeakReference;
 
-import androidx.annotation.Nullable;
 import me.jfenn.alarmio.data.SoundData;
 import me.jfenn.alarmio.fragments.BasePagerFragment;
 import me.jfenn.alarmio.interfaces.ContextFragmentInstantiator;
 import me.jfenn.alarmio.interfaces.SoundChooserListener;
+
 
 public abstract class BaseSoundChooserFragment extends BasePagerFragment implements SoundChooserListener {
 

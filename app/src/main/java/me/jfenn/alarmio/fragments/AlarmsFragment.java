@@ -7,15 +7,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.afollestad.aesthetic.Aesthetic;
-
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.afollestad.aesthetic.Aesthetic;
+
 import io.reactivex.disposables.Disposable;
+
 import me.jfenn.alarmio.R;
 import me.jfenn.alarmio.adapters.AlarmsAdapter;
 import me.jfenn.alarmio.interfaces.ContextFragmentInstantiator;
+
 
 public class AlarmsFragment extends BasePagerFragment {
 

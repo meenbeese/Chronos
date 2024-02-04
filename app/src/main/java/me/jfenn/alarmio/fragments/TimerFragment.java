@@ -7,16 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+
 import com.afollestad.aesthetic.Aesthetic;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
 import io.reactivex.disposables.Disposable;
+
 import me.jfenn.alarmio.R;
 import me.jfenn.alarmio.data.TimerData;
 import me.jfenn.alarmio.utils.FormatUtils;
 import me.jfenn.alarmio.views.ProgressTextView;
+
 
 public class TimerFragment extends BaseFragment {
 

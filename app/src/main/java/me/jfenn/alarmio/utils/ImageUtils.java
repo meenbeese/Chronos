@@ -9,6 +9,7 @@ import java.io.File;
 
 import me.jfenn.alarmio.data.PreferenceData;
 
+
 public class ImageUtils {
 
     /**

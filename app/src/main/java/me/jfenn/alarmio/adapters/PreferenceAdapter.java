@@ -3,10 +3,12 @@ package me.jfenn.alarmio.adapters;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
-import androidx.recyclerview.widget.RecyclerView;
 import me.jfenn.alarmio.data.preference.BasePreferenceData;
+
 
 public class PreferenceAdapter extends RecyclerView.Adapter<BasePreferenceData.ViewHolder> {
 

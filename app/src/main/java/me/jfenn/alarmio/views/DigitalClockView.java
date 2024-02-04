@@ -11,17 +11,20 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.afollestad.aesthetic.Aesthetic;
 
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import io.reactivex.disposables.Disposable;
+
 import me.jfenn.alarmio.interfaces.Subscribblable;
 import me.jfenn.alarmio.utils.FormatUtils;
+
 
 public class DigitalClockView extends View implements ViewTreeObserver.OnGlobalLayoutListener, Subscribblable {
 

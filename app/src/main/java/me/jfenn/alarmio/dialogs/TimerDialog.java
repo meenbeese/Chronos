@@ -8,19 +8,21 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
+
 import com.afollestad.aesthetic.Aesthetic;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 import me.jfenn.alarmio.Alarmio;
 import me.jfenn.alarmio.R;
 import me.jfenn.alarmio.data.PreferenceData;
 import me.jfenn.alarmio.data.SoundData;
 import me.jfenn.alarmio.data.TimerData;
 import me.jfenn.alarmio.fragments.TimerFragment;
+
 
 public class TimerDialog extends AestheticDialog implements View.OnClickListener {
 

@@ -7,12 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import java.util.TimeZone;
 
-import androidx.annotation.Nullable;
 import me.jfenn.alarmio.R;
 import me.jfenn.alarmio.interfaces.ContextFragmentInstantiator;
 import me.jfenn.alarmio.views.DigitalClockView;
+
 
 public class ClockFragment extends BasePagerFragment {
 

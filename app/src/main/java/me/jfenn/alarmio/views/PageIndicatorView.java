@@ -25,9 +25,12 @@ import android.view.View;
 import com.afollestad.aesthetic.Aesthetic;
 
 import androidx.viewpager.widget.ViewPager;
+
 import io.reactivex.disposables.Disposable;
+
 import me.jfenn.alarmio.interfaces.Subscribblable;
 import me.jfenn.androidutils.DimenUtils;
+
 
 public class PageIndicatorView extends View implements ViewPager.OnPageChangeListener, Subscribblable {
 

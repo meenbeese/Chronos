@@ -7,21 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.afollestad.aesthetic.Aesthetic;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
+import com.afollestad.aesthetic.Aesthetic;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+
 import me.jfenn.alarmio.R;
 import me.jfenn.alarmio.adapters.PreferenceAdapter;
 import me.jfenn.alarmio.data.PreferenceData;
@@ -30,13 +29,13 @@ import me.jfenn.alarmio.data.preference.AlertWindowPreferenceData;
 import me.jfenn.alarmio.data.preference.BasePreferenceData;
 import me.jfenn.alarmio.data.preference.BatteryOptimizationPreferenceData;
 import me.jfenn.alarmio.data.preference.BooleanPreferenceData;
-import me.jfenn.alarmio.data.preference.CustomPreferenceData;
 import me.jfenn.alarmio.data.preference.ImageFilePreferenceData;
 import me.jfenn.alarmio.data.preference.RingtonePreferenceData;
 import me.jfenn.alarmio.data.preference.ThemePreferenceData;
 import me.jfenn.alarmio.data.preference.TimePreferenceData;
 import me.jfenn.alarmio.data.preference.TimeZonesPreferenceData;
 import me.jfenn.alarmio.interfaces.ContextFragmentInstantiator;
+
 
 public class SettingsFragment extends BasePagerFragment implements Consumer {
 

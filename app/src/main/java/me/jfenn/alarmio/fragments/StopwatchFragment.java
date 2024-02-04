@@ -13,19 +13,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
+
 import com.afollestad.aesthetic.Aesthetic;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-import androidx.annotation.Nullable;
-import androidx.core.view.GravityCompat;
-import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 import io.reactivex.disposables.Disposable;
+
 import me.jfenn.alarmio.R;
 import me.jfenn.alarmio.services.StopwatchService;
 import me.jfenn.alarmio.utils.FormatUtils;
 import me.jfenn.alarmio.views.ProgressTextView;
+
 
 public class StopwatchFragment extends BaseFragment implements StopwatchService.Listener, ServiceConnection {
 

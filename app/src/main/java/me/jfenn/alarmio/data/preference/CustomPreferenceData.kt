@@ -7,6 +7,7 @@ import android.widget.TextView
 
 import me.jfenn.alarmio.R
 
+
 /**
  * A simple preference item to bind a title
  * and text value of a preference to a basic

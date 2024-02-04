@@ -10,7 +10,9 @@ import android.provider.Settings
 import android.widget.Toast
 
 import androidx.core.content.ContextCompat
+
 import me.jfenn.alarmio.R
+
 
 /**
  * A preference item allowing the user to select to

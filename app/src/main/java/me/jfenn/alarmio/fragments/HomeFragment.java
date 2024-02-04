@@ -13,6 +13,12 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
+
 import com.afollestad.aesthetic.Aesthetic;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
@@ -22,15 +28,12 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
 import io.reactivex.disposables.Disposable;
+
 import jahirfiquitiva.libs.fabsmenu.FABsMenu;
 import jahirfiquitiva.libs.fabsmenu.FABsMenuListener;
 import jahirfiquitiva.libs.fabsmenu.TitleFAB;
+
 import me.jfenn.alarmio.Alarmio;
 import me.jfenn.alarmio.R;
 import me.jfenn.alarmio.adapters.SimplePagerAdapter;
@@ -44,6 +47,7 @@ import me.jfenn.alarmio.views.PageIndicatorView;
 import me.jfenn.androidutils.DimenUtils;
 import me.jfenn.timedatepickers.dialogs.PickerDialog;
 import me.jfenn.timedatepickers.views.LinearTimePickerView;
+
 
 public class HomeFragment extends BaseFragment {
 
