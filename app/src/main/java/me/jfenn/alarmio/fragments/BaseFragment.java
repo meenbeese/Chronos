@@ -31,10 +31,6 @@ public abstract class BaseFragment extends Fragment implements Alarmio.AlarmioLi
         return alarmio;
     }
 
-    public void notifyDataSetChanged() {
-        // Update the info displayed in the fragment.
-    }
-
     @Override
     public void onAlarmsChanged() {
         // Update any alarm-dependent data.

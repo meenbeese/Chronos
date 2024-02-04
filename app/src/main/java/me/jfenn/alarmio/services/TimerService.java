@@ -111,8 +111,5 @@ public class TimerService extends Service {
     }
 
     public class LocalBinder extends Binder {
-        public TimerService getService() {
-            return TimerService.this;
-        }
     }
 }

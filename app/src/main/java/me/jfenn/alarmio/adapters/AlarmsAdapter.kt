@@ -86,7 +86,7 @@ class AlarmsAdapter(private val alarmio: Alarmio, private val recycler: Recycler
             AlarmViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_alarm, parent, false), alarmio)
     }
 
-    private fun onBindTimerViewHolder(holder: TimerViewHolder, position: Int) {
+    private fun onBindTimerViewHolder(holder: TimerViewHolder) {
         holder.runnable = object : Runnable {
             override fun run() {
                 try {
@@ -296,7 +296,7 @@ class AlarmsAdapter(private val alarmio: Alarmio, private val recycler: Recycler
                             alarm.time.set(Calendar.HOUR_OF_DAY, view.hourOfDay)
                             alarm.time.set(Calendar.MINUTE, view.minute)
                             alarm.setTime(alarmio, alarmManager, alarm.time.timeInMillis)
-                            alarm.setEnabled(alarmio, alarmManager, true);
+                            alarm.setEnabled(alarmio, alarmManager, true)
 
                             notifyItemChanged(holder.adapterPosition)
                         }
@@ -357,7 +357,7 @@ class AlarmsAdapter(private val alarmio: Alarmio, private val recycler: Recycler
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (getItemViewType(position) == 0 && holder is TimerViewHolder) {
-            onBindTimerViewHolder(holder, position)
+            onBindTimerViewHolder(holder)
         } else if (holder is AlarmViewHolder) {
             onBindAlarmViewHolder(holder, position)
         }

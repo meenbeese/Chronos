@@ -25,10 +25,6 @@ public class TimeZoneChooserDialog extends AestheticDialog {
         super(context);
     }
 
-    public void excludeTimeZones(String... ids) {
-        excludedIds = ids;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

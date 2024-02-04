@@ -12,10 +12,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 public class ScrollableBottomSheetBehavior<V extends View> extends BottomSheetBehavior<V> {
 
-    public ScrollableBottomSheetBehavior() {
-        super();
-    }
-
     public ScrollableBottomSheetBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
     }

@@ -14,7 +14,7 @@ import java.util.*
  */
 class TimeZonesPreferenceData(private val preference: PreferenceData, title: Int) : CustomPreferenceData(title) {
 
-    override fun getValueName(holder: CustomPreferenceData.ViewHolder): String {
+    override fun getValueName(holder: ViewHolder): String {
         var i = 0
         for (id in TimeZone.getAvailableIDs()) {
             if (preference.getSpecificValue(holder.context, id))
@@ -24,7 +24,7 @@ class TimeZonesPreferenceData(private val preference: PreferenceData, title: Int
         return String.format(Locale.getDefault(), holder.context.getString(R.string.msg_time_zones_selected), i)
     }
 
-    override fun onClick(holder: CustomPreferenceData.ViewHolder) {
+    override fun onClick(holder: ViewHolder) {
         TimeZoneChooserDialog(holder.context).apply {
             setOnDismissListener { bindViewHolder(holder) }
             show()

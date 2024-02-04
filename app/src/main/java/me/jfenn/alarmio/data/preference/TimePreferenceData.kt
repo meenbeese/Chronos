@@ -12,15 +12,15 @@ import java.util.concurrent.TimeUnit
  */
 class TimePreferenceData(private val preference: PreferenceData, name: Int) : CustomPreferenceData(name) {
 
-    override fun getValueName(holder: CustomPreferenceData.ViewHolder): String {
-        return FormatUtils.formatMillis(preference.getValue<Long>(holder.context)).run {
+    override fun getValueName(holder: ViewHolder): String {
+        return FormatUtils.formatMillis(preference.getValue(holder.context)).run {
             substring(0, length - 3)
         }
     }
 
-    override fun onClick(holder: CustomPreferenceData.ViewHolder) {
+    override fun onClick(holder: ViewHolder) {
         val dialog = run {
-            var seconds = TimeUnit.MILLISECONDS.toSeconds(preference.getValue<Long>(holder.context)).toInt()
+            var seconds = TimeUnit.MILLISECONDS.toSeconds(preference.getValue(holder.context)).toInt()
             var minutes = TimeUnit.SECONDS.toMinutes(seconds.toLong()).toInt()
             val hours = TimeUnit.MINUTES.toHours(minutes.toLong()).toInt()
             minutes %= TimeUnit.HOURS.toMinutes(1).toInt()

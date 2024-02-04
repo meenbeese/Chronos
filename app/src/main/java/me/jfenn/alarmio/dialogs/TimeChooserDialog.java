@@ -107,20 +107,6 @@ public class TimeChooserDialog extends AestheticDialog implements View.OnClickLi
         else return String.format(Locale.getDefault(), "%dm %02ds", minutes, seconds);
     }
 
-    private long getMillis() {
-        long millis = 0;
-
-        int hours = Integer.parseInt(input.substring(0, 2));
-        int minutes = Integer.parseInt(input.substring(2, 4));
-        int seconds = Integer.parseInt(input.substring(4, 6));
-
-        millis += TimeUnit.HOURS.toMillis(hours);
-        millis += TimeUnit.MINUTES.toMillis(minutes);
-        millis += TimeUnit.SECONDS.toMillis(seconds);
-
-        return millis;
-    }
-
     @Override
     public void onClick(View view) {
         if (view instanceof TextView)

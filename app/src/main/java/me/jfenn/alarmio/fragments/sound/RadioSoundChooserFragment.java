@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -51,7 +50,6 @@ public class RadioSoundChooserFragment extends BaseSoundChooserFragment {
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         radioUrlEditText = view.findViewById(R.id.radioUrl);
-        TextView errorTextView = view.findViewById(R.id.errorText);
         RecyclerView recycler = view.findViewById(R.id.recycler);
         testRadio = view.findViewById(R.id.testRadio);
 

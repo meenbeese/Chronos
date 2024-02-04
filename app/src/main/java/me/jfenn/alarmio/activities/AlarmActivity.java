@@ -236,6 +236,7 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         finish();
         startActivity(new Intent(intent));
     }
