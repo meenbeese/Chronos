@@ -5,11 +5,11 @@ apply plugin: 'com.github.triplet.play'
 android {
     def isCI = System.getenv("CI") == "true"
 
-    compileSdkVersion 29
+    compileSdkVersion 34
     defaultConfig {
         applicationId "me.jfenn.alarmio"
-        minSdkVersion 16
-        targetSdkVersion 29
+        minSdkVersion 24
+        targetSdkVersion 34
         versionCode 21
         versionName "1.0.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -61,10 +61,13 @@ android {
         }
     }
 
-    // enable Jave 8 features
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }
 
