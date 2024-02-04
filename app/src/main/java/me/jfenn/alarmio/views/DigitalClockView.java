@@ -112,13 +112,13 @@ public class DigitalClockView extends View implements ViewTreeObserver.OnGlobalL
     protected void onDraw(Canvas canvas) {
         TimeZone defaultZone = TimeZone.getDefault();
         TimeZone.setDefault(timezone);
-        canvas.drawText(FormatUtils.format(getContext(), Calendar.getInstance().getTime()), canvas.getWidth() / 2, (canvas.getHeight() - paint.ascent()) / 2, paint);
+        canvas.drawText(FormatUtils.format(getContext(), Calendar.getInstance().getTime()), (float) getWidth() / 2, (getHeight() - paint.ascent()) / 2, paint);
         TimeZone.setDefault(defaultZone);
     }
 
     private static class UpdateThread extends Thread {
 
-        private WeakReference<DigitalClockView> viewReference;
+        private final WeakReference<DigitalClockView> viewReference;
 
         private UpdateThread(DigitalClockView view) {
             viewReference = new WeakReference<>(view);

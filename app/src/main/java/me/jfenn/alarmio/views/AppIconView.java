@@ -30,7 +30,7 @@ public class AppIconView extends View {
     private Bitmap fgMinutesBitmap;
     private Bitmap fgHoursBitmap;
     private Bitmap fgBitmap;
-    private Paint paint;
+    private final Paint paint;
     private int size;
     private float bgRotation = 1;
     private float rotation = 1;
@@ -95,14 +95,14 @@ public class AppIconView extends View {
 
     private Matrix getFgMatrix(Bitmap bitmap) {
         Matrix matrix = new Matrix();
-        matrix.postTranslate(-bitmap.getWidth() / 2, -bitmap.getHeight() / 2);
+        matrix.postTranslate((float) -bitmap.getWidth() / 2, (float) -bitmap.getHeight() / 2);
         matrix.postScale(fgScale, fgScale);
         return matrix;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        int size = Math.min(canvas.getWidth(), canvas.getHeight());
+        int size = Math.min(getWidth(), getHeight());
         if (this.size != size || fgBitmap == null || path == null) {
             this.size = size;
             bgBitmap = getBitmap(size, R.mipmap.ic_launcher_bg);
@@ -116,7 +116,7 @@ public class AppIconView extends View {
         }
 
         Matrix matrix = new Matrix();
-        matrix.postScale(bgScale * 0.942986f, bgScale * 0.942986f, size / 2, size / 2);
+        matrix.postScale(bgScale * 0.942986f, bgScale * 0.942986f, (float) size / 2, (float) size / 2);
 
         Path path = new Path();
         this.path.transform(matrix, path);
@@ -124,26 +124,26 @@ public class AppIconView extends View {
 
         matrix = getFgMatrix(bgBitmap);
         matrix.postRotate(bgRotation * 120);
-        matrix.postTranslate(bgBitmap.getWidth() / 2, bgBitmap.getHeight() / 2);
+        matrix.postTranslate((float) bgBitmap.getWidth() / 2, (float) bgBitmap.getHeight() / 2);
         canvas.drawBitmap(bgBitmap, matrix, paint);
 
         matrix = getFgMatrix(fgSecondsBitmap);
         matrix.postRotate(-rotation * 720);
-        matrix.postTranslate(fgSecondsBitmap.getWidth() / 2, fgSecondsBitmap.getHeight() / 2);
+        matrix.postTranslate((float) fgSecondsBitmap.getWidth() / 2, (float) fgSecondsBitmap.getHeight() / 2);
         canvas.drawBitmap(fgSecondsBitmap, matrix, paint);
 
         matrix = getFgMatrix(fgMinutesBitmap);
         matrix.postRotate(-rotation * 360);
-        matrix.postTranslate(fgMinutesBitmap.getWidth() / 2, fgMinutesBitmap.getHeight() / 2);
+        matrix.postTranslate((float) fgMinutesBitmap.getWidth() / 2, (float) fgMinutesBitmap.getHeight() / 2);
         canvas.drawBitmap(fgMinutesBitmap, matrix, paint);
 
         matrix = getFgMatrix(fgHoursBitmap);
         matrix.postRotate(-rotation * 60);
-        matrix.postTranslate(fgHoursBitmap.getWidth() / 2, fgHoursBitmap.getHeight() / 2);
+        matrix.postTranslate((float) fgHoursBitmap.getWidth() / 2, (float) fgHoursBitmap.getHeight() / 2);
         canvas.drawBitmap(fgHoursBitmap, matrix, paint);
 
         matrix = getFgMatrix(fgBitmap);
-        matrix.postTranslate(fgBitmap.getWidth() / 2, fgBitmap.getHeight() / 2);
+        matrix.postTranslate((float) fgBitmap.getWidth() / 2, (float) fgBitmap.getHeight() / 2);
         canvas.drawBitmap(fgBitmap, matrix, paint);
     }
 
@@ -152,8 +152,4 @@ public class AppIconView extends View {
             animator.addListener(listener);
     }
 
-    public void removeListener(Animator.AnimatorListener listener) {
-        if (animator != null)
-            animator.removeListener(listener);
-    }
 }

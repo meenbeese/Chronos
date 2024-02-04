@@ -13,7 +13,8 @@ import androidx.annotation.Nullable;
 
 public class FragmentLayout extends FrameLayout {
 
-    private Rect tempRect, windowRect;
+    private final Rect tempRect;
+    private final Rect windowRect;
 
     public FragmentLayout(@NonNull Context context) {
         this(context, null, 0);

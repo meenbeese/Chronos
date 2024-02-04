@@ -26,6 +26,8 @@ import com.afollestad.aesthetic.Aesthetic;
 
 import androidx.viewpager.widget.ViewPager;
 
+import java.util.Objects;
+
 import io.reactivex.disposables.Disposable;
 
 import me.jfenn.alarmio.interfaces.Subscribblable;
@@ -37,8 +39,7 @@ public class PageIndicatorView extends View implements ViewPager.OnPageChangeLis
     private int actualPosition;
     private float offset;
     private int size;
-    private ViewPager viewPager;
-
+    
     private IndicatorEngine engine;
 
     private int textColorPrimary;
@@ -125,11 +126,6 @@ public class PageIndicatorView extends View implements ViewPager.OnPageChangeLis
         return offset;
     }
 
-    public void notifyNumberPagesChanged() {
-        size = viewPager.getAdapter().getCount();
-        invalidate();
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -160,13 +156,10 @@ public class PageIndicatorView extends View implements ViewPager.OnPageChangeLis
 
     /**
      * You must call this AFTER setting the Adapter for the ViewPager, or it won't display the right amount of points.
-     *
-     * @param viewPager
      */
     public void setViewPager(ViewPager viewPager) {
-        this.viewPager = viewPager;
         viewPager.addOnPageChangeListener(this);
-        size = viewPager.getAdapter().getCount();
+        size = Objects.requireNonNull(viewPager.getAdapter()).getCount();
         invalidate();
     }
 
