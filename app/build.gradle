@@ -86,7 +86,7 @@ dependencies {
     // debugging tools
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
     debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.3'
-    ossImplementation 'me.jfenn:crasher:0.0.2'
+    debugImplementation 'me.jfenn:crasher:0.0.2'
 
     // support libraries
     implementation 'androidx.multidex:multidex:2.0.1'
