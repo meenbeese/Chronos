@@ -4,11 +4,12 @@ apply plugin: 'com.github.triplet.play'
 
 android {
     namespace = "me.jfenn.alarmio"
-    compileSdk 34
+    compileSdk 30
     defaultConfig {
         applicationId "me.jfenn.alarmio"
         minSdk 24
-        targetSdk 34
+        //noinspection ExpiredTargetSdkVersion
+        targetSdk 30
         versionCode 21
         versionName "1.0.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

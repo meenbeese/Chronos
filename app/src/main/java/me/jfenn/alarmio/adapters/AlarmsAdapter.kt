@@ -399,10 +399,10 @@ class AlarmsAdapter(private val alarmio: Alarmio, private val recycler: Recycler
         var runnable: Runnable? = null
             set(runnable) {
                 if (field != null)
-                    handler.removeCallbacks(field)
+                    handler.removeCallbacks(field!!)
 
                 field = runnable
-                handler.post(field)
+                handler.post(field!!)
             }
 
         val time: TextView = itemView.findViewById(R.id.time)
