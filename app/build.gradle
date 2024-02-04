@@ -3,26 +3,18 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.github.triplet.play'
 
 android {
-    def isCI = System.getenv("CI") == "true"
-
-    compileSdkVersion 34
+    namespace = "me.jfenn.alarmio"
+    compileSdk 34
     defaultConfig {
         applicationId "me.jfenn.alarmio"
-        minSdkVersion 24
-        targetSdkVersion 34
+        minSdk 24
+        targetSdk 34
         versionCode 21
         versionName "1.0.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
         multiDexEnabled true
-
-        def githubToken = System.getenv("GITHUB_TOKEN_PUB")
-        if (isCI && githubToken != null) {
-            buildConfigField "String", "GITHUB_TOKEN", "\"$githubToken\""
-        } else {
-            buildConfigField "String", "GITHUB_TOKEN", 'null'
-        }
     }
     signingConfigs {
         release
@@ -37,19 +29,6 @@ android {
         abortOnError false
     }
 
-    if (isCI) {
-        buildTypes.release.signingConfig = signingConfigs.release
-        signingConfigs.release.storeFile = file("../key.jks")
-        signingConfigs.release.storePassword = System.getenv("KEYSTORE_PASSWORD")
-        signingConfigs.release.keyAlias = System.getenv("KEYSTORE_ALIAS")
-        signingConfigs.release.keyPassword = System.getenv("KEYSTORE_ALIAS_PASSWORD")
-    }
-
-    /**
-     * This is used to circumvent some of Google Play's restrictions
-     * and make some features available in the OSS version that wouldn't
-     * be allowed on Google Play.
-     */
     flavorDimensions "distribution"
     productFlavors {
         gplay {
@@ -76,10 +55,10 @@ play {
 	track = "alpha"
 }
 
-task printVersionName {
-	doLast {
-		println android.defaultConfig.versionName
-	}
+tasks.register('printVersionName') {
+    doLast {
+        println android.defaultConfig.versionName
+    }
 }
 
 dependencies {
