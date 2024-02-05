@@ -218,10 +218,10 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
             isDarkSubscription.dispose();
         }
 
-        stopAnnoyingness();
+        stopAnnoyance();
     }
 
-    private void stopAnnoyingness() {
+    private void stopAnnoyance() {
         if (handler != null)
             handler.removeCallbacks(runnable);
 
@@ -251,7 +251,7 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
 
         names[minutes.length] = getString(R.string.title_snooze_custom);
 
-        stopAnnoyingness();
+        stopAnnoyance();
         new AlertDialog.Builder(AlarmActivity.this, isDark ? R.style.Theme_AppCompat_Dialog_Alert : R.style.Theme_AppCompat_Light_Dialog_Alert)
                 .setItems(names, (dialog, which) -> {
                     if (which < minutes.length) {
