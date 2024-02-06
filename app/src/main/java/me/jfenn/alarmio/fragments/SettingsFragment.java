@@ -67,11 +67,8 @@ public class SettingsFragment extends BasePagerFragment implements Consumer {
                 new TimePreferenceData(PreferenceData.SLOW_WAKE_UP_TIME, R.string.title_slow_wake_up_time)
         ));
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            list.add(0, new BatteryOptimizationPreferenceData());
-            list.add(0, new AlertWindowPreferenceData());
-        }
-
+        list.add(0, new BatteryOptimizationPreferenceData());
+        list.add(0, new AlertWindowPreferenceData());
         list.add(new AboutPreferenceData());
 
         preferenceAdapter = new PreferenceAdapter(list);

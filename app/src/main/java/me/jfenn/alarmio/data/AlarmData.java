@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -280,24 +279,13 @@ public class AlarmData implements Parcelable {
      * @param timeMillis    A UNIX timestamp specifying the next time for the alarm to ring.
      */
     private void setAlarm(Context context, AlarmManager manager, long timeMillis) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            manager.setAlarmClock(
-                    new AlarmManager.AlarmClockInfo(
-                            timeMillis,
-                            PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0)
-                    ),
-                    getIntent(context)
-            );
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                manager.setExact(AlarmManager.RTC_WAKEUP, timeMillis, getIntent(context));
-            else
-                manager.set(AlarmManager.RTC_WAKEUP, timeMillis, getIntent(context));
-
-            Intent intent = new Intent("android.intent.action.ALARM_CHANGED");
-            intent.putExtra("alarmSet", true);
-            context.sendBroadcast(intent);
-        }
+        manager.setAlarmClock(
+                new AlarmManager.AlarmClockInfo(
+                        timeMillis,
+                        PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0)
+                ),
+                getIntent(context)
+        );
 
         manager.set(AlarmManager.RTC_WAKEUP,
                 timeMillis - (long) PreferenceData.SLEEP_REMINDER_TIME.getValue(context),
@@ -314,12 +302,6 @@ public class AlarmData implements Parcelable {
      */
     public void cancel(Context context, AlarmManager manager) {
         manager.cancel(getIntent(context));
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            Intent intent = new Intent("android.intent.action.ALARM_CHANGED");
-            intent.putExtra("alarmSet", false);
-            context.sendBroadcast(intent);
-        }
     }
 
     /**

@@ -60,11 +60,9 @@ public class SoundData {
         if (type.equals(TYPE_RINGTONE) && url.startsWith("content://")) {
             if (ringtone == null) {
                 ringtone = RingtoneManager.getRingtone(alarmio, Uri.parse(url));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ringtone.setAudioAttributes(new AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_ALARM)
-                            .build());
-                }
+                ringtone.setAudioAttributes(new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .build());
             }
 
             alarmio.playRingtone(ringtone);
@@ -98,11 +96,9 @@ public class SoundData {
         if (url.startsWith("content://")) {
             if (ringtone == null) {
                 ringtone = RingtoneManager.getRingtone(alarmio, Uri.parse(url));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ringtone.setAudioAttributes(new AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_ALARM)
-                            .build());
-                }
+                ringtone.setAudioAttributes(new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .build());
             }
 
             alarmio.playRingtone(ringtone);

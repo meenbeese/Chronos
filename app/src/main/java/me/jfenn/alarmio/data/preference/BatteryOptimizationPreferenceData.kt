@@ -1,7 +1,6 @@
 package me.jfenn.alarmio.data.preference
 
 import android.Manifest
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -18,7 +17,6 @@ import me.jfenn.alarmio.R
  * A preference item allowing the user to select to
  * ignore battery optimizations to improve stability.
  */
-@TargetApi(23)
 class BatteryOptimizationPreferenceData : CustomPreferenceData(R.string.title_ignore_battery_optimizations) {
 
     override fun getValueName(holder: ViewHolder): String? = null

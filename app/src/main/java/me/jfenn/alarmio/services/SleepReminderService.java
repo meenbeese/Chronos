@@ -66,7 +66,7 @@ public class SleepReminderService extends Service {
      * should be shown, or stop the service if it shouldn't.
      */
     public void refreshState() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ? powerManager.isInteractive() : powerManager.isScreenOn()) {
+        if (powerManager.isInteractive()) {
             AlarmData nextAlarm = getSleepyAlarm(alarmio);
             if (nextAlarm != null) {
                 NotificationCompat.Builder builder;

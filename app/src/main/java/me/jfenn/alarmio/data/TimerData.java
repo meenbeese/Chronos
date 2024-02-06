@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -175,9 +174,7 @@ public class TimerData implements Parcelable {
      * @param manager       The AlarmManager to schedule the alert on.
      */
     public void setAlarm(Context context, AlarmManager manager) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            manager.setExact(AlarmManager.RTC_WAKEUP, endTime, getIntent(context));
-        else manager.set(AlarmManager.RTC_WAKEUP, endTime, getIntent(context));
+        manager.setExact(AlarmManager.RTC_WAKEUP, endTime, getIntent(context));
     }
 
     /**

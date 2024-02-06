@@ -91,32 +91,30 @@ public class HomeFragment extends BaseFragment {
         behavior = BottomSheetBehavior.from(bottomSheet);
         behavior.setHideable(false);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
 
-                private int statusBarHeight = -1;
+            private int statusBarHeight = -1;
 
-                @Override
-                public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                    if (newState == BottomSheetBehavior.STATE_COLLAPSED)
-                        bottomSheet.setPadding(0, 0, 0, 0);
-                    else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                        if (statusBarHeight < 0)
-                            statusBarHeight = DimenUtils.getStatusBarHeight(getContext());
-
-                        bottomSheet.setPadding(0, statusBarHeight, 0, 0);
-                    }
-                }
-
-                @Override
-                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED)
+                    bottomSheet.setPadding(0, 0, 0, 0);
+                else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     if (statusBarHeight < 0)
                         statusBarHeight = DimenUtils.getStatusBarHeight(getContext());
 
-                    bottomSheet.setPadding(0, (int) (slideOffset * statusBarHeight), 0, 0);
+                    bottomSheet.setPadding(0, statusBarHeight, 0, 0);
                 }
-            });
-        }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                if (statusBarHeight < 0)
+                    statusBarHeight = DimenUtils.getStatusBarHeight(getContext());
+
+                bottomSheet.setPadding(0, (int) (slideOffset * statusBarHeight), 0, 0);
+            }
+        });
 
         SimplePagerAdapter pagerAdapter = new SimplePagerAdapter(
                 getContext(), getChildFragmentManager(),

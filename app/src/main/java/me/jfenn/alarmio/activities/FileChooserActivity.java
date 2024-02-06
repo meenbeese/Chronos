@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
@@ -52,12 +51,8 @@ public class FileChooserActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType(type);
         if (type.equals("audio/*")) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-                intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-            } else {
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-            }
+            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         } else {
             intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -116,8 +111,7 @@ public class FileChooserActivity extends AppCompatActivity {
             Cursor cursor = null;
 
             try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                    getContentResolver().takePersistableUriPermission(data.getData(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                getContentResolver().takePersistableUriPermission(data.getData(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                 cursor = getContentResolver().query(data.getData(), null, null, null, null);
 

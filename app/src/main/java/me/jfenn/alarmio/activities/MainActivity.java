@@ -69,7 +69,7 @@ public class MainActivity extends AestheticActivity implements FragmentManager.O
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
         // background permissions info
-        if (Build.VERSION.SDK_INT >= 23 && !PreferenceData.INFO_BACKGROUND_PERMISSIONS.getValue(this, false)) {
+        if (!PreferenceData.INFO_BACKGROUND_PERMISSIONS.getValue(this, false)) {
             AlertDialog alert = new AlertDialog(this);
             alert.setTitle(getString(R.string.info_background_permissions_title));
             alert.setContent(getString(R.string.info_background_permissions_body));

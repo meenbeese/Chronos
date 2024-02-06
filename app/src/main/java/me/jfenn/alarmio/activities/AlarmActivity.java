@@ -132,11 +132,7 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
             audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
             if (isSlowWake) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    minVolume = audioManager.getStreamMinVolume(AudioManager.STREAM_ALARM);
-                } else {
-                    minVolume = 0;
-                }
+                minVolume = 0;
                 volumeRange = originalVolume - minVolume;
                 currentVolume = minVolume;
 

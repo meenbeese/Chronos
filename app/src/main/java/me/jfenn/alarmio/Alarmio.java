@@ -9,7 +9,6 @@ import android.location.Criteria;
 import android.location.LocationManager;
 import android.media.Ringtone;
 import android.net.Uri;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -238,7 +237,7 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
                     .isDark(true)
                     .lightStatusBarMode(AutoSwitchMode.OFF)
                     .colorPrimary(ContextCompat.getColor(this, R.color.colorNightPrimary))
-                    .colorStatusBar(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ? Color.TRANSPARENT : ContextCompat.getColor(this, R.color.colorNightPrimaryDark))
+                    .colorStatusBar(Color.TRANSPARENT)
                     .colorNavigationBar(ContextCompat.getColor(this, R.color.colorNightPrimaryDark))
                     .colorAccent(ContextCompat.getColor(this, R.color.colorNightAccent))
                     .colorCardViewBackground(ContextCompat.getColor(this, R.color.colorNightForeground))
@@ -255,7 +254,7 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
                         .isDark(false)
                         .lightStatusBarMode(AutoSwitchMode.ON)
                         .colorPrimary(ContextCompat.getColor(this, R.color.colorPrimary))
-                        .colorStatusBar(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ? Color.TRANSPARENT : ContextCompat.getColor(this, R.color.colorPrimaryDark))
+                        .colorStatusBar(Color.TRANSPARENT)
                         .colorNavigationBar(ContextCompat.getColor(this, R.color.colorPrimaryDark))
                         .colorAccent(ContextCompat.getColor(this, R.color.colorAccent))
                         .colorCardViewBackground(ContextCompat.getColor(this, R.color.colorForeground))
@@ -270,7 +269,7 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
                         .isDark(true)
                         .lightStatusBarMode(AutoSwitchMode.OFF)
                         .colorPrimary(Color.BLACK)
-                        .colorStatusBar(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ? Color.TRANSPARENT : Color.BLACK)
+                        .colorStatusBar(Color.TRANSPARENT)
                         .colorNavigationBar(Color.BLACK)
                         .colorAccent(Color.WHITE)
                         .colorCardViewBackground(Color.BLACK)
@@ -300,7 +299,7 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
      * but rather one of Alarmio.THEME_DAY_NIGHT, Alarmio.THEME_DAY,
      * Alarmio.THEME_NIGHT, or Alarmio.THEME_AMOLED.
      *
-     * @return          The theme to be used for activites.
+     * @return          The theme to be used for activities.
      */
     public int getActivityTheme() {
         return PreferenceData.THEME.getValue(this);

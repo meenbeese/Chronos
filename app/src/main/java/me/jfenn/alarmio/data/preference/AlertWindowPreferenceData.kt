@@ -1,7 +1,6 @@
 package me.jfenn.alarmio.data.preference
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -29,7 +28,6 @@ import me.jfenn.alarmio.dialogs.AlertDialog
  *
  * @see https://developer.android.com/guide/components/activities/background-starts
  */
-@TargetApi(23)
 class AlertWindowPreferenceData : BasePreferenceData<AlertWindowPreferenceData.ViewHolder>() {
 
     override fun getViewHolder(inflater: LayoutInflater, parent: ViewGroup): BasePreferenceData.ViewHolder {
