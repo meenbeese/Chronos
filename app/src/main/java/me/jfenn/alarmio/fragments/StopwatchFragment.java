@@ -224,7 +224,7 @@ public class StopwatchFragment extends BaseFragment implements StopwatchService.
 
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-        if (iBinder != null && iBinder instanceof StopwatchService.LocalBinder) {
+        if (iBinder instanceof StopwatchService.LocalBinder) {
             service = ((StopwatchService.LocalBinder) iBinder).getService();
             onStateChanged(service.isRunning());
             onTick(0, "0s 00");
