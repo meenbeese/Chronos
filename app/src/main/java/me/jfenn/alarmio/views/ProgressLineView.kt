@@ -11,14 +11,14 @@ import com.afollestad.aesthetic.Aesthetic
 
 import io.reactivex.disposables.Disposable
 
-import me.jfenn.alarmio.interfaces.Subscribblable
+import me.jfenn.alarmio.interfaces.Subscribable
 
 
 /**
  * Display a progress line, with a given foreground/background
  * color set.
  */
-class ProgressLineView : View, Subscribblable {
+class ProgressLineView : View, Subscribable {
 
     private var backgroundPaint: Paint = Paint().apply {
         style = Paint.Style.FILL

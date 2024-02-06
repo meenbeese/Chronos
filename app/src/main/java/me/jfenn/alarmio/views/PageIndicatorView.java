@@ -30,11 +30,11 @@ import java.util.Objects;
 
 import io.reactivex.disposables.Disposable;
 
-import me.jfenn.alarmio.interfaces.Subscribblable;
+import me.jfenn.alarmio.interfaces.Subscribable;
 import me.jfenn.androidutils.DimenUtils;
 
 
-public class PageIndicatorView extends View implements ViewPager.OnPageChangeListener, Subscribblable {
+public class PageIndicatorView extends View implements ViewPager.OnPageChangeListener, Subscribable {
 
     private int actualPosition;
     private float offset;

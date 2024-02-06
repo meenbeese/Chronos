@@ -7,7 +7,7 @@ import com.afollestad.aesthetic.Aesthetic
 
 import io.reactivex.disposables.Disposable
 
-import me.jfenn.alarmio.interfaces.Subscribblable
+import me.jfenn.alarmio.interfaces.Subscribable
 import me.jfenn.sunrisesunsetview.SunriseSunsetView
 
 
@@ -15,7 +15,7 @@ import me.jfenn.sunrisesunsetview.SunriseSunsetView
  * A SunriseView extension class that implements
  * Aesthetic theming.
  */
-class AestheticSunriseView : SunriseSunsetView, Subscribblable {
+class AestheticSunriseView : SunriseSunsetView, Subscribable {
 
     private var colorAccentSubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null

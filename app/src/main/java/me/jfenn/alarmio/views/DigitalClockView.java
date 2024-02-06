@@ -22,11 +22,11 @@ import java.util.TimeZone;
 
 import io.reactivex.disposables.Disposable;
 
-import me.jfenn.alarmio.interfaces.Subscribblable;
+import me.jfenn.alarmio.interfaces.Subscribable;
 import me.jfenn.alarmio.utils.FormatUtils;
 
 
-public class DigitalClockView extends View implements ViewTreeObserver.OnGlobalLayoutListener, Subscribblable {
+public class DigitalClockView extends View implements ViewTreeObserver.OnGlobalLayoutListener, Subscribable {
 
     private Paint paint;
     private UpdateThread thread;

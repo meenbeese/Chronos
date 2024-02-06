@@ -13,14 +13,14 @@ import com.afollestad.aesthetic.Aesthetic
 
 import io.reactivex.disposables.Disposable
 
-import me.jfenn.alarmio.interfaces.Subscribblable
+import me.jfenn.alarmio.interfaces.Subscribable
 
 
 /**
  * A SwitchCompat extension class that implements
  * Aesthetic theming.
  */
-class AestheticSwitchView : SwitchCompat, Subscribblable {
+class AestheticSwitchView : SwitchCompat, Subscribable {
 
     private var colorAccentSubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null

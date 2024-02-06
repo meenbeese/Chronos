@@ -12,14 +12,14 @@ import com.afollestad.aesthetic.Aesthetic
 
 import io.reactivex.disposables.Disposable
 
-import me.jfenn.alarmio.interfaces.Subscribblable
+import me.jfenn.alarmio.interfaces.Subscribable
 
 
 /**
  * An AppCompatCheckBox extension class that
  * implements Aesthetic theming.
  */
-class AestheticCheckBoxView : AppCompatCheckBox, Subscribblable {
+class AestheticCheckBoxView : AppCompatCheckBox, Subscribable {
 
     private var colorAccentSubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null

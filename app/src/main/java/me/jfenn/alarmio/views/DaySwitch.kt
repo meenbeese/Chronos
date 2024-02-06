@@ -12,11 +12,11 @@ import com.afollestad.aesthetic.Aesthetic
 
 import io.reactivex.disposables.Disposable
 
-import me.jfenn.alarmio.interfaces.Subscribblable
+import me.jfenn.alarmio.interfaces.Subscribable
 import me.jfenn.androidutils.DimenUtils
 
 
-class DaySwitch : View, View.OnClickListener, Subscribblable {
+class DaySwitch : View, View.OnClickListener, Subscribable {
 
     private var accentPaint: Paint = Paint().apply {
         color = Color.BLACK

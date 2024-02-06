@@ -5,7 +5,7 @@ package me.jfenn.alarmio.interfaces;
  * and stuff to be subscribed and un-subscribed easily
  * to adhere to their respective life-cycles.
  */
-public interface Subscribblable {
+public interface Subscribable {
 
     void subscribe();
 

@@ -14,7 +14,7 @@ import com.afollestad.aesthetic.Aesthetic
 
 import io.reactivex.disposables.Disposable
 
-import me.jfenn.alarmio.interfaces.Subscribblable
+import me.jfenn.alarmio.interfaces.Subscribable
 import me.jfenn.androidutils.DimenUtils
 
 import kotlin.math.cos
@@ -26,7 +26,7 @@ import kotlin.math.sin
  * Display a progress circle with text in
  * the center.
  */
-class ProgressTextView : View, Subscribblable {
+class ProgressTextView : View, Subscribable {
 
     private var progress: Long = 0
     private var maxProgress: Long = 0
