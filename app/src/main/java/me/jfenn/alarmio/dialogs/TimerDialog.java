@@ -38,8 +38,8 @@ public class TimerDialog extends AestheticDialog implements View.OnClickListener
 
     private String input = "000000";
 
-    private Alarmio alarmio;
-    private FragmentManager manager;
+    private final Alarmio alarmio;
+    private final FragmentManager manager;
 
     public TimerDialog(Context context, FragmentManager manager) {
         super(context);

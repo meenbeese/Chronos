@@ -123,12 +123,12 @@ public class MainActivity extends AestheticActivity implements FragmentManager.O
         int fragmentId = intent.getIntExtra(EXTRA_FRAGMENT, -1);
 
         switch (fragmentId) {
-            case FRAGMENT_STOPWATCH:
+            case FRAGMENT_STOPWATCH -> {
                 if (fragment instanceof StopwatchFragment)
                     return fragment;
-
                 return new StopwatchFragment();
-            case FRAGMENT_TIMER:
+            }
+            case FRAGMENT_TIMER -> {
                 if (intent.hasExtra(TimerReceiver.EXTRA_TIMER_ID)) {
                     int id = intent.getIntExtra(TimerReceiver.EXTRA_TIMER_ID, 0);
                     if (alarmio.getTimers().size() <= id || id < 0)
@@ -141,18 +141,17 @@ public class MainActivity extends AestheticActivity implements FragmentManager.O
                     newFragment.setArguments(args);
                     return newFragment;
                 }
-
                 return fragment;
-            default:
+            }
+            default -> {
                 if (Intent.ACTION_MAIN.equals(intent.getAction()) || intent.getAction() == null)
                     return new SplashFragment();
-
                 Bundle args = new Bundle();
                 args.putString(HomeFragment.INTENT_ACTION, intent.getAction());
-
                 BaseFragment newFragment = new HomeFragment();
                 newFragment.setArguments(args);
                 return newFragment;
+            }
         }
     }
 

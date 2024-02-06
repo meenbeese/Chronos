@@ -12,7 +12,7 @@ import me.jfenn.alarmio.data.preference.BasePreferenceData;
 
 public class PreferenceAdapter extends RecyclerView.Adapter<BasePreferenceData.ViewHolder> {
 
-    private List<BasePreferenceData> items;
+    private final List<BasePreferenceData> items;
 
     public PreferenceAdapter(List<BasePreferenceData> items) {
         this.items = items;

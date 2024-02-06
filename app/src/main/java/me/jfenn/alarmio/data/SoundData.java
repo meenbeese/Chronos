@@ -20,9 +20,9 @@ public class SoundData {
     public static final String TYPE_RINGTONE = "ringtone";
     public static final String TYPE_RADIO = "radio";
 
-    private String name;
-    private String type;
-    private String url;
+    private final String name;
+    private final String type;
+    private final String url;
 
     private Ringtone ringtone;
 
@@ -183,10 +183,10 @@ public class SoundData {
     }
 
     /**
-     * Decide if two SoundDatas are equal.
+     * Decide if two SoundData are equal.
      *
      * @param obj               The object to compare to.
-     * @return                  True if the SoundDatas contain the same sound.
+     * @return                  True if the SoundData contain the same sound.
      */
     @Override
     public boolean equals(Object obj) {

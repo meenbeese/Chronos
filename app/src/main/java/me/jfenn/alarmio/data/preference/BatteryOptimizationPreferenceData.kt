@@ -21,9 +21,9 @@ import me.jfenn.alarmio.R
 @TargetApi(23)
 class BatteryOptimizationPreferenceData : CustomPreferenceData(R.string.title_ignore_battery_optimizations) {
 
-    override fun getValueName(holder: CustomPreferenceData.ViewHolder): String? = null
+    override fun getValueName(holder: ViewHolder): String? = null
 
-    override fun onClick(holder: CustomPreferenceData.ViewHolder) {
+    override fun onClick(holder: ViewHolder) {
         val context = holder.context
 
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) == PackageManager.PERMISSION_GRANTED) {

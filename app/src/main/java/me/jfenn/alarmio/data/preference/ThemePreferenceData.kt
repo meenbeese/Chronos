@@ -29,6 +29,8 @@ import me.jfenn.timedatepickers.views.LinearTimePickerView
 
 import java.util.*
 
+import kotlin.math.roundToInt
+
 
 const val HOUR_LENGTH = 3600000L
 
@@ -78,7 +80,7 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
 
         val listener = object : SunriseSunsetView.SunriseListener {
             override fun onSunriseChanged(sunriseSunsetView: SunriseSunsetView, l: Long) {
-                val hour = Math.round(l.toFloat() / HOUR_LENGTH)
+                val hour = (l.toFloat() / HOUR_LENGTH).roundToInt()
                 holder.sunriseTextView.text = getText(hour)
                 sunriseSunsetView.setSunrise(hour * HOUR_LENGTH, true)
                 PreferenceData.DAY_START.setValue(holder.context, hour)
@@ -86,7 +88,7 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
             }
 
             override fun onSunsetChanged(sunriseSunsetView: SunriseSunsetView, l: Long) {
-                val hour = Math.round(l.toFloat() / HOUR_LENGTH)
+                val hour = (l.toFloat() / HOUR_LENGTH).roundToInt()
                 holder.sunsetTextView.text = getText(hour)
                 sunriseSunsetView.setSunset(hour * HOUR_LENGTH, true)
                 PreferenceData.DAY_END.setValue(holder.context, hour)

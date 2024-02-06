@@ -54,7 +54,7 @@ public class ClockFragment extends BasePagerFragment {
     public static class Instantiator extends ContextFragmentInstantiator {
 
         @Nullable
-        private String timezone;
+        private final String timezone;
 
         public Instantiator(Context context, @Nullable String timezone) {
             super(context);

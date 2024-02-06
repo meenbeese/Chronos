@@ -230,7 +230,7 @@ public class TimerData implements Parcelable {
             sound = SoundData.fromString(in.readString());
     }
 
-    public static final Creator<TimerData> CREATOR = new Creator<TimerData>() {
+    public static final Creator<TimerData> CREATOR = new Creator<>() {
         @Override
         public TimerData createFromParcel(Parcel in) {
             return new TimerData(in);

@@ -31,12 +31,6 @@ public class ImageUtils {
                         path = "/storage/" + path.replaceFirst(":", "/");
                     else path = Uri.parse(backgroundUrl).getPath();
 
-                    //      "a haiku"
-                    //I don't like storage
-                    //I'm sorry, poor developer
-                    //this is all my fault
-                    //          - james fenn, 2018
-
                     Glide.with(imageView.getContext()).load(new File(path)).into(imageView);
                 } else Glide.with(imageView.getContext()).load(Uri.parse(backgroundUrl)).into(imageView);
             } else Glide.with(imageView.getContext()).load(new File(backgroundUrl)).into(imageView);
