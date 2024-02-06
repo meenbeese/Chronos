@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.github.triplet.play'
 
 android {
     namespace = "me.jfenn.alarmio"
@@ -49,11 +48,6 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-}
-
-play {
-	serviceAccountCredentials = file("../service.json")
-	track = "alpha"
 }
 
 tasks.register('printVersionName') {
