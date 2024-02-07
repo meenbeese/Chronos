@@ -16,6 +16,7 @@ class FragmentLayout @JvmOverloads constructor(
     private val tempRect: Rect = Rect()
     private val windowRect: Rect = Rect()
 
+    @Deprecated("Deprecated")
     override fun fitSystemWindows(insets: Rect): Boolean {
         windowRect.set(insets)
         super.fitSystemWindows(insets)
