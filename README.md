@@ -42,16 +42,14 @@ Alarmio is a simple alarm clock that implements many useful features while follo
 
 ## 📝 How to Contribute
 
-Alarmio is written by users - everyone working on this project (including myself) is motivated entirely by their own needs and ideals. There is no professional support line to handle complaints or paid development team to fix bugs. Anyone that volunteers their time and expertise to improve this app does so without any obligation or commitment to the users of this software.
+Alarmio is a user-driven project. All contributors, including myself, are motivated by personal needs and ideals. We don’t have a professional support line or paid development team. Any contribution, regardless of size or format, is welcome. **If you need help or feedback, feel free to reach out.**
 
-As a contributor, you are highly valued - any contribution, no matter how small, misled, or incorrectly formatted, is welcome. We'd much prefer to work together and resolve an issue than turn any genuine effort away. **If you need help with this process, have any questions or confusion, or want to get feedback before a contribution, please don't hesitate to get in touch.**
-
-- **🖥️ Development:** Developers can help Alarmio by [fixing bugs](https://github.com/meenbeese/Alarmio/issues), implementing features, or helping to debug & research new issues. After reviewing [CONTRIBUTING.md](./.github/CONTRIBUTING.md), you can open a PR request which will be reviewed. If it looks good to me, I will merge it into the main branch.
-- **🍥 Designing:** Alarmio should be intuitive and accessible to a wide variety of users - suggestions to improve certain interfaces are always welcome. This includes compatibility with screen readers, problems with contrast / color blindness, and the sizing/positioning of touch targets in the app - many of which are shamefully untested in Alarmio's present state.
-- **🤝 Helping users:** Often times, issues are created that go untouched for a couple days due to various factors, when they could be resolved immediately. Responding to obvious questions and identifying duplicate issues can be immensely helpful in reducing the workload on other maintainers and developers.
-- **📂 Filing issues:** Accurately reporting bugs and edge cases you experience can drastically reduce the amount of work we need to do to identify a problem. Providing relevant info - the device name & manufacturer, Android version, the version of Alarmio the bug was encountered in, and a thorough description helps others to understand what the issue is and how it could be solved. If you want to go the extra mile, screen recordings and logcat info are often immensely helpful. Don't forget to check for existing similar issues though!
-- **🌍 Localization:** If Alarmio doesn't have support for your fluent language(s), please consider translating it! Most in-app text is stored in [strings.xml](./app/src/main/res/values/strings.xml) - this file should be copied to `../values-{lang}/strings.xml` when translated. (this is an absurdly concise explanation - if this isn't clear, simply sending us translations in a new issue or email is perfectly fine!)
-- **📄 Documentation:** Writing guides and explanations of how Alarmio works, how to use it, and how to contribute to it, can go a long way to ensuring its usefulness and stability in the future. Whether this involves an update to the README, a tutorial for users and contributors, or adding Javadocs & comments to undocumented functions in the app - anything is valid!
+- **🖥️ Development:** Help by fixing bugs, implementing features, or researching issues. Review CONTRIBUTING.md, then open a PR for review.
+- **🍥 Designing:** Suggestions to improve interfaces, including accessibility and usability, are welcome.
+- **🤝 Helping users:** Respond to issues and identify duplicates to reduce workload on maintainers.
+- **📂 Filing issues:** Report bugs and edge cases with relevant info (device name, Android version, Alarmio version, description). Screen recordings and logcat info are helpful.
+- **🌍 Localization:** If Alarmio does not support your language, consider translating it! In-app text is in strings.xml. Copy this file to ../values-{lang}/strings.xml when translated.
+- **📄 Documentation:** Write guides and explanations about Alarmio, its usage, and how to contribute. This can include README updates, user tutorials, or adding comments to undocumented functions.
 
 ### ✅ Other ways of support
 
