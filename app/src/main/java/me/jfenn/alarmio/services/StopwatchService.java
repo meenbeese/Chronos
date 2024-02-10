@@ -187,17 +187,17 @@ public class StopwatchService extends Service {
                 .setSmallIcon(R.drawable.ic_stopwatch_notification)
                 .setContentTitle(getString(R.string.title_stopwatch))
                 .setContentText(time)
-                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class).putExtra(MainActivity.EXTRA_FRAGMENT, MainActivity.FRAGMENT_STOPWATCH), 0))
-                .setDeleteIntent(PendingIntent.getBroadcast(this, 0, new Intent(ACTION_RESET).setPackage(getPackageName()), 0))
+                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class).putExtra(MainActivity.EXTRA_FRAGMENT, MainActivity.FRAGMENT_STOPWATCH), PendingIntent.FLAG_IMMUTABLE))
+                .setDeleteIntent(PendingIntent.getBroadcast(this, 0, new Intent(ACTION_RESET).setPackage(getPackageName()), PendingIntent.FLAG_IMMUTABLE))
                 .addAction(
                         isRunning ? R.drawable.ic_pause_notification : R.drawable.ic_play_notification,
                         isRunning ? "Pause" : "Play",
-                        PendingIntent.getBroadcast(this, 0, new Intent(ACTION_TOGGLE), 0)
+                        PendingIntent.getBroadcast(this, 0, new Intent(ACTION_TOGGLE), PendingIntent.FLAG_IMMUTABLE)
                 )
                 .addAction(
                         R.drawable.ic_lap_notification,
                         "Lap",
-                        PendingIntent.getBroadcast(this, 0, new Intent(ACTION_LAP), 0)
+                        PendingIntent.getBroadcast(this, 0, new Intent(ACTION_LAP), PendingIntent.FLAG_IMMUTABLE)
                 )
                 .build();
     }
@@ -232,7 +232,7 @@ public class StopwatchService extends Service {
 
     private static class NotificationReceiver extends BroadcastReceiver {
 
-        private WeakReference<StopwatchService> serviceReference;
+        private final WeakReference<StopwatchService> serviceReference;
 
         public NotificationReceiver(StopwatchService service) {
             serviceReference = new WeakReference<>(service);

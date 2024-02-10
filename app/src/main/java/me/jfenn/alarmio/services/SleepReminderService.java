@@ -175,7 +175,7 @@ public class SleepReminderService extends Service {
 
     private static class ScreenReceiver extends BroadcastReceiver {
 
-        private WeakReference<SleepReminderService> serviceReference;
+        private final WeakReference<SleepReminderService> serviceReference;
 
         public ScreenReceiver(SleepReminderService service) {
             serviceReference = new WeakReference<>(service);

@@ -59,9 +59,15 @@
             android:name=".activities.FileChooserActivity"
             android:theme="@style/AppTheme.Transparent" />
 
-        <service android:name=".services.SleepReminderService" />
-        <service android:name=".services.StopwatchService" />
-        <service android:name=".services.TimerService" />
+        <service
+            android:name=".services.SleepReminderService"
+            android:foregroundServiceType="shortService" />
+        <service
+            android:name=".services.StopwatchService"
+            android:foregroundServiceType="shortService"/>
+        <service
+            android:name=".services.TimerService"
+            android:foregroundServiceType="shortService" />
 
         <receiver android:name=".receivers.AlarmReceiver" />
         <receiver android:name=".receivers.TimerReceiver" />
