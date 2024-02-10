@@ -47,6 +47,7 @@ import me.jfenn.alarmio.data.SoundData;
 import me.jfenn.alarmio.data.TimerData;
 import me.jfenn.alarmio.services.SleepReminderService;
 import me.jfenn.alarmio.services.TimerService;
+import me.jfenn.alarmio.utils.DebugUtils;
 
 
 public class Alarmio extends MultiDexApplication implements Player.EventListener {
@@ -78,6 +79,7 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
     @Override
     public void onCreate() {
         super.onCreate();
+        DebugUtils.setup(this);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         listeners = new ArrayList<>();

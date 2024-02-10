@@ -26,15 +26,7 @@ object DebugUtils {
                 constructor.isAccessible = true
                 constructor.newInstance().setup(alarmio)
                 break
-            } catch (e: ClassNotFoundException) {
-                e.printStackTrace()
-            } catch (e: NoSuchMethodException) {
-                e.printStackTrace()
-            } catch (e: IllegalAccessException) {
-                e.printStackTrace()
-            } catch (e: InstantiationException) {
-                e.printStackTrace()
-            } catch (e: InvocationTargetException) {
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
