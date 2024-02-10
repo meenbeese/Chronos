@@ -29,15 +29,13 @@ class TimePreferenceData(private val preference: PreferenceData, name: Int) : Cu
             TimeChooserDialog(holder.context).apply { setDefault(hours, minutes, seconds) }
         }
 
-        dialog.setListener { hours, minutes, seconds ->
-            run {
-                seconds + TimeUnit.HOURS.toSeconds(hours.toLong()).toInt() + TimeUnit.MINUTES.toSeconds(minutes.toLong()).toInt()
-            }.let { totalSeconds ->
+        dialog.setListener(object : TimeChooserDialog.OnTimeChosenListener {
+            override fun onTimeChosen(hours: Int, minutes: Int, seconds: Int) {
+                val totalSeconds = seconds + TimeUnit.HOURS.toSeconds(hours.toLong()).toInt() + TimeUnit.MINUTES.toSeconds(minutes.toLong()).toInt()
                 preference.setValue(holder.context, TimeUnit.SECONDS.toMillis(totalSeconds.toLong()))
                 bindViewHolder(holder)
             }
-        }
+        })
         dialog.show()
     }
-
 }
