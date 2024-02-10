@@ -27,7 +27,7 @@ class AlertDialog(context: Context?) : AestheticDialog(context), View.OnClickLis
         return this
     }
 
-    override fun onCreate(savedInstanceState: Bundle) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_alert)
         val titleView = findViewById<TextView>(R.id.title)
