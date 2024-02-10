@@ -282,14 +282,14 @@ public class AlarmData implements Parcelable {
         manager.setAlarmClock(
                 new AlarmManager.AlarmClockInfo(
                         timeMillis,
-                        PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0)
+                        PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_IMMUTABLE)
                 ),
                 getIntent(context)
         );
 
         manager.set(AlarmManager.RTC_WAKEUP,
                 timeMillis - (long) PreferenceData.SLEEP_REMINDER_TIME.getValue(context),
-                PendingIntent.getService(context, 0, new Intent(context, SleepReminderService.class), 0));
+                PendingIntent.getService(context, 0, new Intent(context, SleepReminderService.class), PendingIntent.FLAG_IMMUTABLE));
 
         SleepReminderService.refreshSleepTime(context);
     }
@@ -313,7 +313,7 @@ public class AlarmData implements Parcelable {
     private PendingIntent getIntent(Context context) {
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.putExtra(AlarmReceiver.EXTRA_ALARM_ID, id);
-        return PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     protected AlarmData(Parcel in) {

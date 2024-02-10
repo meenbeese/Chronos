@@ -9,6 +9,7 @@ import android.location.Criteria;
 import android.location.LocationManager;
 import android.media.Ringtone;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -104,8 +105,13 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
                 timers.add(timer);
         }
 
-        if (timerLength > 0)
-            startService(new Intent(this, TimerService.class));
+        if (timerLength > 0) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+                startForegroundService(new Intent(this, TimerService.class));
+            } else {
+                startService(new Intent(this, TimerService.class));
+            }
+        }
 
         SleepReminderService.refreshSleepTime(this);
     }
@@ -215,7 +221,11 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
      * Starts the timer service after a timer has been set.
      */
     public void onTimerStarted() {
-        startService(new Intent(this, TimerService.class));
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            startForegroundService(new Intent(this, TimerService.class));
+        } else {
+            startService(new Intent(this, TimerService.class));
+        }
     }
 
     /**

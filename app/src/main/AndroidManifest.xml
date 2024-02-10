@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="me.jfenn.alarmio.permission.ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -61,12 +62,15 @@
 
         <service
             android:name=".services.SleepReminderService"
+            android:exported="false"
             android:foregroundServiceType="shortService" />
         <service
             android:name=".services.StopwatchService"
+            android:exported="false"
             android:foregroundServiceType="shortService"/>
         <service
             android:name=".services.TimerService"
+            android:exported="false"
             android:foregroundServiceType="shortService" />
 
         <receiver android:name=".receivers.AlarmReceiver" />
