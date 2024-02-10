@@ -8,7 +8,6 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.HapticFeedbackConstants;
@@ -49,18 +48,14 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
     public static final String EXTRA_TIMER = "james.alarmio.AlarmActivity.EXTRA_TIMER";
 
     private View overlay;
-    private TextView date;
     private TextView time;
-    private SlideActionView actionView;
 
     private Alarmio alarmio;
     private Vibrator vibrator;
     private AudioManager audioManager;
 
-    private boolean isAlarm;
     private long triggerMillis;
     private AlarmData alarm;
-    private TimerData timer;
     private SoundData sound;
     private boolean isVibrate;
 
@@ -74,13 +69,14 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
 
     private Handler handler;
     private Runnable runnable;
-    private boolean isWoken;
-    private PowerManager.WakeLock wakeLock;
 
     private Disposable textColorPrimaryInverseSubscription;
     private Disposable isDarkSubscription;
 
     private boolean isDark;
+
+    public AlarmActivity() {
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,9 +85,9 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
         alarmio = (Alarmio) getApplicationContext();
 
         overlay = findViewById(R.id.overlay);
-        date = findViewById(R.id.date);
+        TextView date = findViewById(R.id.date);
         time = findViewById(R.id.time);
-        actionView = findViewById(R.id.slideView);
+        SlideActionView actionView = findViewById(R.id.slideView);
 
         // Lock orientation
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
@@ -111,14 +107,16 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
         isSlowWake = PreferenceData.SLOW_WAKE_UP.getValue(this);
         slowWakeMillis = PreferenceData.SLOW_WAKE_UP_TIME.getValue(this);
 
-        isAlarm = getIntent().hasExtra(EXTRA_ALARM);
+        boolean isAlarm = getIntent().hasExtra(EXTRA_ALARM);
         if (isAlarm) {
             alarm = getIntent().getParcelableExtra(EXTRA_ALARM);
+            assert alarm != null;
             isVibrate = alarm.isVibrate;
             if (alarm.hasSound())
                 sound = alarm.getSound();
         } else if (getIntent().hasExtra(EXTRA_TIMER)) {
-            timer = getIntent().getParcelableExtra(EXTRA_TIMER);
+            TimerData timer = getIntent().getParcelableExtra(EXTRA_TIMER);
+            assert timer != null;
             isVibrate = timer.isVibrate;
             if (timer.hasSound())
                 sound = timer.getSound();
@@ -128,14 +126,12 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
 
         if (sound != null && !sound.isSetVolumeSupported()) {
             // Use the backup method if it is not supported
-
             audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
             if (isSlowWake) {
                 minVolume = 0;
                 volumeRange = originalVolume - minVolume;
                 currentVolume = minVolume;
-
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM, minVolume, 0);
             }
         }
@@ -176,7 +172,7 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
                         // Backup volume setting behavior
                         int newVolume = minVolume + (int) Math.min(originalVolume, slowWakeProgress * volumeRange);
                         if (newVolume != currentVolume) {
-                            audioManager.setStreamVolume(audioManager.STREAM_ALARM, newVolume, 0);
+                            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, newVolume, 0);
                             currentVolume = newVolume;
                         }
                     }

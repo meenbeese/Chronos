@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.provider.AlarmClock;
 import android.provider.Settings;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
@@ -181,8 +182,8 @@ public class MainActivity extends AestheticActivity implements FragmentManager.O
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState != null ? outState : new Bundle());
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override

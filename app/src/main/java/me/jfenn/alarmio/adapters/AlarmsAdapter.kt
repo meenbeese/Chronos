@@ -8,6 +8,7 @@ import android.app.AlarmManager
 import android.content.Context
 import android.graphics.Color
 import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.HapticFeedbackConstants
@@ -401,7 +402,7 @@ class AlarmsAdapter(private val alarmio: Alarmio, private val recycler: Recycler
      * ViewHolder for timer items.
      */
     class TimerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val handler = Handler()
+        val handler = Handler(Looper.getMainLooper())
         var runnable: Runnable? = null
             set(runnable) {
                 if (field != null)

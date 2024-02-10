@@ -2,8 +2,11 @@ package me.jfenn.alarmio.adapters;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+
+import java.util.Objects;
 
 import me.jfenn.alarmio.fragments.BasePagerFragment;
 import me.jfenn.alarmio.interfaces.FragmentInstantiator;
@@ -18,9 +21,10 @@ public class SimplePagerAdapter extends FragmentStatePagerAdapter {
         this.fragments = fragments;
     }
 
+    @NonNull
     @Override
     public BasePagerFragment getItem(int position) {
-        return fragments[position].newInstance(position);
+        return Objects.requireNonNull(fragments[position].newInstance(position));
     }
 
     @Override

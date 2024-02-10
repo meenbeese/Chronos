@@ -3,6 +3,7 @@ package me.jfenn.alarmio.adapters;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -18,13 +19,14 @@ public class PreferenceAdapter extends RecyclerView.Adapter<BasePreferenceData.V
         this.items = items;
     }
 
+    @NonNull
     @Override
-    public BasePreferenceData.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BasePreferenceData.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return items.get(viewType).getViewHolder(LayoutInflater.from(parent.getContext()), parent);
     }
 
     @Override
-    public void onBindViewHolder(BasePreferenceData.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BasePreferenceData.ViewHolder holder, int position) {
         items.get(position).bindViewHolder(holder);
     }
 

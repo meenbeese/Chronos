@@ -24,8 +24,8 @@ import me.jfenn.alarmio.interfaces.SoundChooserListener;
 
 public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.ViewHolder> {
 
-    private Alarmio alarmio;
-    private List<SoundData> sounds;
+    private final Alarmio alarmio;
+    private final List<SoundData> sounds;
     private int currentlyPlaying = -1;
 
     private SoundChooserListener listener;
@@ -133,8 +133,8 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView icon;
-        private TextView title;
+        private final ImageView icon;
+        private final TextView title;
 
         public ViewHolder(View itemView) {
             super(itemView);

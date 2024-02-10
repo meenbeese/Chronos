@@ -35,9 +35,7 @@ class TimeZonesAdapter(private val timeZones: List<String>) :
             "GMT%s%02d:%02d",
             if (offsetMillis >= 0) "+" else "",
             TimeUnit.MILLISECONDS.toHours(offsetMillis.toLong()),
-            TimeUnit.MILLISECONDS.toMinutes(
-                abs(offsetMillis).toLong()
-            ) % TimeUnit.HOURS.toMinutes(1)
+            TimeUnit.MILLISECONDS.toMinutes(abs(offsetMillis).toLong()) % TimeUnit.HOURS.toMinutes(1)
         )
         holder.title.text = timeZone.getDisplayName(Locale.getDefault())
         holder.itemView.setOnClickListener { holder.checkBox.toggle() }

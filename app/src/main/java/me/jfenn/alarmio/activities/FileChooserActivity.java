@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.util.Objects;
+
 import me.jfenn.alarmio.data.PreferenceData;
 
 
@@ -78,7 +80,7 @@ public class FileChooserActivity extends AppCompatActivity {
                 Cursor cursor = null;
 
                 try {
-                    cursor = getContentResolver().query(data.getData(), null, null, null, null);
+                    cursor = getContentResolver().query(Objects.requireNonNull(data.getData()), null, null, null, null);
 
                     String documentId;
                     if (cursor != null) {
@@ -111,8 +113,7 @@ public class FileChooserActivity extends AppCompatActivity {
             Cursor cursor = null;
 
             try {
-                getContentResolver().takePersistableUriPermission(data.getData(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
+                getContentResolver().takePersistableUriPermission(Objects.requireNonNull(data.getData()), Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 cursor = getContentResolver().query(data.getData(), null, null, null, null);
 
                 String documentId;
