@@ -1,7 +1,6 @@
 package me.jfenn.alarmio.activities;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.AlarmClock;
 import android.provider.Settings;
@@ -167,13 +166,9 @@ public class MainActivity extends AestheticActivity implements FragmentManager.O
      */
     private boolean isActionableIntent(Intent intent) {
         return intent.hasExtra(EXTRA_FRAGMENT)
-                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-                        && (AlarmClock.ACTION_SHOW_ALARMS.equals(intent.getAction())
-                        || AlarmClock.ACTION_SET_TIMER.equals(intent.getAction()))
-                || AlarmClock.ACTION_SET_ALARM.equals(intent.getAction())
-                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-                        && (AlarmClock.ACTION_SHOW_TIMERS.equals(intent.getAction()))));
-
+                || AlarmClock.ACTION_SHOW_ALARMS.equals(intent.getAction())
+                || AlarmClock.ACTION_SET_TIMER.equals(intent.getAction())
+                || AlarmClock.ACTION_SET_ALARM.equals(intent.getAction());
     }
 
     @Override
