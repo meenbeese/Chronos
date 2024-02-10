@@ -31,8 +31,8 @@ public class TimerService extends Service {
 
     private final IBinder binder = new LocalBinder();
 
-    private Handler handler = new Handler();
-    private Runnable runnable = new Runnable() {
+    private final Handler handler = new Handler();
+    private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
             if (timers.size() > 0) {
@@ -69,7 +69,7 @@ public class TimerService extends Service {
             notificationManager.createNotificationChannel(new NotificationChannel(Alarmio.NOTIFICATION_CHANNEL_TIMERS, "Timers", NotificationManager.IMPORTANCE_LOW));
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        String string = "";
+        StringBuilder string = new StringBuilder();
         for (TimerData timer : timers) {
             if (!timer.isSet())
                 continue;
@@ -77,13 +77,13 @@ public class TimerService extends Service {
             String time = FormatUtils.formatMillis(timer.getRemainingMillis());
             time = time.substring(0, time.length() - 3);
             inboxStyle.addLine(time);
-            string += "/" + time + "/";
+            string.append("/").append(time).append("/");
         }
 
-        if (notificationString != null && notificationString.equals(string))
+        if (notificationString != null && notificationString.equals(string.toString()))
             return null;
 
-        notificationString = string;
+        notificationString = string.toString();
 
         Intent intent = new Intent(this, MainActivity.class);
         if (timers.size() == 1)
@@ -106,10 +106,9 @@ public class TimerService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        //listener = null;
         return super.onUnbind(intent);
     }
 
-    public class LocalBinder extends Binder {
+    public static class LocalBinder extends Binder {
     }
 }

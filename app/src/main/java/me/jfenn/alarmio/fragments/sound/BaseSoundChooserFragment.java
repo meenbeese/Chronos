@@ -34,7 +34,7 @@ public abstract class BaseSoundChooserFragment extends BasePagerFragment impleme
 
     abstract static class Instantiator extends ContextFragmentInstantiator {
 
-        private WeakReference<SoundChooserListener> listener;
+        private final WeakReference<SoundChooserListener> listener;
 
         public Instantiator(Context context, SoundChooserListener listener) {
             super(context);

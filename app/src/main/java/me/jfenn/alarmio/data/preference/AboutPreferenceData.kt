@@ -9,9 +9,9 @@ import me.jfenn.attribouter.Attribouter
  */
 class AboutPreferenceData : CustomPreferenceData(R.string.title_about) {
 
-    override fun getValueName(holder: CustomPreferenceData.ViewHolder): String? = null
+    override fun getValueName(holder: ViewHolder): String? = null
 
-    override fun onClick(holder: CustomPreferenceData.ViewHolder) {
+    override fun onClick(holder: ViewHolder) {
         Attribouter.from(holder.context)
                 .withGitHubToken(null)
                 .show()

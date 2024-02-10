@@ -101,9 +101,7 @@ public class FileSoundChooserFragment extends BaseSoundChooserFragment {
         super.onSoundChosen(sound);
 
         if (sound != null) {
-            if (sounds.contains(sound))
-                sounds.remove(sound);
-
+            sounds.remove(sound);
             sounds.add(0, sound);
 
             Set<String> files = new HashSet<>();

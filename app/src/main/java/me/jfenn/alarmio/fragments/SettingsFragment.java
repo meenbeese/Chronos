@@ -1,7 +1,6 @@
 package me.jfenn.alarmio.fragments;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +53,7 @@ public class SettingsFragment extends BasePagerFragment implements Consumer {
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
-        ArrayList<BasePreferenceData> list = new ArrayList<BasePreferenceData>(Arrays.asList(
+        ArrayList<BasePreferenceData> list = new ArrayList<>(Arrays.asList(
                 new ThemePreferenceData(),
                 new ImageFilePreferenceData(PreferenceData.BACKGROUND_IMAGE, R.string.title_background_image),
                 new BooleanPreferenceData(PreferenceData.RINGING_BACKGROUND_IMAGE, R.string.title_ringing_background_image, R.string.desc_ringing_background_image),
@@ -106,7 +105,7 @@ public class SettingsFragment extends BasePagerFragment implements Consumer {
     }
 
     @Override
-    public void accept(Object o) throws Exception {
+    public void accept(Object o) {
         if (recyclerView != null && preferenceAdapter != null) {
             recyclerView.post(() -> preferenceAdapter.notifyDataSetChanged());
         }

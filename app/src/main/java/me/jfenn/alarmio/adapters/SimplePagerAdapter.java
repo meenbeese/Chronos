@@ -11,7 +11,7 @@ import me.jfenn.alarmio.interfaces.FragmentInstantiator;
 
 public class SimplePagerAdapter extends FragmentStatePagerAdapter {
 
-    private FragmentInstantiator[] fragments;
+    private final FragmentInstantiator[] fragments;
 
     public SimplePagerAdapter(Context context, FragmentManager fm, FragmentInstantiator... fragments) {
         super(fm);

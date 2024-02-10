@@ -37,8 +37,8 @@ public enum PreferenceData {
     TIMER_SOUND("%d/TIMER_SOUND", ""),
     TIME_ZONE_ENABLED("%s/TIME_ZONE_ENABLED", false);
 
-    private String name;
-    private Object defaultValue;
+    private final String name;
+    private final Object defaultValue;
 
     PreferenceData(Object value) {
         name = name();

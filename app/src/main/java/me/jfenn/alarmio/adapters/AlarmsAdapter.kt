@@ -167,7 +167,7 @@ class AlarmsAdapter(private val alarmio: Alarmio, private val recycler: Recycler
         holder.ringtoneImage.setImageResource(if (alarm.hasSound()) R.drawable.ic_ringtone else R.drawable.ic_ringtone_disabled)
         holder.ringtoneImage.alpha = if (alarm.hasSound()) 1f else 0.333f
         holder.ringtoneText.text = if (alarm.hasSound()) alarm.getSound()?.name else alarmio.getString(R.string.title_sound_none)
-        holder.ringtone.setOnClickListener { view ->
+        holder.ringtone.setOnClickListener {
             val dialog = SoundChooserDialog()
             dialog.setListener { sound ->
                 alarm.setSound(alarmio, sound)
@@ -377,7 +377,7 @@ class AlarmsAdapter(private val alarmio: Alarmio, private val recycler: Recycler
      * is no timer to be bound.
      */
     private fun getTimer(position: Int): TimerData? {
-        return if (position in (0 until timers.size))
+        return if (position in (timers.indices))
             timers[position]
         else null
     }
@@ -390,7 +390,7 @@ class AlarmsAdapter(private val alarmio: Alarmio, private val recycler: Recycler
     private fun getAlarm(position: Int): AlarmData? {
         val alarmPosition = position - timers.size
 
-        return if (alarmPosition in (0 until alarms.size))
+        return if (alarmPosition in (alarms.indices))
             alarms[alarmPosition]
         else null
 

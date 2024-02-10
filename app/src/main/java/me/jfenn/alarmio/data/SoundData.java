@@ -186,6 +186,6 @@ public class SoundData {
      */
     @Override
     public boolean equals(Object obj) {
-        return (obj != null && obj instanceof SoundData && ((SoundData) obj).url.equals(url));
+        return (obj instanceof SoundData && ((SoundData) obj).url.equals(url));
     }
 }

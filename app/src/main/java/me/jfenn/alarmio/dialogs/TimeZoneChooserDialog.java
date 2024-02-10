@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -19,7 +19,7 @@ import me.jfenn.alarmio.adapters.TimeZonesAdapter;
 
 public class TimeZoneChooserDialog extends AestheticDialog {
 
-    private String[] excludedIds = new String[0];
+    private final String[] excludedIds = new String[0];
 
     public TimeZoneChooserDialog(Context context) {
         super(context);
@@ -54,7 +54,7 @@ public class TimeZoneChooserDialog extends AestheticDialog {
                 timeZones.add(id1);
         }
 
-        Collections.sort(timeZones, (id1, id2) -> TimeZone.getTimeZone(id1).getRawOffset() - TimeZone.getTimeZone(id2).getRawOffset());
+        timeZones.sort(Comparator.comparingInt(id -> TimeZone.getTimeZone(id).getRawOffset()));
 
         recycler.setAdapter(new TimeZonesAdapter(timeZones));
 
