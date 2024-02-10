@@ -68,13 +68,14 @@ class AlertWindowPreferenceData : BasePreferenceData<AlertWindowPreferenceData.V
 
     private fun showAlert(holder: ViewHolder) {
         AlertDialog(holder.context)
-                .setTitle(holder.context.getString(R.string.info_background_permissions_title))
-                .setContent(holder.context.getString(R.string.info_background_permissions_body))
-                .setListener { _, ok ->
-                    if (ok)
-                        showActivity(holder.context)
+            .setTitle(holder.context.getString(R.string.info_background_permissions_title))
+            .setContent(holder.context.getString(R.string.info_background_permissions_body))
+            .setListener(object : AlertDialog.Listener {
+                override fun onDismiss(dialog: AlertDialog?, ok: Boolean) {
+                    if (ok) showActivity(holder.context)
                 }
-                .show()
+            })
+            .show()
     }
 
     private fun showActivity(context: Context) {

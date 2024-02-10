@@ -334,12 +334,13 @@ class AlarmsAdapter(private val alarmio: Alarmio, private val recycler: Recycler
         holder.delete.visibility = if (isExpanded) View.VISIBLE else View.GONE
         holder.delete.setOnClickListener { view ->
             AlertDialog(view.context)
-                    .setContent(alarmio.getString(R.string.msg_delete_confirmation, alarm.getName(alarmio)))
-                    .setListener { _, ok ->
-                        if (ok)
-                            alarmio.removeAlarm(alarm)
+                .setContent(alarmio.getString(R.string.msg_delete_confirmation, alarm.getName(alarmio)))
+                .setListener(object : AlertDialog.Listener {
+                    override fun onDismiss(dialog: AlertDialog?, ok: Boolean) {
+                        if (ok) alarmio.removeAlarm(alarm)
                     }
-                    .show()
+                })
+                .show()
         }
 
         holder.repeat.setTextColor(textColorPrimary)
