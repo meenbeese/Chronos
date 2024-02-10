@@ -3,12 +3,11 @@ apply plugin: 'kotlin-android'
 
 android {
     namespace = "me.jfenn.alarmio"
-    compileSdk 30
+    compileSdk 34
     defaultConfig {
-        applicationId "me.jfenn.alarmio"
+        applicationId = "me.jfenn.alarmio"
         minSdk 24
-        //noinspection ExpiredTargetSdkVersion
-        targetSdk 30
+        targetSdk 34
         versionCode 21
         versionName "1.0.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -34,7 +33,6 @@ android {
         gplay {
             dimension "distribution"
         }
-
         oss {
             dimension "distribution"
         }
