@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 
 android {
     namespace = "me.jfenn.alarmio"
-    compileSdk 34
+    compileSdk = 34
     defaultConfig {
         applicationId = "me.jfenn.alarmio"
         minSdk 24
@@ -43,14 +43,9 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
+
     lint {
         abortOnError false
-    }
-}
-
-tasks.register('printVersionName') {
-    doLast {
-        println android.defaultConfig.versionName
     }
 }
 
