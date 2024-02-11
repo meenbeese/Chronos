@@ -13,9 +13,9 @@ import me.jfenn.alarmio.data.PreferenceData
  */
 class ImageFilePreferenceData(private val preference: PreferenceData, name: Int) : CustomPreferenceData(name) {
 
-    override fun getValueName(holder: CustomPreferenceData.ViewHolder): String = ""
+    override fun getValueName(holder: ViewHolder): String = ""
 
-    override fun onClick(holder: CustomPreferenceData.ViewHolder) {
+    override fun onClick(holder: ViewHolder) {
         holder.context.startActivity(Intent(holder.context, FileChooserActivity::class.java).apply {
             putExtra(FileChooserActivity.EXTRA_PREFERENCE, preference)
             putExtra(FileChooserActivity.EXTRA_TYPE, "image/*")
