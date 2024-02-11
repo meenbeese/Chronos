@@ -58,19 +58,21 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    // support libraries
+    // Core
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
+
+    // Material
     implementation 'com.google.android.material:material:1.1.0'
 
-    // media dependencies
+    // Media
     implementation 'com.google.android.exoplayer:exoplayer-core:2.11.3'
     implementation 'com.google.android.exoplayer:exoplayer-hls:2.11.3'
 
-    // uncategorized libraries
+    // Other
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'com.afollestad:aesthetic:0.7.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.6'
@@ -78,6 +80,7 @@ dependencies {
     implementation 'me.jahirfiquitiva:FABsMenu:1.1.4'
     implementation 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
 
+    // Jfenn
     implementation 'me.jfenn:timedatepickers:0.0.6'
     implementation 'me.jfenn:Attribouter:0.1.6'
     implementation 'me.jfenn:SlideActionView:0.0.2'
