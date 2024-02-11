@@ -114,8 +114,8 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
         textColorPrimarySubscription?.dispose()
     }
 
-    override fun getTitle(context: Context): String {
-        return context.getString(R.string.title_settings)
+    override fun getTitle(context: Context?): String? {
+        return context?.getString(R.string.title_settings)
     }
 
     @SuppressLint("NotifyDataSetChanged")

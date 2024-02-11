@@ -40,7 +40,7 @@ class ClockFragment : BasePagerFragment() {
         return view
     }
 
-    override fun getTitle(context: Context): String {
+    override fun getTitle(context: Context?): String? {
         return timezone!!
     }
 
