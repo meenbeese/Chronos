@@ -515,25 +515,14 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
 
     @Override
     public void onPlayerError(ExoPlaybackException error) {
-        String lastStream = currentStream;
         currentStream = null;
         Exception exception;
         switch (error.type) {
-            case ExoPlaybackException.TYPE_RENDERER:
-                exception = error.getRendererException();
-                break;
-            case ExoPlaybackException.TYPE_SOURCE:
-                if (lastStream != null && error.getSourceException().getMessage().contains("does not start with the #EXTM3U header")) {
-                    playStream(lastStream, SoundData.TYPE_RADIO, progressiveMediaSourceFactory);
-                    return;
-                }
-                exception = error.getSourceException();
-                break;
-            case ExoPlaybackException.TYPE_UNEXPECTED:
-                exception = error.getUnexpectedException();
-                break;
-            default:
+            case ExoPlaybackException.TYPE_RENDERER -> exception = error.getRendererException();
+            case ExoPlaybackException.TYPE_UNEXPECTED -> exception = error.getUnexpectedException();
+            default -> {
                 return;
+            }
         }
 
         exception.printStackTrace();

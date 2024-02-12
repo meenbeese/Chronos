@@ -18,7 +18,6 @@ public class SoundData {
     private static final String SEPARATOR = ":AlarmioSoundData:";
 
     public static final String TYPE_RINGTONE = "ringtone";
-    public static final String TYPE_RADIO = "radio";
 
     private final String name;
     private final String type;
