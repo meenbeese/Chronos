@@ -38,13 +38,6 @@
     <string name="word_join">a</string>
     <string name="title_snooze_custom">Vlastní…</string>
     <string name="msg_snoozed_until">Odložit zvonění do %s</string>
-    <string name="title_radio_test">Test</string>
-    <string name="title_radio_create">Vytvořit</string>
-    <string name="msg_radio_create">Vytvořit nové rádio</string>
-    <string name="msg_radio_url">Vlož URL rádia sem (\'.m3u8\')…</string>
-    <string name="msg_radio_previous">Vybrat naposled použité rádio</string>
-    <string name="title_radio_stop">Stop</string>
-    <string name="title_radio">Rádio</string>
     <string name="title_time_zones">Časové zóny</string>
     <string name="title_behavior">Chování</string>
     <string name="title_default_alarm_ringtone">Výchozí zvuk budíku</string>

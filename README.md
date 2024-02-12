@@ -21,7 +21,7 @@ Alarmio is a simple alarm clock that implements many useful features while follo
 - Dark, Light, Amoled themes
 - Granular controls everywhere
 - Unique, minimal, efficient design,
-- Custom backgrounds & Internet radio
+- Custom audio files & backgrounds
 - Portrait and landscape orientation
 - Countless default ringtones
 

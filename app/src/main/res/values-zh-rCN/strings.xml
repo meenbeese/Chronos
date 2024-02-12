@@ -38,13 +38,6 @@
   <string name="word_join">和</string>
   <string name="title_snooze_custom">自定义…</string>
   <string name="msg_snoozed_until">打盹直到 %s</string>
-  <string name="title_radio_test">测试</string>
-  <string name="title_radio_create">创建</string>
-  <string name="msg_radio_create">创建一个新广播</string>
-  <string name="msg_radio_url">粘贴 \'.m3u8\' 广播链接到此处…</string>
-  <string name="msg_radio_previous">选择以前使用的广播</string>
-  <string name="title_radio_stop">停止</string>
-  <string name="title_radio">广播</string>
   <string name="title_time_zones">时区</string>
   <string name="title_behavior">行为</string>
   <string name="title_default_alarm_ringtone">默认闹钟铃声</string>

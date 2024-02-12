@@ -36,13 +36,6 @@
     <string name="word_join">és</string>
     <string name="title_snooze_custom">Egyéni…</string>
     <string name="msg_snoozed_until">Szundi eddig: %s</string>
-    <string name="title_radio_test">Teszt</string>
-    <string name="title_radio_create">Létrehozás</string>
-    <string name="msg_radio_create">Új rádió létrehozása</string>
-    <string name="msg_radio_url">Illeszen be ide egy „.m3u8” rádio URL-t…</string>
-    <string name="msg_radio_previous">Válasszon egy korábban használt rádiót</string>
-    <string name="title_radio_stop">Leállítás</string>
-    <string name="title_radio">Rádió</string>
     <string name="title_time_zones">Időzónák</string>
     <string name="title_behavior">Viselkedés</string>
     <string name="title_default_alarm_ringtone">Alapértelmezett ébresztési csengőhang</string>
