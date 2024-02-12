@@ -17,7 +17,7 @@ class ImageFilePreferenceData(private val preference: PreferenceData, name: Int)
 
     override fun onClick(holder: ViewHolder) {
         holder.context.startActivity(Intent(holder.context, FileChooserActivity::class.java).apply {
-            putExtra(FileChooserActivity.EXTRA_PREFERENCE, preference)
+            putExtra(FileChooserActivity.EXTRA_PREF, preference)
             putExtra(FileChooserActivity.EXTRA_TYPE, "image/*")
         })
     }
