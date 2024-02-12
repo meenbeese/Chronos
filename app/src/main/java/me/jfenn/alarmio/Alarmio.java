@@ -21,16 +21,12 @@ import androidx.multidex.MultiDexApplication;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AutoSwitchMode;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.audio.AudioAttributes;
 import com.google.android.exoplayer2.source.MediaSourceFactory;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
@@ -504,18 +500,6 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
     }
 
     @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
-    }
-
-    @Override
-    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-    }
-
-    @Override
-    public void onLoadingChanged(boolean isLoading) {
-    }
-
-    @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         switch (playbackState) {
             case Player.STATE_BUFFERING:
@@ -527,14 +511,6 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
                 currentStream = null;
                 break;
         }
-    }
-
-    @Override
-    public void onRepeatModeChanged(int repeatMode) {
-    }
-
-    @Override
-    public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
     }
 
     @Override
@@ -562,18 +538,6 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
 
         exception.printStackTrace();
         Toast.makeText(this, exception.getClass().getName() + ": " + exception.getMessage(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPositionDiscontinuity(int reason) {
-    }
-
-    @Override
-    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-    }
-
-    @Override
-    public void onSeekProcessed() {
     }
 
     public void requestPermissions(String... permissions) {
