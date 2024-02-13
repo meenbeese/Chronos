@@ -30,13 +30,6 @@
     <string name="word_join">y</string>
     <string name="title_snooze_custom">Personalizado…</string>
     <string name="msg_snoozed_until">Dormitar hasta %s</string>
-    <string name="title_radio_test">Testear</string>
-    <string name="title_radio_create">Crear</string>
-    <string name="msg_radio_create">Crear un nuevo Radio</string>
-    <string name="msg_radio_url">Pega un \'.m3u8\' URL de Radio aqui…</string>
-    <string name="msg_radio_previous">Escoje un radio previamente usado </string>
-    <string name="title_radio_stop">Para</string>
-    <string name="title_radio">Radio</string>
     <string name="title_time_zones">Zonas de Tiempo</string>
     <string name="title_behavior">Comportamiento</string>
     <string name="title_default_alarm_ringtone">Tono de Alarma por Defecto</string>

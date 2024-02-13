@@ -19,7 +19,6 @@ import me.jfenn.alarmio.adapters.SimplePagerAdapter
 import me.jfenn.alarmio.data.SoundData
 import me.jfenn.alarmio.fragments.sound.AlarmSoundChooserFragment
 import me.jfenn.alarmio.fragments.sound.FileSoundChooserFragment
-import me.jfenn.alarmio.fragments.sound.RadioSoundChooserFragment
 import me.jfenn.alarmio.fragments.sound.RingtoneSoundChooserFragment
 import me.jfenn.alarmio.interfaces.SoundChooserListener
 
@@ -58,17 +57,14 @@ class SoundChooserDialog : DialogFragment(), SoundChooserListener {
         val viewPager = view?.findViewById<ViewPager>(R.id.viewPager)
         val alarmFragment = AlarmSoundChooserFragment()
         val ringtoneFragment = RingtoneSoundChooserFragment()
-        val radioFragment = RadioSoundChooserFragment()
         val fileFragment = FileSoundChooserFragment()
         alarmFragment.setListener(this)
         ringtoneFragment.setListener(this)
-        radioFragment.setListener(this)
         fileFragment.setListener(this)
         viewPager?.adapter = SimplePagerAdapter(
             context, childFragmentManager,
             AlarmSoundChooserFragment.Instantiator(view?.context, this),
             RingtoneSoundChooserFragment.Instantiator(view?.context, this),
-            RadioSoundChooserFragment.Instantiator(view?.context, this),
             FileSoundChooserFragment.Instantiator(view?.context, this)
         )
         tabLayout?.setupWithViewPager(viewPager)
