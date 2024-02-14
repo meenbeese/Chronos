@@ -243,15 +243,9 @@ public class StopwatchService extends Service {
             StopwatchService service = serviceReference.get();
             if (intent != null && intent.getAction() != null && service != null) {
                 switch (intent.getAction()) {
-                    case ACTION_RESET:
-                        service.reset();
-                        break;
-                    case ACTION_TOGGLE:
-                        service.toggle();
-                        break;
-                    case ACTION_LAP:
-                        service.lap();
-                        break;
+                    case ACTION_RESET -> service.reset();
+                    case ACTION_TOGGLE -> service.toggle();
+                    case ACTION_LAP -> service.lap();
                 }
             }
         }

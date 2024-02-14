@@ -29,12 +29,12 @@ public class TimerData implements Parcelable {
         try {
             duration = PreferenceData.TIMER_DURATION.getSpecificValue(context, id);
         } catch (ClassCastException e) {
-            duration = (int) PreferenceData.TIMER_DURATION.getSpecificValue(context, id);
+            duration = PreferenceData.TIMER_DURATION.getSpecificValue(context, id);
         }
         try {
             endTime = PreferenceData.TIMER_END_TIME.getSpecificValue(context, id);
         } catch (ClassCastException e) {
-            endTime = (int) PreferenceData.TIMER_END_TIME.getSpecificValue(context, id);
+            endTime = PreferenceData.TIMER_END_TIME.getSpecificValue(context, id);
         }
 
         isVibrate = PreferenceData.TIMER_VIBRATE.getSpecificValue(context, id);

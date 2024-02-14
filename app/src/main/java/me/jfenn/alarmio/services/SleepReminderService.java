@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat;
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import me.jfenn.alarmio.Alarmio;
@@ -80,7 +81,7 @@ public class SleepReminderService extends Service {
 
                 startForeground(540, builder.setContentTitle(getString(R.string.title_sleep_reminder))
                         .setContentText(String.format(getString(R.string.msg_sleep_reminder),
-                                FormatUtils.formatUnit(this, (int) TimeUnit.MILLISECONDS.toMinutes(nextAlarm.getNext().getTimeInMillis() - System.currentTimeMillis()))))
+                                FormatUtils.formatUnit(this, (int) TimeUnit.MILLISECONDS.toMinutes(Objects.requireNonNull(nextAlarm.getNext()).getTimeInMillis() - System.currentTimeMillis()))))
                         .setSmallIcon(R.drawable.ic_notification_sleep)
                         .setPriority(NotificationCompat.PRIORITY_LOW)
                         .setCategory(NotificationCompat.CATEGORY_SERVICE)
@@ -107,7 +108,8 @@ public class SleepReminderService extends Service {
             AlarmData nextAlarm = getNextWakeAlarm(alarmio);
             if (nextAlarm != null) {
                 Calendar nextTrigger = nextAlarm.getNext();
-                nextTrigger.set(Calendar.MINUTE, nextTrigger.get(Calendar.MINUTE) - (int) TimeUnit.MILLISECONDS.toMinutes((long) PreferenceData.SLEEP_REMINDER_TIME.getValue(alarmio)));
+                assert nextTrigger != null;
+                nextTrigger.set(Calendar.MINUTE, nextTrigger.get(Calendar.MINUTE) - (int) TimeUnit.MILLISECONDS.toMinutes(PreferenceData.SLEEP_REMINDER_TIME.getValue(alarmio)));
 
                 if (Calendar.getInstance().after(nextTrigger))
                     return nextAlarm;

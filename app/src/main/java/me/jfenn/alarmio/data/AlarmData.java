@@ -37,7 +37,7 @@ public class AlarmData implements Parcelable {
         this.id = id;
         name = PreferenceData.ALARM_NAME.getSpecificOverriddenValue(context, getName(context), id);
         time = Calendar.getInstance();
-        time.setTimeInMillis((long) PreferenceData.ALARM_TIME.getSpecificValue(context, id));
+        time.setTimeInMillis(PreferenceData.ALARM_TIME.getSpecificValue(context, id));
         isEnabled = PreferenceData.ALARM_ENABLED.getSpecificValue(context, id);
         for (int i = 0; i < 7; i++) {
             days[i] = PreferenceData.ALARM_DAY_ENABLED.getSpecificValue(context, id, i);
@@ -262,11 +262,12 @@ public class AlarmData implements Parcelable {
      *
      * @param context       An active context instance.
      * @param manager       The AlarmManager to schedule the alarm on.
-     * @return              The next [Date](https://developer.android.com/reference/java/util/Date)
+     * @return              The next [Date](<a href="https://developer.android.com/reference/java/util/Date">...</a>)
      *                      at which the alarm will ring.
      */
     public Date set(Context context, AlarmManager manager) {
         Calendar nextTime = getNext();
+        assert nextTime != null;
         setAlarm(context, manager, nextTime.getTimeInMillis());
         return nextTime.getTime();
     }
@@ -346,7 +347,7 @@ public class AlarmData implements Parcelable {
         return 0;
     }
 
-    public static final Creator<AlarmData> CREATOR = new Creator<AlarmData>() {
+    public static final Creator<AlarmData> CREATOR = new Creator<>() {
         @Override
         public AlarmData createFromParcel(Parcel in) {
             return new AlarmData(in);

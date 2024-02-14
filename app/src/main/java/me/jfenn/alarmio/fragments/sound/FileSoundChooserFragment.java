@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,14 +48,12 @@ public class FileSoundChooserFragment extends BaseSoundChooserFragment {
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        view.findViewById(R.id.addAudioFile).setOnClickListener(v -> {
-            launchFileChooser(TYPE_AUDIO);
-        });
+        view.findViewById(R.id.addAudioFile).setOnClickListener(v -> launchFileChooser());
 
         RecyclerView recycler = view.findViewById(R.id.recycler);
 
-        List<String> previousFiles = new ArrayList<>(prefs.getStringSet(PREF_FILES, new HashSet<String>()));
-        Collections.sort(previousFiles, (o1, o2) -> {
+        List<String> previousFiles = new ArrayList<>(prefs.getStringSet(PREF_FILES, new HashSet<>()));
+        previousFiles.sort((o1, o2) -> {
             try {
                 return Integer.parseInt(o1.split(SEPARATOR)[0]) - Integer.parseInt(o2.split(SEPARATOR)[0]);
             } catch (NumberFormatException e) {
@@ -79,9 +76,9 @@ public class FileSoundChooserFragment extends BaseSoundChooserFragment {
         return view;
     }
 
-    private void launchFileChooser(String type) {
+    private void launchFileChooser() {
         Intent intent = new Intent(getContext(), FileChooserActivity.class);
-        intent.putExtra(FileChooserActivity.EXTRA_TYPE, type);
+        intent.putExtra(FileChooserActivity.EXTRA_TYPE, FileSoundChooserFragment.TYPE_AUDIO);
         startActivityForResult(intent, REQUEST_AUDIO);
     }
 
@@ -117,6 +114,7 @@ public class FileSoundChooserFragment extends BaseSoundChooserFragment {
 
     @Override
     public String getTitle(Context context) {
+        assert context != null;
         return context.getString(R.string.title_files);
     }
 
@@ -135,6 +133,7 @@ public class FileSoundChooserFragment extends BaseSoundChooserFragment {
 
         @Override
         public String getTitle(Context context, int position) {
+            assert context != null;
             return context.getString(R.string.title_files);
         }
     }

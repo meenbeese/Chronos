@@ -52,7 +52,7 @@ public enum PreferenceData {
 
     public String getName(@Nullable Object... args) {
         if (args != null && args.length > 0)
-            return String.format(name, (Object[]) args);
+            return String.format(name, args);
         else return name;
     }
 
@@ -65,7 +65,7 @@ public enum PreferenceData {
     }
 
     public <T> T getValue(Context context) {
-        return getSpecificOverriddenValue(context, (T) getDefaultValue(), (Object[]) null);
+        return getSpecificOverriddenValue(context, getDefaultValue(), (Object[]) null);
     }
 
     public <T> T getValue(Context context, @Nullable T defaultValue) {
@@ -73,7 +73,7 @@ public enum PreferenceData {
     }
 
     public <T> T getSpecificValue(Context context, @Nullable Object... args) {
-        return getSpecificOverriddenValue(context, (T) getDefaultValue(), args);
+        return getSpecificOverriddenValue(context, getDefaultValue(), args);
     }
 
     public <T> T getSpecificOverriddenValue(Context context, @Nullable T defaultValue, @Nullable Object... args) {
@@ -149,8 +149,7 @@ public enum PreferenceData {
 
         if (value == null)
             editor.remove(name + (defaultValue != null && defaultValue instanceof Object[] ? "-length" : ""));
-        else if (value instanceof Object[]) {
-            Object[] array = (Object[]) value;
+        else if (value instanceof Object[] array) {
 
             for (int i = 0; i < array.length; i++) {
                 Object item = array[i];

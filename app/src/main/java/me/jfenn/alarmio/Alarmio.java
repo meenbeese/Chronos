@@ -35,6 +35,7 @@ import com.luckycatlabs.sunrisesunset.dto.Location;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import me.jfenn.alarmio.data.AlarmData;
@@ -69,7 +70,6 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
 
     private SimpleExoPlayer player;
     private HlsMediaSource.Factory hlsMediaSourceFactory;
-    private ProgressiveMediaSource.Factory progressiveMediaSourceFactory;
     private String currentStream;
 
     @Override
@@ -87,7 +87,7 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
 
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "exoplayer2example"), null);
         hlsMediaSourceFactory = new HlsMediaSource.Factory(dataSourceFactory);
-        progressiveMediaSourceFactory = new ProgressiveMediaSource.Factory(dataSourceFactory);
+        ProgressiveMediaSource.Factory progressiveMediaSourceFactory = new ProgressiveMediaSource.Factory(dataSourceFactory);
 
         int alarmLength = PreferenceData.ALARM_LENGTH.getValue(this);
         for (int id = 0; id < alarmLength; id++) {
@@ -368,7 +368,8 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
         if (sunsetCalculator == null && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             try {
                 LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-                android.location.Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+                android.location.Location location = locationManager.getLastKnownLocation(Objects.requireNonNull(locationManager.getBestProvider(new Criteria(), false)));
+                assert location != null;
                 sunsetCalculator = new SunriseSunsetCalculator(new Location(location.getLatitude(), location.getLongitude()), TimeZone.getDefault().getID());
             } catch (NullPointerException ignored) {
             }
