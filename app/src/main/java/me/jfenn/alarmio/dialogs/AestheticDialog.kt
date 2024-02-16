@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatDialog
 import com.afollestad.aesthetic.Aesthetic.Companion.get
 
 
-abstract class AestheticDialog(context: Context?) : AppCompatDialog(context) {
+abstract class AestheticDialog(context: Context?) : AppCompatDialog(context!!) {
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
