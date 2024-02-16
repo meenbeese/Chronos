@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <about>
     <AppWedge repo="fennifith/Alarmio">
-
         <LinkWedge
             id="github"
             url="https://jfenn.me/redirects/?t=github&amp;d=Alarmio" />
@@ -19,12 +18,6 @@
             <LinkWedge
                 id="github"
                 url="https://jfenn.me/redirects/?t=github" />
-
-            <LinkWedge
-                name="Twitter"
-                icon="@drawable/ic_twitter"
-                url="https://jfenn.me/redirects/?t=twitter" />
-
         </ContributorWedge>
 
         <ContributorWedge
@@ -42,17 +35,6 @@
             blog="https://pratti.design/"
             position="3"
             task="^Design Consultant">
-
-            <LinkWedge
-                name="Google Plus"
-                icon="@drawable/ic_gplus"
-                url="https://plus.google.com/+EduardoPratti" />
-
-            <LinkWedge
-                name="Twitter"
-                icon="@drawable/ic_twitter"
-                url="https://twitter.com/edpratti" />
-
         </ContributorWedge>
 
         <ContributorWedge
@@ -61,17 +43,6 @@
             bio="Makes things and stuff. Creator of Candycons, PixBit, Cubllow, and Wafer."
             login="zavukodlak"
             task="^Design Consultant">
-
-            <LinkWedge
-                name="Google Play"
-                icon="@drawable/ic_gplay"
-                url="https://play.google.com/store/apps/dev?id=6941105890231522296" />
-
-            <LinkWedge
-                name="Twitter"
-                icon="@drawable/ic_twitter"
-                url="https://twitter.com/zavukodlak" />
-
         </ContributorWedge>
 
         <ContributorWedge
@@ -81,12 +52,6 @@
             blog="https://rohitkparida.github.io/"
             login="rohitkparida"
             task="^Illustrator">
-
-            <LinkWedge
-                name="Google Plus"
-                icon="@drawable/ic_gplus"
-                url="https://plus.google.com/+RohitParida" />
-
         </ContributorWedge>
 
         <ContributorWedge
@@ -96,15 +61,7 @@
             blog="https://alexandrepiveteau.ch"
             login="alexandrepiveteau"
             task="^Open Source Contributor">
-
-            <LinkWedge
-                name="Twitter"
-                icon="@drawable/ic_twitter"
-                url="https://twitter.com/agpiveteau" />
-
         </ContributorWedge>
-
-		<!-- already in <translators> section -->
 
         <ContributorWedge
             hidden="true"
@@ -124,7 +81,6 @@
 
     </ContributorsWedge>
     <TranslatorsWedge>
-
         <TranslatorWedge
             name="Frieder Zi"
             blog="https://plus.google.com/109963929934858074229"
@@ -148,10 +104,8 @@
             blog="^https://github.com/yzqzss"
             locales="zh"
             login="yzqzss" />
-
     </TranslatorsWedge>
     <LicensesWedge>
-
         <LicenseWedge
             description="^A fast, easy to use, dynamic theme engine. Powered by Rx and Kotlin, for Android apps."
             license="apache-2.0"
@@ -190,12 +144,7 @@
             repo="fennifith/TimeDatePicker" />
 
         <LicenseWedge
-            description="An easy to use crash reporting library for Android."
-            repo="fennifith/Crasher" />
-
-        <LicenseWedge
             description="An image loading and caching library for Android focused on smooth scrolling."
             repo="bumptech/glide" />
-
     </LicensesWedge>
 </about>
