@@ -369,7 +369,6 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
             try {
                 LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                 android.location.Location location = locationManager.getLastKnownLocation(Objects.requireNonNull(locationManager.getBestProvider(new Criteria(), false)));
-                assert location != null;
                 sunsetCalculator = new SunriseSunsetCalculator(new Location(location.getLatitude(), location.getLongitude()), TimeZone.getDefault().getID());
             } catch (NullPointerException ignored) {
             }
