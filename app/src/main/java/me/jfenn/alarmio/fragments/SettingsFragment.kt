@@ -21,6 +21,7 @@ import me.jfenn.alarmio.adapters.PreferenceAdapter
 import me.jfenn.alarmio.data.PreferenceData
 import me.jfenn.alarmio.data.preference.AboutPreferenceData
 import me.jfenn.alarmio.data.preference.AlertWindowPreferenceData
+import me.jfenn.alarmio.data.preference.BasePreferenceData
 import me.jfenn.alarmio.data.preference.BatteryOptimizationPreferenceData
 import me.jfenn.alarmio.data.preference.BooleanPreferenceData
 import me.jfenn.alarmio.data.preference.ImageFilePreferenceData
@@ -50,7 +51,7 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
                 DividerItemDecoration.VERTICAL
             )
         )
-        val list = ArrayList(
+        val dataList = ArrayList(
             listOf(
                 ThemePreferenceData(),
                 ImageFilePreferenceData(
@@ -94,10 +95,10 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
                 )
             )
         )
-        list.add(0, BatteryOptimizationPreferenceData())
-        list.add(0, AlertWindowPreferenceData())
-        list.add(AboutPreferenceData())
-        preferenceAdapter = PreferenceAdapter(list)
+        dataList.add(0, BatteryOptimizationPreferenceData())
+        dataList.add(0, AlertWindowPreferenceData())
+        dataList.add(AboutPreferenceData())
+        preferenceAdapter = PreferenceAdapter(dataList as ArrayList<BasePreferenceData<BasePreferenceData.ViewHolder>>)
         recyclerView?.adapter = preferenceAdapter
         colorPrimarySubscription = get()
             .colorPrimary()
