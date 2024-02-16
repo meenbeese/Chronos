@@ -19,6 +19,7 @@ import me.jfenn.alarmio.R
 import me.jfenn.alarmio.data.PreferenceData
 import me.jfenn.alarmio.data.SoundData
 import me.jfenn.alarmio.fragments.TimerFragment
+import me.jfenn.alarmio.interfaces.SoundChooserListener
 
 import java.util.concurrent.TimeUnit
 
@@ -69,12 +70,14 @@ class TimerDialog(context: Context, private val manager: FragmentManager) :
 
         findViewById<View>(R.id.ringtone)?.setOnClickListener {
             val dialog = SoundChooserDialog()
-            dialog.setListener { sound: SoundData? ->
-                ringtone = sound
-                ringtoneImage?.setImageResource(if (sound != null) R.drawable.ic_ringtone else R.drawable.ic_ringtone_disabled)
-                ringtoneImage?.alpha = if (sound != null) 1f else 0.333f
-                if (sound != null) ringtoneText?.text = sound.name else ringtoneText?.setText(R.string.title_sound_none)
-            }
+            dialog.setListener(object : SoundChooserListener {
+                override fun onSoundChosen(sound: SoundData?) {
+                    ringtone = sound
+                    ringtoneImage?.setImageResource(if (sound != null) R.drawable.ic_ringtone else R.drawable.ic_ringtone_disabled)
+                    ringtoneImage?.alpha = if (sound != null) 1f else 0.333f
+                    if (sound != null) ringtoneText?.text = sound.name else ringtoneText?.setText(R.string.title_sound_none)
+                }
+            })
             dialog.show(manager, "")
         }
         findViewById<View>(R.id.vibrate)!!.setOnClickListener { v: View ->

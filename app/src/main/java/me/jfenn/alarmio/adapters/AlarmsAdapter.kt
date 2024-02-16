@@ -34,10 +34,12 @@ import com.afollestad.aesthetic.Aesthetic
 import me.jfenn.alarmio.Alarmio
 import me.jfenn.alarmio.R
 import me.jfenn.alarmio.data.AlarmData
+import me.jfenn.alarmio.data.SoundData
 import me.jfenn.alarmio.data.TimerData
 import me.jfenn.alarmio.dialogs.AestheticTimeSheetPickerDialog
 import me.jfenn.alarmio.dialogs.AlertDialog
 import me.jfenn.alarmio.dialogs.SoundChooserDialog
+import me.jfenn.alarmio.interfaces.SoundChooserListener
 import me.jfenn.alarmio.utils.FormatUtils
 import me.jfenn.alarmio.views.DaySwitch
 import me.jfenn.alarmio.views.ProgressLineView
@@ -170,10 +172,12 @@ class AlarmsAdapter(private val alarmio: Alarmio, private val recycler: Recycler
         holder.ringtoneText.text = if (alarm.hasSound()) alarm.getSound()?.name else alarmio.getString(R.string.title_sound_none)
         holder.ringtone.setOnClickListener {
             val dialog = SoundChooserDialog()
-            dialog.setListener { sound ->
-                alarm.setSound(alarmio, sound)
-                onBindAlarmViewHolderToggles(holder, alarm)
-            }
+            dialog.setListener(object : SoundChooserListener {
+                override fun onSoundChosen(sound: SoundData?) {
+                    alarm.setSound(alarmio, sound)
+                    onBindAlarmViewHolderToggles(holder, alarm)
+                }
+            })
             dialog.show(fragmentManager, null)
         }
 

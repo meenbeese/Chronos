@@ -75,7 +75,7 @@ class SoundChooserDialog : DialogFragment(), SoundChooserListener {
         this.listener = listener
     }
 
-    override fun onSoundChosen(sound: SoundData) {
+    override fun onSoundChosen(sound: SoundData?) {
         listener?.onSoundChosen(sound)
         dismiss()
     }

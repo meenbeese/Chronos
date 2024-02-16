@@ -4,6 +4,7 @@ import me.jfenn.alarmio.R
 import me.jfenn.alarmio.data.PreferenceData
 import me.jfenn.alarmio.data.SoundData
 import me.jfenn.alarmio.dialogs.SoundChooserDialog
+import me.jfenn.alarmio.interfaces.SoundChooserListener
 
 
 /**
@@ -25,10 +26,12 @@ class RingtonePreferenceData(private val preference: PreferenceData, name: Int) 
     override fun onClick(holder: ViewHolder) {
         holder.alarmio?.fragmentManager?.let { manager ->
             val dialog = SoundChooserDialog()
-            dialog.setListener { sound ->
-                preference.setValue(holder.context, sound?.toString())
-                bindViewHolder(holder)
-            }
+            dialog.setListener(object : SoundChooserListener {
+                override fun onSoundChosen(sound: SoundData?) {
+                    preference.setValue(holder.context, sound?.toString())
+                    bindViewHolder(holder)
+                }
+            })
             dialog.show(manager, null)
         }
     }
