@@ -119,7 +119,7 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
             assert timer != null;
             isVibrate = timer.isVibrate;
             if (timer.hasSound())
-                sound = timer.getSound();
+                sound = timer.sound;
         } else finish();
 
         date.setText(FormatUtils.format(new Date(), FormatUtils.FORMAT_DATE + ", " + FormatUtils.getShortFormat(this)));
