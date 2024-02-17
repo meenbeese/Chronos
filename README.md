@@ -30,6 +30,11 @@
 - Portrait and landscape orientation
 - Countless default ringtones
 
+## 📲 Installation
+
+[<img width='200' height='80' alt='F-Droid Download' src='https://fdroid.gitlab.io/artwork/badge/get-it-on.png'>](https://f-droid.org/packages/me.jfenn.Alarmio/)
+[<img width='200' height='80' alt='APK Download' src='https://user-images.githubusercontent.com/114044633/223920025-83687de0-e463-4c5d-8122-e06e4bb7d40c.png'>]((../../releases/))
+
 ## ⚙️ Permissions
 
 - `SET_ALARM`, `VIBRATE`, `WAKE_LOCK`: necessary for the core functionality of the app
@@ -39,41 +44,34 @@
 - `FOREGROUND_SERVICE`: notifying you to sleep - see the "Sleep Reminder" option in the settings
 - `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`: please see [dontkillmyapp.com](https://dontkillmyapp.com/)
 
-## 📲 Installation
+## 📝 Contribute to Alarmio
 
-[<img width='200' height='80' alt='F-Droid Download' src='https://fdroid.gitlab.io/artwork/badge/get-it-on.png'>](https://f-droid.org/packages/me.jfenn.Alarmio/)
-[<img width='200' height='80' alt='APK Download' src='https://user-images.githubusercontent.com/114044633/223920025-83687de0-e463-4c5d-8122-e06e4bb7d40c.png'>]((../../releases/))
+Alarmio is a user-driven project. We welcome any contribution, big or small.
 
-## 📝 How to Contribute
+- **🖥️ Development:** Fix bugs, implement features, or research issues. Open a PR for review.
+- **🍥 Design:** Improve interfaces, including accessibility and usability.
+- **🤝 User Support:** Respond to issues and identify duplicates.
+- **📂 Issue Reporting:** Report bugs and edge cases with relevant info.
+- **🌍 Localization:** Translate Alarmio if it doesn't support your language.
+- **📄 Documentation:** Write guides, explanations, README updates, user tutorials, or add comments to undocumented functions.
 
-Alarmio is a user-driven project. All contributors, including myself, are motivated by personal needs and ideals. We don’t have a professional support line or paid development team. Any contribution, regardless of size or format, is welcome. **If you need help or feedback, feel free to reach out.**
+### ✅ Other Support Methods
 
-- **🖥️ Development:** Help by fixing bugs, implementing features, or researching issues. Review CONTRIBUTING.md, then open a PR for review.
-- **🍥 Designing:** Suggestions to improve interfaces, including accessibility and usability, are welcome.
-- **🤝 Helping users:** Respond to issues and identify duplicates to reduce workload on maintainers.
-- **📂 Filing issues:** Report bugs and edge cases with relevant info (device name, Android version, Alarmio version, description). Screen recordings and logcat info are helpful.
-- **🌍 Localization:** If Alarmio does not support your language, consider translating it! In-app text is in strings.xml. Copy this file to ../values-{lang}/strings.xml when translated.
-- **📄 Documentation:** Write guides and explanations about Alarmio, its usage, and how to contribute. This can include README updates, user tutorials, or adding comments to undocumented functions.
+If you can't contribute directly, consider these options:
 
-### ✅ Other ways of support
-
-Not everyone has the time or technical knowledge to help out with many of the above - we understand that. With this in mind, here are a few other ways to help us out that don't require as much time or dedication.
-
-- **💈 Advertising:** Spread the word! If you like what we're doing here, getting more people involved is the best way to help improve it. Suggestions include: posting on social media... writing a blog post... yeah, right, you get the idea.
-- **💵 Donations:** I've invested a lot of time into this app - as have many of its contributors. Many of us have paying jobs, difficult classes, or otherwise important life occurrences that prevent us from putting all our time into software.
-- **📢 Politics:** Yep, you're reading this right. Free software is, in fact, a very political thing - and I'd like to think we're taking the right approach. If you can, consider supporting FOSS applications and services over proprietary ones.
+- **💈 Advertising:** Spread the word about Alarmio.
+- **💵 Donations:** Support us financially if you can.
+- **📢 Advocacy:** Support FOSS services over closed ones.
 
 ## ✏️ Acknowledgements
 
-I would like to give a huge thanks to all of Alarmio's [contributors](https://github.com/fennifith/Alarmio/graphs/contributors), the developers that write the software we depend on, and the users that support our goal. Also, props to [F-Droid](https://f-droid.org/en/about/) for maintaining the free software repository that distributes our app and many others like it.
-
-I have received a lot of thanks from various people for the time I've put into this, and that thought helps me get up in the morning. If someone fixes a bug you encountered, helps you out in an issue, or implements a feature you enjoy, please consider sending them a tip or a thank-you note to let them know that you appreciate their time :)
+Thanks to Alarmio’s contributors, the developers of our dependencies, and our users. Please support them with tips or thank-you notes if you like their work :)
 
 ## 🏗️ Building From Source
 
-You need Android Studio to build this App.
-After Installing Android Studio, select `Project` from `Version Control` and paste the link of this repository.
-Navigate to `Build > APK > Create New Keystore > Enter the password` and wait for the build to finish.
+You need to use Android Studio to build this App.
+Select `Project` from `Version Control` and paste the link of this repository.
+Then go to `Build > APK > Create New Keystore > Enter the password`.
 
 ## 📝 License
 
