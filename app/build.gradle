@@ -1,23 +1,27 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+}
 
 android {
     namespace = "me.jfenn.alarmio"
     compileSdk = 34
     defaultConfig {
         applicationId = "me.jfenn.alarmio"
-        minSdk 24
-        targetSdk 34
-        versionCode 21
-        versionName "1.0.5"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        minSdk = 24
+        targetSdk = 34
+        versionCode = 21
+        versionName = "1.0.5"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
-        multiDexEnabled true
+        multiDexEnabled = true
     }
+
     signingConfigs {
         release
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -25,40 +29,26 @@ android {
         }
     }
 
-    flavorDimensions "distribution"
-    productFlavors {
-        gplay {
-            dimension "distribution"
-        }
-        oss {
-            dimension "distribution"
-        }
-    }
-
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = "17"
     }
 
     lint {
-        abortOnError false
+        abortOnError = false
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
     // Core
     implementation 'androidx.activity:activity-ktx:1.8.2'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // Material
@@ -68,15 +58,13 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-core:2.11.3'
     implementation 'com.google.android.exoplayer:exoplayer-hls:2.11.3'
 
-    // Other
+    // Extern
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'com.afollestad:aesthetic:0.7.2'
+    implementation 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.6'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'me.jahirfiquitiva:FABsMenu:1.1.4'
-    implementation 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
-
-    // Jfenn
     implementation 'me.jfenn:timedatepickers:0.0.6'
     implementation 'me.jfenn:Attribouter:0.1.6'
     implementation 'me.jfenn:SlideActionView:0.0.2'
