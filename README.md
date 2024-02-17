@@ -1,5 +1,5 @@
 ⏰ Alarmio
-[![Build Status](https://github.com/fennifith/Alarmio/workflows/Gradle%20Build/badge.svg)](https://github.com/meenbeese/Alarmio/actions)
+[![Build Status](https://github.com/meenbeese/Alarmio/workflows/android.yml/badge.svg)](https://github.com/meenbeese/Alarmio/actions/workflows/android.yml)
 [![Liberapay](https://img.shields.io/badge/liberapay-donate-yellow.svg?logo=liberapay)](https://liberapay.com/meenbeese/)
 =======
 

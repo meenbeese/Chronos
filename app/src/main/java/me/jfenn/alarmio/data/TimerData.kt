@@ -142,7 +142,7 @@ open class TimerData : Parcelable {
     fun hasSound(): Boolean {
         return sound != null
     }
-    
+
     /**
      * Set the sound that the timer should make.
      *
