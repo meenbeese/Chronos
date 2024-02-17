@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <about>
-    <AppWedge repo="fennifith/Alarmio">
+    <AppWedge repo="meenbeese/Alarmio">
         <LinkWedge
             id="github"
             url="https://jfenn.me/redirects/?t=github&amp;d=Alarmio" />
@@ -8,7 +8,7 @@
     </AppWedge>
     <ContributorsWedge repo="fennifith/Alarmio">
         <ContributorWedge
-            name="James Fenn"
+            name="Meenbeese"
             bio="Android developer. Writes Java, C, and HTML. PHP confuses me."
             blog="https://jfenn.me/"
             login="fennifith"
@@ -78,33 +78,7 @@
         <ContributorWedge
             hidden="true"
             login="yzqzss" />
-
     </ContributorsWedge>
-    <TranslatorsWedge>
-        <TranslatorWedge
-            name="Frieder Zi"
-            blog="https://plus.google.com/109963929934858074229"
-            locales="de"
-            login="FriederZi" />
-
-        <TranslatorWedge
-        	name="Pablo Meza"
-        	blog="https://plus.google.com/112338221490547010788"
-        	locales="es"
-        	login="pablomeza10" />
-
-        <TranslatorWedge
-            name="Vinicius R"
-            blog="^https://github.com/Suburbanno"
-            locales="pt"
-            login="Suburbanno" />
-
-        <TranslatorWedge
-            name="yzqzss"
-            blog="^https://github.com/yzqzss"
-            locales="zh"
-            login="yzqzss" />
-    </TranslatorsWedge>
     <LicensesWedge>
         <LicenseWedge
             description="^A fast, easy to use, dynamic theme engine. Powered by Rx and Kotlin, for Android apps."
