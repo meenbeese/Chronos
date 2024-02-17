@@ -19,7 +19,6 @@
     <string name="msg_delete_confirmation">Êtes-vous sûr de vouloir supprimer %s?</string>
     <string name="title_delete">Supprimer</string>
     <string name="title_start_timer">Démarrer la minuterie</string>
-    <string name="title_auto">Auto</string>
     <string name="title_sunrise">Lever du soleil</string>
     <string name="title_sunset">Coucher de soleil</string>
     <string name="title_theme">Thème</string>

@@ -16,7 +16,6 @@
     <string name="msg_delete_confirmation">Estas seguro que quieres eliminar %s?</string>
     <string name="title_delete">Eleminar</string>
     <string name="title_start_timer">Empiezar temporizador</string>
-    <string name="title_auto">Automatico</string>
     <string name="title_sunrise">Amanecer</string>
     <string name="title_sunset">Puesta del Sol</string>
     <string name="title_theme">Thema</string>

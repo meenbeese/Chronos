@@ -19,7 +19,6 @@
   <string name="msg_delete_confirmation">你确定要删除 %s?</string>
   <string name="title_delete">删除</string>
   <string name="title_start_timer">开始计时</string>
-  <string name="title_auto">自动</string>
   <string name="title_sunrise">日出</string>
   <string name="title_sunset">日落</string>
   <string name="title_theme">主题</string>

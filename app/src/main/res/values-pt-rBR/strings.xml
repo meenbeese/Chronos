@@ -16,7 +16,6 @@
     <string name="msg_delete_confirmation">Tem certeza de que deseja excluir %s?</string>
     <string name="title_delete">Excluir</string>
     <string name="title_start_timer">Iniciar temporizador</string>
-    <string name="title_auto">Automático</string>
     <string name="title_sunrise">Nascer do Sol</string>
     <string name="title_sunset">Pôr do Sol</string>
     <string name="title_theme">Tema</string>
