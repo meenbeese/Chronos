@@ -28,7 +28,6 @@ Alarmio is a simple alarm clock that implements many useful features while follo
 ## ⚙️ Permissions
 
 - `SET_ALARM`, `VIBRATE`, `WAKE_LOCK`: necessary for the core functionality of the app
-- `ACCESS_COARSE_LOCATION`: determining automatic sunrise/sunset times for "scheduled" light/dark themes
 - `INTERNET`: obtaining a set of sunrise/sunset times (only stored locally) and fetching graphical assets and some of the information in the about page
 - `RECEIVE_BOOT_COMPLETED`: re-scheduling alarms on startup
 - `READ_EXTERNAL_STORAGE`: setting custom background / header images in the settings
