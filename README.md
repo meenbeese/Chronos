@@ -1,11 +1,16 @@
-⏰ Alarmio
-[![Build Status](https://github.com/meenbeese/Alarmio/workflows/android.yml/badge.svg)](https://github.com/meenbeese/Alarmio/actions/workflows/android.yml)
-[![Liberapay](https://img.shields.io/badge/liberapay-donate-yellow.svg?logo=liberapay)](https://liberapay.com/meenbeese/)
-=======
-
-<img src="https://forthebadge.com/images/badges/built-for-android.svg" alt="badge one"> <img src="https://forthebadge.com/images/badges/built-with-love.svg" alt="badge two"/>
-
-Alarmio is a simple alarm clock that implements many useful features while following regular design standards to ensure that it is quick and intuitive to use.
+<div align="center">
+  <h1>⏰ Alarmio</h1>
+  <p>A simple, quick, and intuitive alarm clock with many useful features.</p>
+  <img src="https://forthebadge.com/images/badges/built-for-android.svg" alt="Built for Android">
+  <img src="https://forthebadge.com/images/badges/built-with-love.svg" alt="Built with love">
+  <br>
+  <a href="https://github.com/meenbeese/Alarmio/actions/workflows/android.yml">
+    <img src="https://github.com/meenbeese/Alarmio/actions/workflows/android.yml/badge.svg?branch=main" alt="Build Status">
+  </a>
+  <a href="https://liberapay.com/meenbeese/">
+    <img src="https://img.shields.io/badge/liberapay-donate-yellow.svg?logo=liberapay" alt="Liberapay">
+  </a>
+</div>
 
 ## 🌄 Screenshots    
 
