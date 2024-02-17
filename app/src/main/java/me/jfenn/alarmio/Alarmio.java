@@ -1,12 +1,8 @@
 package me.jfenn.alarmio;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Criteria;
-import android.location.LocationManager;
 import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Build;
@@ -30,13 +26,10 @@ import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
-import com.luckycatlabs.sunrisesunset.dto.Location;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
-import java.util.TimeZone;
 
 import me.jfenn.alarmio.data.AlarmData;
 import me.jfenn.alarmio.data.PreferenceData;
@@ -312,69 +305,17 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
     }
 
     /**
-     * Determine if the sunrise/sunset stuff should occur automatically.
-     *
-     * @return          True if the day/night stuff is automated.
-     */
-    public boolean isDayAuto() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && (boolean) PreferenceData.DAY_AUTO.getValue(this);
-    }
-
-    /**
      * @return the hour of the start of the day (24h), as specified by the user
      */
     public int getDayStart() {
-        if (isDayAuto() && getSunsetCalculator() != null)
-            return getSunsetCalculator().getOfficialSunriseCalendarForDate(Calendar.getInstance()).get(Calendar.HOUR_OF_DAY);
-        else return PreferenceData.DAY_START.getValue(this);
+        return PreferenceData.DAY_START.getValue(this);
     }
 
     /**
      * @return the hour of the end of the day (24h), as specified by the user
      */
     public int getDayEnd() {
-        if (isDayAuto() && getSunsetCalculator() != null)
-            return getSunsetCalculator().getOfficialSunsetCalendarForDate(Calendar.getInstance()).get(Calendar.HOUR_OF_DAY);
-        else return PreferenceData.DAY_END.getValue(this);
-    }
-
-    /**
-     * @return the hour of the calculated sunrise time, or null.
-     */
-    @Nullable
-    public Integer getSunrise() {
-        if (getSunsetCalculator() != null)
-            return getSunsetCalculator().getOfficialSunsetCalendarForDate(Calendar.getInstance()).get(Calendar.HOUR_OF_DAY);
-        else return null;
-    }
-
-    /**
-     * @return the hour of the calculated sunset time, or null.
-     */
-    @Nullable
-    public Integer getSunset() {
-        if (getSunsetCalculator() != null)
-            return getSunsetCalculator().getOfficialSunsetCalendarForDate(Calendar.getInstance()).get(Calendar.HOUR_OF_DAY);
-        else return null;
-    }
-
-    /**
-     * @return the current SunriseSunsetCalculator object, or null if it cannot
-     *         be instantiated.
-     * @see [SunriseSunsetLib Repo](https://github.com/mikereedell/sunrisesunsetlib-java)
-     */
-    @Nullable
-    private SunriseSunsetCalculator getSunsetCalculator() {
-        if (sunsetCalculator == null && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-                android.location.Location location = locationManager.getLastKnownLocation(Objects.requireNonNull(locationManager.getBestProvider(new Criteria(), false)));
-                sunsetCalculator = new SunriseSunsetCalculator(new Location(location.getLatitude(), location.getLongitude()), TimeZone.getDefault().getID());
-            } catch (NullPointerException ignored) {
-            }
-        }
-
-        return sunsetCalculator;
+        return PreferenceData.DAY_END.getValue(this);
     }
 
     /**
