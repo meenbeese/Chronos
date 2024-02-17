@@ -19,7 +19,6 @@
     <string name="msg_delete_confirmation">Jste si jistí, že chcete smazat %s?</string>
     <string name="title_delete">Smazat</string>
     <string name="title_start_timer">Spustit časovač</string>
-    <string name="title_auto">Auto</string>
     <string name="title_sunrise">Východ slunce</string>
     <string name="title_sunset">Západ slunce</string>
     <string name="title_theme">Motiv</string>

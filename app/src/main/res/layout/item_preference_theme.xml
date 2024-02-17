@@ -33,15 +33,6 @@
 
     </LinearLayout>
 
-    <me.jfenn.alarmio.views.AestheticCheckBoxView
-        android:id="@+id/sunriseAutoSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:layout_marginStart="12dp"
-        android:tag=":aesthetic_ignore"
-        android:text="@string/title_auto" />
-
     <FrameLayout
         android:id="@+id/sunriseLayout"
         android:layout_width="match_parent"

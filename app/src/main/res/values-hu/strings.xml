@@ -17,7 +17,6 @@
     <string name="msg_delete_confirmation">Biztos, hogy törli a következőt: %s?</string>
     <string name="title_delete">Törlés</string>
     <string name="title_start_timer">Időzítő indítása</string>
-    <string name="title_auto">Automatikus</string>
     <string name="title_sunrise">Napkelte</string>
     <string name="title_sunset">Napnyugta</string>
     <string name="title_theme">Téma</string>

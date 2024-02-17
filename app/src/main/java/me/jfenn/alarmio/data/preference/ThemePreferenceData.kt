@@ -1,8 +1,6 @@
 package me.jfenn.alarmio.data.preference
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
@@ -12,9 +10,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
 
-import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatSpinner
-import androidx.core.content.ContextCompat
 
 import com.afollestad.aesthetic.Aesthetic
 
@@ -52,7 +48,6 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
         run {
             if (theme == Alarmio.THEME_DAY_NIGHT) View.VISIBLE else View.GONE
         }.let {
-            holder.sunriseAutoSwitch.visibility = it
             holder.sunriseLayout.visibility = it
         }
 
@@ -66,7 +61,6 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
                     run {
                         if (i == Alarmio.THEME_DAY_NIGHT) View.VISIBLE else View.GONE
                     }.let {
-                        holder.sunriseAutoSwitch.visibility = it
                         holder.sunriseLayout.visibility = it
                     }
 
@@ -103,22 +97,6 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
             }
         }
 
-        holder.sunriseAutoSwitch.setOnCheckedChangeListener(null)
-        holder.sunriseAutoSwitch.isChecked = holder.alarmio?.isDayAuto ?: false
-        holder.sunriseAutoSwitch.setOnCheckedChangeListener { _, b ->
-            PreferenceData.DAY_AUTO.setValue(holder.context, b)
-
-            if (b && ContextCompat.checkSelfPermission(holder.context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                holder.alarmio?.requestPermissions(Manifest.permission.ACCESS_COARSE_LOCATION)
-                holder.sunriseAutoSwitch.isChecked = false
-            } else {
-                holder.alarmio?.let { alarmio ->
-                    listener.onSunriseChanged(holder.sunriseView, alarmio.dayStart * HOUR_LENGTH)
-                    listener.onSunsetChanged(holder.sunriseView, alarmio.dayEnd * HOUR_LENGTH)
-                }
-            }
-        }
-
         holder.alarmio?.let { alarmio ->
             listener.onSunriseChanged(holder.sunriseView, alarmio.dayStart * HOUR_LENGTH)
             listener.onSunsetChanged(holder.sunriseView, alarmio.dayEnd * HOUR_LENGTH)
@@ -126,12 +104,10 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
 
         holder.sunriseView.setListener(object : SunriseSunsetView.SunriseListener {
             override fun onSunriseChanged(sunriseSunsetView: SunriseSunsetView, l: Long) {
-                holder.sunriseAutoSwitch.isChecked = false
                 listener.onSunriseChanged(sunriseSunsetView, l)
             }
 
             override fun onSunsetChanged(sunriseSunsetView: SunriseSunsetView, l: Long) {
-                holder.sunriseAutoSwitch.isChecked = false
                 listener.onSunsetChanged(sunriseSunsetView, l)
             }
         })
@@ -140,7 +116,6 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
             AestheticTimeSheetPickerDialog(view.context, holder.alarmio?.dayStart ?: 1, 0)
                     .setListener(object : PickerDialog.OnSelectedListener<LinearTimePickerView> {
                         override fun onSelect(dialog: PickerDialog<LinearTimePickerView>, view: LinearTimePickerView) {
-                            holder.sunriseAutoSwitch.isChecked = false
                             holder.alarmio?.let { alarmio ->
                                 if (view.hourOfDay < alarmio.dayEnd)
                                     listener.onSunriseChanged(holder.sunriseView, view.hourOfDay * HOUR_LENGTH)
@@ -156,7 +131,6 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
             AestheticTimeSheetPickerDialog(view.context, holder.alarmio?.dayEnd ?: 23, 0)
                     .setListener(object : PickerDialog.OnSelectedListener<LinearTimePickerView> {
                         override fun onSelect(dialog: PickerDialog<LinearTimePickerView>, view: LinearTimePickerView) {
-                            holder.sunriseAutoSwitch.isChecked = false
                             holder.alarmio?.let { alarmio ->
                                 if (view.hourOfDay > alarmio.dayStart)
                                     listener.onSunsetChanged(holder.sunriseView, view.hourOfDay * HOUR_LENGTH)
@@ -187,7 +161,6 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
      */
     class ViewHolder(v: View) : BasePreferenceData.ViewHolder(v) {
         val themeSpinner: AppCompatSpinner = v.findViewById(R.id.themeSpinner)
-        val sunriseAutoSwitch: AppCompatCheckBox = v.findViewById(R.id.sunriseAutoSwitch)
         val sunriseLayout: View = v.findViewById(R.id.sunriseLayout)
         val sunriseView: SunriseSunsetView = v.findViewById(R.id.sunriseView)
         val sunriseTextView: TextView = v.findViewById(R.id.sunriseTextView)
