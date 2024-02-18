@@ -14,7 +14,6 @@ android {
         versionName = "1.0.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-
         multiDexEnabled = true
     }
 
@@ -52,7 +51,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // Material
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android.material:material:1.11.0'
 
     // Media
     implementation 'com.google.android.exoplayer:exoplayer-core:2.11.3'
