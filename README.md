@@ -1,11 +1,11 @@
 <div align="center">
-  <h1>⏰ Alarmio</h1>
+  <h1>⏰ Chronos</h1>
   <p>A simple, quick, and intuitive alarm clock with many useful features.</p>
   <img src="https://forthebadge.com/images/badges/built-for-android.svg" alt="Built for Android">
   <img src="https://forthebadge.com/images/badges/built-with-love.svg" alt="Built with love">
   <br>
-  <a href="https://github.com/meenbeese/Alarmio/actions/workflows/android.yml">
-    <img src="https://github.com/meenbeese/Alarmio/actions/workflows/android.yml/badge.svg?branch=main" alt="Build Status">
+  <a href="https://github.com/meenbeese/Chronos/actions/workflows/android.yml">
+    <img src="https://github.com/meenbeese/Chronos/actions/workflows/android.yml/badge.svg?branch=main" alt="Build Status">
   </a>
   <a href="https://liberapay.com/meenbeese/">
     <img src="https://img.shields.io/badge/liberapay-donate-yellow.svg?logo=liberapay" alt="Liberapay">
@@ -32,7 +32,7 @@
 
 ## 📲 Installation
 
-[<img width='200' height='80' alt='F-Droid Download' src='https://fdroid.gitlab.io/artwork/badge/get-it-on.png'>](https://f-droid.org/packages/me.jfenn.Alarmio/)
+[<img width='200' height='80' alt='F-Droid Download' src='https://fdroid.gitlab.io/artwork/badge/get-it-on.png'>](https://f-droid.org/packages/me.jfenn.Chronos/)
 [<img width='200' height='80' alt='APK Download' src='https://user-images.githubusercontent.com/114044633/223920025-83687de0-e463-4c5d-8122-e06e4bb7d40c.png'>]((../../releases/))
 
 ## ⚙️ Permissions
@@ -44,28 +44,28 @@
 - `FOREGROUND_SERVICE`: notifying you to sleep - see the "Sleep Reminder" option in the settings
 - `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`: please see [dontkillmyapp.com](https://dontkillmyapp.com/)
 
-## 📝 Contribute to Alarmio
+## 📝 Contribute to Chronos
 
-Alarmio is a user-driven project. We welcome any contribution, big or small.
+Chronos is a user-driven project. We welcome any contribution, big or small.
 
 - **🖥️ Development:** Fix bugs, implement features, or research issues. Open a PR for review.
 - **🍥 Design:** Improve interfaces, including accessibility and usability.
 - **🤝 User Support:** Respond to issues and identify duplicates.
 - **📂 Issue Reporting:** Report bugs and edge cases with relevant info.
-- **🌍 Localization:** Translate Alarmio if it doesn't support your language.
+- **🌍 Localization:** Translate Chronos if it doesn't support your language.
 - **📄 Documentation:** Write guides, explanations, README updates, user tutorials, or add comments to undocumented functions.
 
 ### ✅ Other Support Methods
 
 If you can't contribute directly, consider these options:
 
-- **💈 Advertising:** Spread the word about Alarmio.
+- **💈 Advertising:** Spread the word about Chronos.
 - **💵 Donations:** Support us financially if you can.
 - **📢 Advocacy:** Support FOSS services over closed ones.
 
 ## ✏️ Acknowledgements
 
-Thanks to Alarmio’s contributors, the developers of our dependencies, and our users. Please support them with tips or thank-you notes if you like their work :)
+Thanks to Chronos' contributors, the developers of our dependencies, and our users. Please support them with tips or thank-you notes if you like their work :)
 
 ## 🏗️ Building From Source
 
