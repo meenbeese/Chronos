@@ -224,7 +224,7 @@ open class TimerData : Parcelable {
         duration = parcel.readLong()
         endTime = parcel.readLong()
         isVibrate = parcel.readByte().toInt() != 0
-        if (parcel.readByte().toInt() == 1) sound = SoundData.fromString(parcel.readString())
+        if (parcel.readByte().toInt() == 1) sound = SoundData.fromString(parcel.readString()!!)
     }
 
     companion object CREATOR : Creator<TimerData> {
