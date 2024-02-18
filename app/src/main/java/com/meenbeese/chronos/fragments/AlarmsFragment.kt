@@ -37,7 +37,7 @@ class AlarmsFragment : BasePagerFragment() {
         empty = v.findViewById(R.id.empty)
         (v.findViewById<View>(R.id.emptyText) as TextView).setText(R.string.msg_alarms_empty)
         recyclerView?.layoutManager = GridLayoutManager(context, 1)
-        alarmsAdapter = AlarmsAdapter(alarmio!!, recyclerView!!, fragmentManager!!)
+        alarmsAdapter = AlarmsAdapter(chronos!!, recyclerView!!, fragmentManager!!)
         recyclerView?.adapter = alarmsAdapter
         colorAccentSubscription = get()
             .colorAccent()

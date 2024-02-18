@@ -35,7 +35,7 @@ public class FileSoundChooserFragment extends BaseSoundChooserFragment {
 
     private static final String TYPE_AUDIO = "audio/*";
 
-    private static final String SEPARATOR = ":AlarmioFileSound:";
+    private static final String SEPARATOR = ":ChronosFileSound:";
     private static final String PREF_FILES = "previousFiles";
 
     private SharedPreferences prefs;
@@ -69,7 +69,7 @@ public class FileSoundChooserFragment extends BaseSoundChooserFragment {
 
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        SoundsAdapter adapter = new SoundsAdapter(getAlarmio(), sounds);
+        SoundsAdapter adapter = new SoundsAdapter(getChronos(), sounds);
         adapter.setListener(this);
         recycler.setAdapter(adapter);
 

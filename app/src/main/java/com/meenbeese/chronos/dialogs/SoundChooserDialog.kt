@@ -13,7 +13,7 @@ import androidx.viewpager.widget.ViewPager
 import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.google.android.material.tabs.TabLayout
 
-import com.meenbeese.chronos.Alarmio
+import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
 import com.meenbeese.chronos.data.SoundData
@@ -82,6 +82,6 @@ class SoundChooserDialog : DialogFragment(), SoundChooserListener {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        (view?.context?.applicationContext as Alarmio).stopCurrentSound()
+        (view?.context?.applicationContext as Chronos).stopCurrentSound()
     }
 }

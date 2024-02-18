@@ -7,7 +7,7 @@ import android.os.Bundle
 
 import com.afollestad.aesthetic.Aesthetic.Companion.get
 
-import com.meenbeese.chronos.Alarmio
+import com.meenbeese.chronos.Chronos
 import me.jfenn.timedatepickers.dialogs.TimeSheetPickerDialog
 
 
@@ -37,7 +37,7 @@ class AestheticTimeSheetPickerDialog : TimeSheetPickerDialog {
             .take(1)
             .subscribe { integer: Int? ->
                 selectionColor = integer!!
-                selectionTextColor = if ((context.applicationContext as Alarmio).activityTheme == Alarmio.THEME_AMOLED) Color.BLACK else Color.WHITE
+                selectionTextColor = if ((context.applicationContext as Chronos).activityTheme == Chronos.THEME_AMOLED) Color.BLACK else Color.WHITE
             }
     }
 }

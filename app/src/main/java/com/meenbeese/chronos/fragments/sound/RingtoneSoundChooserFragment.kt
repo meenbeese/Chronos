@@ -44,7 +44,7 @@ class RingtoneSoundChooserFragment : BaseSoundChooserFragment() {
                 )
             } while (cursor.moveToNext())
         }
-        val adapter = SoundsAdapter(alarmio!!, sounds)
+        val adapter = SoundsAdapter(chronos!!, sounds)
         adapter.setListener(this)
         recyclerView.adapter = adapter
         return view

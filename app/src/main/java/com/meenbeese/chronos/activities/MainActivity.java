@@ -15,7 +15,7 @@ import com.afollestad.aesthetic.AestheticActivity;
 
 import java.lang.ref.WeakReference;
 
-import com.meenbeese.chronos.Alarmio;
+import com.meenbeese.chronos.Chronos;
 import com.meenbeese.chronos.R;
 import com.meenbeese.chronos.data.PreferenceData;
 import com.meenbeese.chronos.dialogs.AlertDialog;
@@ -27,21 +27,21 @@ import com.meenbeese.chronos.fragments.TimerFragment;
 import com.meenbeese.chronos.receivers.TimerReceiver;
 
 
-public class MainActivity extends AestheticActivity implements FragmentManager.OnBackStackChangedListener, Alarmio.ActivityListener {
+public class MainActivity extends AestheticActivity implements FragmentManager.OnBackStackChangedListener, Chronos.ActivityListener {
 
     public static final String EXTRA_FRAGMENT = "com.meenbeese.chronos.MainActivity.EXTRA_FRAGMENT";
     public static final int FRAGMENT_TIMER = 0;
     public static final int FRAGMENT_STOPWATCH = 2;
 
-    private Alarmio alarmio;
+    private Chronos chronos;
     private WeakReference<BaseFragment> fragmentRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        alarmio = (Alarmio) getApplicationContext();
-        alarmio.setListener(this);
+        chronos = (Chronos) getApplicationContext();
+        chronos.setListener(this);
 
         if (savedInstanceState == null) {
             BaseFragment fragment = createFragmentFor(getIntent());
@@ -131,11 +131,11 @@ public class MainActivity extends AestheticActivity implements FragmentManager.O
             case FRAGMENT_TIMER -> {
                 if (intent.hasExtra(TimerReceiver.EXTRA_TIMER_ID)) {
                     int id = intent.getIntExtra(TimerReceiver.EXTRA_TIMER_ID, 0);
-                    if (alarmio.getTimers().size() <= id || id < 0)
+                    if (chronos.getTimers().size() <= id || id < 0)
                         return fragment;
 
                     Bundle args = new Bundle();
-                    args.putParcelable(TimerFragment.EXTRA_TIMER, alarmio.getTimers().get(id));
+                    args.putParcelable(TimerFragment.EXTRA_TIMER, chronos.getTimers().get(id));
 
                     BaseFragment newFragment = new TimerFragment();
                     newFragment.setArguments(args);
@@ -175,10 +175,10 @@ public class MainActivity extends AestheticActivity implements FragmentManager.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (alarmio != null)
-            alarmio.setListener(null);
+        if (chronos != null)
+            chronos.setListener(null);
 
-        alarmio = null;
+        chronos = null;
     }
 
     @Override
@@ -189,7 +189,7 @@ public class MainActivity extends AestheticActivity implements FragmentManager.O
     @Override
     protected void onPause() {
         super.onPause();
-        alarmio.stopCurrentSound();
+        chronos.stopCurrentSound();
     }
 
     @Override

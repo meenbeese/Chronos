@@ -14,7 +14,7 @@ import androidx.appcompat.widget.AppCompatSpinner
 
 import com.afollestad.aesthetic.Aesthetic
 
-import com.meenbeese.chronos.Alarmio
+import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.dialogs.AestheticTimeSheetPickerDialog
@@ -44,9 +44,9 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
     override fun bindViewHolder(holder: ViewHolder) {
         holder.themeSpinner.adapter = ArrayAdapter.createFromResource(holder.itemView.context, R.array.array_themes, R.layout.support_simple_spinner_dropdown_item)
 
-        val theme : Int = holder.alarmio?.activityTheme ?: Alarmio.THEME_DAY_NIGHT
+        val theme : Int = holder.chronos?.activityTheme ?: Chronos.THEME_DAY_NIGHT
         run {
-            if (theme == Alarmio.THEME_DAY_NIGHT) View.VISIBLE else View.GONE
+            if (theme == Chronos.THEME_DAY_NIGHT) View.VISIBLE else View.GONE
         }.let {
             holder.sunriseLayout.visibility = it
         }
@@ -59,13 +59,13 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
                 if (selection != null) {
                     run {
-                        if (i == Alarmio.THEME_DAY_NIGHT) View.VISIBLE else View.GONE
+                        if (i == Chronos.THEME_DAY_NIGHT) View.VISIBLE else View.GONE
                     }.let {
                         holder.sunriseLayout.visibility = it
                     }
 
                     PreferenceData.THEME.setValue(adapterView.context, i)
-                    holder.alarmio?.updateTheme()
+                    holder.chronos?.updateTheme()
                 } else selection = i
             }
 
@@ -78,7 +78,7 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
                 holder.sunriseTextView.text = getText(hour)
                 sunriseSunsetView.setSunrise(hour * HOUR_LENGTH, true)
                 PreferenceData.DAY_START.setValue(holder.context, hour)
-                holder.alarmio?.updateTheme()
+                holder.chronos?.updateTheme()
             }
 
             override fun onSunsetChanged(sunriseSunsetView: SunriseSunsetView, l: Long) {
@@ -86,7 +86,7 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
                 holder.sunsetTextView.text = getText(hour)
                 sunriseSunsetView.setSunset(hour * HOUR_LENGTH, true)
                 PreferenceData.DAY_END.setValue(holder.context, hour)
-                holder.alarmio?.updateTheme()
+                holder.chronos?.updateTheme()
             }
 
             private fun getText(hour: Int): String = Calendar.getInstance().apply {
@@ -97,9 +97,9 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
             }
         }
 
-        holder.alarmio?.let { alarmio ->
-            listener.onSunriseChanged(holder.sunriseView, alarmio.dayStart * HOUR_LENGTH)
-            listener.onSunsetChanged(holder.sunriseView, alarmio.dayEnd * HOUR_LENGTH)
+        holder.chronos?.let { chronos ->
+            listener.onSunriseChanged(holder.sunriseView, chronos.dayStart * HOUR_LENGTH)
+            listener.onSunsetChanged(holder.sunriseView, chronos.dayEnd * HOUR_LENGTH)
         }
 
         holder.sunriseView.setListener(object : SunriseSunsetView.SunriseListener {
@@ -113,11 +113,11 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
         })
 
         holder.sunriseTextView.setOnClickListener { view ->
-            AestheticTimeSheetPickerDialog(view.context, holder.alarmio?.dayStart ?: 1, 0)
+            AestheticTimeSheetPickerDialog(view.context, holder.chronos?.dayStart ?: 1, 0)
                     .setListener(object : PickerDialog.OnSelectedListener<LinearTimePickerView> {
                         override fun onSelect(dialog: PickerDialog<LinearTimePickerView>, view: LinearTimePickerView) {
-                            holder.alarmio?.let { alarmio ->
-                                if (view.hourOfDay < alarmio.dayEnd)
+                            holder.chronos?.let { chronos ->
+                                if (view.hourOfDay < chronos.dayEnd)
                                     listener.onSunriseChanged(holder.sunriseView, view.hourOfDay * HOUR_LENGTH)
                             }
                         }
@@ -128,11 +128,11 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
         }
 
         holder.sunsetTextView.setOnClickListener { view ->
-            AestheticTimeSheetPickerDialog(view.context, holder.alarmio?.dayEnd ?: 23, 0)
+            AestheticTimeSheetPickerDialog(view.context, holder.chronos?.dayEnd ?: 23, 0)
                     .setListener(object : PickerDialog.OnSelectedListener<LinearTimePickerView> {
                         override fun onSelect(dialog: PickerDialog<LinearTimePickerView>, view: LinearTimePickerView) {
-                            holder.alarmio?.let { alarmio ->
-                                if (view.hourOfDay > alarmio.dayStart)
+                            holder.chronos?.let { chronos ->
+                                if (view.hourOfDay > chronos.dayStart)
                                     listener.onSunsetChanged(holder.sunriseView, view.hourOfDay * HOUR_LENGTH)
                             }
                         }

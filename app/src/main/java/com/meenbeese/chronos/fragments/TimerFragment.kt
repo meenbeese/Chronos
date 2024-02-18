@@ -59,7 +59,7 @@ class TimerFragment : BaseFragment() {
             }
         }
         stop?.setOnClickListener {
-            alarmio?.removeTimer(timer)
+            chronos?.removeTimer(timer)
             fragmentManager?.popBackStack()
         }
         back?.setOnClickListener { fragmentManager?.popBackStack() }
@@ -78,6 +78,6 @@ class TimerFragment : BaseFragment() {
     }
 
     companion object {
-        const val EXTRA_TIMER = "james.alarmio.TimerFragment.EXTRA_TIMER"
+        const val EXTRA_TIMER = "james.chronos.TimerFragment.EXTRA_TIMER"
     }
 }

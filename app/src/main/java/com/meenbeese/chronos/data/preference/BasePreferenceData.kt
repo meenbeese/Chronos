@@ -7,7 +7,7 @@ import android.view.ViewGroup
 
 import androidx.recyclerview.widget.RecyclerView
 
-import com.meenbeese.chronos.Alarmio
+import com.meenbeese.chronos.Chronos
 
 
 /**
@@ -40,8 +40,8 @@ abstract class BasePreferenceData<V : BasePreferenceData.ViewHolder> {
         val context: Context
             get() = itemView.context
 
-        val alarmio: Alarmio?
-            get() = context.applicationContext as? Alarmio?
+        val chronos: Chronos?
+            get() = context.applicationContext as? Chronos?
 
     }
 

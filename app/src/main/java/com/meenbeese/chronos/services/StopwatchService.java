@@ -21,7 +21,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.meenbeese.chronos.Alarmio;
+import com.meenbeese.chronos.Chronos;
 import com.meenbeese.chronos.R;
 import com.meenbeese.chronos.activities.MainActivity;
 import com.meenbeese.chronos.utils.FormatUtils;
@@ -30,9 +30,9 @@ import com.meenbeese.chronos.utils.FormatUtils;
 public class StopwatchService extends Service {
 
     private static final int NOTIFICATION_ID = 247;
-    private static final String ACTION_RESET = "james.alarmio.StopwatchFragment.ACTION_RESET";
-    private static final String ACTION_TOGGLE = "james.alarmio.StopwatchFragment.ACTION_TOGGLE";
-    private static final String ACTION_LAP = "james.alarmio.StopwatchFragment.ACTION_LAP";
+    private static final String ACTION_RESET = "james.chronos.StopwatchFragment.ACTION_RESET";
+    private static final String ACTION_TOGGLE = "james.chronos.StopwatchFragment.ACTION_TOGGLE";
+    private static final String ACTION_LAP = "james.chronos.StopwatchFragment.ACTION_LAP";
 
     private final IBinder binder = new LocalBinder();
     private Listener listener;
@@ -181,9 +181,9 @@ public class StopwatchService extends Service {
      */
     private Notification getNotification(String time) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            notificationManager.createNotificationChannel(new NotificationChannel(Alarmio.NOTIFICATION_CHANNEL_STOPWATCH, getString(R.string.title_stopwatch), NotificationManager.IMPORTANCE_DEFAULT));
+            notificationManager.createNotificationChannel(new NotificationChannel(Chronos.NOTIFICATION_CHANNEL_STOPWATCH, getString(R.string.title_stopwatch), NotificationManager.IMPORTANCE_DEFAULT));
 
-        return new NotificationCompat.Builder(this, Alarmio.NOTIFICATION_CHANNEL_STOPWATCH)
+        return new NotificationCompat.Builder(this, Chronos.NOTIFICATION_CHANNEL_STOPWATCH)
                 .setSmallIcon(R.drawable.ic_stopwatch_notification)
                 .setContentTitle(getString(R.string.title_stopwatch))
                 .setContentText(time)

@@ -6,12 +6,12 @@ import android.preference.PreferenceManager;
 
 import androidx.annotation.Nullable;
 
-import com.meenbeese.chronos.Alarmio;
+import com.meenbeese.chronos.Chronos;
 
 
 public enum PreferenceData {
     INFO_BACKGROUND_PERMISSIONS(false),
-    THEME(Alarmio.THEME_DAY_NIGHT),
+    THEME(Chronos.THEME_DAY_NIGHT),
     BACKGROUND_IMAGE("https://jfenn.me/images/headers/snowytrees.jpg"),
     RINGING_BACKGROUND_IMAGE(true),
     DAY_AUTO(true),

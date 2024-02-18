@@ -40,7 +40,7 @@ import com.meenbeese.chronos.services.TimerService;
 import com.meenbeese.chronos.utils.DebugUtils;
 
 
-public class Alarmio extends MultiDexApplication implements Player.EventListener {
+public class Chronos extends MultiDexApplication implements Player.EventListener {
 
     public static final int THEME_DAY_NIGHT = 0;
     public static final int THEME_DAY = 1;
@@ -58,7 +58,7 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
     private List<AlarmData> alarms;
     private List<TimerData> timers;
 
-    private List<AlarmioListener> listeners;
+    private List<ChronosListener> listeners;
     private ActivityListener listener;
 
     private SimpleExoPlayer player;
@@ -155,7 +155,7 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
      * Notify the application of changes to the current alarms.
      */
     public void onAlarmsChanged() {
-        for (AlarmioListener listener : listeners) {
+        for (ChronosListener listener : listeners) {
             listener.onAlarmsChanged();
         }
     }
@@ -201,7 +201,7 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
      * Notify the application of changes to the current timers.
      */
     public void onTimersChanged() {
-        for (AlarmioListener listener : listeners) {
+        for (ChronosListener listener : listeners) {
             listener.onTimersChanged();
         }
     }
@@ -295,8 +295,8 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
     /**
      * Get the theme to be used for activities and things. Despite
      * what the name implies, it does not return a theme resource,
-     * but rather one of Alarmio.THEME_DAY_NIGHT, Alarmio.THEME_DAY,
-     * Alarmio.THEME_NIGHT, or Alarmio.THEME_AMOLED.
+     * but rather one of Chronos.THEME_DAY_NIGHT, Chronos.THEME_DAY,
+     * Chronos.THEME_NIGHT, or Chronos.THEME_AMOLED.
      *
      * @return          The theme to be used for activities.
      */
@@ -425,11 +425,11 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
         stopStream();
     }
 
-    public void addListener(AlarmioListener listener) {
+    public void addListener(ChronosListener listener) {
         listeners.add(listener);
     }
 
-    public void removeListener(AlarmioListener listener) {
+    public void removeListener(ChronosListener listener) {
         listeners.remove(listener);
     }
 
@@ -481,7 +481,7 @@ public class Alarmio extends MultiDexApplication implements Player.EventListener
         else return null;
     }
 
-    public interface AlarmioListener {
+    public interface ChronosListener {
         void onAlarmsChanged();
 
         void onTimersChanged();

@@ -29,7 +29,7 @@ import jahirfiquitiva.libs.fabsmenu.FABsMenu
 import jahirfiquitiva.libs.fabsmenu.FABsMenuListener
 import jahirfiquitiva.libs.fabsmenu.TitleFAB
 
-import com.meenbeese.chronos.Alarmio
+import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
 import com.meenbeese.chronos.data.PreferenceData
@@ -153,7 +153,7 @@ class HomeFragment : BaseFragment() {
                 menu?.menuButtonColor = integer!!
                 val color = ContextCompat.getColor(
                     context!!,
-                    if (alarmio!!.activityTheme == Alarmio.THEME_AMOLED) R.color.textColorPrimary else R.color.textColorPrimaryNight
+                    if (chronos!!.activityTheme == Chronos.THEME_AMOLED) R.color.textColorPrimary else R.color.textColorPrimaryNight
                 )
                 menu?.menuButton?.setColorFilter(color)
                 stopwatchFab?.setColorFilter(color)
@@ -235,12 +235,12 @@ class HomeFragment : BaseFragment() {
                     view: LinearTimePickerView
                 ) {
                     val manager = view.context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                    val alarm = alarmio!!.newAlarm()
+                    val alarm = chronos!!.newAlarm()
                     alarm.time[Calendar.HOUR_OF_DAY] = view.hourOfDay
                     alarm.time[Calendar.MINUTE] = view.minute
-                    alarm.setTime(alarmio, manager, alarm.time.timeInMillis)
+                    alarm.setTime(chronos, manager, alarm.time.timeInMillis)
                     alarm.setEnabled(context, manager, true)
-                    alarmio?.onAlarmsChanged()
+                    chronos?.onAlarmsChanged()
                 }
 
                 override fun onCancel(dialog: PickerDialog<LinearTimePickerView>) {}

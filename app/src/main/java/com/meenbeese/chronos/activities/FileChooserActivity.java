@@ -27,8 +27,8 @@ public class FileChooserActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_PERMISSION = 726;
     private static final int REQUEST_AUDIO_PERMISSION = 727;
 
-    public static final String EXTRA_TYPE = "james.alarmio.FileChooserActivity.EXTRA_TYPE";
-    public static final String EXTRA_PREF = "james.alarmio.FileChooserActivity.EXTRA_PREFERENCE";
+    public static final String EXTRA_TYPE = "james.chronos.FileChooserActivity.EXTRA_TYPE";
+    public static final String EXTRA_PREF = "james.chronos.FileChooserActivity.EXTRA_PREFERENCE";
     public static final String TYPE_IMAGE = "image/*";
     public static final String TYPE_AUDIO = "audio/*";
 

@@ -15,13 +15,13 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.afollestad.aesthetic.Aesthetic.Companion.get
 
-import com.meenbeese.chronos.Alarmio
+import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 
 
-class SoundsAdapter(private val alarmio: Alarmio, private val sounds: List<SoundData>) :
+class SoundsAdapter(private val chronos: Chronos, private val sounds: List<SoundData>) :
     RecyclerView.Adapter<SoundsAdapter.ViewHolder>() {
     private var currentlyPlaying = -1
     private var listener: SoundChooserListener? = null
@@ -52,13 +52,13 @@ class SoundsAdapter(private val alarmio: Alarmio, private val sounds: List<Sound
             holder.icon.setOnClickListener {
                 val position1 = holder.adapterPosition
                 val sound1 = sounds[position1 - 1]
-                currentlyPlaying = if (sound1.isPlaying(alarmio) || currentlyPlaying == position1) {
-                    sound1.stop(alarmio)
+                currentlyPlaying = if (sound1.isPlaying(chronos) || currentlyPlaying == position1) {
+                    sound1.stop(chronos)
                     -1
                 } else {
-                    sound1.preview(alarmio)
+                    sound1.preview(chronos)
                     if (currentlyPlaying >= 0) {
-                        sounds[currentlyPlaying - 1].stop(alarmio)
+                        sounds[currentlyPlaying - 1].stop(chronos)
                         notifyItemChanged(currentlyPlaying)
                     }
                     position1
@@ -70,7 +70,7 @@ class SoundsAdapter(private val alarmio: Alarmio, private val sounds: List<Sound
                     sounds[holder.adapterPosition - 1]
                 )
             }
-            setPlaying(holder, sound.isPlaying(alarmio), false)
+            setPlaying(holder, sound.isPlaying(chronos), false)
         }
     }
 
@@ -114,7 +114,7 @@ class SoundsAdapter(private val alarmio: Alarmio, private val sounds: List<Sound
         }
         if (isAnimated) {
             val drawable = AnimatedVectorDrawableCompat.create(
-                alarmio, if (isPlaying) R.drawable.ic_play_to_pause else R.drawable.ic_pause_to_play
+                chronos, if (isPlaying) R.drawable.ic_play_to_pause else R.drawable.ic_pause_to_play
             )
             if (drawable != null) {
                 holder.icon.setImageDrawable(drawable)

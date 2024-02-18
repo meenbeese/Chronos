@@ -14,7 +14,7 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.afollestad.aesthetic.Aesthetic.Companion.get
 
-import com.meenbeese.chronos.Alarmio
+import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.data.SoundData
@@ -34,10 +34,10 @@ class TimerDialog(context: Context, private val manager: FragmentManager) :
     private var time: TextView? = null
     private var backspace: ImageView? = null
     private var input = "000000"
-    private val alarmio: Alarmio
+    private val chronos: Chronos
 
     init {
-        alarmio = context.applicationContext as Alarmio
+        chronos = context.applicationContext as Chronos
         ringtone = SoundData.fromString(PreferenceData.DEFAULT_TIMER_RINGTONE.getValue(context, ""))
     }
 
@@ -95,12 +95,12 @@ class TimerDialog(context: Context, private val manager: FragmentManager) :
         }
         findViewById<View>(R.id.start)?.setOnClickListener { view: View ->
             if (input.toInt() > 0) {
-                val timer = alarmio.newTimer()
-                timer.setDuration(millis, alarmio)
+                val timer = chronos.newTimer()
+                timer.setDuration(millis, chronos)
                 timer.setVibrate(view.context, isVibrate)
                 timer.setSound(view.context, ringtone)
-                timer[alarmio] = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                alarmio.onTimerStarted()
+                timer[chronos] = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                chronos.onTimerStarted()
                 val args = Bundle()
                 args.putParcelable(TimerFragment.EXTRA_TIMER, timer)
                 val fragment = TimerFragment()

@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.Disposable;
 
-import com.meenbeese.chronos.Alarmio;
+import com.meenbeese.chronos.Chronos;
 import com.meenbeese.chronos.R;
 import com.meenbeese.chronos.data.AlarmData;
 import com.meenbeese.chronos.data.PreferenceData;
@@ -44,13 +44,13 @@ import me.jfenn.slideactionview.SlideActionView;
 
 public class AlarmActivity extends AestheticActivity implements SlideActionListener {
 
-    public static final String EXTRA_ALARM = "james.alarmio.AlarmActivity.EXTRA_ALARM";
-    public static final String EXTRA_TIMER = "james.alarmio.AlarmActivity.EXTRA_TIMER";
+    public static final String EXTRA_ALARM = "james.chronos.AlarmActivity.EXTRA_ALARM";
+    public static final String EXTRA_TIMER = "james.chronos.AlarmActivity.EXTRA_TIMER";
 
     private View overlay;
     private TextView time;
 
-    private Alarmio alarmio;
+    private Chronos chronos;
     private Vibrator vibrator;
     private AudioManager audioManager;
 
@@ -82,7 +82,7 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
-        alarmio = (Alarmio) getApplicationContext();
+        chronos = (Chronos) getApplicationContext();
 
         overlay = findViewById(R.id.overlay);
         TextView date = findViewById(R.id.date);
@@ -153,8 +153,8 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
                     else vibrator.vibrate(500);
                 }
 
-                if (sound != null && !sound.isPlaying(alarmio))
-                    sound.play(alarmio);
+                if (sound != null && !sound.isPlaying(chronos))
+                    sound.play(chronos);
 
                 if (alarm != null && isSlowWake) {
                     float slowWakeProgress = (float) elapsedMillis / slowWakeMillis;
@@ -167,7 +167,7 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
                     if (sound != null && sound.isSetVolumeSupported()) {
                         float newVolume = Math.min(1f, slowWakeProgress);
 
-                        sound.setVolume(alarmio, newVolume);
+                        sound.setVolume(chronos, newVolume);
                     } else if (currentVolume < originalVolume) {
                         // Backup volume setting behavior
                         int newVolume = minVolume + (int) Math.min(originalVolume, slowWakeProgress * volumeRange);
@@ -184,9 +184,9 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
         handler.post(runnable);
 
         if (sound != null)
-            sound.play(alarmio);
+            sound.play(chronos);
 
-        SleepReminderService.refreshSleepTime(alarmio);
+        SleepReminderService.refreshSleepTime(chronos);
 
         if (PreferenceData.RINGING_BACKGROUND_IMAGE.getValue(this))
             ImageUtils.getBackgroundImage((ImageView) findViewById(R.id.background));
@@ -217,8 +217,8 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
         if (handler != null)
             handler.removeCallbacks(runnable);
 
-        if (sound != null && sound.isPlaying(alarmio)) {
-            sound.stop(alarmio);
+        if (sound != null && sound.isPlaying(chronos)) {
+            sound.stop(chronos);
 
             if (isSlowWake && !sound.isSetVolumeSupported()) {
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0);
@@ -247,27 +247,27 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
         new AlertDialog.Builder(AlarmActivity.this, isDark ? R.style.Theme_AppCompat_Dialog_Alert : R.style.Theme_AppCompat_Light_Dialog_Alert)
                 .setItems(names, (dialog, which) -> {
                     if (which < minutes.length) {
-                        TimerData timer = alarmio.newTimer();
-                        timer.setDuration(TimeUnit.MINUTES.toMillis(minutes[which]), alarmio);
+                        TimerData timer = chronos.newTimer();
+                        timer.setDuration(TimeUnit.MINUTES.toMillis(minutes[which]), chronos);
                         timer.setVibrate(AlarmActivity.this, isVibrate);
                         timer.setSound(AlarmActivity.this, sound);
-                        timer.set(alarmio, ((AlarmManager) AlarmActivity.this.getSystemService(Context.ALARM_SERVICE)));
-                        alarmio.onTimerStarted();
+                        timer.set(chronos, ((AlarmManager) AlarmActivity.this.getSystemService(Context.ALARM_SERVICE)));
+                        chronos.onTimerStarted();
 
                         finish();
                     } else {
                         TimeChooserDialog timerDialog = new TimeChooserDialog(AlarmActivity.this);
                         timerDialog.setListener((hours, minutes1, seconds) -> {
-                            TimerData timer = alarmio.newTimer();
+                            TimerData timer = chronos.newTimer();
                             timer.setVibrate(AlarmActivity.this, isVibrate);
                             timer.setSound(AlarmActivity.this, sound);
                             timer.setDuration(TimeUnit.HOURS.toMillis(hours)
                                             + TimeUnit.MINUTES.toMillis(minutes1)
                                             + TimeUnit.SECONDS.toMillis(seconds),
-                                    alarmio);
+                                    chronos);
 
-                            timer.set(alarmio, ((AlarmManager) getSystemService(Context.ALARM_SERVICE)));
-                            alarmio.onTimerStarted();
+                            timer.set(chronos, ((AlarmManager) getSystemService(Context.ALARM_SERVICE)));
+                            chronos.onTimerStarted();
                             finish();
                         });
                         timerDialog.show();

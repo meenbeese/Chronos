@@ -24,7 +24,7 @@ class RingtonePreferenceData(private val preference: PreferenceData, name: Int) 
     }
 
     override fun onClick(holder: ViewHolder) {
-        holder.alarmio?.fragmentManager?.let { manager ->
+        holder.chronos?.fragmentManager?.let { manager ->
             val dialog = SoundChooserDialog()
             dialog.setListener(object : SoundChooserListener {
                 override fun onSoundChosen(sound: SoundData?) {

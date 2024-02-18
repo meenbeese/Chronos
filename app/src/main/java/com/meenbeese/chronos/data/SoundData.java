@@ -10,12 +10,12 @@ import com.google.android.exoplayer2.C;
 
 import io.reactivex.annotations.Nullable;
 
-import com.meenbeese.chronos.Alarmio;
+import com.meenbeese.chronos.Chronos;
 
 
 public class SoundData {
 
-    private static final String SEPARATOR = ":AlarmioSoundData:";
+    private static final String SEPARATOR = ":ChronosSoundData:";
 
     public static final String TYPE_RINGTONE = "ringtone";
 
@@ -50,23 +50,23 @@ public class SoundData {
 
     /**
      * Plays the sound. This will pass the SoundData instance to the provided
-     * [Alarmio](../Alarmio) class, which will store the currently playing sound
+     * [Chronos](../Chronos) class, which will store the currently playing sound
      * until it is stopped or cancelled.
      *
-     * @param alarmio           The active Application instance.
+     * @param chronos           The active Application instance.
      */
-    public void play(Alarmio alarmio) {
+    public void play(Chronos chronos) {
         if (type.equals(TYPE_RINGTONE) && url.startsWith("content://")) {
             if (ringtone == null) {
-                ringtone = RingtoneManager.getRingtone(alarmio, Uri.parse(url));
+                ringtone = RingtoneManager.getRingtone(chronos, Uri.parse(url));
                 ringtone.setAudioAttributes(new AudioAttributes.Builder()
                         .setUsage(AudioAttributes.USAGE_ALARM)
                         .build());
             }
 
-            alarmio.playRingtone(ringtone);
+            chronos.playRingtone(ringtone);
         } else {
-            alarmio.playStream(url, type,
+            chronos.playStream(url, type,
                     new com.google.android.exoplayer2.audio.AudioAttributes.Builder()
                     .setUsage(C.USAGE_ALARM)
                     .build());
@@ -78,31 +78,31 @@ public class SoundData {
      * if the sound is a ringtone; if it is a stream, then all streams will be stopped,
      * regardless of whether this sound is in fact the currently playing stream or not.
      *
-     * @param alarmio           The active Application instance.
+     * @param chronos           The active Application instance.
      */
-    public void stop(Alarmio alarmio) {
+    public void stop(Chronos chronos) {
         if (ringtone != null)
             ringtone.stop();
-        else alarmio.stopStream();
+        else chronos.stopStream();
     }
 
     /**
      * Preview the sound on the "media" volume channel.
      *
-     * @param alarmio           The active Application instance.
+     * @param chronos           The active Application instance.
      */
-    public void preview(Alarmio alarmio) {
+    public void preview(Chronos chronos) {
         if (url.startsWith("content://")) {
             if (ringtone == null) {
-                ringtone = RingtoneManager.getRingtone(alarmio, Uri.parse(url));
+                ringtone = RingtoneManager.getRingtone(chronos, Uri.parse(url));
                 ringtone.setAudioAttributes(new AudioAttributes.Builder()
                         .setUsage(AudioAttributes.USAGE_ALARM)
                         .build());
             }
 
-            alarmio.playRingtone(ringtone);
+            chronos.playRingtone(ringtone);
         } else {
-            alarmio.playStream(url, type,
+            chronos.playStream(url, type,
                     new com.google.android.exoplayer2.audio.AudioAttributes.Builder()
                     .setUsage(C.USAGE_ALARM)
                     .build());
@@ -112,22 +112,22 @@ public class SoundData {
     /**
      * Decide whether the sound is currently playing or not.
      *
-     * @param alarmio           The active Application instance.
+     * @param chronos           The active Application instance.
      * @return                  True if "this" sound is playing.
      */
-    public boolean isPlaying(Alarmio alarmio) {
+    public boolean isPlaying(Chronos chronos) {
         if (ringtone != null)
             return ringtone.isPlaying();
-        else return alarmio.isPlayingStream(url);
+        else return chronos.isPlayingStream(url);
     }
 
     /**
      * Sets the player volume to the given float.
      *
-     * @param alarmio           The active Application instance.
+     * @param chronos           The active Application instance.
      * @param volume            The volume between 0 and 1
      */
-    public void setVolume(Alarmio alarmio, float volume) {
+    public void setVolume(Chronos chronos, float volume) {
         if (ringtone != null)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 ringtone.setVolume(volume);
@@ -135,7 +135,7 @@ public class SoundData {
                 // Not possible
                 throw new IllegalArgumentException("Attempted to set the ringtone volume on a device older than Android P.");
             }
-        else alarmio.setStreamVolume(volume);
+        else chronos.setStreamVolume(volume);
     }
 
     /**

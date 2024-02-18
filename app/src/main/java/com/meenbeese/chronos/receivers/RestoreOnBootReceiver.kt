@@ -5,17 +5,17 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 
-import com.meenbeese.chronos.Alarmio
+import com.meenbeese.chronos.Chronos
 
 
 class RestoreOnBootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val alarmio = context.applicationContext as Alarmio
+        val chronos = context.applicationContext as Chronos
         val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        for (alarm in alarmio.alarms) {
+        for (alarm in chronos.alarms) {
             if (alarm.isEnabled) alarm[context] = manager
         }
-        for (timer in alarmio.timers) {
+        for (timer in chronos.timers) {
             if (timer.remainingMillis > 0) timer.setAlarm(context, manager)
         }
     }

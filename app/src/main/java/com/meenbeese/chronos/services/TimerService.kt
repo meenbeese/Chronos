@@ -14,7 +14,7 @@ import android.os.Looper
 
 import androidx.core.app.NotificationCompat
 
-import com.meenbeese.chronos.Alarmio
+import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.activities.MainActivity
 import com.meenbeese.chronos.data.TimerData
@@ -42,7 +42,7 @@ class TimerService : Service() {
     private var notificationString: String? = null
     override fun onCreate() {
         super.onCreate()
-        timers = (applicationContext as Alarmio).timers
+        timers = (applicationContext as Chronos).timers
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     }
 
@@ -56,7 +56,7 @@ class TimerService : Service() {
         get() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) notificationManager?.createNotificationChannel(
                 NotificationChannel(
-                    Alarmio.NOTIFICATION_CHANNEL_TIMERS,
+                    Chronos.NOTIFICATION_CHANNEL_TIMERS,
                     "Timers",
                     NotificationManager.IMPORTANCE_LOW
                 )
@@ -74,7 +74,7 @@ class TimerService : Service() {
             notificationString = string.toString()
             val intent = Intent(this, MainActivity::class.java)
             if (timers?.size == 1) intent.putExtra(TimerReceiver.EXTRA_TIMER_ID, 0)
-            return NotificationCompat.Builder(this, Alarmio.NOTIFICATION_CHANNEL_TIMERS)
+            return NotificationCompat.Builder(this, Chronos.NOTIFICATION_CHANNEL_TIMERS)
                 .setSmallIcon(R.drawable.ic_timer_notification)
                 .setContentTitle(getString(R.string.title_set_timer))
                 .setContentText("")
