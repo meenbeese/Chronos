@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="12dp">
 
-        <me.jfenn.alarmio.views.AestheticSunriseView
+        <com.meenbeese.chronos.views.AestheticSunriseView
             android:id="@+id/sunriseView"
             android:layout_width="match_parent"
             android:layout_height="200dp" />

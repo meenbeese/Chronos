@@ -4,10 +4,10 @@ plugins {
 }
 
 android {
-    namespace = "me.jfenn.alarmio"
+    namespace = "com.meenbeese.chronos"
     compileSdk = 34
     defaultConfig {
-        applicationId = "me.jfenn.alarmio"
+        applicationId = "com.meenbeese.chronos"
         minSdk = 24
         targetSdk = 34
         versionCode = 21

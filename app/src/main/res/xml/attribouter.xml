@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <about>
-    <AppWedge repo="meenbeese/Alarmio">
+    <AppWedge repo="meenbeese/Chronos">
         <LinkWedge
             id="github"
-            url="https://jfenn.me/redirects/?t=github&amp;d=Alarmio" />
+            url="https://jfenn.me/redirects/?t=github&amp;d=Chronos" />
 
     </AppWedge>
-    <ContributorsWedge repo="fennifith/Alarmio">
+    <ContributorsWedge repo="meenbeese/Chronos">
         <ContributorWedge
             name="Meenbeese"
             bio="Android developer. Writes Java, C, and HTML. PHP confuses me."
