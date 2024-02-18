@@ -14,10 +14,16 @@
 
 ## 🌄 Screenshots    
 
-[<img src="./.github/images/home.png" height=80% width=20% alt="Home">](./.github/images/home.png)
-[<img src="./.github/images/alarms.png" height=80% width=20% alt="Alarms">](./.github/images/alarms.png)
-[<img src="./.github/images/timers.png" height=80% width=20% alt="Timers">](./.github/images/timers.png)
-[<img src="./.github/images/themes.png" height=80% width=20% alt="Themes">](./.github/images/themes.png)
+<div align="center">
+  <table>
+    <tr>
+      <td style="width: 25%; height: 100px;"><img src="./.github/images/home.png" alt="Home" style="width: 100%; height: 100%;"></td>
+      <td style="width: 25%; height: 100px;"><img src="./.github/images/alarms.png" alt="Alarms" style="width: 100%; height: 100%;"></td>
+      <td style="width: 25%; height: 100px;"><img src="./.github/images/timers.png" alt="Timers" style="width: 100%; height: 100%;"></td>
+      <td style="width: 25%; height: 100px;"><img src="./.github/images/themes.png" alt="Themes" style="width: 100%; height: 100%;"></td>
+    </tr>
+  </table>
+</div>
 
 ## ⭐ Features
 
