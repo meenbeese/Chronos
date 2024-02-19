@@ -56,12 +56,12 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
         toggle?.setOnClickListener { service?.toggle() }
         lap?.setOnClickListener { service?.lap() }
         share?.setOnClickListener {
-            if (service != null) {
-                val time = formatMillis(service!!.elapsedTime)
-                val content = StringBuilder().append(context!!.getString(R.string.title_time, time)).append("\n")
+            service?.let {
+                val time = formatMillis(it.elapsedTime)
+                val content = StringBuilder().append(requireContext().getString(R.string.title_time, time)).append("\n")
                 var total: Long = 0
-                val laps = service!!.laps
-                for (i in laps.indices) {
+                val laps = it.laps
+                for (i in laps!!.indices) {
                     val lapTime = laps[i]
                     total += lapTime
                     content.append(context?.getString(R.string.title_lap_number, laps.size - i))
@@ -126,29 +126,29 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
 
     override fun onStateChanged(isRunning: Boolean) {
         if (isRunning) {
-            reset!!.isClickable = false
-            reset!!.animate().alpha(0f).start()
-            lap!!.visibility = View.VISIBLE
-            share!!.visibility = View.GONE
+            reset?.isClickable = false
+            reset?.animate()?.alpha(0f)?.start()
+            lap?.visibility = View.VISIBLE
+            share?.visibility = View.GONE
             val drawable =
-                AnimatedVectorDrawableCompat.create(context!!, R.drawable.ic_play_to_pause)
+                AnimatedVectorDrawableCompat.create(requireContext(), R.drawable.ic_play_to_pause)
             if (drawable != null) {
-                toggle!!.setImageDrawable(drawable)
+                toggle?.setImageDrawable(drawable)
                 drawable.start()
-            } else toggle!!.setImageResource(R.drawable.ic_pause)
+            } else toggle?.setImageResource(R.drawable.ic_pause)
         } else {
             if (service!!.elapsedTime > 0) {
-                reset!!.isClickable = true
-                reset!!.animate().alpha(1f).start()
-                share!!.visibility = View.VISIBLE
-            } else share!!.visibility = View.INVISIBLE
-            lap!!.visibility = View.GONE
+                reset?.isClickable = true
+                reset?.animate()?.alpha(1f)?.start()
+                share?.visibility = View.VISIBLE
+            } else share?.visibility = View.INVISIBLE
+            lap?.visibility = View.GONE
             val drawable =
-                AnimatedVectorDrawableCompat.create(context!!, R.drawable.ic_pause_to_play)
+                AnimatedVectorDrawableCompat.create(requireContext(), R.drawable.ic_pause_to_play)
             if (drawable != null) {
-                toggle!!.setImageDrawable(drawable)
+                toggle?.setImageDrawable(drawable)
                 drawable.start()
-            } else toggle!!.setImageResource(R.drawable.ic_play)
+            } else toggle?.setImageResource(R.drawable.ic_play)
         }
     }
 
@@ -163,9 +163,9 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
     }
 
     override fun onTick(currentTime: Long, text: String) {
-        if (service != null) {
+        service?.let {
             time?.setText(text)
-            time?.setProgress(currentTime - if (service?.lastLapTime == 0L) currentTime else service!!.lastLapTime)
+            time?.setProgress(currentTime - if (it.lastLapTime == 0L) currentTime else it.lastLapTime)
         }
     }
 

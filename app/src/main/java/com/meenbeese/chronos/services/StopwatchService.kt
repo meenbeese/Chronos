@@ -33,7 +33,7 @@ class StopwatchService : Service() {
     private var startTime: Long = 0
     private var pauseTime: Long = 0
     private var stopTime: Long = 0
-    private var laps: MutableList<Long>? = null
+    internal var laps: MutableList<Long>? = null
     var lastLapTime: Long = 0
         private set
     var isRunning = false
@@ -76,7 +76,7 @@ class StopwatchService : Service() {
     }
 
     override fun onDestroy() {
-        if (receiver != null) unregisterReceiver(receiver)
+        receiver?.let { unregisterReceiver(it) }
         super.onDestroy()
     }
 
@@ -206,7 +206,7 @@ class StopwatchService : Service() {
     interface Listener {
         fun onStateChanged(isRunning: Boolean)
         fun onReset()
-        fun onTick(currentTime: Long, text: String?)
+        fun onTick(currentTime: Long, text: String)
         fun onLap(lapNum: Int, lapTime: Long, lastLapTime: Long, lapDiff: Long)
     }
 
