@@ -3,21 +3,16 @@
     <AppWedge repo="meenbeese/Chronos">
         <LinkWedge
             id="github"
-            url="https://jfenn.me/redirects/?t=github&amp;d=Chronos" />
+            url="https://github.com/meenbeese/Chronos" />
 
     </AppWedge>
     <ContributorsWedge repo="meenbeese/Chronos">
         <ContributorWedge
             name="Meenbeese"
             bio="Android developer. Writes Java, C, and HTML. PHP confuses me."
-            blog="https://jfenn.me/"
-            login="fennifith"
+            login="meenbeese"
             position="1"
             task="^Developer">
-
-            <LinkWedge
-                id="github"
-                url="https://jfenn.me/redirects/?t=github" />
         </ContributorWedge>
 
         <ContributorWedge
@@ -29,12 +24,13 @@
             task="^UX Design" />
 
         <ContributorWedge
-            name="Eduardo Pratti"
-            avatar="https://images.squarespace-cdn.com/content/5850c064e3df2866f9ea28e1/1521615909558-EJ104MS81XHWTDC6787M/ic_pratti_favicon.png"
-            bio="UI / UX designer focusing on Android, illustrator, and a charismatic seal."
-            blog="https://pratti.design/"
+            name="Alexandre Piveteau"
+            avatar="https://avatars0.githubusercontent.com/u/6318990"
+            bio="Computer Science student and Android developer."
+            blog="https://alexandrepiveteau.ch"
             position="3"
-            task="^Design Consultant">
+            login="alexandrepiveteau"
+            task="^Open Source Contributor">
         </ContributorWedge>
 
         <ContributorWedge
@@ -53,40 +49,15 @@
             login="rohitkparida"
             task="^Illustrator">
         </ContributorWedge>
-
-        <ContributorWedge
-            name="Alexandre Piveteau"
-            avatar="https://avatars0.githubusercontent.com/u/6318990"
-            bio="Computer Science student and Android developer."
-            blog="https://alexandrepiveteau.ch"
-            login="alexandrepiveteau"
-            task="^Open Source Contributor">
-        </ContributorWedge>
-
-        <ContributorWedge
-            hidden="true"
-            login="Suburbanno" />
-
-        <ContributorWedge
-            hidden="true"
-            login="FriederZi" />
-
-        <ContributorWedge
-        	hidden="true"
-        	login="pablomeza10" />
-
-        <ContributorWedge
-            hidden="true"
-            login="yzqzss" />
     </ContributorsWedge>
     <LicensesWedge>
         <LicenseWedge
-            description="^A fast, easy to use, dynamic theme engine. Powered by Rx and Kotlin, for Android apps."
+            description="A fast, easy to use, dynamic theme engine. Powered by Rx and Kotlin, for Android apps."
             license="apache-2.0"
             repo="afollestad/aesthetic" />
 
         <LicenseWedge
-            description="A simple library to use a menu of FloatingActionButtons from Design Support Library that follow Material Design Guidelines."
+            description="A simple library to use a menu of FloatingActionButtons from Design Support Library."
             license="apache-2.0"
             repo="jahirfiquitiva/FABsMenu"
             title="^FABs Menu" />
