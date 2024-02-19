@@ -13,7 +13,7 @@ import com.afollestad.aesthetic.Aesthetic
 import io.reactivex.disposables.Disposable
 
 import com.meenbeese.chronos.interfaces.Subscribable
-import me.jfenn.androidutils.DimenUtils
+import com.meenbeese.chronos.utils.DimenUtils
 
 
 class DaySwitch : View, View.OnClickListener, Subscribable {

@@ -36,9 +36,10 @@ import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.dialogs.AestheticTimeSheetPickerDialog
 import com.meenbeese.chronos.dialogs.TimerDialog
 import com.meenbeese.chronos.interfaces.FragmentInstantiator
+import com.meenbeese.chronos.utils.DimenUtils.getStatusBarHeight
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImage
 import com.meenbeese.chronos.views.PageIndicatorView
-import me.jfenn.androidutils.DimenUtils
+
 import me.jfenn.timedatepickers.dialogs.PickerDialog
 import me.jfenn.timedatepickers.dialogs.PickerDialog.OnSelectedListener
 import me.jfenn.timedatepickers.views.LinearTimePickerView
@@ -92,14 +93,13 @@ class HomeFragment : BaseFragment() {
                     0,
                     0
                 ) else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    if (statusBarHeight < 0) statusBarHeight =
-                        DimenUtils.getStatusBarHeight(context)
+                    if (statusBarHeight < 0) statusBarHeight = requireContext().getStatusBarHeight()
                     bottomSheet.setPadding(0, statusBarHeight, 0, 0)
                 }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                if (statusBarHeight < 0) statusBarHeight = DimenUtils.getStatusBarHeight(context)
+                if (statusBarHeight < 0) statusBarHeight = requireContext().getStatusBarHeight()
                 bottomSheet.setPadding(0, (slideOffset * statusBarHeight).toInt(), 0, 0)
             }
         })
@@ -152,7 +152,7 @@ class HomeFragment : BaseFragment() {
             .subscribe { integer: Int? ->
                 menu?.menuButtonColor = integer!!
                 val color = ContextCompat.getColor(
-                    context!!,
+                    requireContext(),
                     if (chronos!!.activityTheme == Chronos.THEME_AMOLED) R.color.textColorPrimary else R.color.textColorPrimaryNight
                 )
                 menu?.menuButton?.setColorFilter(color)
@@ -179,7 +179,7 @@ class HomeFragment : BaseFragment() {
             }
         stopwatchFab?.setOnClickListener {
             menu?.collapseImmediately()
-            fragmentManager!!.beginTransaction()
+            requireFragmentManager().beginTransaction()
                 .setCustomAnimations(
                     R.anim.slide_in_up_sheet,
                     R.anim.slide_out_up_sheet,
@@ -253,7 +253,7 @@ class HomeFragment : BaseFragment() {
      * a timer.
      */
     private fun invokeTimerScheduler() {
-        TimerDialog(context!!, fragmentManager!!)
+        TimerDialog(requireContext(), requireFragmentManager())
             .show()
     }
 

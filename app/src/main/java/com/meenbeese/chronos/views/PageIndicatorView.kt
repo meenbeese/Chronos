@@ -14,7 +14,7 @@ import com.afollestad.aesthetic.Aesthetic.Companion.get
 import io.reactivex.disposables.Disposable
 
 import com.meenbeese.chronos.interfaces.Subscribable
-import me.jfenn.androidutils.DimenUtils
+import com.meenbeese.chronos.utils.DimenUtils
 
 
 class PageIndicatorView : View, OnPageChangeListener, Subscribable {

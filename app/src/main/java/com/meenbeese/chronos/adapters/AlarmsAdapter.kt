@@ -40,10 +40,11 @@ import com.meenbeese.chronos.dialogs.AestheticTimeSheetPickerDialog
 import com.meenbeese.chronos.dialogs.AlertDialog
 import com.meenbeese.chronos.dialogs.SoundChooserDialog
 import com.meenbeese.chronos.interfaces.SoundChooserListener
+import com.meenbeese.chronos.utils.DimenUtils
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.DaySwitch
 import com.meenbeese.chronos.views.ProgressLineView
-import me.jfenn.androidutils.DimenUtils
+
 import me.jfenn.timedatepickers.dialogs.PickerDialog
 import me.jfenn.timedatepickers.views.LinearTimePickerView
 
