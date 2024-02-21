@@ -56,9 +56,9 @@ class AlarmSoundChooserFragment : BaseSoundChooserFragment() {
 
     internal class Instantiator(context: Context?, listener: SoundChooserListener?) :
         BaseSoundChooserFragment.Instantiator(context, listener) {
-        public override fun newInstance(
+        override fun newInstance(
             position: Int,
-            listener: SoundChooserListener
+            listener: SoundChooserListener?
         ): BasePagerFragment {
             val fragment: BaseSoundChooserFragment = AlarmSoundChooserFragment()
             fragment.setListener(listener)

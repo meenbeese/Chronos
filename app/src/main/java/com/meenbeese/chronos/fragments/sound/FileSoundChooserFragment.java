@@ -125,7 +125,7 @@ public class FileSoundChooserFragment extends BaseSoundChooserFragment {
         }
 
         @Override
-        BasePagerFragment newInstance(int position, SoundChooserListener listener) {
+        public BasePagerFragment newInstance(int position, SoundChooserListener listener) {
             BaseSoundChooserFragment fragment = new FileSoundChooserFragment();
             fragment.setListener(listener);
             return fragment;
