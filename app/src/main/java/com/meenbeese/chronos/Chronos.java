@@ -27,7 +27,6 @@ import com.meenbeese.chronos.data.SoundData;
 import com.meenbeese.chronos.data.TimerData;
 import com.meenbeese.chronos.services.SleepReminderService;
 import com.meenbeese.chronos.services.TimerService;
-import com.meenbeese.chronos.utils.DebugUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,7 +58,6 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
     @Override
     public void onCreate() {
         super.onCreate();
-        DebugUtils.setup(this);
 
         listeners = new ArrayList<>();
         alarms = new ArrayList<>();
