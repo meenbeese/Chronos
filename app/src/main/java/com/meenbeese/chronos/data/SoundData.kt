@@ -39,7 +39,7 @@ data class SoundData(val name: String, val type: String, val url: String) {
             chronos.playRingtone(ringtone)
         } else {
             chronos.playStream(
-                url, type,
+                url,
                 com.google.android.exoplayer2.audio.AudioAttributes.Builder()
                     .setUsage(C.USAGE_ALARM)
                     .build()
@@ -74,7 +74,7 @@ data class SoundData(val name: String, val type: String, val url: String) {
             chronos.playRingtone(ringtone)
         } else {
             chronos.playStream(
-                url, type,
+                url,
                 com.google.android.exoplayer2.audio.AudioAttributes.Builder()
                     .setUsage(C.USAGE_ALARM)
                     .build()

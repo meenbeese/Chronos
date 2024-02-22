@@ -1,15 +1,12 @@
 package com.meenbeese.chronos;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.multidex.MultiDexApplication;
@@ -21,16 +18,9 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.AudioAttributes;
 import com.google.android.exoplayer2.source.MediaSourceFactory;
-import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
 import com.meenbeese.chronos.data.AlarmData;
 import com.meenbeese.chronos.data.PreferenceData;
 import com.meenbeese.chronos.data.SoundData;
@@ -38,6 +28,10 @@ import com.meenbeese.chronos.data.TimerData;
 import com.meenbeese.chronos.services.SleepReminderService;
 import com.meenbeese.chronos.services.TimerService;
 import com.meenbeese.chronos.utils.DebugUtils;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 
 public class Chronos extends MultiDexApplication implements Player.EventListener {
@@ -49,9 +43,6 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
 
     public static final String NOTIFICATION_CHANNEL_STOPWATCH = "stopwatch";
     public static final String NOTIFICATION_CHANNEL_TIMERS = "timers";
-
-    private SharedPreferences prefs;
-    private SunriseSunsetCalculator sunsetCalculator;
 
     private Ringtone currentRingtone;
 
@@ -70,7 +61,6 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
         super.onCreate();
         DebugUtils.setup(this);
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         listeners = new ArrayList<>();
         alarms = new ArrayList<>();
         timers = new ArrayList<>();
@@ -80,7 +70,6 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
 
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "exoplayer2example"), null);
         hlsMediaSourceFactory = new HlsMediaSource.Factory(dataSourceFactory);
-        ProgressiveMediaSource.Factory progressiveMediaSourceFactory = new ProgressiveMediaSource.Factory(dataSourceFactory);
 
         int alarmLength = PreferenceData.ALARM_LENGTH.getValue(this);
         for (int id = 0; id < alarmLength; id++) {
@@ -218,16 +207,6 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
     }
 
     /**
-     * Get an instance of SharedPreferences.
-     *
-     * @return          The instance of SharedPreferences being used by the application.
-     * @see [android.content.SharedPreferences Documentation](https://developer.android.com/reference/android/content/SharedPreferences)
-     */
-    public SharedPreferences getPrefs() {
-        return prefs;
-    }
-
-    /**
      * Update the application theme.
      */
     public void updateTheme() {
@@ -327,16 +306,6 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
         return currentRingtone != null && currentRingtone.isPlaying();
     }
 
-    /**
-     * Get the currently playing ringtone.
-     *
-     * @return          The currently playing ringtone, or null.
-     */
-    @Nullable
-    public Ringtone getCurrentRingtone() {
-        return currentRingtone;
-    }
-
     public void playRingtone(Ringtone ringtone) {
         if (!ringtone.isPlaying()) {
             stopCurrentSound();
@@ -352,7 +321,7 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
      * @param url       The URL of the stream to be passed to ExoPlayer.
      * @see [ExoPlayer Repo](https://github.com/google/ExoPlayer)
      */
-    private void playStream(String url, String type, MediaSourceFactory factory) {
+    private void playStream(String url, MediaSourceFactory factory) {
         stopCurrentSound();
 
         // Error handling, including when this is a progressive stream
@@ -369,8 +338,8 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
      * @param url       The URL of the stream to be passed to ExoPlayer.
      * @see [ExoPlayer Repo](https://github.com/google/ExoPlayer)
      */
-    public void playStream(String url, String type) {
-        playStream(url, type, hlsMediaSourceFactory);
+    public void playStream(String url) {
+        playStream(url, hlsMediaSourceFactory);
     }
 
     /**
@@ -380,10 +349,10 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
      * @param attributes    The attributes to play the stream with.
      * @see [ExoPlayer Repo](https://github.com/google/ExoPlayer)
      */
-    public void playStream(String url, String type, AudioAttributes attributes) {
+    public void playStream(String url, AudioAttributes attributes) {
         player.stop();
         player.setAudioAttributes(attributes);
-        playStream(url, type);
+        playStream(url);
     }
 
     /**
@@ -421,7 +390,6 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
     public void stopCurrentSound() {
         if (isRingtonePlaying())
             currentRingtone.stop();
-
         stopStream();
     }
 
@@ -435,7 +403,6 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
 
     public void setListener(ActivityListener listener) {
         this.listener = listener;
-
         if (listener != null)
             updateTheme();
     }
@@ -461,6 +428,8 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
         switch (error.type) {
             case ExoPlaybackException.TYPE_RENDERER -> exception = error.getRendererException();
             case ExoPlaybackException.TYPE_UNEXPECTED -> exception = error.getUnexpectedException();
+            case ExoPlaybackException.TYPE_SOURCE, ExoPlaybackException.TYPE_REMOTE -> exception = error.getSourceException();
+            case ExoPlaybackException.TYPE_OUT_OF_MEMORY -> exception = new Exception("Out of memory exception.");
             default -> {
                 return;
             }
@@ -468,11 +437,6 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
 
         exception.printStackTrace();
         Toast.makeText(this, exception.getClass().getName() + ": " + exception.getMessage(), Toast.LENGTH_SHORT).show();
-    }
-
-    public void requestPermissions(String... permissions) {
-        if (listener != null)
-            listener.requestPermissions(permissions);
     }
 
     public FragmentManager getFragmentManager() {
@@ -488,9 +452,6 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
     }
 
     public interface ActivityListener {
-        void requestPermissions(String... permissions);
-
         FragmentManager gettFragmentManager(); //help
     }
-
 }

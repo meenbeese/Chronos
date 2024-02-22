@@ -7,7 +7,6 @@ import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -196,11 +195,6 @@ public class MainActivity extends AestheticActivity implements FragmentManager.O
     public void onBackStackChanged() {
         BaseFragment fragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
         fragmentRef = new WeakReference<>(fragment);
-    }
-
-    @Override
-    public void requestPermissions(String... permissions) {
-        ActivityCompat.requestPermissions(this, permissions, 0);
     }
 
     @Override
