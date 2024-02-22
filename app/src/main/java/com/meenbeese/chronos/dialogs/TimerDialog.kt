@@ -12,14 +12,13 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
-import com.afollestad.aesthetic.Aesthetic.Companion.get
-
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.fragments.TimerFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
+import com.afollestad.aesthetic.Aesthetic.Companion.get
 
 import java.util.concurrent.TimeUnit
 

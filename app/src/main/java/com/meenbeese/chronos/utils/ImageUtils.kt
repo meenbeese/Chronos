@@ -4,7 +4,6 @@ import android.net.Uri
 import android.widget.ImageView
 
 import com.bumptech.glide.Glide
-
 import com.meenbeese.chronos.data.PreferenceData
 
 import java.io.File

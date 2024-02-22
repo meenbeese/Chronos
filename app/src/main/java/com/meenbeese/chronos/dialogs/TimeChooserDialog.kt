@@ -7,9 +7,8 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 
-import com.afollestad.aesthetic.Aesthetic.Companion.get
-
 import com.meenbeese.chronos.R
+import com.afollestad.aesthetic.Aesthetic.Companion.get
 
 import java.util.concurrent.TimeUnit
 

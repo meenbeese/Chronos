@@ -7,15 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 
-import com.afollestad.aesthetic.Aesthetic.Companion.get
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-
-import io.reactivex.disposables.Disposable
-
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.ProgressTextView
+import com.afollestad.aesthetic.Aesthetic.Companion.get
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+
+import io.reactivex.disposables.Disposable
 
 
 class TimerFragment : BaseFragment() {

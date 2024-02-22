@@ -11,11 +11,10 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 
 import com.afollestad.aesthetic.Aesthetic
-
-import io.reactivex.disposables.Disposable
-
 import com.meenbeese.chronos.interfaces.Subscribable
 import com.meenbeese.chronos.utils.DimenUtils
+
+import io.reactivex.disposables.Disposable
 
 import kotlin.math.cos
 import kotlin.math.min

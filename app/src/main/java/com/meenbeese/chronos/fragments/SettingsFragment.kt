@@ -11,11 +11,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-import com.afollestad.aesthetic.Aesthetic.Companion.get
-
-import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
-
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.PreferenceAdapter
 import com.meenbeese.chronos.data.PreferenceData
@@ -30,6 +25,10 @@ import com.meenbeese.chronos.data.preference.ThemePreferenceData
 import com.meenbeese.chronos.data.preference.TimePreferenceData
 import com.meenbeese.chronos.data.preference.TimeZonesPreferenceData
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
+import com.afollestad.aesthetic.Aesthetic.Companion.get
+
+import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Consumer
 
 
 class SettingsFragment : BasePagerFragment(), Consumer<Any?> {

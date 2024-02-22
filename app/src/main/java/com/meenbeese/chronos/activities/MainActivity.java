@@ -11,9 +11,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.afollestad.aesthetic.AestheticActivity;
-
-import java.lang.ref.WeakReference;
-
 import com.meenbeese.chronos.Chronos;
 import com.meenbeese.chronos.R;
 import com.meenbeese.chronos.data.PreferenceData;
@@ -24,6 +21,8 @@ import com.meenbeese.chronos.fragments.SplashFragment;
 import com.meenbeese.chronos.fragments.StopwatchFragment;
 import com.meenbeese.chronos.fragments.TimerFragment;
 import com.meenbeese.chronos.receivers.TimerReceiver;
+
+import java.lang.ref.WeakReference;
 
 
 public class MainActivity extends AestheticActivity implements FragmentManager.OnBackStackChangedListener, Chronos.ActivityListener {

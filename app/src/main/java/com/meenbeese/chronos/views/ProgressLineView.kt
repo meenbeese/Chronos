@@ -8,10 +8,9 @@ import android.util.AttributeSet
 import android.view.View
 
 import com.afollestad.aesthetic.Aesthetic
+import com.meenbeese.chronos.interfaces.Subscribable
 
 import io.reactivex.disposables.Disposable
-
-import com.meenbeese.chronos.interfaces.Subscribable
 
 
 /**

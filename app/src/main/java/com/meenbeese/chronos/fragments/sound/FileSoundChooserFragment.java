@@ -16,17 +16,17 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.meenbeese.chronos.R;
 import com.meenbeese.chronos.activities.FileChooserActivity;
 import com.meenbeese.chronos.adapters.SoundsAdapter;
 import com.meenbeese.chronos.data.SoundData;
 import com.meenbeese.chronos.fragments.BasePagerFragment;
 import com.meenbeese.chronos.interfaces.SoundChooserListener;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 public class FileSoundChooserFragment extends BaseSoundChooserFragment {

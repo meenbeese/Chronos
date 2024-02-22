@@ -13,7 +13,6 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.core.widget.CompoundButtonCompat
 
 import com.afollestad.aesthetic.Aesthetic
-
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 

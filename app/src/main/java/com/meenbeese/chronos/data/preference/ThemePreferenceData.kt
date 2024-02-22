@@ -13,12 +13,12 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatSpinner
 
 import com.afollestad.aesthetic.Aesthetic
-
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.dialogs.AestheticTimeSheetPickerDialog
 import com.meenbeese.chronos.utils.FormatUtils
+
 import me.jfenn.sunrisesunsetview.SunriseSunsetView
 import me.jfenn.timedatepickers.dialogs.PickerDialog
 import me.jfenn.timedatepickers.views.LinearTimePickerView

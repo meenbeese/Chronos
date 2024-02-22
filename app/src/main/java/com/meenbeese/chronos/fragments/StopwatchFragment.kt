@@ -16,15 +16,14 @@ import android.widget.TextView
 import androidx.core.view.GravityCompat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
-import com.afollestad.aesthetic.Aesthetic.Companion.get
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-
-import io.reactivex.disposables.Disposable
-
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.services.StopwatchService
 import com.meenbeese.chronos.utils.FormatUtils.formatMillis
 import com.meenbeese.chronos.views.ProgressTextView
+import com.afollestad.aesthetic.Aesthetic.Companion.get
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+
+import io.reactivex.disposables.Disposable
 
 
 class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConnection {

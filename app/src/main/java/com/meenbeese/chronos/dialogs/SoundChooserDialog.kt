@@ -10,9 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.viewpager.widget.ViewPager
 
-import com.afollestad.aesthetic.Aesthetic.Companion.get
-import com.google.android.material.tabs.TabLayout
-
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
@@ -21,6 +18,8 @@ import com.meenbeese.chronos.fragments.sound.AlarmSoundChooserFragment
 import com.meenbeese.chronos.fragments.sound.FileSoundChooserFragment
 import com.meenbeese.chronos.fragments.sound.RingtoneSoundChooserFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
+import com.afollestad.aesthetic.Aesthetic.Companion.get
+import com.google.android.material.tabs.TabLayout
 
 
 class SoundChooserDialog : DialogFragment(), SoundChooserListener {

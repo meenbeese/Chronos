@@ -11,13 +11,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-import com.afollestad.aesthetic.Aesthetic.Companion.get
-
-import io.reactivex.disposables.Disposable
-
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.AlarmsAdapter
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
+import com.afollestad.aesthetic.Aesthetic.Companion.get
+
+import io.reactivex.disposables.Disposable
 
 
 class AlarmsFragment : BasePagerFragment() {

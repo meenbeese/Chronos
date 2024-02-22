@@ -1,6 +1,7 @@
 package com.meenbeese.chronos.data.preference
 
 import com.meenbeese.chronos.R
+
 import me.jfenn.attribouter.Attribouter as About
 
 

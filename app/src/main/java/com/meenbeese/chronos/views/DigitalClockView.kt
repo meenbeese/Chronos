@@ -12,11 +12,10 @@ import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 
 import com.afollestad.aesthetic.Aesthetic.Companion.get
-
-import io.reactivex.disposables.Disposable
-
 import com.meenbeese.chronos.interfaces.Subscribable
 import com.meenbeese.chronos.utils.FormatUtils
+
+import io.reactivex.disposables.Disposable
 
 import java.lang.ref.WeakReference
 import java.util.Calendar

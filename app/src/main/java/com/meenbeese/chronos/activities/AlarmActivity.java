@@ -20,14 +20,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
-import com.afollestad.aesthetic.Aesthetic;
-import com.afollestad.aesthetic.AestheticActivity;
-
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
 import io.reactivex.disposables.Disposable;
 
+import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.aesthetic.AestheticActivity;
 import com.meenbeese.chronos.Chronos;
 import com.meenbeese.chronos.R;
 import com.meenbeese.chronos.data.AlarmData;
@@ -38,8 +34,12 @@ import com.meenbeese.chronos.dialogs.TimeChooserDialog;
 import com.meenbeese.chronos.services.SleepReminderService;
 import com.meenbeese.chronos.utils.FormatUtils;
 import com.meenbeese.chronos.utils.ImageUtils;
+
 import me.jfenn.slideactionview.SlideActionListener;
 import me.jfenn.slideactionview.SlideActionView;
+
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 
 public class AlarmActivity extends AestheticActivity implements SlideActionListener {

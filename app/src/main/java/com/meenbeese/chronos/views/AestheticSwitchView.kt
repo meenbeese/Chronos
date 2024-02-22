@@ -10,10 +10,9 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.CompoundButtonCompat
 
 import com.afollestad.aesthetic.Aesthetic
+import com.meenbeese.chronos.interfaces.Subscribable
 
 import io.reactivex.disposables.Disposable
-
-import com.meenbeese.chronos.interfaces.Subscribable
 
 
 /**

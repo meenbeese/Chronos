@@ -9,13 +9,13 @@ import android.os.Parcelable;
 
 import androidx.annotation.Nullable;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import com.meenbeese.chronos.R;
 import com.meenbeese.chronos.activities.MainActivity;
 import com.meenbeese.chronos.receivers.AlarmReceiver;
 import com.meenbeese.chronos.services.SleepReminderService;
+
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class AlarmData implements Parcelable {

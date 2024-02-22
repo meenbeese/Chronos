@@ -9,11 +9,10 @@ import android.view.animation.AnticipateOvershootInterpolator
 import android.view.animation.DecelerateInterpolator
 
 import com.afollestad.aesthetic.Aesthetic
-
-import io.reactivex.disposables.Disposable
-
 import com.meenbeese.chronos.interfaces.Subscribable
 import com.meenbeese.chronos.utils.DimenUtils
+
+import io.reactivex.disposables.Disposable
 
 
 class DaySwitch : View, View.OnClickListener, Subscribable {

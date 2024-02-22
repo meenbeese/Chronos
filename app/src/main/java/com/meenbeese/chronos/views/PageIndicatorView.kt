@@ -10,11 +10,10 @@ import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 
 import com.afollestad.aesthetic.Aesthetic.Companion.get
-
-import io.reactivex.disposables.Disposable
-
 import com.meenbeese.chronos.interfaces.Subscribable
 import com.meenbeese.chronos.utils.DimenUtils
+
+import io.reactivex.disposables.Disposable
 
 
 class PageIndicatorView : View, OnPageChangeListener, Subscribable {
