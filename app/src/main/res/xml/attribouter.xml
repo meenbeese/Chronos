@@ -73,12 +73,6 @@
             repo="fennifith/SunriseSunsetView" />
 
         <LicenseWedge
-            description="Library for computing the sunrise/sunset from GPS coordinates and a date, in Java."
-            license="apache-2.0"
-            repo="mikereedell/sunrisesunsetlib-java"
-            title="^Sunrise Sunset Lib" />
-
-        <LicenseWedge
             description="An extensible media player for Android."
             license="apache-2.0"
             repo="google/ExoPlayer" />
