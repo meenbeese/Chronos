@@ -197,7 +197,7 @@ public class MainActivity extends AestheticActivity implements FragmentManager.O
     }
 
     @Override
-    public FragmentManager gettFragmentManager() {
+    public FragmentManager fetchFragmentManager() {
         return getSupportFragmentManager();
     }
 }

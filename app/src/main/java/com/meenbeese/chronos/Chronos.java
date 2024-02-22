@@ -439,7 +439,7 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
 
     public FragmentManager getFragmentManager() {
         if (listener != null)
-            return listener.gettFragmentManager();
+            return listener.fetchFragmentManager();
         else return null;
     }
 
@@ -450,6 +450,6 @@ public class Chronos extends MultiDexApplication implements Player.EventListener
     }
 
     public interface ActivityListener {
-        FragmentManager gettFragmentManager(); //help
+        FragmentManager fetchFragmentManager();
     }
 }
