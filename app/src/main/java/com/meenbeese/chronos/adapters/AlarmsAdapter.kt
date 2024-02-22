@@ -458,8 +458,9 @@ class AlarmsAdapter(private val chronos: Chronos, private val recycler: Recycler
                 }
 
                 override fun afterTextChanged(editable: Editable) {
-                    alarms[adapterPosition].setName(chronos, editable.toString())
-
+                    if (adapterPosition < alarms.size) {
+                        alarms[adapterPosition].setName(chronos, editable.toString())
+                    }
                 }
             })
         }
