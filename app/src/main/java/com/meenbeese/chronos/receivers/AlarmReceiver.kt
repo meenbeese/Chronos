@@ -23,6 +23,6 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        const val EXTRA_ALARM_ID = "james.chronos.EXTRA_ALARM_ID"
+        const val EXTRA_ALARM_ID = "meenbeese.chronos.EXTRA_ALARM_ID"
     }
 }

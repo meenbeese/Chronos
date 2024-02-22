@@ -77,6 +77,6 @@ class TimerFragment : BaseFragment() {
     }
 
     companion object {
-        const val EXTRA_TIMER = "james.chronos.TimerFragment.EXTRA_TIMER"
+        const val EXTRA_TIMER = "meenbeese.chronos.TimerFragment.EXTRA_TIMER"
     }
 }

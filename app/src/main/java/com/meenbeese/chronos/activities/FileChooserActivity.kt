@@ -197,8 +197,8 @@ class FileChooserActivity : AppCompatActivity() {
         private const val REQUEST_AUDIO = 285
         private const val REQUEST_IMAGE_PERMISSION = 726
         private const val REQUEST_AUDIO_PERMISSION = 727
-        const val EXTRA_TYPE = "james.chronos.FileChooserActivity.EXTRA_TYPE"
-        const val EXTRA_PREF = "james.chronos.FileChooserActivity.EXTRA_PREFERENCE"
+        const val EXTRA_TYPE = "meenbeese.chronos.FileChooserActivity.EXTRA_TYPE"
+        const val EXTRA_PREF = "meenbeese.chronos.FileChooserActivity.EXTRA_PREFERENCE"
         const val TYPE_IMAGE = "image/*"
         const val TYPE_AUDIO = "audio/*"
     }

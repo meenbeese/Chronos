@@ -20,6 +20,6 @@ class TimerReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        const val EXTRA_TIMER_ID = "james.chronos.EXTRA_TIMER_ID"
+        const val EXTRA_TIMER_ID = "meenbeese.chronos.EXTRA_TIMER_ID"
     }
 }

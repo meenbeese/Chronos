@@ -44,8 +44,8 @@ import java.util.concurrent.TimeUnit;
 
 public class AlarmActivity extends AestheticActivity implements SlideActionListener {
 
-    public static final String EXTRA_ALARM = "james.chronos.AlarmActivity.EXTRA_ALARM";
-    public static final String EXTRA_TIMER = "james.chronos.AlarmActivity.EXTRA_TIMER";
+    public static final String EXTRA_ALARM = "meenbeese.chronos.AlarmActivity.EXTRA_ALARM";
+    public static final String EXTRA_TIMER = "meenbeese.chronos.AlarmActivity.EXTRA_TIMER";
 
     private View overlay;
     private TextView time;

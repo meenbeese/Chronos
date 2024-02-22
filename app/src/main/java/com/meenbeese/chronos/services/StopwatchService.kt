@@ -231,8 +231,8 @@ class StopwatchService : Service() {
 
     companion object {
         private const val NOTIFICATION_ID = 247
-        private const val ACTION_RESET = "james.chronos.StopwatchFragment.ACTION_RESET"
-        private const val ACTION_TOGGLE = "james.chronos.StopwatchFragment.ACTION_TOGGLE"
-        private const val ACTION_LAP = "james.chronos.StopwatchFragment.ACTION_LAP"
+        private const val ACTION_RESET = "meenbeese.chronos.StopwatchFragment.ACTION_RESET"
+        private const val ACTION_TOGGLE = "meenbeese.chronos.StopwatchFragment.ACTION_TOGGLE"
+        private const val ACTION_LAP = "meenbeese.chronos.StopwatchFragment.ACTION_LAP"
     }
 }
