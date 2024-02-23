@@ -44,7 +44,7 @@
 ## ⚙️ Permissions
 
 - `SET_ALARM`, `VIBRATE`, `WAKE_LOCK`: necessary for the core functionality of the app
-- `INTERNET`: obtaining a set of sunrise/sunset times (only stored locally) and fetching graphical assets and some of the information in the about page
+- `INTERNET`: fetching graphical assets and some of the information in the about page
 - `RECEIVE_BOOT_COMPLETED`: re-scheduling alarms on startup
 - `READ_EXTERNAL_STORAGE`: setting custom background / header images in the settings
 - `FOREGROUND_SERVICE`: notifying you to sleep - see the "Sleep Reminder" option in the settings
