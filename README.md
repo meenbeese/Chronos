@@ -27,12 +27,11 @@
 
 ## ⭐ Features
 
-- Custom backgrounds & ringtones,
-- No unnecessary permissions,
+- Custom backgrounds & ringtones
+- No unnecessary permissions
 - Dark, Light, Amoled themes
 - Granular controls everywhere
-- Unique, minimal, efficient design,
-- Custom audio files & backgrounds
+- Unique, minimal, efficient design
 - Portrait and landscape orientation
 - Countless default ringtones
 
@@ -45,7 +44,7 @@
 
 - `SET_ALARM`, `VIBRATE`, `WAKE_LOCK`: necessary for the core functionality of the app
 - `INTERNET`: fetching graphical assets and some of the information in the about page
-- `RECEIVE_BOOT_COMPLETED`: re-scheduling alarms on startup
+- `RECEIVE_BOOT_COMPLETED`: automatically re-scheduling alarms on startup
 - `READ_EXTERNAL_STORAGE`: setting custom background / header images in the settings
 - `FOREGROUND_SERVICE`: notifying you to sleep - see the "Sleep Reminder" option in the settings
 - `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`: please see [dontkillmyapp.com](https://dontkillmyapp.com/)
@@ -59,14 +58,14 @@ Chronos is a user-driven project. We welcome any contribution, big or small.
 - **🤝 User Support:** Respond to issues and identify duplicates.
 - **📂 Issue Reporting:** Report bugs and edge cases with relevant info.
 - **🌍 Localization:** Translate Chronos if it doesn't support your language.
-- **📄 Documentation:** Write guides, explanations, README updates, user tutorials, or add comments to undocumented functions.
+- **📄 Documentation:** Write guides, explanations, README updates, user tutorials, or documentation.
 
 ### ✅ Other Support Methods
 
 If you can't contribute directly, consider these options:
 
 - **💈 Advertising:** Spread the word about Chronos.
-- **💵 Donations:** Support us financially if you can.
+- **💵 Donations:** [Support us](https://liberapay.com/meenbeese/) financially if you can.
 - **📢 Advocacy:** Support FOSS services over closed ones.
 
 ## ✏️ Acknowledgements
