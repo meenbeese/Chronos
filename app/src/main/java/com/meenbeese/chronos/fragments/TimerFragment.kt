@@ -58,7 +58,7 @@ class TimerFragment : BaseFragment() {
             }
         }
         stop?.setOnClickListener {
-            chronos?.removeTimer(timer)
+            chronos?.removeTimer(timer!!)
             fragmentManager?.popBackStack()
         }
         back?.setOnClickListener { fragmentManager?.popBackStack() }
