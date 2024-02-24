@@ -315,7 +315,9 @@ class Chronos : MultiDexApplication(), Player.EventListener {
      */
     fun playStream(url: String, attributes: AudioAttributes?) {
         player?.stop()
-        player?.audioAttributes = attributes!!
+        player = SimpleExoPlayer.Builder(this)
+            .setAudioAttributes(attributes!!, true)
+            .build()
         playStream(url)
     }
 
@@ -382,7 +384,6 @@ class Chronos : MultiDexApplication(), Player.EventListener {
             ExoPlaybackException.TYPE_RENDERER -> error.rendererException
             ExoPlaybackException.TYPE_UNEXPECTED -> error.unexpectedException
             ExoPlaybackException.TYPE_SOURCE, ExoPlaybackException.TYPE_REMOTE -> error.sourceException
-            ExoPlaybackException.TYPE_OUT_OF_MEMORY -> Exception("Out of memory exception.")
             else -> {
                 return
             }
