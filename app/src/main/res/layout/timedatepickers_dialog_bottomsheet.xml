@@ -30,7 +30,8 @@
             android:gravity="end"
             android:orientation="horizontal"
             android:paddingLeft="8dp"
-            android:paddingRight="8dp">
+            android:paddingRight="8dp"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:id="@+id/cancel"
@@ -76,8 +77,8 @@
                     android:layout_width="40dp"
                     android:layout_height="match_parent"
                     android:scaleType="centerInside"
-                    android:tint="@color/timedatepicker_colorAccent"
-                    app:srcCompat="@drawable/ic_check" />
+                    app:srcCompat="@drawable/ic_check"
+                    app:tint="@color/timedatepicker_colorAccent" />
 
                 <TextView
                     android:id="@+id/okText"
