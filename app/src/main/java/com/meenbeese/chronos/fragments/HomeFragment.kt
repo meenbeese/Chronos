@@ -83,7 +83,7 @@ class HomeFragment : BaseFragment() {
         alarmFab = view?.findViewById(R.id.alarmFab)
         behavior = BottomSheetBehavior.from(bottomSheet!!)
         behavior?.isHideable = false
-        behavior?.setBottomSheetCallback(object : BottomSheetCallback() {
+        behavior?.addBottomSheetCallback(object : BottomSheetCallback() {
             private var statusBarHeight = -1
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) bottomSheet.setPadding(
@@ -178,7 +178,7 @@ class HomeFragment : BaseFragment() {
             }
         stopwatchFab?.setOnClickListener {
             menu?.collapseImmediately()
-            requireFragmentManager().beginTransaction()
+            parentFragmentManager.beginTransaction()
                 .setCustomAnimations(
                     R.anim.slide_in_up_sheet,
                     R.anim.slide_out_up_sheet,
@@ -252,7 +252,7 @@ class HomeFragment : BaseFragment() {
      * a timer.
      */
     private fun invokeTimerScheduler() {
-        TimerDialog(requireContext(), requireFragmentManager())
+        TimerDialog(requireContext(), parentFragmentManager)
             .show()
     }
 

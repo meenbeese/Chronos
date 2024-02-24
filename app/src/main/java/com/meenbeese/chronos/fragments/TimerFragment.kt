@@ -48,8 +48,7 @@ class TimerFragment : BaseFragment() {
                         handler?.postDelayed(this, 10)
                     } else {
                         try {
-                            val manager = fragmentManager
-                            manager?.popBackStack()
+                            parentFragmentManager.popBackStack()
                         } catch (e: IllegalStateException) {
                             handler?.postDelayed(this, 100)
                         }
@@ -59,9 +58,9 @@ class TimerFragment : BaseFragment() {
         }
         stop?.setOnClickListener {
             chronos?.removeTimer(timer!!)
-            fragmentManager?.popBackStack()
+            parentFragmentManager.popBackStack()
         }
-        back?.setOnClickListener { fragmentManager?.popBackStack() }
+        back?.setOnClickListener { parentFragmentManager.popBackStack() }
         handler?.post(runnable as Runnable)
         textColorPrimarySubscription = get()
             .textColorPrimary()

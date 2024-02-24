@@ -51,7 +51,7 @@ class SplashFragment : BaseFragment(), Animator.AnimatorListener {
     private fun finish() {
         val fragment = HomeFragment()
         fragment.arguments = arguments
-        fragmentManager!!.beginTransaction()
+        parentFragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
             .replace(R.id.fragment, fragment)
             .commit()

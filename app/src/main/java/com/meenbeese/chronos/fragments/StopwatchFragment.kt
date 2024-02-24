@@ -89,7 +89,7 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
                 )
             }
         }
-        back?.setOnClickListener { fragmentManager?.popBackStack() }
+        back?.setOnClickListener { parentFragmentManager.popBackStack() }
         textColorPrimarySubscription = get()
             .textColorPrimary()
             .subscribe { integer: Int ->
