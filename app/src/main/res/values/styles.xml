@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
         <item name="android:windowBackground">@android:color/black</item>
         <item name="colorPrimary">@color/colorNightPrimary</item>
         <item name="colorPrimaryDark">@color/colorNightPrimaryDark</item>
@@ -12,7 +12,7 @@
         <item name="android:textColorSecondaryInverse">@color/textColorSecondaryNight</item>
     </style>
 
-    <style name="AppTheme.Transparent" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme.Transparent" parent="Theme.MaterialComponents.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
