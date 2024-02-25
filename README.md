@@ -37,8 +37,7 @@
 
 ## 📲 Installation
 
-[<img width='200' height='80' alt='F-Droid Download' src='https://fdroid.gitlab.io/artwork/badge/get-it-on.png'>](https://f-droid.org/packages/me.jfenn.Chronos/)
-[<img width='200' height='80' alt='APK Download' src='https://user-images.githubusercontent.com/114044633/223920025-83687de0-e463-4c5d-8122-e06e4bb7d40c.png'>]((../../releases/))
+[<img width='200' height='80' alt='APK Download' src='https://user-images.githubusercontent.com/114044633/223920025-83687de0-e463-4c5d-8122-e06e4bb7d40c.png'>](https://github.com/meenbeese/Chronos/releases/latest)
 
 ## ⚙️ Permissions
 
