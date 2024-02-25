@@ -4,6 +4,7 @@ import android.net.Uri
 import android.widget.ImageView
 
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.meenbeese.chronos.data.PreferenceData
 
 import java.io.File
@@ -19,18 +20,25 @@ object ImageUtils {
     @JvmStatic
     fun getBackgroundImage(imageView: ImageView) {
         val backgroundUrl = PreferenceData.BACKGROUND_IMAGE.getValue<String>(imageView.context)
-        if (backgroundUrl != null && backgroundUrl.isNotEmpty()) {
-            if (backgroundUrl.startsWith("http")) Glide.with(imageView.context).load(backgroundUrl)
-                .into(imageView) else if (backgroundUrl.contains("://")) {
-                if (backgroundUrl.startsWith("content://")) {
-                    var path = Uri.parse(backgroundUrl).lastPathSegment
-                    path = if (path != null && path.contains(":")) "/storage/" + path.replaceFirst(
-                        ":".toRegex(),
-                        "/"
-                    ) else Uri.parse(backgroundUrl).path
-                    Glide.with(imageView.context).load(File(path!!)).into(imageView)
-                } else Glide.with(imageView.context).load(Uri.parse(backgroundUrl)).into(imageView)
-            } else Glide.with(imageView.context).load(File(backgroundUrl)).into(imageView)
+        backgroundUrl?.takeIf { it.isNotEmpty() }?.let { it ->
+            val imageUri = when {
+                it.startsWith("http") -> Uri.parse(it)
+                it.startsWith("content://") -> {
+                    val path = Uri.parse(it).lastPathSegment?.let { segment ->
+                        if (segment.contains(":")) "/storage/" + segment.replaceFirst(":", "/") else Uri.parse(it).path
+                    }
+                    path?.let { Uri.fromFile(File(it)) }
+                }
+                else -> Uri.fromFile(File(it))
+            }
+            imageUri?.let { uri -> loadImageWithGlide(imageView, uri) }
         }
+    }
+
+    private fun loadImageWithGlide(imageView: ImageView, uri: Uri) {
+        Glide.with(imageView.context)
+            .load(uri)
+            .apply(RequestOptions().centerCrop())
+            .into(imageView)
     }
 }
