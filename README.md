@@ -12,7 +12,7 @@
   </a>
 </div>
 
-## 🌄 Screenshots    
+## 🌄 Screenshots
 
 <div align="center">
   <table>
@@ -37,7 +37,14 @@
 
 ## 📲 Installation
 
-[<img width='200' height='80' alt='APK Download' src='https://user-images.githubusercontent.com/114044633/223920025-83687de0-e463-4c5d-8122-e06e4bb7d40c.png'>](https://github.com/meenbeese/Chronos/releases/latest)
+<div style="display: flex; justify-content: center; align-items: center; flex-direction: row;">
+    <a href="https://apt.izzysoft.de/fdroid/index/apk/com.meenbeese.chronos">
+        <img width="200" height="80" alt="Izzy Download" src="./assets/izzy_install_badge.png">
+    </a>
+    <a href="https://github.com/meenbeese/Chronos/releases/latest">
+        <img width="200" height="84" alt="APK Download" src="./assets/apk_install_badge.png">
+    </a>
+</div>
 
 ## ⚙️ Permissions
 
