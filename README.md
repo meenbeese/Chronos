@@ -44,7 +44,8 @@
 - `SET_ALARM`, `VIBRATE`, `WAKE_LOCK`: necessary for the core functionality of the app
 - `INTERNET`: fetching graphical assets and some of the information in the about page
 - `RECEIVE_BOOT_COMPLETED`: automatically re-scheduling alarms on startup
-- `READ_EXTERNAL_STORAGE`: setting custom background / header images in the settings
+- `READ_MEDIA_AUDIO`: setting custom ringtones for the alarms or timers
+- `READ_MEDIA_IMAGES`: setting custom background / header images in the settings
 - `FOREGROUND_SERVICE`: notifying you to sleep - see the "Sleep Reminder" option in the settings
 - `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`: please see [dontkillmyapp.com](https://dontkillmyapp.com/)
 
