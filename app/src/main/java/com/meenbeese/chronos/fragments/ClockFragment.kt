@@ -24,7 +24,7 @@ class ClockFragment : BasePagerFragment() {
         val view = inflater.inflate(R.layout.fragment_clock, container, false)
         val clockView = view.findViewById<DigitalClockView>(R.id.timeView)
         val timezoneView = view.findViewById<TextView>(R.id.timezone)
-        if (arguments != null && arguments!!.containsKey(EXTRA_TIME_ZONE)) {
+        if (arguments != null && requireArguments().containsKey(EXTRA_TIME_ZONE)) {
             timezone = arguments?.getString(EXTRA_TIME_ZONE)
             timezone?.let {
                 clockView.setTimezone(it)

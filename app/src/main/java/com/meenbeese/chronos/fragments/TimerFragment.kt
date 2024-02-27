@@ -36,28 +36,32 @@ class TimerFragment : BaseFragment() {
         time = view.findViewById(R.id.time)
         stop = view.findViewById(R.id.stop)
         timer = arguments?.getParcelable(EXTRA_TIMER)
-        time?.setMaxProgress(timer!!.duration)
+        timer?.duration?.let { time?.setMaxProgress(it) }
         handler = Handler()
         runnable = object : Runnable {
             override fun run() {
                 if (isRunning) {
-                    if (timer!!.isSet) {
-                        val remainingMillis = timer!!.remainingMillis
-                        time?.setText(FormatUtils.formatMillis(remainingMillis))
-                        time?.setProgress(timer!!.duration - remainingMillis)
-                        handler?.postDelayed(this, 10)
-                    } else {
-                        try {
-                            parentFragmentManager.popBackStack()
-                        } catch (e: IllegalStateException) {
-                            handler?.postDelayed(this, 100)
+                    timer?.let { timer ->
+                        if (timer.isSet) {
+                            val remainingMillis = timer.remainingMillis
+                            time?.apply {
+                                setText(FormatUtils.formatMillis(remainingMillis))
+                                setProgress(timer.duration - remainingMillis)
+                            }
+                            handler?.postDelayed(this, 10)
+                        } else {
+                            try {
+                                parentFragmentManager.popBackStack()
+                            } catch (e: IllegalStateException) {
+                                handler?.postDelayed(this, 100)
+                            }
                         }
                     }
                 }
             }
         }
         stop?.setOnClickListener {
-            chronos?.removeTimer(timer!!)
+            timer?.let { it1 -> chronos?.removeTimer(it1) }
             parentFragmentManager.popBackStack()
         }
         back?.setOnClickListener { parentFragmentManager.popBackStack() }

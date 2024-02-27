@@ -134,8 +134,8 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
     }
 
     class Instantiator(context: Context?) : ContextFragmentInstantiator(context!!) {
-        override fun getTitle(context: Context?, position: Int): String {
-            return context!!.getString(R.string.title_settings)
+        override fun getTitle(context: Context?, position: Int): String? {
+            return context?.getString(R.string.title_settings)
         }
 
         override fun newInstance(position: Int): BasePagerFragment {

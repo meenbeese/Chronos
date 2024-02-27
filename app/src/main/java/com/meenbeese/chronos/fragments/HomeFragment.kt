@@ -201,7 +201,7 @@ class HomeFragment : BaseFragment() {
             override fun onMenuExpanded(fabsMenu: FABsMenu) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     if (ContextCompat.checkSelfPermission(
-                            context!!,
+                            requireContext(),
                             Manifest.permission.FOREGROUND_SERVICE
                         ) != PackageManager.PERMISSION_GRANTED
                     ) requestPermissions(

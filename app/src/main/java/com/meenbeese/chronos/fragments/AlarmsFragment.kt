@@ -58,8 +58,8 @@ class AlarmsFragment : BasePagerFragment() {
         super.onDestroyView()
     }
 
-    override fun getTitle(context: Context?): String {
-        return context!!.getString(R.string.title_alarms)
+    override fun getTitle(context: Context?): String? {
+        return context?.getString(R.string.title_alarms)
     }
 
     @SuppressLint("NotifyDataSetChanged")

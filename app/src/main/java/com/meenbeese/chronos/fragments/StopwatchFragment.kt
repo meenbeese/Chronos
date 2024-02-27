@@ -191,13 +191,13 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
         total.text = getString(R.string.title_total_time, formatMillis(lapTime))
         total.setTextColor(textColorPrimary)
         layout.addView(total)
-        lapsLayout!!.addView(layout, 0)
+        lapsLayout?.addView(layout, 0)
     }
 
     override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
         if (iBinder is StopwatchService.LocalBinder) {
             service = iBinder.service
-            onStateChanged(service!!.isRunning)
+            service?.isRunning?.let { onStateChanged(it) }
             onTick(0, "0s 00")
             service?.setListener(this)
         }
