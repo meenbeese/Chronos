@@ -8,8 +8,6 @@ import android.os.Bundle
 import com.meenbeese.chronos.Chronos
 import com.afollestad.aesthetic.Aesthetic.Companion.get
 
-import me.jfenn.timedatepickers.dialogs.TimeSheetPickerDialog
-
 
 class AestheticTimeSheetPickerDialog : TimeSheetPickerDialog {
     constructor(context: Context?) : super(context)
