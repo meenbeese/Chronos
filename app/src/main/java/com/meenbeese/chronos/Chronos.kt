@@ -13,7 +13,7 @@ import androidx.multidex.MultiDexApplication
 
 import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.afollestad.aesthetic.AutoSwitchMode
-import com.google.android.exoplayer2.ExoPlaybackException
+import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
@@ -31,7 +31,7 @@ import com.meenbeese.chronos.services.TimerService
 import java.util.Calendar
 
 
-class Chronos : MultiDexApplication(), Player.EventListener {
+class Chronos : MultiDexApplication(), Player.Listener {
     lateinit var alarms: ArrayList<AlarmData>
     lateinit var timers: ArrayList<TimerData>
     private var listeners: MutableList<ChronosListener>? = null
@@ -378,20 +378,13 @@ class Chronos : MultiDexApplication(), Player.EventListener {
         }
     }
 
-    override fun onPlayerError(error: ExoPlaybackException) {
+    override fun onPlayerError(error: PlaybackException) {
         currentStream = null
-        val exception: Exception = when (error.type) {
-            ExoPlaybackException.TYPE_RENDERER -> error.rendererException
-            ExoPlaybackException.TYPE_UNEXPECTED -> error.unexpectedException
-            ExoPlaybackException.TYPE_SOURCE, ExoPlaybackException.TYPE_REMOTE -> error.sourceException
-            else -> {
-                return
-            }
-        }
-        exception.printStackTrace()
+        val exception: Throwable? = error.cause
+        exception?.printStackTrace()
         Toast.makeText(
             this,
-            exception.javaClass.name + ": " + exception.message,
+            exception?.javaClass?.name + ": " + exception?.message,
             Toast.LENGTH_SHORT
         ).show()
     }
