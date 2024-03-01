@@ -13,14 +13,14 @@ import androidx.multidex.MultiDexApplication
 
 import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.afollestad.aesthetic.AutoSwitchMode
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
-import com.google.android.exoplayer2.source.MediaSourceFactory
+import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
+import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.data.SoundData.Companion.fromString
@@ -36,7 +36,7 @@ class Chronos : MultiDexApplication(), Player.Listener {
     lateinit var timers: ArrayList<TimerData>
     private var listeners: MutableList<ChronosListener>? = null
     private var listener: ActivityListener? = null
-    private var player: SimpleExoPlayer? = null
+    private var player: ExoPlayer? = null
     private var currentRingtone: Ringtone? = null
     private var hlsMediaSourceFactory: HlsMediaSource.Factory? = null
     private var currentStream: String? = null
@@ -45,10 +45,9 @@ class Chronos : MultiDexApplication(), Player.Listener {
         listeners = ArrayList()
         alarms = ArrayList()
         timers = ArrayList()
-        player = SimpleExoPlayer.Builder(this).build()
+        player = ExoPlayer.Builder(this).build()
         player?.addListener(this)
-        val dataSourceFactory =
-            DefaultDataSourceFactory(this, Util.getUserAgent(this, "exoplayer2example"), null)
+        val dataSourceFactory = DefaultDataSource.Factory(this)
         hlsMediaSourceFactory = HlsMediaSource.Factory(dataSourceFactory)
         val alarmLength = PreferenceData.ALARM_LENGTH.getValue<Int>(this)
         for (id in 0 until alarmLength) {
@@ -286,12 +285,16 @@ class Chronos : MultiDexApplication(), Player.Listener {
      * @param url       The URL of the stream to be passed to ExoPlayer.
      * @see [ExoPlayer Repo]
      */
-    private fun playStream(url: String, factory: MediaSourceFactory?) {
+    private fun playStream(url: String, factory: MediaSource.Factory?) {
         stopCurrentSound()
+
+        // Create a MediaItem from the URL
+        val mediaItem: MediaItem = MediaItem.fromUri(Uri.parse(url))
 
         // Error handling, including when this is a progressive stream
         // rather than a HLS stream, is in onPlayerError
-        player?.prepare(factory!!.createMediaSource(Uri.parse(url)))
+        player?.setMediaSource(factory!!.createMediaSource(mediaItem))
+        player?.prepare()
         player?.playWhenReady = true
         currentStream = url
     }
@@ -315,7 +318,7 @@ class Chronos : MultiDexApplication(), Player.Listener {
      */
     fun playStream(url: String, attributes: AudioAttributes?) {
         player?.stop()
-        player = SimpleExoPlayer.Builder(this)
+        player = ExoPlayer.Builder(this)
             .setAudioAttributes(attributes!!, true)
             .build()
         playStream(url)
@@ -371,7 +374,7 @@ class Chronos : MultiDexApplication(), Player.Listener {
         if (listener != null) updateTheme()
     }
 
-    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+    override fun onPlaybackStateChanged(playbackState: Int) {
         when (playbackState) {
             Player.STATE_BUFFERING, Player.STATE_READY, Player.STATE_IDLE -> {}
             else -> currentStream = null
