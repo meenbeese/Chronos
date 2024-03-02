@@ -6,7 +6,10 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 
-import com.google.android.exoplayer2.C
+import androidx.media3.common.C
+import androidx.media3.common.AudioAttributes as M3Attributes
+import androidx.media3.common.util.UnstableApi
+
 import com.meenbeese.chronos.Chronos
 
 
@@ -28,6 +31,7 @@ data class SoundData(val name: String, val type: String, val url: String) {
      *
      * @param chronos           The active Application instance.
      */
+    @UnstableApi
     fun play(chronos: Chronos) {
         if (type == TYPE_RINGTONE && url.startsWith("content://")) {
             if (ringtone == null) {
@@ -40,7 +44,7 @@ data class SoundData(val name: String, val type: String, val url: String) {
         } else {
             chronos.playStream(
                 url,
-                com.google.android.exoplayer2.audio.AudioAttributes.Builder()
+                M3Attributes.Builder()
                     .setUsage(C.USAGE_ALARM)
                     .build()
             )
@@ -63,6 +67,7 @@ data class SoundData(val name: String, val type: String, val url: String) {
      *
      * @param chronos           The active Application instance.
      */
+    @UnstableApi
     fun preview(chronos: Chronos) {
         if (url.startsWith("content://")) {
             if (ringtone == null) {
@@ -75,7 +80,7 @@ data class SoundData(val name: String, val type: String, val url: String) {
         } else {
             chronos.playStream(
                 url,
-                com.google.android.exoplayer2.audio.AudioAttributes.Builder()
+                M3Attributes.Builder()
                     .setUsage(C.USAGE_ALARM)
                     .build()
             )

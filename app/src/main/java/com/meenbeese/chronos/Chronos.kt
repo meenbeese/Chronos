@@ -9,18 +9,19 @@ import android.widget.Toast
 
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
+import androidx.media3.common.AudioAttributes
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.hls.HlsMediaSource
+import androidx.media3.exoplayer.source.MediaSource
 import androidx.multidex.MultiDexApplication
 
 import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.afollestad.aesthetic.AutoSwitchMode
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackException
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.audio.AudioAttributes
-import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.data.SoundData.Companion.fromString
@@ -40,6 +41,7 @@ class Chronos : MultiDexApplication(), Player.Listener {
     private var currentRingtone: Ringtone? = null
     private var hlsMediaSourceFactory: HlsMediaSource.Factory? = null
     private var currentStream: String? = null
+    @UnstableApi
     override fun onCreate() {
         super.onCreate()
         listeners = ArrayList()
@@ -285,6 +287,7 @@ class Chronos : MultiDexApplication(), Player.Listener {
      * @param url       The URL of the stream to be passed to ExoPlayer.
      * @see [ExoPlayer Repo]
      */
+    @UnstableApi
     private fun playStream(url: String, factory: MediaSource.Factory?) {
         stopCurrentSound()
 
@@ -305,6 +308,7 @@ class Chronos : MultiDexApplication(), Player.Listener {
      * @param url       The URL of the stream to be passed to ExoPlayer.
      * @see [ExoPlayer Repo]
      */
+    @UnstableApi
     private fun playStream(url: String) {
         playStream(url, hlsMediaSourceFactory)
     }
@@ -316,6 +320,7 @@ class Chronos : MultiDexApplication(), Player.Listener {
      * @param attributes    The attributes to play the stream with.
      * @see [ExoPlayer Repo]
      */
+    @UnstableApi
     fun playStream(url: String, attributes: AudioAttributes?) {
         player?.stop()
         player = ExoPlayer.Builder(this)

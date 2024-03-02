@@ -55,12 +55,13 @@ dependencies {
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.multidex:multidex:2.0.1'
 
+    // Media
+    implementation 'androidx.media3:media3-exoplayer:1.2.1'
+    implementation 'androidx.media3:media3-exoplayer-hls:1.2.1'
+    implementation 'androidx.media3:media3-ui:1.2.1'
+
     // Material
     implementation 'com.google.android.material:material:1.11.0'
-
-    // Media
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.17.1'
-    implementation 'com.google.android.exoplayer:exoplayer-hls:2.17.1'
 
     // Extern
     implementation 'com.afollestad:aesthetic:0.7.2'
