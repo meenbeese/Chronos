@@ -1,0 +1,5 @@
+Remove dependency info from APK
+Add initial fastlane structures
+Add IzzyOnDroid badge to README
+Migrate deprecated ExoPlayer to Media3
+Some more internal changes
