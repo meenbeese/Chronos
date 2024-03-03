@@ -93,7 +93,7 @@ class AlarmsAdapter(private val chronos: Chronos, private val recycler: Recycler
         holder.runnable = object : Runnable {
             override fun run() {
                 try {
-                    getTimer(holder.adapterPosition)?.let { timer ->
+                    getTimer(holder.bindingAdapterPosition)?.let { timer ->
                         val text = FormatUtils.formatMillis(timer.remainingMillis)
                         holder.time.text = text.substring(0, text.length - 3)
                         holder.progress.update(1 - timer.remainingMillis.toFloat() / timer.duration)
@@ -108,7 +108,7 @@ class AlarmsAdapter(private val chronos: Chronos, private val recycler: Recycler
 
         holder.stop.setColorFilter(textColorPrimary)
         holder.stop.setOnClickListener {
-            getTimer(holder.adapterPosition)?.let { timer ->
+            getTimer(holder.bindingAdapterPosition)?.let { timer ->
                 chronos.removeTimer(timer)
             }
         }
@@ -139,12 +139,12 @@ class AlarmsAdapter(private val chronos: Chronos, private val recycler: Recycler
                 alarm.setDays(chronos, alarm.days)
 
                 if (!alarm.isRepeat) {
-                    notifyItemChanged(holder.adapterPosition)
+                    notifyItemChanged(holder.bindingAdapterPosition)
                 } else {
                     // if the view isn't going to change size in the recycler,
                     //   then I can just do this (prevents the background flickering as
                     //   the recyclerview attempts to smooth the transition)
-                    onBindAlarmViewHolder(holder, holder.adapterPosition)
+                    onBindAlarmViewHolder(holder, holder.bindingAdapterPosition)
                 }
             }
         }
@@ -253,7 +253,7 @@ class AlarmsAdapter(private val chronos: Chronos, private val recycler: Recycler
         }
 
         holder.itemView.setOnClickListener {
-            expandedPosition = if (isExpanded) -1 else holder.adapterPosition
+            expandedPosition = if (isExpanded) -1 else holder.bindingAdapterPosition
 
             val transition = AutoTransition()
             transition.duration = 250
@@ -279,7 +279,7 @@ class AlarmsAdapter(private val chronos: Chronos, private val recycler: Recycler
              holder.name.setOnClickListener(null)
         else holder.name.setOnClickListener { holder.itemView.callOnClick()}
 
-        holder.name.setOnFocusChangeListener { _, hasFocus -> holder.name.isCursorVisible = hasFocus && holder.adapterPosition == expandedPosition }
+        holder.name.setOnFocusChangeListener { _, hasFocus -> holder.name.isCursorVisible = hasFocus && holder.bindingAdapterPosition == expandedPosition }
 
         holder.enable.setOnCheckedChangeListener(null)
         holder.enable.isChecked = alarm.isEnabled
@@ -303,7 +303,7 @@ class AlarmsAdapter(private val chronos: Chronos, private val recycler: Recycler
                             alarm.setTime(chronos, alarmManager, alarm.time.timeInMillis)
                             alarm.setEnabled(chronos, alarmManager, true)
 
-                            notifyItemChanged(holder.adapterPosition)
+                            notifyItemChanged(holder.bindingAdapterPosition)
                         }
 
                         override fun onCancel(dialog: PickerDialog<LinearTimePickerView>) {
@@ -458,8 +458,8 @@ class AlarmsAdapter(private val chronos: Chronos, private val recycler: Recycler
                 }
 
                 override fun afterTextChanged(editable: Editable) {
-                    if (adapterPosition < alarms.size) {
-                        alarms[adapterPosition].setName(chronos, editable.toString())
+                    if (bindingAdapterPosition < alarms.size) {
+                        alarms[bindingAdapterPosition].setName(chronos, editable.toString())
                     }
                 }
             })

@@ -49,7 +49,7 @@ class SoundsAdapter(private val chronos: Chronos, private val sounds: List<Sound
             val sound = sounds[position - 1]
             holder.title.text = sound.name
             holder.icon.setOnClickListener {
-                val position1 = holder.adapterPosition
+                val position1 = holder.bindingAdapterPosition
                 val sound1 = sounds[position1 - 1]
                 currentlyPlaying = if (sound1.isPlaying(chronos) || currentlyPlaying == position1) {
                     sound1.stop(chronos)
@@ -66,7 +66,7 @@ class SoundsAdapter(private val chronos: Chronos, private val sounds: List<Sound
             }
             holder.itemView.setOnClickListener {
                 listener?.onSoundChosen(
-                    sounds[holder.adapterPosition - 1]
+                    sounds[holder.bindingAdapterPosition - 1]
                 )
             }
             setPlaying(holder, sound.isPlaying(chronos), false)

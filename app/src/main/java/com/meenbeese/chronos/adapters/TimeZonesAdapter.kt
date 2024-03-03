@@ -46,7 +46,7 @@ class TimeZonesAdapter(private val timeZones: List<String>) :
         ) as Boolean
         holder.checkBox.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             val timeZone1 = TimeZone.getTimeZone(
-                timeZones[holder.adapterPosition]
+                timeZones[holder.bindingAdapterPosition]
             )
             PreferenceData.TIME_ZONE_ENABLED.setValue(
                 holder.itemView.context,
