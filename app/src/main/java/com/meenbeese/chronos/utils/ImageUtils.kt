@@ -7,8 +7,9 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
 
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import coil.load
+import coil.transform.RoundedCornersTransformation
+
 import com.meenbeese.chronos.data.PreferenceData
 
 import java.io.File
@@ -57,14 +58,14 @@ object ImageUtils {
                 }
                 else -> Uri.fromFile(File(it))
             }
-            imageUri?.let { uri -> loadImageWithGlide(imageView, uri) }
+            imageUri?.let { uri -> loadImageWithCoil(imageView, uri) }
         }
     }
 
-    private fun loadImageWithGlide(imageView: ImageView, uri: Uri) {
-        Glide.with(imageView.context)
-            .load(uri)
-            .apply(RequestOptions().centerCrop())
-            .into(imageView)
+    private fun loadImageWithCoil(imageView: ImageView, uri: Uri) {
+        imageView.load(uri) {
+            crossfade(true)
+            transformations(RoundedCornersTransformation())
+        }
     }
 }

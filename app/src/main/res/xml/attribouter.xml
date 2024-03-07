@@ -81,9 +81,5 @@
             description="A simple library containing several configurable time/date picker views and dialogs."
             license="apache-2.0"
             repo="fennifith/TimeDatePicker" />
-
-        <LicenseWedge
-            description="An image loading and caching library for Android focused on smooth scrolling."
-            repo="bumptech/glide" />
     </LicensesWedge>
 </about>

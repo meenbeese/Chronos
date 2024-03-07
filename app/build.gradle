@@ -62,9 +62,11 @@ dependencies {
     // Material
     implementation 'com.google.android.material:material:1.11.0'
 
+    // Image
+    implementation 'io.coil-kt:coil:2.6.0'
+
     // Extern
     implementation 'com.afollestad:aesthetic:0.7.2'
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'me.jahirfiquitiva:FABsMenu:1.1.4'
