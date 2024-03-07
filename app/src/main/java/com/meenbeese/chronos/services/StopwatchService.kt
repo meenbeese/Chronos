@@ -97,7 +97,7 @@ class StopwatchService : Service() {
         handler?.post(runnable!!)
         laps?.clear()
         lastLapTime = 0
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) stopForeground(true)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) stopForeground(STOP_FOREGROUND_REMOVE)
         listener?.onReset()
     }
 

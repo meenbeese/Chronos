@@ -34,7 +34,7 @@ class TimerService : Service() {
                     handler.removeCallbacks(this)
                     handler.postDelayed(this, 10)
                 }
-            } else stopForeground(true)
+            } else stopForeground(STOP_FOREGROUND_REMOVE)
         }
     }
     private var timers: List<TimerData>? = null
