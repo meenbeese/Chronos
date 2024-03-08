@@ -6,8 +6,6 @@ import android.util.AttributeSet
 import com.afollestad.aesthetic.Aesthetic
 import com.meenbeese.chronos.interfaces.Subscribable
 
-import me.jfenn.sunrisesunsetview.SunriseSunsetView
-
 import io.reactivex.disposables.Disposable
 
 

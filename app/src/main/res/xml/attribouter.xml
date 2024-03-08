@@ -68,11 +68,6 @@
             repo="fennifith/SlideActionView" />
 
         <LicenseWedge
-            description="A lightweight Android view used for displaying and/or editing sunrise and sunset times."
-            license="apache-2.0"
-            repo="fennifith/SunriseSunsetView" />
-
-        <LicenseWedge
             description="An extensible media player for Android."
             license="apache-2.0"
             repo="google/ExoPlayer" />

@@ -18,8 +18,8 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.dialogs.AestheticTimeSheetPickerDialog
 import com.meenbeese.chronos.utils.FormatUtils
+import com.meenbeese.chronos.views.SunriseSunsetView
 
-import me.jfenn.sunrisesunsetview.SunriseSunsetView
 import me.jfenn.timedatepickers.dialogs.PickerDialog
 import me.jfenn.timedatepickers.views.LinearTimePickerView
 
