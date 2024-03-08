@@ -18,6 +18,7 @@ import android.widget.ImageView
 import android.widget.TextView
 
 import androidx.appcompat.app.AlertDialog
+import androidx.media3.common.util.UnstableApi
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 
 import com.afollestad.aesthetic.Aesthetic.Companion.get
@@ -71,6 +72,8 @@ class AlarmActivity : AestheticActivity(), SlideActionListener {
     private var textColorPrimaryInverseSubscription: Disposable? = null
     private var isDarkSubscription: Disposable? = null
     private var isDark = false
+
+    @UnstableApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm)

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 
+import androidx.media3.common.util.UnstableApi
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
@@ -34,6 +35,7 @@ class SoundsAdapter(private val chronos: Chronos, private val sounds: List<Sound
         )
     }
 
+    @UnstableApi
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (position == 0) {
             holder.title.setText(R.string.title_sound_none)
