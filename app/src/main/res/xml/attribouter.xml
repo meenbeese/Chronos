@@ -68,11 +68,6 @@
             repo="fennifith/SlideActionView" />
 
         <LicenseWedge
-            description="An extensible media player for Android."
-            license="apache-2.0"
-            repo="google/ExoPlayer" />
-
-        <LicenseWedge
             description="A simple library containing several configurable time/date picker views and dialogs."
             license="apache-2.0"
             repo="fennifith/TimeDatePicker" />
