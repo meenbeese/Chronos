@@ -1,0 +1,6 @@
+Fix excessively large 0 touch target
+Migrate legacy Glide to Coil
+Upgrade media3 to latest version
+Upgrade AGP to latest version
+Remove an unused activity library
+Some more internal changes
