@@ -12,7 +12,9 @@ import com.afollestad.aesthetic.Aesthetic
 import com.meenbeese.chronos.interfaces.Subscribable
 import com.meenbeese.chronos.utils.DimenUtils
 
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 
 
 class DaySwitch : View, View.OnClickListener, Subscribable {
@@ -38,6 +40,7 @@ class DaySwitch : View, View.OnClickListener, Subscribable {
     private var colorAccentSubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null
     private var textColorPrimaryInverseSubscription: Disposable? = null
+    private val disposables = CompositeDisposable()
 
     private var checked: Float = 0f
 
@@ -87,33 +90,40 @@ class DaySwitch : View, View.OnClickListener, Subscribable {
 
     override fun subscribe() {
         colorAccentSubscription = Aesthetic.get()
-                .colorAccent()
-                .subscribe { integer ->
+            .colorAccent()
+            .subscribeBy(
+                onNext = { integer ->
                     accentPaint.color = integer
                     invalidate()
-                }
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
 
         textColorPrimarySubscription = Aesthetic.get()
-                .textColorPrimary()
-                .subscribe { integer ->
+            .textColorPrimary()
+            .subscribeBy(
+                onNext = { integer ->
                     textColorPrimary = integer
                     textPaint.color = integer
                     invalidate()
-                }
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
 
         textColorPrimaryInverseSubscription = Aesthetic.get()
-                .textColorPrimaryInverse()
-                .subscribe { integer ->
+            .textColorPrimaryInverse()
+            .subscribeBy(
+                onNext = { integer ->
                     textColorPrimaryInverse = integer
                     clippedTextPaint.color = integer
                     invalidate()
-                }
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
     }
 
     override fun unsubscribe() {
-        colorAccentSubscription?.dispose()
-        textColorPrimarySubscription?.dispose()
-        textColorPrimaryInverseSubscription?.dispose()
+        disposables.clear()
     }
 
     override fun onAttachedToWindow() {

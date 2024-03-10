@@ -17,7 +17,9 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 
 import jahirfiquitiva.libs.fabsmenu.FABsMenu
 import jahirfiquitiva.libs.fabsmenu.FABsMenuListener
@@ -64,6 +66,8 @@ class HomeFragment : BaseFragment() {
     private var colorAccentSubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null
     private var textColorPrimaryInverseSubscription: Disposable? = null
+    private val disposables = CompositeDisposable()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -142,40 +146,52 @@ class HomeFragment : BaseFragment() {
         })
         colorPrimarySubscription = get()
             .colorPrimary()
-            .subscribe { integer: Int? ->
-                bottomSheet?.setBackgroundColor(integer!!)
-                overlay?.setBackgroundColor(integer!!)
-            }
+            .subscribeBy(
+                onNext = { integer: Int? ->
+                    bottomSheet?.setBackgroundColor(integer!!)
+                    overlay?.setBackgroundColor(integer!!)
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
         colorAccentSubscription = get()
             .colorAccent()
-            .subscribe { integer: Int? ->
-                menu?.menuButtonColor = integer!!
-                val color = ContextCompat.getColor(
-                    requireContext(),
-                    if (chronos!!.activityTheme == Chronos.THEME_AMOLED) R.color.textColorPrimary else R.color.textColorPrimaryNight
-                )
-                menu?.menuButton?.setColorFilter(color)
-                stopwatchFab?.setColorFilter(color)
-                timerFab?.setColorFilter(color)
-                alarmFab?.setColorFilter(color)
-                stopwatchFab?.setBackgroundColor(integer)
-                timerFab?.setBackgroundColor(integer)
-                alarmFab?.setBackgroundColor(integer)
-            }
+            .subscribeBy(
+                onNext = { integer: Int? ->
+                    menu?.menuButtonColor = integer!!
+                    val color = ContextCompat.getColor(
+                        requireContext(),
+                        if (chronos!!.activityTheme == Chronos.THEME_AMOLED) R.color.textColorPrimary else R.color.textColorPrimaryNight
+                    )
+                    menu?.menuButton?.setColorFilter(color)
+                    stopwatchFab?.setColorFilter(color)
+                    timerFab?.setColorFilter(color)
+                    alarmFab?.setColorFilter(color)
+                    stopwatchFab?.setBackgroundColor(integer)
+                    timerFab?.setBackgroundColor(integer)
+                    alarmFab?.setBackgroundColor(integer)
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
         textColorPrimarySubscription = get()
             .textColorPrimary()
-            .subscribe { integer: Int? ->
-                stopwatchFab?.titleTextColor = integer!!
-                timerFab?.titleTextColor = integer
-                alarmFab?.titleTextColor = integer
-            }
+            .subscribeBy(
+                onNext = { integer: Int? ->
+                    stopwatchFab?.titleTextColor = integer!!
+                    timerFab?.titleTextColor = integer
+                    alarmFab?.titleTextColor = integer
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
         textColorPrimaryInverseSubscription = get()
             .textColorPrimaryInverse()
-            .subscribe { integer: Int? ->
-                alarmFab?.titleBackgroundColor = integer!!
-                stopwatchFab?.titleBackgroundColor = integer
-                timerFab?.titleBackgroundColor = integer
-            }
+            .subscribeBy(
+                onNext = { integer: Int? ->
+                    alarmFab?.titleBackgroundColor = integer!!
+                    stopwatchFab?.titleBackgroundColor = integer
+                    timerFab?.titleBackgroundColor = integer
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
         stopwatchFab?.setOnClickListener {
             menu?.collapseImmediately()
             parentFragmentManager.beginTransaction()
@@ -283,10 +299,7 @@ class HomeFragment : BaseFragment() {
     }
 
     override fun onDestroyView() {
-        colorPrimarySubscription?.dispose()
-        colorAccentSubscription?.dispose()
-        textColorPrimarySubscription?.dispose()
-        textColorPrimaryInverseSubscription?.dispose()
+        disposables.dispose()
         super.onDestroyView()
     }
 

@@ -13,7 +13,9 @@ import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.meenbeese.chronos.interfaces.Subscribable
 import com.meenbeese.chronos.utils.DimenUtils
 
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 
 
 class PageIndicatorView : View, OnPageChangeListener, Subscribable {
@@ -28,6 +30,7 @@ class PageIndicatorView : View, OnPageChangeListener, Subscribable {
     private var textColorSecondary = 0
     private var textColorPrimarySubscription: Disposable? = null
     private var textColorSecondarySubscription: Disposable? = null
+    private val disposables = CompositeDisposable()
 
     constructor(context: Context?) : super(context) {
         init()
@@ -54,29 +57,29 @@ class PageIndicatorView : View, OnPageChangeListener, Subscribable {
     override fun subscribe() {
         textColorPrimarySubscription = get()
             .textColorPrimary()
-            .subscribe { integer: Int ->
-                textColorPrimary = integer
-                engine!!.updateTextColors(this@PageIndicatorView)
-                invalidate()
-            }
+            .subscribeBy(
+                onNext = { integer: Int ->
+                    textColorPrimary = integer
+                    engine?.updateTextColors(this@PageIndicatorView)
+                    invalidate()
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
+
         textColorSecondarySubscription = get()
             .textColorSecondary()
-            .subscribe { integer: Int ->
-                textColorSecondary = integer
-                engine!!.updateTextColors(this@PageIndicatorView)
-                invalidate()
-            }
+            .subscribeBy(
+                onNext = { integer: Int ->
+                    textColorSecondary = integer
+                    engine?.updateTextColors(this@PageIndicatorView)
+                    invalidate()
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
     }
 
     override fun unsubscribe() {
-        if (textColorPrimarySubscription != null) {
-            textColorPrimarySubscription!!.dispose()
-            textColorSecondarySubscription = null
-        }
-        if (textColorSecondarySubscription != null) {
-            textColorSecondarySubscription!!.dispose()
-            textColorSecondarySubscription = null
-        }
+        disposables.clear()
     }
 
     override fun onAttachedToWindow() {

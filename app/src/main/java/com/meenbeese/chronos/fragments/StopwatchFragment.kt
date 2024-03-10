@@ -23,7 +23,9 @@ import com.meenbeese.chronos.views.ProgressTextView
 import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 
 
 class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConnection {
@@ -36,7 +38,9 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
     private var lapsLayout: LinearLayout? = null
     private var textColorPrimary = 0
     private var textColorPrimarySubscription: Disposable? = null
+    private val disposables = CompositeDisposable()
     private var service: StopwatchService? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -92,19 +96,22 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
         back?.setOnClickListener { parentFragmentManager.popBackStack() }
         textColorPrimarySubscription = get()
             .textColorPrimary()
-            .subscribe { integer: Int ->
-                textColorPrimary = integer
-                back?.setColorFilter(integer)
-                reset?.setColorFilter(integer)
-                lap?.setTextColor(integer)
-                share?.setColorFilter(integer)
-                for (i in 0 until lapsLayout!!.childCount) {
-                    val layout = lapsLayout!!.getChildAt(i) as LinearLayout
-                    for (i2 in 0 until layout.childCount) {
-                        (layout.getChildAt(i2) as TextView).setTextColor(integer)
+            .subscribeBy(
+                onNext = { integer: Int ->
+                    textColorPrimary = integer
+                    back?.setColorFilter(integer)
+                    reset?.setColorFilter(integer)
+                    lap?.setTextColor(integer)
+                    share?.setColorFilter(integer)
+                    for (i in 0 until lapsLayout!!.childCount) {
+                        val layout = lapsLayout!!.getChildAt(i) as LinearLayout
+                        for (i2 in 0 until layout.childCount) {
+                            (layout.getChildAt(i2) as TextView).setTextColor(integer)
+                        }
                     }
-                }
-            }
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
         val intent = Intent(context, StopwatchService::class.java)
         context?.startService(intent)
         context?.bindService(intent, this, Context.BIND_AUTO_CREATE)
@@ -112,7 +119,7 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
     }
 
     override fun onDestroyView() {
-        textColorPrimarySubscription?.dispose()
+        disposables.dispose()
         time?.unsubscribe()
         service?.let {
             it.setListener(null)

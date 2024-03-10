@@ -16,7 +16,9 @@ import com.meenbeese.chronos.adapters.AlarmsAdapter
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 import com.afollestad.aesthetic.Aesthetic.Companion.get
 
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 
 
 class AlarmsFragment : BasePagerFragment() {
@@ -26,6 +28,8 @@ class AlarmsFragment : BasePagerFragment() {
     private var colorAccentSubscription: Disposable? = null
     private var colorForegroundSubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null
+    private val disposables = CompositeDisposable()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,23 +42,32 @@ class AlarmsFragment : BasePagerFragment() {
         recyclerView?.layoutManager = GridLayoutManager(context, 1)
         alarmsAdapter = AlarmsAdapter(chronos!!, recyclerView!!, parentFragmentManager)
         recyclerView?.adapter = alarmsAdapter
+
         colorAccentSubscription = get()
             .colorAccent()
-            .subscribe { integer: Int? -> alarmsAdapter?.colorAccent = integer!! }
+            .subscribeBy(
+                onNext = { integer: Int? -> alarmsAdapter?.colorAccent = integer!! },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
         colorForegroundSubscription = get()
             .colorCardViewBackground()
-            .subscribe { integer: Int? -> alarmsAdapter?.colorForeground = integer!! }
+            .subscribeBy(
+                onNext = { integer: Int? -> alarmsAdapter?.colorForeground = integer!! },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
         textColorPrimarySubscription = get()
             .textColorPrimary()
-            .subscribe { integer: Int? -> alarmsAdapter?.textColorPrimary = integer!! }
+            .subscribeBy(
+                onNext = { integer: Int? -> alarmsAdapter?.textColorPrimary = integer!! },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
         onChanged()
+
         return v
     }
 
     override fun onDestroyView() {
-        colorAccentSubscription?.dispose()
-        colorForegroundSubscription?.dispose()
-        textColorPrimarySubscription?.dispose()
+        disposables.dispose()
         super.onDestroyView()
     }
 
