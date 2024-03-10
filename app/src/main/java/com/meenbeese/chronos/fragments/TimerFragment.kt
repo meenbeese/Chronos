@@ -14,7 +14,9 @@ import com.meenbeese.chronos.views.ProgressTextView
 import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 
 
 class TimerFragment : BaseFragment() {
@@ -26,6 +28,8 @@ class TimerFragment : BaseFragment() {
     private var isRunning = true
     private var timer: TimerData? = null
     private var textColorPrimarySubscription: Disposable? = null
+    private val disposables = CompositeDisposable()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -68,13 +72,16 @@ class TimerFragment : BaseFragment() {
         handler?.post(runnable as Runnable)
         textColorPrimarySubscription = get()
             .textColorPrimary()
-            .subscribe { integer: Int? -> back?.setColorFilter(integer!!) }
+            .subscribeBy(
+                onNext = { integer: Int? -> back?.setColorFilter(integer!!) },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
         return view
     }
 
     override fun onDestroyView() {
         isRunning = false
-        textColorPrimarySubscription?.dispose()
+        disposables.dispose()
         time?.unsubscribe()
         super.onDestroyView()
     }

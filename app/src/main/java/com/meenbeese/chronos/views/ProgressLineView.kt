@@ -10,7 +10,9 @@ import android.view.View
 import com.afollestad.aesthetic.Aesthetic
 import com.meenbeese.chronos.interfaces.Subscribable
 
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 
 
 /**
@@ -34,6 +36,7 @@ class ProgressLineView : View, Subscribable {
 
     private var colorAccentSubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null
+    private val disposables = CompositeDisposable()
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -41,25 +44,30 @@ class ProgressLineView : View, Subscribable {
 
     override fun subscribe() {
         colorAccentSubscription = Aesthetic.get()
-                .colorAccent()
-                .subscribe { integer ->
+            .colorAccent()
+            .subscribeBy(
+                onNext = { integer ->
                     linePaint.color = integer
                     linePaint.alpha = 100
                     postInvalidate()
-                }
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
 
         textColorPrimarySubscription = Aesthetic.get()
-                .textColorPrimary()
-                .subscribe { integer ->
-                    backgroundPaint.color = integer
-                    backgroundPaint.alpha = 30
-                    postInvalidate()
-                }
+            .textColorPrimary()
+            .subscribeBy(
+                onNext = { integer ->
+                backgroundPaint.color = integer
+                backgroundPaint.alpha = 30
+                postInvalidate()
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
     }
 
     override fun unsubscribe() {
-        colorAccentSubscription?.dispose()
-        textColorPrimarySubscription?.dispose()
+        disposables.clear()
     }
 
     override fun onAttachedToWindow() {

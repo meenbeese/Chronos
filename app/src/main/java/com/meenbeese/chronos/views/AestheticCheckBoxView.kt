@@ -11,7 +11,9 @@ import androidx.core.widget.CompoundButtonCompat
 import com.afollestad.aesthetic.Aesthetic
 import com.meenbeese.chronos.interfaces.Subscribable
 
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 
 
 /**
@@ -22,6 +24,7 @@ class AestheticCheckBoxView : AppCompatCheckBox, Subscribable {
 
     private var colorAccentSubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null
+    private val disposables = CompositeDisposable()
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -29,22 +32,26 @@ class AestheticCheckBoxView : AppCompatCheckBox, Subscribable {
 
     override fun subscribe() {
         colorAccentSubscription = Aesthetic.get().colorAccent()
-                .subscribe { integer ->
+            .subscribeBy(
+                onNext = { integer ->
                     val colorStateList = ColorStateList(
-                            arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked)),
-                            intArrayOf(Color.argb(255, 128, 128, 128), integer)
+                        arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked)),
+                        intArrayOf(Color.argb(255, 128, 128, 128), integer)
                     )
-
                     CompoundButtonCompat.setButtonTintList(this, colorStateList)
-                }
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
 
         textColorPrimarySubscription = Aesthetic.get().textColorPrimary()
-                .subscribe { integer -> setTextColor(integer) }
+            .subscribeBy(
+                onNext = { integer -> setTextColor(integer) },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
     }
 
     override fun unsubscribe() {
-        colorAccentSubscription?.dispose()
-        textColorPrimarySubscription?.dispose()
+        disposables.clear()
     }
 
     override fun onAttachedToWindow() {

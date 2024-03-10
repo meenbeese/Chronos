@@ -39,7 +39,9 @@ import com.meenbeese.chronos.utils.FormatUtils.formatUnit
 import com.meenbeese.chronos.utils.FormatUtils.getShortFormat
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImage
 
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 
 import me.jfenn.slideactionview.SlideActionListener
 import me.jfenn.slideactionview.SlideActionView
@@ -82,21 +84,26 @@ class AlarmActivity : AestheticActivity(), SlideActionListener {
         val date = findViewById<TextView>(R.id.date)
         time = findViewById(R.id.time)
         val actionView = findViewById<SlideActionView>(R.id.slideView)
+        val disposables = CompositeDisposable()
 
         // Lock orientation
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
         textColorPrimaryInverseSubscription = get()
             .textColorPrimaryInverse()
-            .subscribe { integer: Int? ->
-                overlay?.setBackgroundColor(
-                    (integer)!!
-                )
-            }
+            .subscribeBy(
+                onNext = { integer: Int? ->
+                    overlay?.setBackgroundColor(integer!!)
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
         isDarkSubscription = get()
             .isDark
-            .subscribe { aBoolean: Boolean ->
-                isDark = aBoolean
-            }
+            .subscribeBy(
+                onNext = { aBoolean: Boolean ->
+                    isDark = aBoolean
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
         actionView.setLeftIcon(VectorDrawableCompat.create(resources, R.drawable.ic_snooze, theme))
         actionView.setRightIcon(VectorDrawableCompat.create(resources, R.drawable.ic_close, theme))
         actionView.setListener(this)

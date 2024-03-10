@@ -8,7 +8,9 @@ import com.meenbeese.chronos.interfaces.Subscribable
 
 import me.jfenn.slideactionview.SlideActionView
 
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 
 
 /**
@@ -19,6 +21,7 @@ class AestheticSlideActionView : SlideActionView, Subscribable {
 
     private var textColorPrimarySubscription: Disposable? = null
     private var textColorPrimaryInverseSubscription: Disposable? = null
+    private val disposables = CompositeDisposable()
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -26,22 +29,29 @@ class AestheticSlideActionView : SlideActionView, Subscribable {
 
     override fun subscribe() {
         textColorPrimarySubscription = Aesthetic.get()
-                .textColorPrimary()
-                .subscribe { integer ->
+            .textColorPrimary()
+            .subscribeBy(
+                onNext = { integer ->
                     touchHandleColor = integer
                     outlineColor = integer
                     iconColor = integer
                     postInvalidate()
-                }
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
 
         textColorPrimaryInverseSubscription = Aesthetic.get()
-                .textColorPrimaryInverse()
-                .subscribe { integer -> setBackgroundColor((100 shl 24) or (integer and 0x00ffffff)) }
+            .textColorPrimaryInverse()
+            .subscribeBy(
+                onNext = { integer ->
+                    setBackgroundColor((100 shl 24) or (integer and 0x00ffffff))
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
     }
 
     override fun unsubscribe() {
-        textColorPrimarySubscription?.dispose()
-        textColorPrimaryInverseSubscription?.dispose()
+        disposables.clear()
     }
 
     override fun onAttachedToWindow() {

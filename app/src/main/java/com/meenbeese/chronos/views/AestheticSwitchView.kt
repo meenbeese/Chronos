@@ -12,7 +12,9 @@ import androidx.core.widget.CompoundButtonCompat
 import com.afollestad.aesthetic.Aesthetic
 import com.meenbeese.chronos.interfaces.Subscribable
 
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 
 
 /**
@@ -23,6 +25,7 @@ class AestheticSwitchView : SwitchCompat, Subscribable {
 
     private var colorAccentSubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null
+    private val disposables = CompositeDisposable()
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -30,36 +33,40 @@ class AestheticSwitchView : SwitchCompat, Subscribable {
 
     override fun subscribe() {
         colorAccentSubscription = Aesthetic.get().colorAccent()
-                .subscribe { integer ->
+            .subscribeBy(
+                onNext = { integer ->
                     val states = arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked))
 
                     CompoundButtonCompat.setButtonTintList(this, ColorStateList(
-                            states,
-                            intArrayOf(Color.argb(100, 128, 128, 128), integer)
+                        states,
+                        intArrayOf(Color.argb(100, 128, 128, 128), integer)
                     ))
 
                     thumbDrawable?.let { drawable ->
                         DrawableCompat.setTintList(DrawableCompat.wrap(drawable), ColorStateList(
-                                states,
-                                intArrayOf(Color.argb(255, 128, 128, 128), integer)
+                            states,
+                            intArrayOf(Color.argb(255, 128, 128, 128), integer)
                         ))
                     }
 
                     trackDrawable?.let { drawable ->
                         DrawableCompat.setTintList(DrawableCompat.wrap(drawable), ColorStateList(
-                                states,
-                                intArrayOf(Color.argb(100, 128, 128, 128), Color.argb(100, Color.red(integer), Color.green(integer), Color.blue(integer)))
+                            states,
+                            intArrayOf(Color.argb(100, 128, 128, 128), Color.argb(100, Color.red(integer), Color.green(integer), Color.blue(integer)))
                         ))
                     }
-                }
+                }, onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
 
         textColorPrimarySubscription = Aesthetic.get().textColorPrimary()
-                .subscribe { integer -> setTextColor(integer) }
+            .subscribeBy(
+                onNext = { integer -> setTextColor(integer) },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
     }
 
     override fun unsubscribe() {
-        colorAccentSubscription?.dispose()
-        textColorPrimarySubscription?.dispose()
+        disposables.clear()
     }
 
     override fun onAttachedToWindow() {
