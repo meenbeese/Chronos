@@ -96,7 +96,7 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
         )
         dataList.add(0, BatteryOptimizationPreferenceData())
         dataList.add(0, AlertWindowPreferenceData())
-        dataList.add(AboutPreferenceData())
+        dataList.add(AboutPreferenceData(requireContext()))
         preferenceAdapter = PreferenceAdapter(dataList as ArrayList<BasePreferenceData<BasePreferenceData.ViewHolder>>)
         recyclerView?.adapter = preferenceAdapter
         colorPrimarySubscription = get()
