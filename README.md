@@ -49,7 +49,7 @@
 ## ⚙️ Permissions
 
 - `SET_ALARM`, `VIBRATE`, `WAKE_LOCK`: necessary for the core functionality of the app
-- `INTERNET`: fetching graphical assets and some of the information in the about page
+- `INTERNET`: fetching some of the graphical assets in the about page
 - `RECEIVE_BOOT_COMPLETED`: automatically re-scheduling alarms on startup
 - `READ_MEDIA_AUDIO`: setting custom ringtones for the alarms or timers
 - `READ_MEDIA_IMAGES`: setting custom background / header images in the settings
