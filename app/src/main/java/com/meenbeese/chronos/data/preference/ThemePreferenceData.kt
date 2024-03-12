@@ -23,7 +23,8 @@ import com.meenbeese.chronos.views.SunriseSunsetView
 import me.jfenn.timedatepickers.dialogs.PickerDialog
 import me.jfenn.timedatepickers.views.LinearTimePickerView
 
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 import kotlin.math.roundToInt
 

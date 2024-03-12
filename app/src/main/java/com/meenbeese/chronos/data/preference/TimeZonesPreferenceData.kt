@@ -4,7 +4,8 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.dialogs.TimeZoneChooserDialog
 
-import java.util.*
+import java.util.Locale
+import java.util.TimeZone
 
 
 /**
