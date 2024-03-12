@@ -37,8 +37,7 @@
                 android:id="@+id/enable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:tag=":aesthetic_ignore" />
+                android:layout_gravity="end|center_vertical" />
 
         </FrameLayout>
 
@@ -66,7 +65,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
-                android:tag=":aesthetic_ignore"
                 android:text="@string/title_repeat" />
 
             <LinearLayout
