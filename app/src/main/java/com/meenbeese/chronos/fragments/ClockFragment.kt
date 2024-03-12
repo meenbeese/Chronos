@@ -41,7 +41,7 @@ class ClockFragment : BasePagerFragment() {
     }
 
     override fun getTitle(context: Context?): String? {
-        return timezone!!
+        return timezone
     }
 
     class Instantiator(context: Context?, private val timezone: String?) :

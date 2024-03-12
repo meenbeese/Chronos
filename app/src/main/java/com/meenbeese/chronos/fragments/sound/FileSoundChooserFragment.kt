@@ -22,8 +22,8 @@ import com.meenbeese.chronos.interfaces.SoundChooserListener
 
 
 class FileSoundChooserFragment : BaseSoundChooserFragment() {
-    private var prefs: SharedPreferences? = null
-    private var sounds: MutableList<SoundData>? = null
+    private lateinit var prefs: SharedPreferences
+    private lateinit var sounds: MutableList<SoundData>
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -75,13 +75,13 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
     override fun onSoundChosen(sound: SoundData?) {
         super.onSoundChosen(sound)
         sound?.let {
-            sounds?.remove(it)
-            sounds?.add(0, it)
+            sounds.remove(it)
+            sounds.add(0, it)
             val files: MutableSet<String> = HashSet()
-            for (i in sounds!!.indices) {
-                files.add(i.toString() + SEPARATOR + sounds!![i].name + SEPARATOR + sounds!![i].url)
+            for (i in sounds.indices) {
+                files.add(i.toString() + SEPARATOR + sounds[i].name + SEPARATOR + sounds[i].url)
             }
-            prefs?.edit()?.putStringSet(PREF_FILES, files)?.apply()
+            prefs.edit()?.putStringSet(PREF_FILES, files)?.apply()
         }
     }
 

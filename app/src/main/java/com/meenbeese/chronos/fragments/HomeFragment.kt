@@ -50,17 +50,17 @@ import java.util.TimeZone
 
 
 class HomeFragment : BaseFragment() {
-    private var view: View? = null
-    private var timePager: ViewPager? = null
-    private var timeIndicator: PageIndicatorView? = null
-    private var bottomSheet: View? = null
-    private var background: ImageView? = null
-    private var overlay: View? = null
-    private var menu: FABsMenu? = null
-    private var stopwatchFab: TitleFAB? = null
-    private var timerFab: TitleFAB? = null
-    private var alarmFab: TitleFAB? = null
-    private var behavior: BottomSheetBehavior<*>? = null
+    private lateinit var view: View
+    private lateinit var timePager: ViewPager
+    private lateinit var timeIndicator: PageIndicatorView
+    private lateinit var bottomSheet: View
+    private lateinit var background: ImageView
+    private lateinit var overlay: View
+    private lateinit var menu: FABsMenu
+    private lateinit var stopwatchFab: TitleFAB
+    private lateinit var timerFab: TitleFAB
+    private lateinit var alarmFab: TitleFAB
+    private lateinit var behavior: BottomSheetBehavior<*>
     private var shouldCollapseBack = false
     private var colorPrimarySubscription: Disposable? = null
     private var colorAccentSubscription: Disposable? = null
@@ -72,30 +72,27 @@ class HomeFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         view = inflater.inflate(R.layout.fragment_home, container, false)
-        val viewPager = view?.findViewById<ViewPager>(R.id.viewPager)
-        val tabLayout = view?.findViewById<TabLayout>(R.id.tabLayout)
-        timePager = view?.findViewById(R.id.timePager)
-        bottomSheet = view?.findViewById(R.id.bottomSheet)
-        timeIndicator = view?.findViewById(R.id.pageIndicator)
-        background = view?.findViewById(R.id.background)
-        overlay = view?.findViewById(R.id.overlay)
-        menu = view?.findViewById(R.id.fabsMenu)
-        stopwatchFab = view?.findViewById(R.id.stopwatchFab)
-        timerFab = view?.findViewById(R.id.timerFab)
-        alarmFab = view?.findViewById(R.id.alarmFab)
-        behavior = BottomSheetBehavior.from(bottomSheet!!)
-        behavior?.isHideable = false
-        behavior?.addBottomSheetCallback(object : BottomSheetCallback() {
+        val viewPager = view.findViewById<ViewPager>(R.id.viewPager)
+        val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
+        timePager = view.findViewById(R.id.timePager)
+        bottomSheet = view.findViewById(R.id.bottomSheet)
+        timeIndicator = view.findViewById(R.id.pageIndicator)
+        background = view.findViewById(R.id.background)
+        overlay = view.findViewById(R.id.overlay)
+        menu = view.findViewById(R.id.fabsMenu)
+        stopwatchFab = view.findViewById(R.id.stopwatchFab)
+        timerFab = view.findViewById(R.id.timerFab)
+        alarmFab = view.findViewById(R.id.alarmFab)
+        behavior = BottomSheetBehavior.from(bottomSheet)
+        behavior.isHideable = false
+        behavior.addBottomSheetCallback(object : BottomSheetCallback() {
             private var statusBarHeight = -1
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED) bottomSheet.setPadding(
-                    0,
-                    0,
-                    0,
-                    0
-                ) else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED)
+                    bottomSheet.setPadding(0, 0, 0, 0)
+                else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     if (statusBarHeight < 0) statusBarHeight = requireContext().getStatusBarHeight()
                     bottomSheet.setPadding(0, statusBarHeight, 0, 0)
                 }
@@ -116,14 +113,14 @@ class HomeFragment : BaseFragment() {
         tabLayout?.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if (tab.position > 0) {
-                    shouldCollapseBack = behavior?.state != BottomSheetBehavior.STATE_EXPANDED
-                    behavior?.state = BottomSheetBehavior.STATE_EXPANDED
-                    menu?.hide()
+                    shouldCollapseBack = behavior.state != BottomSheetBehavior.STATE_EXPANDED
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    menu.hide()
                 } else {
                     setClockFragments()
-                    menu?.show()
+                    menu.show()
                     if (shouldCollapseBack) {
-                        behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
                         shouldCollapseBack = false
                     }
                 }
@@ -133,14 +130,14 @@ class HomeFragment : BaseFragment() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
         setClockFragments()
-        view?.viewTreeObserver?.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+        view.viewTreeObserver?.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                view?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
-                behavior?.peekHeight = view!!.measuredHeight / 2
-                view?.findViewById<View>(R.id.timeContainer)?.layoutParams =
+                view.viewTreeObserver?.removeOnGlobalLayoutListener(this)
+                behavior.peekHeight = view.measuredHeight / 2
+                view.findViewById<View>(R.id.timeContainer)?.layoutParams =
                     CoordinatorLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
-                        view!!.measuredHeight / 2
+                        view.measuredHeight / 2
                     )
             }
         })
@@ -148,8 +145,8 @@ class HomeFragment : BaseFragment() {
             .colorPrimary()
             .subscribeBy(
                 onNext = { integer: Int? ->
-                    bottomSheet?.setBackgroundColor(integer!!)
-                    overlay?.setBackgroundColor(integer!!)
+                    bottomSheet.setBackgroundColor(integer!!)
+                    overlay.setBackgroundColor(integer)
                 },
                 onError = { it.printStackTrace() }
             ).also { disposables.add(it) }
@@ -157,18 +154,18 @@ class HomeFragment : BaseFragment() {
             .colorAccent()
             .subscribeBy(
                 onNext = { integer: Int? ->
-                    menu?.menuButtonColor = integer!!
+                    menu.menuButtonColor = integer!!
                     val color = ContextCompat.getColor(
                         requireContext(),
-                        if (chronos!!.activityTheme == Chronos.THEME_AMOLED) R.color.textColorPrimary else R.color.textColorPrimaryNight
+                        if (chronos?.activityTheme == Chronos.THEME_AMOLED) R.color.textColorPrimary else R.color.textColorPrimaryNight
                     )
-                    menu?.menuButton?.setColorFilter(color)
-                    stopwatchFab?.setColorFilter(color)
-                    timerFab?.setColorFilter(color)
-                    alarmFab?.setColorFilter(color)
-                    stopwatchFab?.setBackgroundColor(integer)
-                    timerFab?.setBackgroundColor(integer)
-                    alarmFab?.setBackgroundColor(integer)
+                    menu.menuButton?.setColorFilter(color)
+                    stopwatchFab.setColorFilter(color)
+                    timerFab.setColorFilter(color)
+                    alarmFab.setColorFilter(color)
+                    stopwatchFab.setBackgroundColor(integer)
+                    timerFab.setBackgroundColor(integer)
+                    alarmFab.setBackgroundColor(integer)
                 },
                 onError = { it.printStackTrace() }
             ).also { disposables.add(it) }
@@ -176,9 +173,9 @@ class HomeFragment : BaseFragment() {
             .textColorPrimary()
             .subscribeBy(
                 onNext = { integer: Int? ->
-                    stopwatchFab?.titleTextColor = integer!!
-                    timerFab?.titleTextColor = integer
-                    alarmFab?.titleTextColor = integer
+                    stopwatchFab.titleTextColor = integer!!
+                    timerFab.titleTextColor = integer
+                    alarmFab.titleTextColor = integer
                 },
                 onError = { it.printStackTrace() }
             ).also { disposables.add(it) }
@@ -186,14 +183,14 @@ class HomeFragment : BaseFragment() {
             .textColorPrimaryInverse()
             .subscribeBy(
                 onNext = { integer: Int? ->
-                    alarmFab?.titleBackgroundColor = integer!!
-                    stopwatchFab?.titleBackgroundColor = integer
-                    timerFab?.titleBackgroundColor = integer
+                    alarmFab.titleBackgroundColor = integer!!
+                    stopwatchFab.titleBackgroundColor = integer
+                    timerFab.titleBackgroundColor = integer
                 },
                 onError = { it.printStackTrace() }
             ).also { disposables.add(it) }
-        stopwatchFab?.setOnClickListener {
-            menu?.collapseImmediately()
+        stopwatchFab.setOnClickListener {
+            menu.collapseImmediately()
             parentFragmentManager.beginTransaction()
                 .setCustomAnimations(
                     R.anim.slide_in_up_sheet,
@@ -205,15 +202,15 @@ class HomeFragment : BaseFragment() {
                 .addToBackStack(null)
                 .commit()
         }
-        timerFab?.setOnClickListener {
+        timerFab.setOnClickListener {
             invokeTimerScheduler()
-            menu?.collapse()
+            menu.collapse()
         }
-        alarmFab?.setOnClickListener {
+        alarmFab.setOnClickListener {
             invokeAlarmScheduler()
-            menu?.collapse()
+            menu.collapse()
         }
-        menu?.menuListener = object : FABsMenuListener() {
+        menu.menuListener = object : FABsMenuListener() {
             override fun onMenuExpanded(fabsMenu: FABsMenu) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     if (ContextCompat.checkSelfPermission(
@@ -231,9 +228,9 @@ class HomeFragment : BaseFragment() {
         val args = arguments
         val action = args?.getString(INTENT_ACTION, null)
         if (AlarmClock.ACTION_SET_ALARM == action) {
-            view?.post { invokeAlarmScheduler() }
+            view.post { invokeAlarmScheduler() }
         } else if (AlarmClock.ACTION_SET_TIMER == action) {
-            view?.post { invokeTimerScheduler() }
+            view.post { invokeTimerScheduler() }
         }
         return view
     }
@@ -243,7 +240,7 @@ class HomeFragment : BaseFragment() {
      * a new alarm.
      */
     private fun invokeAlarmScheduler() {
-        AestheticTimeSheetPickerDialog(view?.context)
+        AestheticTimeSheetPickerDialog(view.context)
             .setListener(object : OnSelectedListener<LinearTimePickerView> {
                 override fun onSelect(
                     dialog: PickerDialog<LinearTimePickerView>,
@@ -276,26 +273,24 @@ class HomeFragment : BaseFragment() {
      * Update the time zones displayed in the clock fragments pager.
      */
     private fun setClockFragments() {
-        if (timePager != null && timeIndicator != null) {
-            val fragments: MutableList<FragmentInstantiator> = ArrayList()
-            fragments.add(ClockFragment.Instantiator(context, null))
-            for (id in TimeZone.getAvailableIDs()) {
-                if (PreferenceData.TIME_ZONE_ENABLED.getSpecificValue(context, id)) fragments.add(
-                    ClockFragment.Instantiator(
-                        context, id
-                    )
+        val fragments: MutableList<FragmentInstantiator> = ArrayList()
+        fragments.add(ClockFragment.Instantiator(context, null))
+        for (id in TimeZone.getAvailableIDs()) {
+            if (PreferenceData.TIME_ZONE_ENABLED.getSpecificValue(context, id)) fragments.add(
+                ClockFragment.Instantiator(
+                    context, id
                 )
-            }
-            val timeAdapter = SimplePagerAdapter(
-                context,
-                childFragmentManager,
-                *fragments.toTypedArray<FragmentInstantiator>()
             )
-            timePager?.adapter = timeAdapter
-            timeIndicator?.setViewPager(timePager!!)
-            timeIndicator?.visibility = if (fragments.size > 1) View.VISIBLE else View.GONE
         }
-        getBackgroundImage(background!!)
+        val timeAdapter = SimplePagerAdapter(
+            context,
+            childFragmentManager,
+            *fragments.toTypedArray<FragmentInstantiator>()
+        )
+        timePager.adapter = timeAdapter
+        timeIndicator.setViewPager(timePager)
+        timeIndicator.visibility = if (fragments.size > 1) View.VISIBLE else View.GONE
+        getBackgroundImage(background)
     }
 
     override fun onDestroyView() {

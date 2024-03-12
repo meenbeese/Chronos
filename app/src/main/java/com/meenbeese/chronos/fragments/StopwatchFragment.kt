@@ -29,13 +29,13 @@ import io.reactivex.rxkotlin.subscribeBy
 
 
 class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConnection {
-    private var back: ImageView? = null
-    private var reset: ImageView? = null
-    private var share: ImageView? = null
-    private var lap: TextView? = null
-    private var toggle: FloatingActionButton? = null
-    private var time: ProgressTextView? = null
-    private var lapsLayout: LinearLayout? = null
+    private lateinit var back: ImageView
+    private lateinit var reset: ImageView
+    private lateinit var share: ImageView
+    private lateinit var lap: TextView
+    private lateinit var toggle: FloatingActionButton
+    private lateinit var time: ProgressTextView
+    private lateinit var lapsLayout: LinearLayout
     private var textColorPrimary = 0
     private var textColorPrimarySubscription: Disposable? = null
     private val disposables = CompositeDisposable()
@@ -54,11 +54,11 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
         toggle = view.findViewById(R.id.toggle)
         time = view.findViewById(R.id.time)
         lapsLayout = view.findViewById(R.id.laps)
-        reset?.setOnClickListener { service?.reset() }
-        reset?.isClickable = false
-        toggle?.setOnClickListener { service?.toggle() }
-        lap?.setOnClickListener { service?.lap() }
-        share?.setOnClickListener {
+        reset.setOnClickListener { service?.reset() }
+        reset.isClickable = false
+        toggle.setOnClickListener { service?.toggle() }
+        lap.setOnClickListener { service?.lap() }
+        share.setOnClickListener {
             service?.let {
                 val time = formatMillis(it.elapsedTime)
                 val content = StringBuilder().append(requireContext().getString(R.string.title_time, time)).append("\n")
@@ -93,18 +93,18 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
                 )
             }
         }
-        back?.setOnClickListener { parentFragmentManager.popBackStack() }
+        back.setOnClickListener { parentFragmentManager.popBackStack() }
         textColorPrimarySubscription = get()
             .textColorPrimary()
             .subscribeBy(
                 onNext = { integer: Int ->
                     textColorPrimary = integer
-                    back?.setColorFilter(integer)
-                    reset?.setColorFilter(integer)
-                    lap?.setTextColor(integer)
-                    share?.setColorFilter(integer)
-                    for (i in 0 until lapsLayout!!.childCount) {
-                        val layout = lapsLayout!!.getChildAt(i) as LinearLayout
+                    back.setColorFilter(integer)
+                    reset.setColorFilter(integer)
+                    lap.setTextColor(integer)
+                    share.setColorFilter(integer)
+                    for (i in 0 until lapsLayout.childCount) {
+                        val layout = lapsLayout.getChildAt(i) as LinearLayout
                         for (i2 in 0 until layout.childCount) {
                             (layout.getChildAt(i2) as TextView).setTextColor(integer)
                         }
@@ -120,7 +120,7 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
 
     override fun onDestroyView() {
         disposables.dispose()
-        time?.unsubscribe()
+        time.unsubscribe()
         service?.let {
             it.setListener(null)
             val isRunning = it.isRunning
@@ -132,51 +132,51 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
 
     override fun onStateChanged(isRunning: Boolean) {
         if (isRunning) {
-            reset?.isClickable = false
-            reset?.animate()?.alpha(0f)?.start()
-            lap?.visibility = View.VISIBLE
-            share?.visibility = View.GONE
+            reset.isClickable = false
+            reset.animate()?.alpha(0f)?.start()
+            lap.visibility = View.VISIBLE
+            share.visibility = View.GONE
             val drawable =
                 AnimatedVectorDrawableCompat.create(requireContext(), R.drawable.ic_play_to_pause)
             if (drawable != null) {
-                toggle?.setImageDrawable(drawable)
+                toggle.setImageDrawable(drawable)
                 drawable.start()
-            } else toggle?.setImageResource(R.drawable.ic_pause)
+            } else toggle.setImageResource(R.drawable.ic_pause)
         } else {
             if (service!!.elapsedTime > 0) {
-                reset?.isClickable = true
-                reset?.animate()?.alpha(1f)?.start()
-                share?.visibility = View.VISIBLE
-            } else share?.visibility = View.INVISIBLE
-            lap?.visibility = View.GONE
+                reset.isClickable = true
+                reset.animate()?.alpha(1f)?.start()
+                share.visibility = View.VISIBLE
+            } else share.visibility = View.INVISIBLE
+            lap.visibility = View.GONE
             val drawable =
                 AnimatedVectorDrawableCompat.create(requireContext(), R.drawable.ic_pause_to_play)
             if (drawable != null) {
-                toggle?.setImageDrawable(drawable)
+                toggle.setImageDrawable(drawable)
                 drawable.start()
-            } else toggle?.setImageResource(R.drawable.ic_play)
+            } else toggle.setImageResource(R.drawable.ic_play)
         }
     }
 
     override fun onReset() {
-        lapsLayout?.removeAllViews()
-        time?.setMaxProgress(0)
-        time?.setReferenceProgress(0)
-        reset?.isClickable = false
-        reset?.alpha = 0f
-        lap?.visibility = View.INVISIBLE
-        share?.visibility = View.GONE
+        lapsLayout.removeAllViews()
+        time.setMaxProgress(0)
+        time.setReferenceProgress(0)
+        reset.isClickable = false
+        reset.alpha = 0f
+        lap.visibility = View.INVISIBLE
+        share.visibility = View.GONE
     }
 
     override fun onTick(currentTime: Long, text: String) {
         service?.let {
-            time?.setText(text)
-            time?.setProgress(currentTime - if (it.lastLapTime == 0L) currentTime else it.lastLapTime)
+            time.setText(text)
+            time.setProgress(currentTime - if (it.lastLapTime == 0L) currentTime else it.lastLapTime)
         }
     }
 
     override fun onLap(lapNum: Int, lapTime: Long, lastLapTime: Long, lapDiff: Long) {
-        if (lastLapTime == 0L) time?.setMaxProgress(lapDiff) else time?.setReferenceProgress(
+        if (lastLapTime == 0L) time.setMaxProgress(lapDiff) else time.setReferenceProgress(
             lapDiff
         )
         val layout = LinearLayout(context)
@@ -198,7 +198,7 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
         total.text = getString(R.string.title_total_time, formatMillis(lapTime))
         total.setTextColor(textColorPrimary)
         layout.addView(total)
-        lapsLayout?.addView(layout, 0)
+        lapsLayout.addView(layout, 0)
     }
 
     override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {

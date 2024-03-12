@@ -22,9 +22,9 @@ import io.reactivex.rxkotlin.subscribeBy
 
 
 class AlarmsFragment : BasePagerFragment() {
-    private var recyclerView: RecyclerView? = null
-    private var empty: View? = null
-    private var alarmsAdapter: AlarmsAdapter? = null
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var empty: View
+    private lateinit var alarmsAdapter: AlarmsAdapter
     private var colorAccentSubscription: Disposable? = null
     private var colorForegroundSubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null
@@ -39,26 +39,26 @@ class AlarmsFragment : BasePagerFragment() {
         recyclerView = v.findViewById(R.id.recycler)
         empty = v.findViewById(R.id.empty)
         (v.findViewById<View>(R.id.emptyText) as TextView).setText(R.string.msg_alarms_empty)
-        recyclerView?.layoutManager = GridLayoutManager(context, 1)
-        alarmsAdapter = AlarmsAdapter(chronos!!, recyclerView!!, parentFragmentManager)
-        recyclerView?.adapter = alarmsAdapter
+        recyclerView.layoutManager = GridLayoutManager(context, 1)
+        alarmsAdapter = AlarmsAdapter(chronos!!, recyclerView, parentFragmentManager)
+        recyclerView.adapter = alarmsAdapter
 
         colorAccentSubscription = get()
             .colorAccent()
             .subscribeBy(
-                onNext = { integer: Int? -> alarmsAdapter?.colorAccent = integer!! },
+                onNext = { integer: Int? -> alarmsAdapter.colorAccent = integer!! },
                 onError = { it.printStackTrace() }
             ).also { disposables.add(it) }
         colorForegroundSubscription = get()
             .colorCardViewBackground()
             .subscribeBy(
-                onNext = { integer: Int? -> alarmsAdapter?.colorForeground = integer!! },
+                onNext = { integer: Int? -> alarmsAdapter.colorForeground = integer!! },
                 onError = { it.printStackTrace() }
             ).also { disposables.add(it) }
         textColorPrimarySubscription = get()
             .textColorPrimary()
             .subscribeBy(
-                onNext = { integer: Int? -> alarmsAdapter?.textColorPrimary = integer!! },
+                onNext = { integer: Int? -> alarmsAdapter.textColorPrimary = integer!! },
                 onError = { it.printStackTrace() }
             ).also { disposables.add(it) }
         onChanged()
@@ -77,23 +77,23 @@ class AlarmsFragment : BasePagerFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onAlarmsChanged() {
-        recyclerView?.post { alarmsAdapter?.notifyDataSetChanged() }
+        recyclerView.post { alarmsAdapter.notifyDataSetChanged() }
         onChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onTimersChanged() {
-        recyclerView?.post { alarmsAdapter?.notifyDataSetChanged() }
+        recyclerView.post { alarmsAdapter.notifyDataSetChanged() }
         onChanged()
     }
 
     private fun onChanged() {
-        empty?.visibility = if (alarmsAdapter!!.itemCount > 0) View.GONE else View.VISIBLE
+        empty.visibility = if (alarmsAdapter.itemCount > 0) View.GONE else View.VISIBLE
     }
 
     class Instantiator(context: Context?) : ContextFragmentInstantiator(context!!) {
-        override fun getTitle(context: Context?, position: Int): String {
-            return context!!.getString(R.string.title_alarms)
+        override fun getTitle(context: Context?, position: Int): String? {
+            return context?.getString(R.string.title_alarms)
         }
 
         override fun newInstance(position: Int): BasePagerFragment {

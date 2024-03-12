@@ -32,7 +32,7 @@ import io.reactivex.functions.Consumer
 
 
 class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
-    private var recyclerView: RecyclerView? = null
+    private lateinit var recyclerView: RecyclerView
     private var preferenceAdapter: PreferenceAdapter? = null
     private var colorPrimarySubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null
@@ -43,10 +43,10 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
     ): View? {
         val v = inflater.inflate(R.layout.fragment_recycler, container, false)
         recyclerView = v.findViewById(R.id.recycler)
-        recyclerView?.layoutManager = GridLayoutManager(context, 1)
-        recyclerView?.addItemDecoration(
+        recyclerView.layoutManager = GridLayoutManager(context, 1)
+        recyclerView.addItemDecoration(
             DividerItemDecoration(
-                recyclerView?.context,
+                recyclerView.context,
                 DividerItemDecoration.VERTICAL
             )
         )
@@ -98,7 +98,7 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
         dataList.add(0, AlertWindowPreferenceData())
         dataList.add(AboutPreferenceData(requireContext()))
         preferenceAdapter = PreferenceAdapter(dataList as ArrayList<BasePreferenceData<BasePreferenceData.ViewHolder>>)
-        recyclerView?.adapter = preferenceAdapter
+        recyclerView.adapter = preferenceAdapter
         colorPrimarySubscription = get()
             .colorPrimary()
             .subscribe(this)
@@ -125,12 +125,12 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        recyclerView?.post { preferenceAdapter?.notifyDataSetChanged() }
+        recyclerView.post { preferenceAdapter?.notifyDataSetChanged() }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun accept(o: Any?) {
-        recyclerView?.post { preferenceAdapter?.notifyDataSetChanged() }
+        recyclerView.post { preferenceAdapter?.notifyDataSetChanged() }
     }
 
     class Instantiator(context: Context?) : ContextFragmentInstantiator(context!!) {

@@ -20,11 +20,11 @@ import io.reactivex.rxkotlin.subscribeBy
 
 
 class TimerFragment : BaseFragment() {
-    private var back: ImageView? = null
-    private var time: ProgressTextView? = null
-    private var stop: FloatingActionButton? = null
-    private var handler: Handler? = null
-    private var runnable: Runnable? = null
+    private lateinit var back: ImageView
+    private lateinit var time: ProgressTextView
+    private lateinit var stop: FloatingActionButton
+    private lateinit var handler: Handler
+    private lateinit var runnable: Runnable
     private var isRunning = true
     private var timer: TimerData? = null
     private var textColorPrimarySubscription: Disposable? = null
@@ -40,7 +40,7 @@ class TimerFragment : BaseFragment() {
         time = view.findViewById(R.id.time)
         stop = view.findViewById(R.id.stop)
         timer = arguments?.getParcelable(EXTRA_TIMER)
-        timer?.duration?.let { time?.setMaxProgress(it) }
+        timer?.duration?.let { time.setMaxProgress(it) }
         handler = Handler()
         runnable = object : Runnable {
             override fun run() {
@@ -48,32 +48,32 @@ class TimerFragment : BaseFragment() {
                     timer?.let { timer ->
                         if (timer.isSet) {
                             val remainingMillis = timer.remainingMillis
-                            time?.apply {
+                            time.apply {
                                 setText(FormatUtils.formatMillis(remainingMillis))
                                 setProgress(timer.duration - remainingMillis)
                             }
-                            handler?.postDelayed(this, 10)
+                            handler.postDelayed(this, 10)
                         } else {
                             try {
                                 parentFragmentManager.popBackStack()
                             } catch (e: IllegalStateException) {
-                                handler?.postDelayed(this, 100)
+                                handler.postDelayed(this, 100)
                             }
                         }
                     }
                 }
             }
         }
-        stop?.setOnClickListener {
+        stop.setOnClickListener {
             timer?.let { it1 -> chronos?.removeTimer(it1) }
             parentFragmentManager.popBackStack()
         }
-        back?.setOnClickListener { parentFragmentManager.popBackStack() }
-        handler?.post(runnable as Runnable)
+        back.setOnClickListener { parentFragmentManager.popBackStack() }
+        handler.post(runnable)
         textColorPrimarySubscription = get()
             .textColorPrimary()
             .subscribeBy(
-                onNext = { integer: Int? -> back?.setColorFilter(integer!!) },
+                onNext = { integer: Int? -> back.setColorFilter(integer!!) },
                 onError = { it.printStackTrace() }
             ).also { disposables.add(it) }
         return view
@@ -82,7 +82,7 @@ class TimerFragment : BaseFragment() {
     override fun onDestroyView() {
         isRunning = false
         disposables.dispose()
-        time?.unsubscribe()
+        time.unsubscribe()
         super.onDestroyView()
     }
 
