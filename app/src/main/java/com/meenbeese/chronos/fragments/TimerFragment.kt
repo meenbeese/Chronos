@@ -2,6 +2,7 @@ package com.meenbeese.chronos.fragments
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +42,7 @@ class TimerFragment : BaseFragment() {
         stop = view.findViewById(R.id.stop)
         timer = arguments?.getParcelable(EXTRA_TIMER)
         timer?.duration?.let { time.setMaxProgress(it) }
-        handler = Handler()
+        handler = Handler(Looper.getMainLooper())
         runnable = object : Runnable {
             override fun run() {
                 if (isRunning) {
