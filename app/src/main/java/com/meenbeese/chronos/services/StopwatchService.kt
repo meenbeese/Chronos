@@ -1,5 +1,6 @@
 package com.meenbeese.chronos.services
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -41,6 +42,7 @@ class StopwatchService : Service() {
     private var notificationText: String? = null
     private var notificationManager: NotificationManager? = null
     private var receiver: NotificationReceiver? = null
+    @SuppressLint("NewApi")
     override fun onCreate() {
         super.onCreate()
         receiver = NotificationReceiver(this)
@@ -72,7 +74,7 @@ class StopwatchService : Service() {
         filter.addAction(ACTION_RESET)
         filter.addAction(ACTION_TOGGLE)
         filter.addAction(ACTION_LAP)
-        registerReceiver(receiver, filter)
+        registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED)
     }
 
     override fun onDestroy() {
