@@ -14,12 +14,10 @@ import java.util.TimeZone
  * should have a parameter for the zone id).
  */
 class TimeZonesPreferenceData(private val preference: PreferenceData, title: Int) : CustomPreferenceData(title) {
-
     override fun getValueName(holder: ViewHolder): String {
         var i = 0
         for (id in TimeZone.getAvailableIDs()) {
-            if (preference.getSpecificValue(holder.context, id))
-                i++
+            if (preference.getSpecificValue(holder.context, id)) i++
         }
 
         return String.format(Locale.getDefault(), holder.context.getString(R.string.msg_time_zones_selected), i)

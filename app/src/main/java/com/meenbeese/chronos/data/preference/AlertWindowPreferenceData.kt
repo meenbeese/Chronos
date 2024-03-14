@@ -28,7 +28,6 @@ import com.meenbeese.chronos.dialogs.AlertDialog
  * @see https://developer.android.com/guide/components/activities/background-starts
  */
 class AlertWindowPreferenceData : BasePreferenceData<AlertWindowPreferenceData.ViewHolder>() {
-
     override fun getViewHolder(inflater: LayoutInflater, parent: ViewGroup): BasePreferenceData.ViewHolder {
         return ViewHolder(inflater.inflate(R.layout.item_preference_boolean, parent, false))
     }
@@ -39,7 +38,6 @@ class AlertWindowPreferenceData : BasePreferenceData<AlertWindowPreferenceData.V
         holder.description.visibility = View.GONE
         holder.toggle.setOnCheckedChangeListener(null)
         holder.toggle.isClickable = false
-
         holder.toggle.isChecked = Settings.canDrawOverlays(holder.context)
         holder.itemView.setOnClickListener {
             if (!Settings.canDrawOverlays(holder.context)) {
@@ -48,21 +46,21 @@ class AlertWindowPreferenceData : BasePreferenceData<AlertWindowPreferenceData.V
         }
 
         Aesthetic.get()
-                .colorAccent()
-                .take(1)
-                .subscribe { colorAccent ->
-                    Aesthetic.get()
-                            .textColorPrimary()
-                            .take(1)
-                            .subscribe { textColorPrimary ->
-                                CompoundButtonCompat.setButtonTintList(holder.toggle, ColorStateList(
-                                        arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked)),
-                                        intArrayOf(Color.argb(100, Color.red(textColorPrimary), Color.green(textColorPrimary), Color.blue(textColorPrimary)), colorAccent)
-                                ))
+            .colorAccent()
+            .take(1)
+            .subscribe { colorAccent ->
+                Aesthetic.get()
+                    .textColorPrimary()
+                    .take(1)
+                    .subscribe { textColorPrimary ->
+                        CompoundButtonCompat.setButtonTintList(holder.toggle, ColorStateList(
+                            arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked)),
+                            intArrayOf(Color.argb(100, Color.red(textColorPrimary), Color.green(textColorPrimary), Color.blue(textColorPrimary)), colorAccent)
+                        ))
 
-                                holder.toggle.setTextColor(textColorPrimary)
-                            }
-                }
+                        holder.toggle.setTextColor(textColorPrimary)
+                    }
+            }
     }
 
     private fun showAlert(holder: ViewHolder) {
@@ -89,5 +87,4 @@ class AlertWindowPreferenceData : BasePreferenceData<AlertWindowPreferenceData.V
         val description: TextView = v.findViewById(R.id.description)
         val toggle: SwitchCompat = v.findViewById(R.id.toggle)
     }
-
 }

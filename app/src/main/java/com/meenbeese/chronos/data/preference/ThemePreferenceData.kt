@@ -36,7 +36,6 @@ const val HOUR_LENGTH = 3600000L
  * application.
  */
 class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>() {
-
     override fun getViewHolder(inflater: LayoutInflater, parent: ViewGroup): BasePreferenceData.ViewHolder {
         return ViewHolder(inflater.inflate(R.layout.item_preference_theme, parent, false))
     }
@@ -115,46 +114,46 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
 
         holder.sunriseTextView.setOnClickListener { view ->
             AestheticTimeSheetPickerDialog(view.context, holder.chronos?.dayStart ?: 1, 0)
-                    .setListener(object : PickerDialog.OnSelectedListener<LinearTimePickerView> {
-                        override fun onSelect(dialog: PickerDialog<LinearTimePickerView>, view: LinearTimePickerView) {
-                            holder.chronos?.let { chronos ->
-                                if (view.hourOfDay < chronos.dayEnd)
-                                    listener.onSunriseChanged(holder.sunriseView, view.hourOfDay * HOUR_LENGTH)
-                            }
+                .setListener(object : PickerDialog.OnSelectedListener<LinearTimePickerView> {
+                    override fun onSelect(dialog: PickerDialog<LinearTimePickerView>, view: LinearTimePickerView) {
+                        holder.chronos?.let { chronos ->
+                            if (view.hourOfDay < chronos.dayEnd)
+                                listener.onSunriseChanged(holder.sunriseView, view.hourOfDay * HOUR_LENGTH)
                         }
+                    }
 
-                        override fun onCancel(dialog: PickerDialog<LinearTimePickerView>) {}
-                    })
-                    .show()
+                    override fun onCancel(dialog: PickerDialog<LinearTimePickerView>) {}
+                })
+                .show()
         }
 
         holder.sunsetTextView.setOnClickListener { view ->
             AestheticTimeSheetPickerDialog(view.context, holder.chronos?.dayEnd ?: 23, 0)
-                    .setListener(object : PickerDialog.OnSelectedListener<LinearTimePickerView> {
-                        override fun onSelect(dialog: PickerDialog<LinearTimePickerView>, view: LinearTimePickerView) {
-                            holder.chronos?.let { chronos ->
-                                if (view.hourOfDay > chronos.dayStart)
-                                    listener.onSunsetChanged(holder.sunriseView, view.hourOfDay * HOUR_LENGTH)
-                            }
+                .setListener(object : PickerDialog.OnSelectedListener<LinearTimePickerView> {
+                    override fun onSelect(dialog: PickerDialog<LinearTimePickerView>, view: LinearTimePickerView) {
+                        holder.chronos?.let { chronos ->
+                            if (view.hourOfDay > chronos.dayStart)
+                                listener.onSunsetChanged(holder.sunriseView, view.hourOfDay * HOUR_LENGTH)
                         }
+                    }
 
-                        override fun onCancel(dialog: PickerDialog<LinearTimePickerView>) {}
-                    }).show()
+                    override fun onCancel(dialog: PickerDialog<LinearTimePickerView>) {}
+                }).show()
         }
 
         Aesthetic.get()
-                .textColorSecondary()
-                .take(1)
-                .subscribe { textColorSecondary ->
-                    holder.themeSpinner.supportBackgroundTintList = ColorStateList.valueOf(textColorSecondary)
-                }
+            .textColorSecondary()
+            .take(1)
+            .subscribe { textColorSecondary ->
+                holder.themeSpinner.supportBackgroundTintList = ColorStateList.valueOf(textColorSecondary)
+            }
 
         Aesthetic.get()
-                .colorCardViewBackground()
-                .take(1)
-                .subscribe { colorForeground ->
-                    holder.themeSpinner.setPopupBackgroundDrawable(ColorDrawable(colorForeground))
-                }
+            .colorCardViewBackground()
+            .take(1)
+            .subscribe { colorForeground ->
+                holder.themeSpinner.setPopupBackgroundDrawable(ColorDrawable(colorForeground))
+            }
     }
 
     /**
@@ -167,5 +166,4 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
         val sunriseTextView: TextView = v.findViewById(R.id.sunriseTextView)
         val sunsetTextView: TextView = v.findViewById(R.id.sunsetTextView)
     }
-
 }

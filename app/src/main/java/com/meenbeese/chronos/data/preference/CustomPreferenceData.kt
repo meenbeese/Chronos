@@ -14,7 +14,6 @@ import com.meenbeese.chronos.R
  * item view.
  */
 abstract class CustomPreferenceData(private val name: Int) : BasePreferenceData<CustomPreferenceData.ViewHolder>() {
-
     /**
      * Get the name of the current value of the preference.
      */
@@ -43,5 +42,4 @@ abstract class CustomPreferenceData(private val name: Int) : BasePreferenceData<
         val nameView: TextView = v.findViewById(R.id.name)
         val valueNameView: TextView = v.findViewById(R.id.value)
     }
-
 }

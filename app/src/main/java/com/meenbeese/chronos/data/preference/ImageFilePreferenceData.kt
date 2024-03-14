@@ -12,7 +12,6 @@ import com.meenbeese.chronos.data.PreferenceData
  * contains a valid image path / URI).
  */
 class ImageFilePreferenceData(private val preference: PreferenceData, name: Int) : CustomPreferenceData(name) {
-
     override fun getValueName(holder: ViewHolder): String = ""
 
     override fun onClick(holder: ViewHolder) {

@@ -18,7 +18,6 @@ import com.meenbeese.chronos.R
  * ignore battery optimizations to improve stability.
  */
 class BatteryOptimizationPreferenceData : CustomPreferenceData(R.string.title_ignore_battery_optimizations) {
-
     override fun getValueName(holder: ViewHolder): String? = null
 
     override fun onClick(holder: ViewHolder) {
@@ -43,5 +42,4 @@ class BatteryOptimizationPreferenceData : CustomPreferenceData(R.string.title_ig
 
         return false
     }
-
 }

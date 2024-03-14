@@ -15,7 +15,6 @@ import com.meenbeese.chronos.Chronos
  * of preferences as a settings item.
  */
 abstract class BasePreferenceData<V : BasePreferenceData.ViewHolder> {
-
     /**
      * Create a ViewHolder instance for the item to use.
      *
@@ -36,7 +35,6 @@ abstract class BasePreferenceData<V : BasePreferenceData.ViewHolder> {
      * Holds child views of the current item.
      */
     open class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-
         val context: Context
             get() = itemView.context
 
@@ -44,5 +42,4 @@ abstract class BasePreferenceData<V : BasePreferenceData.ViewHolder> {
             get() = context.applicationContext as? Chronos?
 
     }
-
 }
