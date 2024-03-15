@@ -49,7 +49,6 @@ import me.jfenn.slideactionview.SlideActionView
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
-import kotlin.math.max
 import kotlin.math.min
 
 
@@ -148,7 +147,6 @@ class AlarmActivity : AestheticActivity(), SlideActionListener {
                 if (alarm != null && isSlowWake) {
                     val slowWakeProgress = elapsedMillis.toFloat() / slowWakeMillis
                     val params = window.attributes
-                    params.screenBrightness = max(0.01f, min(1f, slowWakeProgress))
                     window.attributes = params
                     window.addFlags(WindowManager.LayoutParams.FLAGS_CHANGED)
                     if (sound != null && sound!!.isSetVolumeSupported) {
