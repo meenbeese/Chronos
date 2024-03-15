@@ -146,8 +146,6 @@ class AlarmActivity : AestheticActivity(), SlideActionListener {
                 if (sound != null && !sound!!.isPlaying(chronos!!)) sound!!.play(chronos!!)
                 if (alarm != null && isSlowWake) {
                     val slowWakeProgress = elapsedMillis.toFloat() / slowWakeMillis
-                    val params = window.attributes
-                    window.attributes = params
                     window.addFlags(WindowManager.LayoutParams.FLAGS_CHANGED)
                     if (sound != null && sound!!.isSetVolumeSupported) {
                         val newVolume = min(1f, slowWakeProgress)
