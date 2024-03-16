@@ -31,6 +31,7 @@ import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.dialogs.TimeChooserDialog
 import com.meenbeese.chronos.dialogs.TimeChooserDialog.OnTimeChosenListener
+import com.meenbeese.chronos.interfaces.SlideActionListener
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.utils.FormatUtils.format
@@ -38,13 +39,11 @@ import com.meenbeese.chronos.utils.FormatUtils.formatMillis
 import com.meenbeese.chronos.utils.FormatUtils.formatUnit
 import com.meenbeese.chronos.utils.FormatUtils.getShortFormat
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImage
+import com.meenbeese.chronos.views.SlideActionView
 
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
-
-import me.jfenn.slideactionview.SlideActionListener
-import me.jfenn.slideactionview.SlideActionView
 
 import java.util.Date
 import java.util.concurrent.TimeUnit

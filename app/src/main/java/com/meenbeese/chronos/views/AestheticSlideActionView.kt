@@ -6,8 +6,6 @@ import android.util.AttributeSet
 import com.afollestad.aesthetic.Aesthetic
 import com.meenbeese.chronos.interfaces.Subscribable
 
-import me.jfenn.slideactionview.SlideActionView
-
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy

@@ -76,6 +76,5 @@ dependencies {
     implementation "com.afollestad:aesthetic:1.0.0-beta05"
     implementation "me.jahirfiquitiva:FABsMenu:1.1.4"
     implementation "me.jfenn:timedatepickers:0.0.6"
-    implementation "me.jfenn:SlideActionView:0.0.2"
     implementation "me.jfenn:AndroidUtils:0.0.5"
 }
