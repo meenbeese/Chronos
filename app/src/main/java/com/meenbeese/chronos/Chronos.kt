@@ -24,7 +24,7 @@ import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.afollestad.aesthetic.AutoSwitchMode
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.PreferenceData
-import com.meenbeese.chronos.data.SoundData.Companion.fromString
+import com.meenbeese.chronos.data.SoundData.fromString
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
@@ -288,7 +288,7 @@ class Chronos : MultiDexApplication(), Player.Listener {
      * @see [ExoPlayer Repo]
      */
     @UnstableApi
-    private fun playStream(url: String, factory: MediaSource.Factory?) {
+    private fun playStream(url: String, type: String, factory: MediaSource.Factory?) {
         stopCurrentSound()
 
         // Create a MediaItem from the URL
@@ -309,8 +309,8 @@ class Chronos : MultiDexApplication(), Player.Listener {
      * @see [ExoPlayer Repo]
      */
     @UnstableApi
-    private fun playStream(url: String) {
-        playStream(url, hlsMediaSourceFactory)
+    private fun playStream(url: String, type: String) {
+        playStream(url, type, hlsMediaSourceFactory)
     }
 
     /**
@@ -321,12 +321,12 @@ class Chronos : MultiDexApplication(), Player.Listener {
      * @see [ExoPlayer Repo]
      */
     @UnstableApi
-    fun playStream(url: String, attributes: AudioAttributes?) {
+    fun playStream(url: String, type: String, attributes: AudioAttributes?) {
         player?.stop()
         player = ExoPlayer.Builder(this)
             .setAudioAttributes(attributes!!, true)
             .build()
-        playStream(url)
+        playStream(url, type)
     }
 
     /**
