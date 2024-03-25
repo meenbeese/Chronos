@@ -132,29 +132,41 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
 
     override fun onStateChanged(isRunning: Boolean) {
         if (isRunning) {
-            reset.isClickable = false
-            reset.animate()?.alpha(0f)?.start()
-            lap.visibility = View.VISIBLE
-            share.visibility = View.GONE
-            val drawable =
-                AnimatedVectorDrawableCompat.create(requireContext(), R.drawable.ic_play_to_pause)
-            if (drawable != null) {
-                toggle.setImageDrawable(drawable)
-                drawable.start()
-            } else toggle.setImageResource(R.drawable.ic_pause)
+            configureRunningState()
         } else {
-            if (service!!.elapsedTime > 0) {
+            configureStoppedState()
+        }
+    }
+
+    private fun configureRunningState() {
+        reset.isClickable = false
+        reset.animate()?.alpha(0f)?.start()
+        lap.visibility = View.VISIBLE
+        share.visibility = View.GONE
+        setToggleDrawable(R.drawable.ic_play_to_pause, R.drawable.ic_pause)
+    }
+
+    private fun configureStoppedState() {
+        service?.let {
+            if (it.elapsedTime > 0) {
                 reset.isClickable = true
                 reset.animate()?.alpha(1f)?.start()
                 share.visibility = View.VISIBLE
-            } else share.visibility = View.INVISIBLE
-            lap.visibility = View.GONE
-            val drawable =
-                AnimatedVectorDrawableCompat.create(requireContext(), R.drawable.ic_pause_to_play)
-            if (drawable != null) {
-                toggle.setImageDrawable(drawable)
-                drawable.start()
-            } else toggle.setImageResource(R.drawable.ic_play)
+            } else {
+                share.visibility = View.INVISIBLE
+            }
+        }
+        lap.visibility = View.GONE
+        setToggleDrawable(R.drawable.ic_pause_to_play, R.drawable.ic_play)
+    }
+
+    private fun setToggleDrawable(drawableId: Int, fallbackId: Int) {
+        val drawable = AnimatedVectorDrawableCompat.create(requireContext(), drawableId)
+        if (drawable != null) {
+            toggle.setImageDrawable(drawable)
+            drawable.start()
+        } else {
+            toggle.setImageResource(fallbackId)
         }
     }
 
