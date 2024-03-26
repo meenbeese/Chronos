@@ -77,7 +77,7 @@ class AboutActivity : AppCompatActivity() {
                 "• Portrait and landscape orientation\n" +
                 "• Countless default ringtones\n\n\n\n" +
                 "Made with ❤ in Canada."
-        const val VERSION = "Version 1.2.0"
+        const val VERSION = "Version 1.3.0"
         val YEAR = Calendar.getInstance().get(Calendar.YEAR)
     }
 }
