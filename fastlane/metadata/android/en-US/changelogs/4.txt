@@ -1,0 +1,9 @@
+Fix multiple SoundData related issues
+Fix crash on stopwatch service starting
+Fix brightness decreasing on alarm start
+Rewrite the about page completely
+Upgrade Kotlin and AGP to latest version
+Upgrade some external dependencies
+Fix outdated info in funding doc
+Migrate RxJava2 to RxKotlin2
+Some more internal changes
