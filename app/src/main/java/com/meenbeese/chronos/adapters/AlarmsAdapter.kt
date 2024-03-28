@@ -141,9 +141,9 @@ class AlarmsAdapter(private val chronos: Chronos, private val recycler: Recycler
                 if (!alarm.isRepeat) {
                     notifyItemChanged(holder.bindingAdapterPosition)
                 } else {
-                    // if the view isn't going to change size in the recycler,
-                    //   then I can just do this (prevents the background flickering as
-                    //   the recyclerview attempts to smooth the transition)
+                    // If the view isn't going to change size in the recycler,
+                    // then I can just do this (prevents the background flickering as
+                    // the recyclerview attempts to smooth the transition)
                     onBindAlarmViewHolder(holder, holder.bindingAdapterPosition)
                 }
             }
@@ -317,9 +317,9 @@ class AlarmsAdapter(private val chronos: Chronos, private val recycler: Recycler
 
         val nextAlarm = alarm.next
         if (alarm.isEnabled && nextAlarm != null) {
-            // minutes in a week: 10080
-            // maximum value of an integer: 2147483647
-            // we do not need to check this int cast
+            // Minutes in a week: 10080
+            // Maximum value of an integer: 2147483647
+            // We do not need to check this int cast
             val minutes = TimeUnit.MILLISECONDS.toMinutes(nextAlarm.timeInMillis - Calendar.getInstance().timeInMillis).toInt()
 
             holder.nextTime.text = String.format(chronos.getString(R.string.title_alarm_next), FormatUtils.formatUnit(chronos, minutes))
