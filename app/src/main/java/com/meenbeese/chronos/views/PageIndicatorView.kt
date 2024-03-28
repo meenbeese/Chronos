@@ -50,7 +50,7 @@ class PageIndicatorView : View, OnPageChangeListener, Subscribable {
 
     private fun init() {
         engine = IndicatorEngine()
-        engine!!.onInitEngine(this)
+        engine?.onInitEngine(this)
         totalPages = 2
     }
 
@@ -94,12 +94,12 @@ class PageIndicatorView : View, OnPageChangeListener, Subscribable {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        engine!!.onDrawIndicator(canvas)
+        engine?.onDrawIndicator(canvas)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        setMeasuredDimension(engine!!.measuredWidth, engine!!.measuredHeight)
+        engine?.let { setMeasuredDimension(it.measuredWidth, it.measuredHeight) }
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -121,47 +121,47 @@ class PageIndicatorView : View, OnPageChangeListener, Subscribable {
     }
 
     private class IndicatorEngine {
-        private var indicator: PageIndicatorView? = null
-        private var selectedPaint: Paint? = null
-        private var unselectedPaint: Paint? = null
+        private lateinit var indicator: PageIndicatorView
+        private lateinit var selectedPaint: Paint
+        private lateinit var unselectedPaint: Paint
         val measuredHeight: Int
             get() = DimenUtils.dpToPx(8f)
         val measuredWidth: Int
-            get() = DimenUtils.dpToPx((8 * (indicator!!.totalPages * 2 - 1)).toFloat())
+            get() = DimenUtils.dpToPx((8 * (indicator.totalPages * 2 - 1)).toFloat())
 
         fun onInitEngine(indicator: PageIndicatorView) {
             this.indicator = indicator
             selectedPaint = Paint()
             unselectedPaint = Paint()
-            selectedPaint!!.color = indicator.textColorPrimary
-            unselectedPaint!!.color = indicator.textColorSecondary
-            selectedPaint!!.flags = Paint.ANTI_ALIAS_FLAG
-            unselectedPaint!!.flags = Paint.ANTI_ALIAS_FLAG
+            selectedPaint.color = indicator.textColorPrimary
+            unselectedPaint.color = indicator.textColorSecondary
+            selectedPaint.flags = Paint.ANTI_ALIAS_FLAG
+            unselectedPaint.flags = Paint.ANTI_ALIAS_FLAG
         }
 
         fun updateTextColors(indicator: PageIndicatorView) {
-            selectedPaint!!.color = indicator.textColorPrimary
-            unselectedPaint!!.color = indicator.textColorSecondary
+            selectedPaint.color = indicator.textColorPrimary
+            unselectedPaint.color = indicator.textColorSecondary
         }
 
         fun onDrawIndicator(canvas: Canvas) {
-            val height = indicator!!.height
-            for (i in 0 until indicator!!.totalPages) {
+            val height = indicator.height
+            for (i in 0 until indicator.totalPages) {
                 val x = DimenUtils.dpToPx(4f) + DimenUtils.dpToPx((16 * i).toFloat())
                 canvas.drawCircle(
                     x.toFloat(),
                     height / 2f,
                     DimenUtils.dpToPx(4f).toFloat(),
-                    unselectedPaint!!
+                    unselectedPaint
                 )
             }
-            var firstX: Int = DimenUtils.dpToPx((4 + indicator!!.actualPosition * 16).toFloat())
-            if (indicator!!.positionOffset > .5f) {
-                firstX += DimenUtils.dpToPx(16 * (indicator!!.positionOffset - .5f) * 2)
+            var firstX: Int = DimenUtils.dpToPx((4 + indicator.actualPosition * 16).toFloat())
+            if (indicator.positionOffset > .5f) {
+                firstX += DimenUtils.dpToPx(16 * (indicator.positionOffset - .5f) * 2)
             }
-            var secondX: Int = DimenUtils.dpToPx((4 + indicator!!.actualPosition * 16).toFloat())
-            secondX += if (indicator!!.positionOffset < .5f) {
-                DimenUtils.dpToPx(16 * indicator!!.positionOffset * 2)
+            var secondX: Int = DimenUtils.dpToPx((4 + indicator.actualPosition * 16).toFloat())
+            secondX += if (indicator.positionOffset < .5f) {
+                DimenUtils.dpToPx(16 * indicator.positionOffset * 2)
             } else {
                 DimenUtils.dpToPx(16f)
             }
@@ -169,20 +169,20 @@ class PageIndicatorView : View, OnPageChangeListener, Subscribable {
                 firstX.toFloat(),
                 DimenUtils.dpToPx(4f).toFloat(),
                 DimenUtils.dpToPx(4f).toFloat(),
-                selectedPaint!!
+                selectedPaint
             )
             canvas.drawCircle(
                 secondX.toFloat(),
                 DimenUtils.dpToPx(4f).toFloat(),
                 DimenUtils.dpToPx(4f).toFloat(),
-                selectedPaint!!
+                selectedPaint
             )
             canvas.drawRect(
                 firstX.toFloat(),
                 0f,
                 secondX.toFloat(),
                 DimenUtils.dpToPx(8f).toFloat(),
-                selectedPaint!!
+                selectedPaint
             )
         }
     }
