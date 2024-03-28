@@ -75,9 +75,13 @@ Thanks to Chronos' contributors, the developers of our dependencies, and our use
 
 ## 🏗️ Building From Source
 
-You need to use Android Studio to build this App.
-Select `Project` from `Version Control` and paste the link of this repository.
-Then go to `Build > APK > Create New Keystore > Enter the password`.
+1. First you need to get the source code of Chronos.
+```sh
+git clone https://github.com/meenbeese/Chronos.git
+```
+2. Open the project in [Android Studio](https://developer.android.com/studio).
+3. When you click the `▶ Run` button, it will be built automatically.
+4. Launch Chronos.
 
 ## 📝 License
 
