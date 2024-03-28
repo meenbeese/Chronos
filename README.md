@@ -37,14 +37,8 @@
 
 ## 📲 Installation
 
-<div style="display: flex; justify-content: center; align-items: center; flex-direction: row;">
-    <a href="https://apt.izzysoft.de/fdroid/index/apk/com.meenbeese.chronos">
-        <img width="200" height="80" alt="Izzy Download" src="./assets/izzy_install_badge.png">
-    </a>
-    <a href="https://github.com/meenbeese/Chronos/releases/latest">
-        <img width="200" height="84" alt="APK Download" src="./assets/apk_install_badge.png">
-    </a>
-</div>
+<a href="https://apt.izzysoft.de/fdroid/index/apk/com.meenbeese.chronos"><img height="80" alt="Izzy Download" src="./assets/izzy_install_badge.png"></a>
+<a href="https://github.com/meenbeese/Chronos/releases/latest"><img height="80" alt="APK Download" src="./assets/apk_install_badge.png"></a>
 
 ## ⚙️ Permissions
 
