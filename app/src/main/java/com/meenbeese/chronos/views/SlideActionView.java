@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class SlideActionView extends View implements View.OnTouchListener {
 
-    private float x = -1;
+    private float position = -1;
     private AnimatedFloat selected;
     private Map<Float, AnimatedFloat> ripples;
 
@@ -205,12 +205,12 @@ public class SlideActionView extends View implements View.OnTouchListener {
     public void draw(@NonNull Canvas canvas) {
         super.draw(canvas);
         selected.next(true);
-        if (x < 0)
-            x = (float) getWidth() / 2;
+        if (position < 0)
+            position = (float) getWidth() / 2;
 
         normalPaint.setAlpha(150 - (int) (selected.val() * 100));
         int radius = (int) ((handleRadius * (1 - selected.val())) + (expandedHandleRadius * selected.val()));
-        float drawnX = (x * selected.val()) + (((float) getWidth() / 2) * (1 - selected.val()));
+        float drawnX = (position * selected.val()) + (((float) getWidth() / 2) * (1 - selected.val()));
         canvas.drawCircle(drawnX, (float) getHeight() / 2, radius, normalPaint);
 
         if (leftImage != null && rightImage != null) {
@@ -278,7 +278,7 @@ public class SlideActionView extends View implements View.OnTouchListener {
         }
 
         if (selected.getTarget() > 0) {
-            x = event.getX();
+            position = event.getX();
             postInvalidate();
         }
 
