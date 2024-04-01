@@ -12,6 +12,7 @@ android {
         targetSdk = 34
         versionCode = 4
         versionName = "1.3.0"
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -21,21 +22,23 @@ android {
         create("release")
     }
 
-    dependenciesInfo {
-        includeInApk = false
-        includeInBundle = false
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            )
         }
     }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
     }
 
     kotlinOptions {
@@ -67,11 +70,11 @@ dependencies {
     // About
     implementation("io.github.medyo:android-about-page:2.0.0")
 
-    // RxKotlin
+    // Async
     implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
 
-    // External
+    // Misc
     implementation("com.afollestad:aesthetic:0.7.2")
     implementation("me.jahirfiquitiva:FABsMenu:1.1.4")
     implementation("me.jfenn:timedatepickers:0.0.6")
