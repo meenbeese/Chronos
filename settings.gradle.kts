@@ -1,2 +1,2 @@
 rootProject.name = "Chronos"
-include ':app'
+include(":app")
