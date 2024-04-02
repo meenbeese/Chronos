@@ -71,7 +71,7 @@ class AboutActivity : AppCompatActivity() {
                 "Simple, yet customizable alarm clock app that is focused on simplicity, usability and modern design.\n\n" +
                 "• Custom backgrounds & ringtones\n" +
                 "• No unnecessary permissions\n" +
-                "• Dark, Light, Amoled themes\n" +
+                "• Dark, Light, AMOLED themes\n" +
                 "• Granular controls everywhere\n" +
                 "• Unique, minimal, efficient design\n" +
                 "• Portrait and landscape orientation\n" +

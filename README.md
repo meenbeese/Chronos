@@ -29,7 +29,7 @@
 
 - Custom backgrounds & ringtones
 - No unnecessary permissions
-- Dark, Light, Amoled themes
+- Dark, Light, AMOLED themes
 - Granular controls everywhere
 - Unique, minimal, efficient design
 - Portrait and landscape orientation
