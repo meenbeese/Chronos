@@ -28,6 +28,14 @@ class AboutPreferenceData(private val context: Context) : CustomPreferenceData(R
         val intent = Intent(context, AboutActivity::class.java)
         context.startActivity(intent)
     }
+
+    companion object {
+        var versionName: String? = null
+    }
+
+    init {
+        versionName = context.packageManager?.getPackageInfo(context.packageName, 0)?.versionName
+    }
 }
 
 class AboutActivity : AppCompatActivity() {
@@ -77,7 +85,7 @@ class AboutActivity : AppCompatActivity() {
                 "• Portrait and landscape orientation\n" +
                 "• Countless default ringtones\n\n\n\n" +
                 "Made with ❤ in Canada."
-        const val VERSION = "Version 1.3.0"
+        val VERSION = "Version ${AboutPreferenceData.versionName}"
         val YEAR = Calendar.getInstance().get(Calendar.YEAR)
     }
 }
