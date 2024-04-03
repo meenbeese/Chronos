@@ -43,12 +43,12 @@ class AboutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val aboutPage: View = AboutPage(this)
             .setImage(R.mipmap.ic_launcher)
-            .setDescription("Chronos".plus("\n\n").plus(DESCRIPTION.trim()))
+            .setDescription("Chronos\n\n".plus(DESCRIPTION.trim()))
             .addItem(Element().setTitle(VERSION).setGravity(1))
             .addGroup("Connect with us")
             .addGitHub("meenbeese/Chronos")
             .addWebsite("https://meenbeese.is-a.dev")
-            .addEmail("meenbeese@tutanota.com")
+            .addEmail(EMAIL)
             .addItem(copyrightsElement())
             .create()
         aboutPage.setPadding(0, getStatusBarHeight(), 0, 0)
@@ -56,15 +56,15 @@ class AboutActivity : AppCompatActivity() {
     }
 
     private fun copyrightsElement(): Element {
-        val copyrightsElement = Element()
         val copyrightText = "Copyright $YEAR Meenbeese"
-        copyrightsElement.setTitle(copyrightText)
-        copyrightsElement.setIconDrawable(R.drawable.ic_copyright)
-        copyrightsElement.setAutoApplyIconTint(true)
-        copyrightsElement.setIconTint(mehdi.sakout.aboutpage.R.color.about_item_icon_color)
-        copyrightsElement.setIconNightTint(android.R.color.white)
-        copyrightsElement.setGravity(Gravity.CENTER)
-        copyrightsElement.setOnClickListener {
+        val copyrightsElement = Element()
+            .setTitle(copyrightText)
+            .setIconDrawable(R.drawable.ic_copyright)
+            .setAutoApplyIconTint(true)
+            .setIconTint(mehdi.sakout.aboutpage.R.color.about_item_icon_color)
+            .setIconNightTint(android.R.color.white)
+            .setGravity(Gravity.CENTER)
+            .setOnClickListener {
             Toast.makeText(
                 this@AboutActivity,
                 copyrightText,
@@ -75,8 +75,9 @@ class AboutActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val EMAIL = "meenbeese@tutanota.com"
         const val DESCRIPTION =
-                "Simple, yet customizable alarm clock app that is focused on simplicity, usability and modern design.\n\n" +
+                "Simple, yet customizable alarm clock app focused on simplicity, usability and modern design.\n\n" +
                 "• Custom backgrounds & ringtones\n" +
                 "• No unnecessary permissions\n" +
                 "• Dark, Light, AMOLED themes\n" +
