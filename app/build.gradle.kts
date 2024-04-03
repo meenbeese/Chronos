@@ -14,8 +14,6 @@ android {
         versionName = "1.3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
-        multiDexEnabled = true
     }
 
     signingConfigs {
@@ -54,7 +52,6 @@ dependencies {
     // Core
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.multidex:multidex:2.0.1")
 
     // Media
     implementation("androidx.media3:media3-exoplayer:1.3.0")
