@@ -17,10 +17,10 @@
 <div align="center">
   <table>
     <tr>
-      <td style="width: 25%; height: 100px;"><img src="./.github/images/home.png" alt="Home" style="width: 100%; height: 100%;"></td>
-      <td style="width: 25%; height: 100px;"><img src="./.github/images/alarms.png" alt="Alarms" style="width: 100%; height: 100%;"></td>
-      <td style="width: 25%; height: 100px;"><img src="./.github/images/timers.png" alt="Timers" style="width: 100%; height: 100%;"></td>
-      <td style="width: 25%; height: 100px;"><img src="./.github/images/themes.png" alt="Themes" style="width: 100%; height: 100%;"></td>
+      <td style="width: 25%; height: 100px;"><img src="./assets/images/home.png" alt="Home" style="width: 100%; height: 100%;"></td>
+      <td style="width: 25%; height: 100px;"><img src="./assets/images/alarms.png" alt="Alarms" style="width: 100%; height: 100%;"></td>
+      <td style="width: 25%; height: 100px;"><img src="./assets/images/timers.png" alt="Timers" style="width: 100%; height: 100%;"></td>
+      <td style="width: 25%; height: 100px;"><img src="./assets/images/themes.png" alt="Themes" style="width: 100%; height: 100%;"></td>
     </tr>
   </table>
 </div>
@@ -37,8 +37,8 @@
 
 ## 📲 Installation
 
-<a href="https://apt.izzysoft.de/fdroid/index/apk/com.meenbeese.chronos"><img height="80" alt="Izzy Download" src="./assets/izzy_install_badge.png"></a>
-<a href="https://github.com/meenbeese/Chronos/releases/latest"><img height="80" alt="APK Download" src="./assets/apk_install_badge.png"></a>
+<a href="https://apt.izzysoft.de/fdroid/index/apk/com.meenbeese.chronos"><img height="80" alt="Izzy Download" src="./assets/badges/izzy_install_badge.png"></a>
+<a href="https://github.com/meenbeese/Chronos/releases/latest"><img height="80" alt="APK Download" src="./assets/badges/apk_install_badge.png"></a>
 
 ## ⚙️ Permissions
 
