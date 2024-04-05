@@ -1,5 +1,6 @@
 package com.meenbeese.chronos
 
+import android.app.Application
 import android.content.Intent
 import android.graphics.Color
 import android.media.Ringtone
@@ -18,7 +19,6 @@ import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.MediaSource
-import androidx.multidex.MultiDexApplication
 
 import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.afollestad.aesthetic.AutoSwitchMode
@@ -32,7 +32,7 @@ import com.meenbeese.chronos.services.TimerService
 import java.util.Calendar
 
 
-class Chronos : MultiDexApplication(), Player.Listener {
+class Chronos : Application(), Player.Listener {
     lateinit var alarms: ArrayList<AlarmData>
     lateinit var timers: ArrayList<TimerData>
     private var listeners: MutableList<ChronosListener>? = null
