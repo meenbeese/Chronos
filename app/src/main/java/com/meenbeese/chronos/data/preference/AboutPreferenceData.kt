@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.utils.DimenUtils.getStatusBarHeight
+import com.meenbeese.chronos.BuildConfig
 
 import mehdi.sakout.aboutpage.AboutPage
 import mehdi.sakout.aboutpage.Element
@@ -27,14 +28,6 @@ class AboutPreferenceData(private val context: Context) : CustomPreferenceData(R
     override fun onClick(holder: ViewHolder) {
         val intent = Intent(context, AboutActivity::class.java)
         context.startActivity(intent)
-    }
-
-    companion object {
-        var versionName: String? = null
-    }
-
-    init {
-        versionName = context.packageManager?.getPackageInfo(context.packageName, 0)?.versionName
     }
 }
 
@@ -86,7 +79,7 @@ class AboutActivity : AppCompatActivity() {
                 "• Portrait and landscape orientation\n" +
                 "• Countless default ringtones\n\n\n\n" +
                 "Made with ❤ in Canada."
-        val VERSION = "Version ${AboutPreferenceData.versionName}"
+        const val VERSION = "Version ${BuildConfig.VERSION_NAME}"
         val YEAR = Calendar.getInstance().get(Calendar.YEAR)
     }
 }
