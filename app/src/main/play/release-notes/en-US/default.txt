@@ -1,5 +1,0 @@
-- temporary workaround for background optimizations
-- fix bugs with alarm volume (@ajayyy)
-- alarms re-enable when setting time (@raboof)
-- support for more internet radio sources (@raboof)
-- prevent alarms from appearing in recent apps
