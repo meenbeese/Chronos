@@ -15,14 +15,7 @@
 ## 🌄 Screenshots
 
 <div align="center">
-  <table>
-    <tr>
-      <td style="width: 25%; height: 100px;"><img src="./assets/images/home.png" alt="Home" style="width: 100%; height: 100%;"></td>
-      <td style="width: 25%; height: 100px;"><img src="./assets/images/alarms.png" alt="Alarms" style="width: 100%; height: 100%;"></td>
-      <td style="width: 25%; height: 100px;"><img src="./assets/images/timers.png" alt="Timers" style="width: 100%; height: 100%;"></td>
-      <td style="width: 25%; height: 100px;"><img src="./assets/images/themes.png" alt="Themes" style="width: 100%; height: 100%;"></td>
-    </tr>
-  </table>
+    <img src="./assets/images/home.png" alt="Home" style="width: 24%"> <img src="./assets/images/alarms.png" alt="Alarms" style="width: 24%"> <img src="./assets/images/timers.png" alt="Timers" style="width: 24%"> <img src="./assets/images/themes.png" alt="Themes" style="width: 24%">
 </div>
 
 ## ⭐ Features
