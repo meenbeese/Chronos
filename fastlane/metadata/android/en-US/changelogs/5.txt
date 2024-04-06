@@ -1,0 +1,6 @@
+Fix many theme color inconsistencies
+Some improvements to the about page
+Migrate Gradle scripts to Kotlin
+Fix some possible crashes
+Remove unused multiDex library
+Remove an unused AndroidX library
