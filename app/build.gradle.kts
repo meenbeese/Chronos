@@ -64,6 +64,9 @@ dependencies {
     // Material
     implementation("com.google.android.material:material:1.11.0")
 
+    // FAB
+    implementation("com.leinardi.android:speed-dial:3.3.0")
+
     // Image
     implementation("io.coil-kt:coil:2.6.0")
 
@@ -76,7 +79,6 @@ dependencies {
 
     // Misc
     implementation("com.afollestad:aesthetic:0.7.2")
-    implementation("me.jahirfiquitiva:FABsMenu:1.1.4")
     implementation("me.jfenn:timedatepickers:0.0.6")
     implementation("me.jfenn:AndroidUtils:0.0.5")
 }
