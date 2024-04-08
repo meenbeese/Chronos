@@ -21,7 +21,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 
 import androidx.appcompat.widget.AppCompatCheckBox
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +29,7 @@ import androidx.transition.TransitionManager
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.afollestad.aesthetic.Aesthetic
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
@@ -427,7 +427,7 @@ class AlarmsAdapter(private val chronos: Chronos, private val recycler: Recycler
     class AlarmViewHolder(v: View, val chronos: Chronos) : RecyclerView.ViewHolder(v) {
         val name: EditText = v.findViewById(R.id.name)
         val nameUnderline: View = v.findViewById(R.id.underline)
-        val enable: SwitchCompat = v.findViewById(R.id.enable)
+        val enable: SwitchMaterial = v.findViewById(R.id.enable)
         val time: TextView = v.findViewById(R.id.time)
         val nextTime: TextView = v.findViewById(R.id.nextTime)
         val extra: View = v.findViewById(R.id.extra)

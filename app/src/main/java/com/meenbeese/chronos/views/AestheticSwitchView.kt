@@ -5,11 +5,11 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.AttributeSet
 
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.CompoundButtonCompat
 
 import com.afollestad.aesthetic.Aesthetic
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.meenbeese.chronos.interfaces.Subscribable
 
 import io.reactivex.disposables.CompositeDisposable
@@ -18,10 +18,10 @@ import io.reactivex.rxkotlin.subscribeBy
 
 
 /**
- * A SwitchCompat extension class that implements
+ * A SwitchMaterial extension class that implements
  * Aesthetic theming.
  */
-class AestheticSwitchView : SwitchCompat, Subscribable {
+class AestheticSwitchView : SwitchMaterial, Subscribable {
 
     private var colorAccentSubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null

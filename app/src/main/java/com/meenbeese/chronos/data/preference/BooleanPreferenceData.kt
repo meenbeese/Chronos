@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 import androidx.annotation.StringRes
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.widget.CompoundButtonCompat
 
 import com.afollestad.aesthetic.Aesthetic
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 
@@ -58,6 +58,6 @@ class BooleanPreferenceData(private val preference: PreferenceData, @StringRes p
     inner class ViewHolder(v: View) : BasePreferenceData.ViewHolder(v) {
         val title: TextView = v.findViewById(R.id.title)
         val description: TextView = v.findViewById(R.id.description)
-        val toggle: SwitchCompat = v.findViewById(R.id.toggle)
+        val toggle: SwitchMaterial = v.findViewById(R.id.toggle)
     }
 }
