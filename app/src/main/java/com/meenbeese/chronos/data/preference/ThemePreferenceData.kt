@@ -42,7 +42,7 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
 
     @SuppressLint("CheckResult")
     override fun bindViewHolder(holder: ViewHolder) {
-        holder.themeSpinner.adapter = ArrayAdapter.createFromResource(holder.itemView.context, R.array.array_themes, R.layout.support_simple_spinner_dropdown_item)
+        holder.themeSpinner.adapter = ArrayAdapter.createFromResource(holder.itemView.context, R.array.array_themes, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item)
 
         val theme : Int = holder.chronos?.activityTheme ?: Chronos.THEME_DAY_NIGHT
         run {
