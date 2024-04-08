@@ -55,7 +55,6 @@ android {
 dependencies {
     // Core
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.cardview:cardview:1.0.0")
 
     // Media
     implementation("androidx.media3:media3-exoplayer:1.3.0")
