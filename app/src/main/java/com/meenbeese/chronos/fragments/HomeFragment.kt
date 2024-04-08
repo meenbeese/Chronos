@@ -1,10 +1,7 @@
 package com.meenbeese.chronos.fragments
 
-import android.Manifest
 import android.app.AlarmManager
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.provider.AlarmClock
 import android.view.LayoutInflater
@@ -21,10 +18,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 
-import jahirfiquitiva.libs.fabsmenu.FABsMenu
-import jahirfiquitiva.libs.fabsmenu.FABsMenuListener
-import jahirfiquitiva.libs.fabsmenu.TitleFAB
-
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
@@ -40,6 +33,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import com.leinardi.android.speeddial.SpeedDialView
 
 import me.jfenn.timedatepickers.dialogs.PickerDialog
 import me.jfenn.timedatepickers.dialogs.PickerDialog.OnSelectedListener
@@ -56,16 +50,12 @@ class HomeFragment : BaseFragment() {
     private lateinit var bottomSheet: View
     private lateinit var background: ImageView
     private lateinit var overlay: View
-    private lateinit var menu: FABsMenu
-    private lateinit var stopwatchFab: TitleFAB
-    private lateinit var timerFab: TitleFAB
-    private lateinit var alarmFab: TitleFAB
+    private lateinit var speedDialView: SpeedDialView
     private lateinit var behavior: BottomSheetBehavior<*>
     private var shouldCollapseBack = false
     private var colorPrimarySubscription: Disposable? = null
     private var colorAccentSubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null
-    private var textColorPrimaryInverseSubscription: Disposable? = null
     private val disposables = CompositeDisposable()
 
     override fun onCreateView(
@@ -81,15 +71,13 @@ class HomeFragment : BaseFragment() {
         timeIndicator = view.findViewById(R.id.pageIndicator)
         background = view.findViewById(R.id.background)
         overlay = view.findViewById(R.id.overlay)
-        menu = view.findViewById(R.id.fabsMenu)
-        stopwatchFab = view.findViewById(R.id.stopwatchFab)
-        timerFab = view.findViewById(R.id.timerFab)
-        alarmFab = view.findViewById(R.id.alarmFab)
+        speedDialView = view.findViewById(R.id.speedDial)
         behavior = BottomSheetBehavior.from(bottomSheet)
         behavior.isHideable = false
         behavior.addBottomSheetCallback(object : BottomSheetCallback() {
             private var statusBarHeight = -1
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+                speedDialView.close()
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED)
                     bottomSheet.setPadding(0, 0, 0, 0)
                 else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
@@ -99,6 +87,7 @@ class HomeFragment : BaseFragment() {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                speedDialView.close()
                 if (statusBarHeight < 0) statusBarHeight = requireContext().getStatusBarHeight()
                 bottomSheet.setPadding(0, (slideOffset * statusBarHeight).toInt(), 0, 0)
             }
@@ -108,17 +97,18 @@ class HomeFragment : BaseFragment() {
             AlarmsFragment.Instantiator(context),
             SettingsFragment.Instantiator(context)
         )
+        speedDialView.inflate(R.menu.fab)
         viewPager?.adapter = pagerAdapter
         tabLayout?.setupWithViewPager(viewPager)
         tabLayout?.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if (tab.position > 0) {
+                    speedDialView.hide()
                     shouldCollapseBack = behavior.state != BottomSheetBehavior.STATE_EXPANDED
                     behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                    menu.hide()
                 } else {
                     setClockFragments()
-                    menu.show()
+                    speedDialView.show()
                     if (shouldCollapseBack) {
                         behavior.state = BottomSheetBehavior.STATE_COLLAPSED
                         shouldCollapseBack = false
@@ -153,75 +143,58 @@ class HomeFragment : BaseFragment() {
         colorAccentSubscription = get()
             .colorAccent()
             .subscribeBy(
-                onNext = { integer: Int? ->
-                    menu.menuButtonColor = integer!!
+                onNext = {
                     val color = ContextCompat.getColor(
                         requireContext(),
-                        if (chronos?.activityTheme == Chronos.THEME_AMOLED) R.color.textColorPrimary else R.color.textColorPrimaryNight
+                        when (chronos?.activityTheme) {
+                            Chronos.THEME_DAY -> R.color.colorAccent
+                            Chronos.THEME_NIGHT -> R.color.colorNightAccent
+                            Chronos.THEME_AMOLED -> R.color.textColorPrimaryNight
+                            else -> R.color.colorPrimary
+                        }
                     )
-                    menu.menuButton?.setColorFilter(color)
-                    stopwatchFab.setColorFilter(color)
-                    timerFab.setColorFilter(color)
-                    alarmFab.setColorFilter(color)
-                    stopwatchFab.setBackgroundColor(integer)
-                    timerFab.setBackgroundColor(integer)
-                    alarmFab.setBackgroundColor(integer)
+                    speedDialView.mainFabOpenedBackgroundColor = color
+                    speedDialView.mainFabClosedBackgroundColor = color
                 },
                 onError = { it.printStackTrace() }
             ).also { disposables.add(it) }
         textColorPrimarySubscription = get()
             .textColorPrimary()
             .subscribeBy(
-                onNext = { integer: Int? ->
-                    stopwatchFab.titleTextColor = integer!!
-                    timerFab.titleTextColor = integer
-                    alarmFab.titleTextColor = integer
+                onNext = {
+                    val color = ContextCompat.getColor(
+                        requireContext(),
+                        when (chronos?.activityTheme) {
+                            Chronos.THEME_AMOLED -> R.color.textColorPrimary
+                            else -> R.color.textColorPrimaryNight
+                        }
+                    )
+                    speedDialView.mainFabOpenedIconColor = color
+                    speedDialView.mainFabClosedIconColor = color
                 },
                 onError = { it.printStackTrace() }
             ).also { disposables.add(it) }
-        textColorPrimaryInverseSubscription = get()
-            .textColorPrimaryInverse()
-            .subscribeBy(
-                onNext = { integer: Int? ->
-                    alarmFab.titleBackgroundColor = integer!!
-                    stopwatchFab.titleBackgroundColor = integer
-                    timerFab.titleBackgroundColor = integer
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-        stopwatchFab.setOnClickListener {
-            menu.collapseImmediately()
-            parentFragmentManager.beginTransaction()
-                .setCustomAnimations(
-                    R.anim.slide_in_up_sheet,
-                    R.anim.slide_out_up_sheet,
-                    R.anim.slide_in_down_sheet,
-                    R.anim.slide_out_down_sheet
-                )
-                .replace(R.id.fragment, StopwatchFragment())
-                .addToBackStack(null)
-                .commit()
-        }
-        timerFab.setOnClickListener {
-            invokeTimerScheduler()
-            menu.collapse()
-        }
-        alarmFab.setOnClickListener {
-            invokeAlarmScheduler()
-            menu.collapse()
-        }
-        menu.menuListener = object : FABsMenuListener() {
-            override fun onMenuExpanded(fabsMenu: FABsMenu) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    if (ContextCompat.checkSelfPermission(
-                            requireContext(),
-                            Manifest.permission.FOREGROUND_SERVICE
-                        ) != PackageManager.PERMISSION_GRANTED
-                    ) requestPermissions(
-                        arrayOf(Manifest.permission.FOREGROUND_SERVICE), 0
-                    ) else fabsMenu.collapseImmediately()
+
+        speedDialView.setOnActionSelectedListener { actionItem ->
+            speedDialView.close()
+            when (actionItem.id) {
+                R.id.alarm_fab -> invokeAlarmScheduler()
+                R.id.timer_fab -> invokeTimerScheduler()
+                R.id.stopwatch_fab -> {
+                    parentFragmentManager.beginTransaction()
+                        .setCustomAnimations(
+                            R.anim.slide_in_up_sheet,
+                            R.anim.slide_out_up_sheet,
+                            R.anim.slide_in_down_sheet,
+                            R.anim.slide_out_down_sheet
+                        )
+                        .replace(R.id.fragment, StopwatchFragment())
+                        .addToBackStack(null)
+                        .commit()
                 }
+                else -> speedDialView.hide()
             }
+            false
         }
 
         // Check actions passed from MainActivity; open timer/alarm schedulers if necessary
