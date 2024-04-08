@@ -11,7 +11,6 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.ImageView
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 
 import io.reactivex.disposables.CompositeDisposable
@@ -54,8 +53,6 @@ class HomeFragment : BaseFragment() {
     private lateinit var behavior: BottomSheetBehavior<*>
     private var shouldCollapseBack = false
     private var colorPrimarySubscription: Disposable? = null
-    private var colorAccentSubscription: Disposable? = null
-    private var textColorPrimarySubscription: Disposable? = null
     private val disposables = CompositeDisposable()
 
     override fun onCreateView(
@@ -134,43 +131,10 @@ class HomeFragment : BaseFragment() {
         colorPrimarySubscription = get()
             .colorPrimary()
             .subscribeBy(
-                onNext = { integer: Int? ->
-                    bottomSheet.setBackgroundColor(integer!!)
+                onNext = { integer: Int ->
+                    speedDialView.updateColors()
+                    bottomSheet.setBackgroundColor(integer)
                     overlay.setBackgroundColor(integer)
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-        colorAccentSubscription = get()
-            .colorAccent()
-            .subscribeBy(
-                onNext = {
-                    val color = ContextCompat.getColor(
-                        requireContext(),
-                        when (chronos?.activityTheme) {
-                            Chronos.THEME_DAY -> R.color.colorAccent
-                            Chronos.THEME_NIGHT -> R.color.colorNightAccent
-                            Chronos.THEME_AMOLED -> R.color.textColorPrimaryNight
-                            else -> R.color.colorPrimary
-                        }
-                    )
-                    speedDialView.mainFabOpenedBackgroundColor = color
-                    speedDialView.mainFabClosedBackgroundColor = color
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-        textColorPrimarySubscription = get()
-            .textColorPrimary()
-            .subscribeBy(
-                onNext = {
-                    val color = ContextCompat.getColor(
-                        requireContext(),
-                        when (chronos?.activityTheme) {
-                            Chronos.THEME_AMOLED -> R.color.textColorPrimary
-                            else -> R.color.textColorPrimaryNight
-                        }
-                    )
-                    speedDialView.mainFabOpenedIconColor = color
-                    speedDialView.mainFabClosedIconColor = color
                 },
                 onError = { it.printStackTrace() }
             ).also { disposables.add(it) }
@@ -231,6 +195,39 @@ class HomeFragment : BaseFragment() {
                 override fun onCancel(dialog: PickerDialog<LinearTimePickerView>) {}
             })
             .show()
+    }
+
+    /**
+     * Helper extension function to manage the colors of the FAB.
+     */
+    private fun SpeedDialView.updateColors() {
+        when (chronos?.activityTheme) {
+            Chronos.THEME_DAY -> {
+                speedDialView.mainFabOpenedIconColor = resources.getColor(R.color.textColorPrimaryNight, chronos?.theme)
+                speedDialView.mainFabClosedIconColor = resources.getColor(R.color.textColorPrimaryNight, chronos?.theme)
+                speedDialView.mainFabOpenedBackgroundColor = resources.getColor(R.color.colorAccent, chronos?.theme)
+                speedDialView.mainFabClosedBackgroundColor = resources.getColor(R.color.colorAccent, chronos?.theme)
+            }
+            Chronos.THEME_NIGHT -> {
+                speedDialView.mainFabOpenedIconColor = resources.getColor(R.color.textColorPrimaryNight, chronos?.theme)
+                speedDialView.mainFabClosedIconColor = resources.getColor(R.color.textColorPrimaryNight, chronos?.theme)
+                speedDialView.mainFabOpenedBackgroundColor = resources.getColor(R.color.colorNightAccent, chronos?.theme)
+                speedDialView.mainFabClosedBackgroundColor = resources.getColor(R.color.colorNightAccent, chronos?.theme)
+            }
+            Chronos.THEME_DAY_NIGHT -> {
+                speedDialView.mainFabOpenedIconColor = resources.getColor(R.color.textColorPrimaryNight, chronos?.theme)
+                speedDialView.mainFabClosedIconColor = resources.getColor(R.color.textColorPrimaryNight, chronos?.theme)
+                speedDialView.mainFabOpenedBackgroundColor = resources.getColor(R.color.colorPrimary, chronos?.theme)
+                speedDialView.mainFabClosedBackgroundColor = resources.getColor(R.color.colorPrimary, chronos?.theme)
+            }
+            Chronos.THEME_AMOLED -> {
+                speedDialView.mainFabOpenedIconColor = resources.getColor(R.color.textColorPrimary, chronos?.theme)
+                speedDialView.mainFabClosedIconColor = resources.getColor(R.color.textColorPrimary, chronos?.theme)
+                speedDialView.mainFabOpenedBackgroundColor = resources.getColor(R.color.textColorPrimaryNight, chronos?.theme)
+                speedDialView.mainFabClosedBackgroundColor = resources.getColor(R.color.textColorPrimaryNight, chronos?.theme)
+            }
+            else -> return
+        }
     }
 
     /**
