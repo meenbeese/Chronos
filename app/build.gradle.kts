@@ -50,6 +50,10 @@ android {
     lint {
         abortOnError = false
     }
+
+    androidResources {
+        generateLocaleConfig = true
+    }
 }
 
 dependencies {
