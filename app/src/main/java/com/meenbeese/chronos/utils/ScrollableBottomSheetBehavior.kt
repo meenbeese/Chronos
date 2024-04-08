@@ -10,9 +10,9 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
-class ScrollableBottomSheetBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
+class ScrollableBottomSheetBehavior<V : View>(context: Context, attrs: AttributeSet?) :
     BottomSheetBehavior<V>(
-        context!!, attrs
+        context, attrs
     ) {
     override fun onInterceptTouchEvent(
         parent: CoordinatorLayout,
