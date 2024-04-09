@@ -66,9 +66,9 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
 
     // Media
-    implementation("androidx.media3:media3-exoplayer:1.3.0")
-    implementation("androidx.media3:media3-exoplayer-hls:1.3.0")
-    implementation("androidx.media3:media3-ui:1.3.0")
+    implementation("androidx.media3:media3-exoplayer:1.3.1")
+    implementation("androidx.media3:media3-exoplayer-hls:1.3.1")
+    implementation("androidx.media3:media3-ui:1.3.1")
 
     // Material
     implementation("com.google.android.material:material:1.11.0")
