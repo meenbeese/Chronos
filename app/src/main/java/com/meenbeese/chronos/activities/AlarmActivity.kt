@@ -216,7 +216,7 @@ class AlarmActivity : AestheticActivity(), SlideActionListener {
         stopAnnoyance()
         AlertDialog.Builder(
             this@AlarmActivity,
-            if (isDark) R.style.Theme_AppCompat_Dialog_Alert else R.style.Theme_AppCompat_Light_Dialog_Alert
+            if (isDark) androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert else androidx.appcompat.R.style.Theme_AppCompat_Light_Dialog_Alert
         )
             .setItems(names) { _: DialogInterface?, which: Int ->
                 if (which < minutes.size) {
