@@ -15,9 +15,10 @@ import android.widget.TextView
 import androidx.core.widget.CompoundButtonCompat
 
 import com.afollestad.aesthetic.Aesthetic
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.switchmaterial.SwitchMaterial
+import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.dialogs.AlertDialog
 
 
 /**
@@ -64,14 +65,11 @@ class AlertWindowPreferenceData : BasePreferenceData<AlertWindowPreferenceData.V
     }
 
     private fun showAlert(holder: ViewHolder) {
-        AlertDialog(holder.context)
+        MaterialAlertDialogBuilder(holder.context, if(holder.chronos!!.isDarkTheme()) com.google.android.material.R.style.Theme_MaterialComponents_Dialog_Alert else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog_Alert)
             .setTitle(holder.context.getString(R.string.info_background_permissions_title))
-            .setContent(holder.context.getString(R.string.info_background_permissions_body))
-            .setListener(object : AlertDialog.Listener {
-                override fun onDismiss(dialog: AlertDialog?, ok: Boolean) {
-                    if (ok) showActivity(holder.context)
-                }
-            })
+            .setMessage(holder.context.getString(R.string.info_background_permissions_body))
+            .setPositiveButton(holder.context.getString(android.R.string.ok)){_, _ ->  showActivity(holder.context)}
+            .setNegativeButton(holder.context.getString(android.R.string.cancel), null)
             .show()
     }
 

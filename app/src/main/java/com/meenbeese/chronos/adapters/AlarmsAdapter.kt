@@ -29,6 +29,7 @@ import androidx.transition.TransitionManager
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.afollestad.aesthetic.Aesthetic
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
@@ -36,7 +37,6 @@ import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.dialogs.AestheticTimeSheetPickerDialog
-import com.meenbeese.chronos.dialogs.AlertDialog
 import com.meenbeese.chronos.dialogs.SoundChooserDialog
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.meenbeese.chronos.utils.DimenUtils
@@ -338,13 +338,10 @@ class AlarmsAdapter(private val chronos: Chronos, private val recycler: Recycler
         holder.expandImage.animate().rotationX((if (isExpanded) 180 else 0).toFloat()).start()
         holder.delete.visibility = if (isExpanded) View.VISIBLE else View.GONE
         holder.delete.setOnClickListener { view ->
-            AlertDialog(view.context)
-                .setContent(chronos.getString(R.string.msg_delete_confirmation, alarm.getName(chronos)))
-                .setListener(object : AlertDialog.Listener {
-                    override fun onDismiss(dialog: AlertDialog?, ok: Boolean) {
-                        if (ok) chronos.removeAlarm(alarm)
-                    }
-                })
+            MaterialAlertDialogBuilder(view.context, if(chronos.isDarkTheme()) com.google.android.material.R.style.Theme_MaterialComponents_Dialog_Alert else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog_Alert)
+                .setMessage(chronos.getString(R.string.msg_delete_confirmation, alarm.getName(chronos)))
+                .setPositiveButton(view.context.getString(android.R.string.ok)){_, _ ->  chronos.removeAlarm(alarm)}
+                .setNegativeButton(view.context.getString(android.R.string.cancel), null)
                 .show()
         }
 
