@@ -179,8 +179,8 @@ class DaySwitch : View, View.OnClickListener, Subscribable {
          * Called when the state is changed.
          *
          * @param daySwitch The switch view that was changed.
-         * @param b Whether the switch is checked (boolean).
+         * @param isChecked Whether the switch is checked (boolean).
          */
-        fun onCheckedChanged(daySwitch: DaySwitch, b: Boolean)
+        fun onCheckedChanged(daySwitch: DaySwitch, isChecked: Boolean)
     }
 }

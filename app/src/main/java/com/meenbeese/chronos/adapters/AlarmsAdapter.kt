@@ -134,8 +134,8 @@ class AlarmsAdapter(private val chronos: Chronos, private val recycler: Recycler
         holder.days.visibility = if (alarm.isRepeat) View.VISIBLE else View.GONE
 
         val listener : DaySwitch.OnCheckedChangeListener = object : DaySwitch.OnCheckedChangeListener {
-            override fun onCheckedChanged(daySwitch: DaySwitch, b: Boolean) {
-                alarm.days[holder.days.indexOfChild(daySwitch)] = b
+            override fun onCheckedChanged(daySwitch: DaySwitch, isChecked: Boolean) {
+                alarm.days[holder.days.indexOfChild(daySwitch)] = isChecked
                 alarm.setDays(chronos, alarm.days)
 
                 if (!alarm.isRepeat) {
