@@ -1,5 +1,6 @@
 <div align="center">
-  <h1>⏰ Chronos</h1>
+  <img src="./fastlane/metadata/android/en-US/images/icon.png" width="15%" alt="Chronos Logo">
+  <h1>Chronos</h1>
   <p>A simple, quick, and intuitive alarm clock with many useful features.</p>
   <img src="https://forthebadge.com/images/badges/built-for-android.svg" alt="Built for Android">
   <img src="https://forthebadge.com/images/badges/built-with-love.svg" alt="Built with love">
