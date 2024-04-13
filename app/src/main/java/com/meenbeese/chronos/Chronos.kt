@@ -273,6 +273,10 @@ class Chronos : Application(), Player.Listener {
          */
         get() = currentRingtone != null && currentRingtone!!.isPlaying
 
+    fun isDarkTheme(): Boolean {
+        return activityTheme == THEME_NIGHT || activityTheme == THEME_AMOLED || (activityTheme == THEME_DAY_NIGHT && isNight)
+    }
+
     fun playRingtone(ringtone: Ringtone) {
         if (!ringtone.isPlaying) {
             stopCurrentSound()

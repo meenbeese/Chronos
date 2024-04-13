@@ -8,11 +8,11 @@ import android.provider.Settings
 import androidx.fragment.app.FragmentManager
 
 import com.afollestad.aesthetic.AestheticActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.Chronos.ActivityListener
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
-import com.meenbeese.chronos.dialogs.AlertDialog
 import com.meenbeese.chronos.fragments.BaseFragment
 import com.meenbeese.chronos.fragments.HomeFragment
 import com.meenbeese.chronos.fragments.SplashFragment
@@ -52,17 +52,12 @@ class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedList
 
         // Background permissions info
         if (!PreferenceData.INFO_BACKGROUND_PERMISSIONS.getValue(this, false)) {
-            val alert = AlertDialog(this)
+            val alert = MaterialAlertDialogBuilder(this, if(chronos!!.isDarkTheme()) com.google.android.material.R.style.Theme_MaterialComponents_Dialog_Alert else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog_Alert)
             alert.setTitle(getString(R.string.info_background_permissions_title))
-            alert.setContent(getString(R.string.info_background_permissions_body))
-            alert.setListener(object : AlertDialog.Listener {
-                override fun onDismiss(dialog: AlertDialog?, ok: Boolean) {
-                    if (ok) {
-                        PreferenceData.INFO_BACKGROUND_PERMISSIONS.setValue(this@MainActivity, true)
-                        startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION))
-                    }
-                }
-            })
+            alert.setMessage(getString(R.string.info_background_permissions_body))
+            alert.setPositiveButton(applicationContext.getString(android.R.string.ok)){_, _ ->  PreferenceData.INFO_BACKGROUND_PERMISSIONS.setValue(this@MainActivity, true)
+                startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION))}
+            alert.setNegativeButton(applicationContext.getString(android.R.string.cancel),  null)
             alert.show()
         }
     }

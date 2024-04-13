@@ -17,12 +17,12 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 
-import androidx.appcompat.app.AlertDialog
 import androidx.media3.common.util.UnstableApi
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 
 import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.afollestad.aesthetic.AestheticActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
@@ -214,9 +214,9 @@ class AlarmActivity : AestheticActivity(), SlideActionListener {
         }
         names[minutes.size] = getString(R.string.title_snooze_custom)
         stopAnnoyance()
-        AlertDialog.Builder(
+        MaterialAlertDialogBuilder(
             this@AlarmActivity,
-            if (isDark) androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert else androidx.appcompat.R.style.Theme_AppCompat_Light_Dialog_Alert
+            if (isDark) com.google.android.material.R.style.Theme_MaterialComponents_Dialog_Alert else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog_Alert
         )
             .setItems(names) { _: DialogInterface?, which: Int ->
                 if (which < minutes.size) {
