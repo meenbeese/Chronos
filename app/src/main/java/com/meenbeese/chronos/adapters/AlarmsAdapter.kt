@@ -20,7 +20,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 
-import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +29,7 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.afollestad.aesthetic.Aesthetic
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
@@ -428,7 +428,7 @@ class AlarmsAdapter(private val chronos: Chronos, private val recycler: Recycler
         val time: TextView = v.findViewById(R.id.time)
         val nextTime: TextView = v.findViewById(R.id.nextTime)
         val extra: View = v.findViewById(R.id.extra)
-        val repeat: AppCompatCheckBox = v.findViewById(R.id.repeat)
+        val repeat: MaterialCheckBox = v.findViewById(R.id.repeat)
         val days: LinearLayout = v.findViewById(R.id.days)
         val ringtone: View = v.findViewById(R.id.ringtone)
         val ringtoneImage: ImageView = v.findViewById(R.id.ringtoneImage)

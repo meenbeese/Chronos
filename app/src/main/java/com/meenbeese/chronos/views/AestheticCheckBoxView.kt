@@ -5,10 +5,10 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.AttributeSet
 
-import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.core.widget.CompoundButtonCompat
 
 import com.afollestad.aesthetic.Aesthetic
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.meenbeese.chronos.interfaces.Subscribable
 
 import io.reactivex.disposables.CompositeDisposable
@@ -17,10 +17,10 @@ import io.reactivex.rxkotlin.subscribeBy
 
 
 /**
- * An AppCompatCheckBox extension class that
+ * A MaterialCheckBox extension class that
  * implements Aesthetic theming.
  */
-class AestheticCheckBoxView : AppCompatCheckBox, Subscribable {
+class AestheticCheckBoxView : MaterialCheckBox, Subscribable {
 
     private var colorAccentSubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null
