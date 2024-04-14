@@ -110,8 +110,7 @@ class FileChooserActivity : AppCompatActivity() {
                 try {
                     cursor = contentResolver.query(data.data!!, null, null, null, null)
                     var documentId: String
-                    if (cursor != null) {
-                        cursor.moveToFirst()
+                    if (cursor != null && cursor.moveToFirst()) {
                         documentId = cursor.getString(0)
                         documentId = documentId.substring(documentId.lastIndexOf(":") + 1)
                         cursor.close()
@@ -127,9 +126,10 @@ class FileChooserActivity : AppCompatActivity() {
                         null
                     )
                     cursor?.let {
-                        it.moveToFirst()
-                        val columnIndex = it.getColumnIndex(MediaStore.Images.Media.DATA)
-                        if (columnIndex != -1) path = it.getString(columnIndex)
+                        if (it.moveToFirst()) {
+                            val columnIndex = it.getColumnIndex(MediaStore.Images.Media.DATA)
+                            if (columnIndex != -1) path = it.getString(columnIndex)
+                        }
                         it.close()
                     }
                 } catch (e: Exception) {
