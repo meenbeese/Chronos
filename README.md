@@ -48,20 +48,20 @@
 
 Chronos is a user-driven project. We welcome any contribution, big or small.
 
-- **🖥️ Development:** Fix bugs, implement features, or research issues. Open a PR for review.
-- **🍥 Design:** Improve interfaces, including accessibility and usability.
-- **🤝 User Support:** Respond to issues and identify duplicates.
-- **📂 Issue Reporting:** Report bugs and edge cases with relevant info.
-- **🌍 Localization:** Translate Chronos if it doesn't support your language.
-- **📄 Documentation:** Write guides, explanations, README updates, user tutorials, or documentation.
+- **Development:** Fix bugs, implement features, or research issues. Open a PR for review.
+- **Design:** Improve interfaces, including accessibility and usability.
+- **User Support:** Respond to issues and identify duplicates.
+- **Issue Reporting:** Report bugs and edge cases with relevant info.
+- **Localization:** Translate Chronos if it doesn't support your language.
+- **Documentation:** Write guides, explanations, README updates, user tutorials, or documentation.
 
 ### ✅ Other Support Methods
 
 If you can't contribute directly, consider these options:
 
-- **💈 Advertising:** Spread the word about Chronos.
-- **💵 Donations:** [Support us](https://liberapay.com/meenbeese/) financially if you can.
-- **📢 Advocacy:** Support FOSS services over closed ones.
+- **Advertising:** Spread the word about Chronos.
+- **Donations:** [Support us](https://liberapay.com/meenbeese/) financially if you can.
+- **Advocacy:** Support FOSS services over closed ones.
 
 ## ✏️ Acknowledgements
 
