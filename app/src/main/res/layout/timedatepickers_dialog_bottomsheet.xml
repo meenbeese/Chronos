@@ -29,8 +29,8 @@
             android:layout_height="48dp"
             android:gravity="end"
             android:orientation="horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:baselineAligned="false">
 
             <LinearLayout

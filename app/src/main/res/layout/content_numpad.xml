@@ -14,8 +14,8 @@
         android:background="#30000000"
         android:orientation="horizontal"
         android:paddingBottom="16dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
         android:paddingTop="16dp">
 
         <TextView
@@ -46,8 +46,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -87,8 +87,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -128,8 +128,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -170,8 +170,8 @@
         android:layout_width="121dp"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:layout_weight="1"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:gravity="center"

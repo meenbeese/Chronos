@@ -32,10 +32,10 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
                 android:scaleType="centerInside"
                 app:srcCompat="@drawable/state_empty" />
 
@@ -44,8 +44,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="18sp"
                 android:gravity="center"
