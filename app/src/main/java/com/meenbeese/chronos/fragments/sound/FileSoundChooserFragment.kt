@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,10 +30,10 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_sound_chooser_file, container, false)
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val prefs = context?.let { PreferenceManager.getDefaultSharedPreferences(it) }
         view.findViewById<View>(R.id.addAudioFile).setOnClickListener { launchFileChooser() }
         val recycler = view.findViewById<RecyclerView>(R.id.recycler)
-        val previousFiles = ArrayList(prefs.getStringSet(PREF_FILES, HashSet())!!)
+        val previousFiles = ArrayList(prefs?.getStringSet(PREF_FILES, HashSet())!!)
         previousFiles.sortWith { o1, o2 ->
             try {
                 Integer.parseInt(o1.split(SEPARATOR.toRegex())[0]) - Integer.parseInt(o2.split(SEPARATOR.toRegex())[0])
