@@ -18,16 +18,16 @@
             android:layout_marginTop="8dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp">
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
 
             <TextView
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="42sp"
                 tools:text="0:00"
@@ -46,8 +46,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="6dp"
             tools:text="Next alarm: 14:00 Friday, January 26"/>
 
@@ -63,8 +63,8 @@
                 android:id="@+id/repeat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
                 android:text="@string/title_repeat" />
 
             <LinearLayout
@@ -73,8 +73,8 @@
                 android:layout_height="56dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp">
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp">
 
                 <com.meenbeese.chronos.views.DaySwitch
                     android:layout_width="0dp"
@@ -119,8 +119,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:orientation="horizontal"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp">
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp">
 
                 <FrameLayout
                     android:layout_width="0dp"
@@ -213,16 +213,16 @@
             android:layout_height="56dp"
             android:layout_marginBottom="8dp"
             android:orientation="horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp">
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp">
 
             <ImageView
                 android:id="@+id/expandImage"
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="start|center_vertical"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:scaleType="centerInside"
                 app:srcCompat="@drawable/ic_expand"
                 tools:tint="@color/textColorPrimaryNight" />
@@ -231,8 +231,8 @@
                 android:id="@+id/nameContainer"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
@@ -272,8 +272,8 @@
                 android:layout_gravity="start|center_vertical"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:gravity="center"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:paddingBottom="4dp"
                 android:text="@string/title_delete"
                 android:textAlignment="center"
@@ -288,8 +288,8 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="end|center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:visibility="gone"
                 tools:visibility="visible">
 
