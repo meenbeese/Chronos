@@ -32,6 +32,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
 
 import me.jfenn.timedatepickers.dialogs.PickerDialog
@@ -94,7 +95,30 @@ class HomeFragment : BaseFragment() {
             AlarmsFragment.Instantiator(context),
             SettingsFragment.Instantiator(context)
         )
-        speedDialView.inflate(R.menu.fab)
+        speedDialView.addActionItem(
+            SpeedDialActionItem
+                .Builder(R.id.alarm_fab, R.drawable.ic_alarm_add)
+                .setLabel(R.string.title_set_alarm)
+                .setLabelBackgroundColor(getFabLabelBgColor())
+                .setLabelClickable(true)
+                .create()
+        )
+        speedDialView.addActionItem(
+            SpeedDialActionItem
+                .Builder(R.id.timer_fab, R.drawable.ic_timer)
+                .setLabel(R.string.title_set_timer)
+                .setLabelBackgroundColor(getFabLabelBgColor())
+                .setLabelClickable(true)
+                .create()
+        )
+        speedDialView.addActionItem(
+            SpeedDialActionItem
+                .Builder(R.id.stopwatch_fab, R.drawable.ic_stopwatch)
+                .setLabel(R.string.title_set_stopwatch)
+                .setLabelBackgroundColor(getFabLabelBgColor())
+                .setLabelClickable(true)
+                .create()
+        )
         viewPager?.adapter = pagerAdapter
         tabLayout?.setupWithViewPager(viewPager)
         tabLayout?.addOnTabSelectedListener(object : OnTabSelectedListener {
@@ -227,6 +251,17 @@ class HomeFragment : BaseFragment() {
                 speedDialView.mainFabClosedBackgroundColor = resources.getColor(R.color.textColorPrimaryNight, chronos?.theme)
             }
             else -> return
+        }
+    }
+
+    /**
+     * Helper extension function to manage the background colors of the FAB label.
+     */
+    private fun getFabLabelBgColor(): Int {
+        return if (chronos!!.isDarkTheme()) {
+            resources.getColor(R.color.colorNightPrimary)
+        } else {
+            resources.getColor(R.color.colorPrimary)
         }
     }
 
