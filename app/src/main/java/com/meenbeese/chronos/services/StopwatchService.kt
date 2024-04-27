@@ -35,6 +35,8 @@ class StopwatchService : Service() {
     private var pauseTime: Long = 0
     private var stopTime: Long = 0
     internal var laps: MutableList<Long>? = null
+    val elapsedTime: Long
+        get() = stopTime - startTime
     var lastLapTime: Long = 0
         private set
     var isRunning = false
@@ -42,6 +44,7 @@ class StopwatchService : Service() {
     private var notificationText: String? = null
     private var notificationManager: NotificationManager? = null
     private var receiver: NotificationReceiver? = null
+
     @SuppressLint("NewApi")
     override fun onCreate() {
         super.onCreate()
@@ -85,9 +88,6 @@ class StopwatchService : Service() {
     fun setListener(listener: Listener?) {
         this.listener = listener
     }
-
-    val elapsedTime: Long
-        get() = stopTime - startTime
 
     /**
      * Reset the stopwatch, cancelling any notifications and setting everything to zero.
