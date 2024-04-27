@@ -17,10 +17,8 @@ abstract class AestheticDialog(context: Context?) : AppCompatDialog(context!!) {
         get()
             .colorPrimary()
             .take(1)
-            .subscribe { integer: Int? ->
-                findViewById<View>(android.R.id.content)!!.setBackgroundColor(
-                    integer!!
-                )
+            .subscribe { integer: Int ->
+                findViewById<View>(android.R.id.content)?.setBackgroundColor(integer)
             }
     }
 }

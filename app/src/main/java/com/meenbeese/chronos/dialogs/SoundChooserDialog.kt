@@ -47,10 +47,8 @@ class SoundChooserDialog : DialogFragment(), SoundChooserListener {
         get()
             .colorPrimary()
             .take(1)
-            .subscribe { integer: Int? ->
-                view?.setBackgroundColor(
-                    integer!!
-                )
+            .subscribe { integer: Int ->
+                view?.setBackgroundColor(integer)
             }
         val tabLayout = view?.findViewById<TabLayout>(R.id.tabLayout)
         val viewPager = view?.findViewById<ViewPager>(R.id.viewPager)

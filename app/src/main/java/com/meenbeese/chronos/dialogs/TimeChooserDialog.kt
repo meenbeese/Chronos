@@ -71,10 +71,8 @@ class TimeChooserDialog(context: Context?) : AestheticDialog(context), View.OnCl
         get()
             .textColorPrimary()
             .take(1)
-            .subscribe { integer: Int? ->
-                backspace?.setColorFilter(
-                    integer!!
-                )
+            .subscribe { integer: Int ->
+                backspace?.setColorFilter(integer)
             }
     }
 

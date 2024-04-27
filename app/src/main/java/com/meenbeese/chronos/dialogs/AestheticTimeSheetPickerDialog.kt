@@ -21,22 +21,22 @@ class AestheticTimeSheetPickerDialog : TimeSheetPickerDialog {
         get()
             .textColorPrimary()
             .take(1)
-            .subscribe { integer: Int? -> primaryTextColor = integer!! }
+            .subscribe { integer: Int -> primaryTextColor = integer }
         get()
             .textColorSecondary()
             .take(1)
-            .subscribe { integer: Int? -> secondaryTextColor = integer!! }
+            .subscribe { integer: Int -> secondaryTextColor = integer }
         get().colorPrimary()
             .take(1)
-            .subscribe { integer: Int? ->
-                backgroundColor = integer!!
+            .subscribe { integer: Int ->
+                backgroundColor = integer
                 primaryBackgroundColor = integer
                 secondaryBackgroundColor = integer
             }
         get().colorAccent()
             .take(1)
-            .subscribe { integer: Int? ->
-                selectionColor = integer!!
+            .subscribe { integer: Int ->
+                selectionColor = integer
                 selectionTextColor = if ((context.applicationContext as Chronos).activityTheme == Chronos.THEME_AMOLED) Color.BLACK else Color.WHITE
             }
     }

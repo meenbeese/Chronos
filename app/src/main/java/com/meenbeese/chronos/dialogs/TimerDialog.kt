@@ -121,10 +121,10 @@ class TimerDialog(context: Context, private val manager: FragmentManager) :
         get()
             .textColorPrimary()
             .take(1)
-            .subscribe { integer: Int? ->
-                ringtoneImage!!.setColorFilter(integer!!)
-                vibrateImage!!.setColorFilter(integer)
-                backspace!!.setColorFilter(integer)
+            .subscribe { integer: Int ->
+                ringtoneImage?.setColorFilter(integer)
+                vibrateImage?.setColorFilter(integer)
+                backspace?.setColorFilter(integer)
             }
     }
 
