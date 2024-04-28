@@ -1,0 +1,10 @@
+Remove cardview dependency by @Jean-BaptisteC in #36
+Switch to newer FAB library by @meenbeese in #37
+Add ability to change app language by @Jean-BaptisteC in #35
+Replace old png by new svg drawables by @Jean-BaptisteC in #42
+Enable non Transitive RClass parameter by @Jean-BaptisteC in #41
+Update french translations by @Jean-BaptisteC in #44
+Use Material Alert Dialog by @Jean-BaptisteC in #46
+Fix french translations by @Jean-BaptisteC in #49
+Improve RTL by @Jean-BaptisteC in #50
+Migrate to androidx preference by @Jean-BaptisteC in #52
