@@ -205,83 +205,99 @@ public class SlideActionView extends View implements View.OnTouchListener {
     public void draw(@NonNull Canvas canvas) {
         super.draw(canvas);
         selected.next(true);
-        if (position < 0)
-            position = (float) getWidth() / 2;
+        position = position < 0 ? (float) getWidth() / 2 : position;
 
+        drawCircle(canvas);
+        drawImages(canvas);
+        drawOutline(canvas);
+        drawRipples(canvas);
+
+        if (!selected.isTarget() || !ripples.isEmpty()) {
+            postInvalidate();
+        }
+    }
+
+    private void drawCircle(Canvas canvas) {
         normalPaint.setAlpha(150 - (int) (selected.val() * 100));
         int radius = (int) ((handleRadius * (1 - selected.val())) + (expandedHandleRadius * selected.val()));
         float drawnX = (position * selected.val()) + (((float) getWidth() / 2) * (1 - selected.val()));
         canvas.drawCircle(drawnX, (float) getHeight() / 2, radius, normalPaint);
+    }
 
+    private void drawImages(Canvas canvas) {
         if (leftImage != null && rightImage != null) {
+            float drawnX = (position * selected.val()) + (((float) getWidth() / 2) * (1 - selected.val()));
             bitmapPaint.setAlpha((int) (255 * Math.min(1f, Math.max(0f, (getWidth() - drawnX - selectionRadius) / getWidth()))));
             canvas.drawBitmap(leftImage, selectionRadius - ((float) leftImage.getWidth() / 2), (float) (getHeight() - leftImage.getHeight()) / 2, bitmapPaint);
             bitmapPaint.setAlpha((int) (255 * Math.min(1f, Math.max(0f, (drawnX - selectionRadius) / getWidth()))));
             canvas.drawBitmap(rightImage, getWidth() - selectionRadius - ((float) leftImage.getWidth() / 2), (float) (getHeight() - leftImage.getHeight()) / 2, bitmapPaint);
         }
+    }
 
+    private void drawOutline(Canvas canvas) {
+        float drawnX = (position * selected.val()) + (((float) getWidth() / 2) * (1 - selected.val()));
         if (Math.abs(((float) getWidth() / 2) - drawnX) > (float) selectionRadius / 2) {
-            if (drawnX * 2 < getWidth()) {
-                float progress = Math.min(1f, Math.max(0f, ((getWidth() - ((drawnX + selectionRadius) * 2)) / getWidth())));
-                progress = (float) Math.pow(progress, 0.2f);
-
-                outlinePaint.setAlpha((int) (255 * progress));
-                canvas.drawCircle(selectionRadius, (float) getHeight() / 2, ((float) selectionRadius / 2) + (rippleRadius * (1 - progress)), outlinePaint);
-            } else {
-                float progress = Math.min(1f, Math.max(0f, (((drawnX - selectionRadius) * 2) - getWidth()) / getWidth()));
-                progress = (float) Math.pow(progress, 0.2f);
-
-                outlinePaint.setAlpha((int) (255 * progress));
-                canvas.drawCircle(getWidth() - selectionRadius, (float) getHeight() / 2, ((float) selectionRadius / 2) + (rippleRadius * (1 - progress)), outlinePaint);
-            }
+            float progress = drawnX * 2 < getWidth() ? Math.min(1f, Math.max(0f, ((getWidth() - ((drawnX + selectionRadius) * 2)) / getWidth()))) : Math.min(1f, Math.max(0f, (((drawnX - selectionRadius) * 2) - getWidth()) / getWidth()));
+            progress = (float) Math.pow(progress, 0.2f);
+            outlinePaint.setAlpha((int) (255 * progress));
+            float circleX = drawnX * 2 < getWidth() ? selectionRadius : getWidth() - selectionRadius;
+            canvas.drawCircle(circleX, (float) getHeight() / 2, ((float) selectionRadius / 2) + (rippleRadius * (1 - progress)), outlinePaint);
         }
+    }
 
+    private void drawRipples(Canvas canvas) {
         for (float x : ripples.keySet()) {
             AnimatedFloat scale = ripples.get(x);
             assert scale != null;
             scale.next(true, 1600);
             normalPaint.setAlpha((int) (150 * (scale.getTarget() - scale.val()) / scale.getTarget()));
             canvas.drawCircle(x, (float) getHeight() / 2, scale.val(), normalPaint);
-            if (scale.isTarget())
+            if (scale.isTarget()) {
                 ripples.remove(x);
+            }
         }
-
-        if (!selected.isTarget() || !ripples.isEmpty())
-            postInvalidate();
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN && Math.abs(event.getX() - ((float) getWidth() / 2)) < selectionRadius)
+        float eventX = event.getX();
+        float halfWidth = (float) getWidth() / 2;
+        boolean isActionDown = event.getAction() == MotionEvent.ACTION_DOWN;
+        boolean isActionUp = event.getAction() == MotionEvent.ACTION_UP;
+
+        if (isActionDown && Math.abs(eventX - halfWidth) < selectionRadius) {
             selected.to(1f);
-        else if (event.getAction() == MotionEvent.ACTION_UP && selected.getTarget() > 0) {
-            selected.to(0f);
-            if (event.getX() > getWidth() - (selectionRadius * 2)) {
-                AnimatedFloat ripple = new AnimatedFloat(selectionRadius);
-                ripple.to((float) rippleRadius);
-                ripples.put((float) getWidth() - selectionRadius, ripple);
-                if (listener != null)
-                    listener.onSlideRight();
-
-                postInvalidate();
-            } else if (event.getX() < selectionRadius * 2) {
-                AnimatedFloat ripple = new AnimatedFloat(selectionRadius);
-                ripple.to((float) rippleRadius);
-                ripples.put((float) selectionRadius, ripple);
-                if (listener != null)
-                    listener.onSlideLeft();
-
-                postInvalidate();
-            }
-
+        } else if (isActionUp && selected.getTarget() > 0) {
+            handleActionUp(eventX);
             return true;
         }
 
         if (selected.getTarget() > 0) {
-            position = event.getX();
+            position = eventX;
             postInvalidate();
         }
 
         return false;
+    }
+
+    private void handleActionUp(float eventX) {
+        selected.to(0f);
+        float rippleStart = eventX > getWidth() - (selectionRadius * 2) ? getWidth() - selectionRadius : selectionRadius;
+        createRipple(rippleStart);
+        postInvalidate();
+    }
+
+    private void createRipple(float rippleStart) {
+        AnimatedFloat ripple = new AnimatedFloat(selectionRadius);
+        ripple.to((float) rippleRadius);
+        ripples.put(rippleStart, ripple);
+
+        if (listener != null) {
+            if (rippleStart == selectionRadius) {
+                listener.onSlideLeft();
+            } else {
+                listener.onSlideRight();
+            }
+        }
     }
 }
