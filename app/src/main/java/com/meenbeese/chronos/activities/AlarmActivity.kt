@@ -102,8 +102,8 @@ class AlarmActivity : AestheticActivity(), SlideActionListener {
                 },
                 onError = { it.printStackTrace() }
             ).also { disposables.add(it) }
-        actionView.setLeftIcon(VectorDrawableCompat.create(resources, R.drawable.ic_snooze, theme))
-        actionView.setRightIcon(VectorDrawableCompat.create(resources, R.drawable.ic_close, theme))
+        actionView.setLeftIcon(VectorDrawableCompat.create(resources, R.drawable.ic_snooze, theme)!!)
+        actionView.setRightIcon(VectorDrawableCompat.create(resources, R.drawable.ic_close, theme)!!)
         actionView.setListener(this)
         isSlowWake = PreferenceData.SLOW_WAKE_UP.getValue(this)
         slowWakeMillis = PreferenceData.SLOW_WAKE_UP_TIME.getValue(this)
