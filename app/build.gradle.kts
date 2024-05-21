@@ -72,7 +72,7 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.3.1")
 
     // Material
-    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.12.0")
 
     // FAB
     implementation("com.leinardi.android:speed-dial:3.3.0")
