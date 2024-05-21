@@ -11,16 +11,11 @@ import com.meenbeese.chronos.interfaces.FragmentInstantiator
 
 class SimplePagerAdapter(
     context: Context?,
-    fm: FragmentManager?,
-    vararg fragments: FragmentInstantiator
+    fragMan: FragmentManager,
+    private vararg val fragments: FragmentInstantiator
 ) : FragmentStatePagerAdapter(
-    fm!!
+    fragMan
 ) {
-    private val fragments: Array<out FragmentInstantiator>
-
-    init {
-        this.fragments = fragments
-    }
 
     override fun getItem(position: Int): BasePagerFragment {
         return fragments[position].newInstance(position)!!
