@@ -6,11 +6,7 @@ import java.lang.ref.WeakReference
 
 
 abstract class ContextFragmentInstantiator(context: Context) : FragmentInstantiator {
-    private val context: WeakReference<Context>
-
-    init {
-        this.context = WeakReference(context)
-    }
+    private val context: WeakReference<Context> = WeakReference(context)
 
     override fun getTitle(position: Int): String? {
         val context = context.get()
