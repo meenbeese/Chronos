@@ -199,7 +199,7 @@ open class SlideActionView : View, OnTouchListener {
         drawImages(canvas)
         drawOutline(canvas)
         drawRipples(canvas)
-        if (!selected.isTargetValue || ripples.isNotEmpty()) postInvalidate()
+        if (!selected.isTargetValue() || ripples.isNotEmpty()) postInvalidate()
     }
 
     private fun drawCircle(canvas: Canvas) {
@@ -269,7 +269,7 @@ open class SlideActionView : View, OnTouchListener {
             scale.updateValue(true, 1600)
             normalPaint?.alpha = (150 * (scale.targetValue - scale.drawnValue) / scale.targetValue).toInt()
             canvas.drawCircle(key, height.toFloat() / 2, scale.drawnValue, normalPaint!!)
-            if (scale.isTargetValue) ripples.remove(key)
+            if (scale.isTargetValue()) ripples.remove(key)
         }
     }
 
@@ -300,7 +300,7 @@ open class SlideActionView : View, OnTouchListener {
 
     private fun createRipple(rippleStart: Float) {
         val ripple = AnimFloat(selectionRadius.toFloat())
-        ripple.to(rippleRadius.toFloat())
+        ripple.targetValue = rippleRadius.toFloat()
         ripples[rippleStart] = ripple
         if (listener != null) {
             if (rippleStart == selectionRadius.toFloat()) {
