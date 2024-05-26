@@ -18,7 +18,7 @@ import androidx.annotation.ColorInt
 import com.meenbeese.chronos.interfaces.SlideActionListener
 import com.meenbeese.chronos.utils.DimenUtils.dpToPx
 import com.meenbeese.chronos.utils.ImageUtils.toBitmap
-import com.meenbeese.chronos.utils.FloatUtils
+import com.meenbeese.chronos.utils.AnimFloat
 
 import kotlin.math.abs
 import kotlin.math.max
@@ -38,8 +38,8 @@ open class SlideActionView : View, OnTouchListener {
     private var leftImage: Bitmap? = null
     private var rightImage: Bitmap? = null
     private var listener: SlideActionListener? = null
-    private lateinit var selected: FloatUtils
-    private lateinit var ripples: MutableMap<Float, FloatUtils>
+    private lateinit var selected: AnimFloat
+    private lateinit var ripples: MutableMap<Float, AnimFloat>
 
     constructor(context: Context?) : super(context) {
         init()
@@ -62,7 +62,7 @@ open class SlideActionView : View, OnTouchListener {
         expandedHandleRadius = dpToPx(32f)
         selectionRadius = dpToPx(42f)
         rippleRadius = dpToPx(140f)
-        selected = FloatUtils(0f)
+        selected = AnimFloat(0f)
         ripples = HashMap()
 
         normalPaint = Paint()
@@ -193,25 +193,25 @@ open class SlideActionView : View, OnTouchListener {
 
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
-        selected.next(true)
+        selected.updateValue(true)
         position = if (position < 0) width.toFloat() / 2 else position
         drawCircle(canvas)
         drawImages(canvas)
         drawOutline(canvas)
         drawRipples(canvas)
-        if (!selected.isTarget || ripples.isNotEmpty()) postInvalidate()
+        if (!selected.isTargetValue || ripples.isNotEmpty()) postInvalidate()
     }
 
     private fun drawCircle(canvas: Canvas) {
-        normalPaint?.alpha = 150 - (selected.`val`() * 100).toInt()
-        val radius = (handleRadius * (1 - selected.`val`()) + expandedHandleRadius * selected.`val`()).toInt()
-        val drawnX = position * selected.`val`() + width.toFloat() / 2 * (1 - selected.`val`())
+        normalPaint?.alpha = 150 - (selected.drawnValue * 100).toInt()
+        val radius = (handleRadius * (1 - selected.drawnValue) + expandedHandleRadius * selected.drawnValue).toInt()
+        val drawnX = position * selected.drawnValue + width.toFloat() / 2 * (1 - selected.drawnValue)
         canvas.drawCircle(drawnX, height.toFloat() / 2, radius.toFloat(), normalPaint!!)
     }
 
     private fun drawImages(canvas: Canvas) {
         if (leftImage != null && rightImage != null) {
-            val drawnX = position * selected.`val`() + width.toFloat() / 2 * (1 - selected.`val`())
+            val drawnX = position * selected.drawnValue + width.toFloat() / 2 * (1 - selected.drawnValue)
             bitmapPaint?.alpha = (255 * min(
                 1.0,
                 max(0.0, ((width - drawnX - selectionRadius) / width).toDouble())
@@ -236,7 +236,7 @@ open class SlideActionView : View, OnTouchListener {
     }
 
     private fun drawOutline(canvas: Canvas) {
-        val drawnX = position * selected.`val`() + width.toFloat() / 2 * (1 - selected.`val`())
+        val drawnX = position * selected.drawnValue + width.toFloat() / 2 * (1 - selected.drawnValue)
         if (abs((width.toFloat() / 2 - drawnX).toDouble()) > selectionRadius.toFloat() / 2) {
             var progress = if (drawnX * 2 < width) min(
                 1.0,
@@ -266,10 +266,10 @@ open class SlideActionView : View, OnTouchListener {
     private fun drawRipples(canvas: Canvas) {
         for (key in ripples.keys) {
             val scale = ripples[key]!!
-            scale.next(true, 1600)
-            normalPaint?.alpha = (150 * (scale.target - scale.`val`()) / scale.target).toInt()
-            canvas.drawCircle(key, height.toFloat() / 2, scale.`val`(), normalPaint!!)
-            if (scale.isTarget) ripples.remove(key)
+            scale.updateValue(true, 1600)
+            normalPaint?.alpha = (150 * (scale.targetValue - scale.drawnValue) / scale.targetValue).toInt()
+            canvas.drawCircle(key, height.toFloat() / 2, scale.drawnValue, normalPaint!!)
+            if (scale.isTargetValue) ripples.remove(key)
         }
     }
 
@@ -279,12 +279,12 @@ open class SlideActionView : View, OnTouchListener {
         val isActionDown = event.action == MotionEvent.ACTION_DOWN
         val isActionUp = event.action == MotionEvent.ACTION_UP
         if (isActionDown && abs((eventX - halfWidth).toDouble()) < selectionRadius) {
-            selected.setCurrent(1f)
-        } else if (isActionUp && selected.target > 0) {
+            selected.setCurrentValue(1f)
+        } else if (isActionUp && selected.targetValue > 0) {
             handleActionUp(eventX)
             return true
         }
-        if (selected.target > 0) {
+        if (selected.targetValue > 0) {
             position = eventX
             postInvalidate()
         }
@@ -292,14 +292,14 @@ open class SlideActionView : View, OnTouchListener {
     }
 
     private fun handleActionUp(eventX: Float) {
-        selected.setCurrent(0f)
+        selected.setCurrentValue(0f)
         val rippleStart = (if (eventX > width - selectionRadius * 2) width - selectionRadius else selectionRadius).toFloat()
         createRipple(rippleStart)
         postInvalidate()
     }
 
     private fun createRipple(rippleStart: Float) {
-        val ripple = FloatUtils(selectionRadius.toFloat())
+        val ripple = AnimFloat(selectionRadius.toFloat())
         ripple.to(rippleRadius.toFloat())
         ripples[rippleStart] = ripple
         if (listener != null) {

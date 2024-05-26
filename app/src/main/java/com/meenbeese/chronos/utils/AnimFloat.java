@@ -2,26 +2,27 @@ package com.meenbeese.chronos.utils;
 
 import androidx.annotation.Nullable;
 
+
 /**
- * The FloatUtils class animates a float, to a granularity of
+ * The AnimFloat class animates a float, to a granularity of
  * 0.1f. That is, if the difference between the target and current
  * value is less than 0.1, it will be ignored and the animation will
  * be regarded as complete.
  */
-public class FloatUtils {
+public class AnimFloat {
 
-    public final static long DEFAULT_ANIMATION_DURATION = 400;
+    public final static long DEFAULT_ANIM_DURATION = 400;
 
-    private Float targetValue;
-    private Float drawnValue;
+    private Float targetVal;
+    private Float drawnVal;
 
     @Nullable
-    private Float defaultValue;
+    private Float defaultVal;
 
-    private long start;
+    private long startTime;
 
-    public FloatUtils(Float value) {
-        targetValue = drawnValue = value;
+    public AnimFloat(Float value) {
+        targetVal = drawnVal = value;
     }
 
     /**
@@ -29,17 +30,17 @@ public class FloatUtils {
      *
      * @param value         The current value.
      */
-    public void set(Float value) {
-        drawnValue = value;
+    public void setDrawnValue(Float value) {
+        drawnVal = value;
     }
 
     /**
      * Set the default value to return to.
      *
-     * @param defaultValue  The default value.
+     * @param defaultVal  The default value.
      */
-    public void setDefault(Float defaultValue) {
-        this.defaultValue = defaultValue;
+    public void setDefaultValue(Float defaultVal) {
+        this.drawnVal = defaultVal;
     }
 
     /**
@@ -47,8 +48,8 @@ public class FloatUtils {
      *
      * @param value         The current value.
      */
-    public void setCurrent(Float value) {
-        drawnValue = targetValue = value;
+    public void setCurrentValue(Float value) {
+        drawnVal = targetVal = value;
     }
 
     /**
@@ -56,8 +57,8 @@ public class FloatUtils {
      *
      * @return              The current value.
      */
-    public Float val() {
-        return drawnValue;
+    public Float getDrawnValue() {
+        return drawnVal;
     }
 
     /**
@@ -66,8 +67,8 @@ public class FloatUtils {
      *
      * @return              The next value.
      */
-    public Float nextVal() {
-        return nextVal(DEFAULT_ANIMATION_DURATION);
+    public Float getNextValue() {
+        return getNextValue(DEFAULT_ANIM_DURATION);
     }
 
     /**
@@ -78,8 +79,8 @@ public class FloatUtils {
      *                      the animation should take.
      * @return              The next value.
      */
-    public Float nextVal(long duration) {
-        return nextVal(start, duration);
+    public Float getNextValue(long duration) {
+        return getNextValue(startTime, duration);
     }
 
     /**
@@ -92,11 +93,11 @@ public class FloatUtils {
      *                      the animation should take.
      * @return              The next value.
      */
-    public Float nextVal(long start, long duration) {
-        float difference = (getTarget() - val()) * (float) Math.sqrt((double) (System.currentTimeMillis() - start) / (duration));
-        if (Math.abs(getTarget() - val()) > .1f && System.currentTimeMillis() - start < duration)
-            return val() + (getTarget() < val() ? Math.min(difference, -.1f) : Math.max(difference, .1f));
-        else return getTarget();
+    public Float getNextValue(long start, long duration) {
+        float difference = (getTargetValue() - getDrawnValue()) * (float) Math.sqrt((double) (System.currentTimeMillis() - start) / (duration));
+        if (Math.abs(getTargetValue() - getDrawnValue()) > .1f && System.currentTimeMillis() - start < duration)
+            return getDrawnValue() + (getTargetValue() < getDrawnValue() ? Math.min(difference, -.1f) : Math.max(difference, .1f));
+        else return getTargetValue();
     }
 
     /**
@@ -104,8 +105,8 @@ public class FloatUtils {
      *
      * @return              The target value.
      */
-    public Float getTarget() {
-        return targetValue;
+    public Float getTargetValue() {
+        return targetVal;
     }
 
     /**
@@ -113,8 +114,8 @@ public class FloatUtils {
      *
      * @return              The default value.
      */
-    public Float getDefault() {
-        return defaultValue != null ? defaultValue : targetValue;
+    public Float getDefaultValue() {
+        return defaultVal != null ? defaultVal : targetVal;
     }
 
     /**
@@ -124,8 +125,8 @@ public class FloatUtils {
      * @return              True if the target value has supposedly
      *                      been drawn.
      */
-    public boolean isTarget() {
-        return drawnValue.equals(targetValue);
+    public boolean isTargetValue() {
+        return drawnVal.equals(targetVal);
     }
 
     /**
@@ -135,7 +136,7 @@ public class FloatUtils {
      *                      been drawn.
      */
     public boolean isDefault() {
-        return drawnValue.equals(defaultValue);
+        return drawnVal.equals(defaultVal);
     }
 
     /**
@@ -146,15 +147,15 @@ public class FloatUtils {
      *                      target.
      */
     public boolean isTargetDefault() {
-        return targetValue.equals(defaultValue);
+        return targetVal.equals(defaultVal);
     }
 
     /**
      * Animate to the default value.
      */
     public void toDefault() {
-        if (defaultValue != null)
-            to(defaultValue);
+        if (defaultVal != null)
+            setTargetValue(defaultVal);
     }
 
     /**
@@ -162,9 +163,9 @@ public class FloatUtils {
      *
      * @param value         The target value.
      */
-    public void to(Float value) {
-        targetValue = value;
-        start = System.currentTimeMillis();
+    public void setTargetValue(Float value) {
+        targetVal = value;
+        startTime = System.currentTimeMillis();
     }
 
     /**
@@ -174,8 +175,8 @@ public class FloatUtils {
      * @param duration      The duration, in milliseconds, to animate
      *                      across.
      */
-    public void next(boolean animate, long duration) {
-        drawnValue = animate ? nextVal(duration) : targetValue;
+    public void updateValue(boolean animate, long duration) {
+        drawnVal = animate ? getNextValue(duration) : targetVal;
     }
 
     /**
@@ -183,7 +184,7 @@ public class FloatUtils {
      *
      * @param animate       Whether to animate the change.
      */
-    public void next(boolean animate) {
-        next(animate, DEFAULT_ANIMATION_DURATION);
+    public void updateValue(boolean animate) {
+        updateValue(animate, DEFAULT_ANIM_DURATION);
     }
 }

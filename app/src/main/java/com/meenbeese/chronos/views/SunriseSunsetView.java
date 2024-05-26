@@ -13,7 +13,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.meenbeese.chronos.utils.FloatUtils;
+import com.meenbeese.chronos.utils.AnimFloat;
 
 import java.util.Calendar;
 
@@ -30,8 +30,8 @@ public class SunriseSunsetView extends View implements View.OnTouchListener {
     private Paint sunsetPaint;
     private Paint linePaint;
 
-    private FloatUtils dayStart;
-    private FloatUtils dayEnd;
+    private AnimFloat dayStart;
+    private AnimFloat dayEnd;
 
     private Float moveBeginStart;
     private Float moveBeginEnd;
@@ -55,8 +55,8 @@ public class SunriseSunsetView extends View implements View.OnTouchListener {
     }
 
     private void init() {
-        dayStart = new FloatUtils(0.25f);
-        dayEnd = new FloatUtils(0.75f);
+        dayStart = new AnimFloat(0.25f);
+        dayEnd = new AnimFloat(0.75f);
 
         sunrisePaint = new Paint();
         sunrisePaint.setAntiAlias(true);
@@ -185,8 +185,8 @@ public class SunriseSunsetView extends View implements View.OnTouchListener {
     public void setSunrise(long dayStartMillis, boolean animate) {
         dayStartMillis %= DAY_LENGTH;
         if (animate)
-            dayStart.to((float) dayStartMillis / DAY_LENGTH);
-        else dayStart.setCurrent((float) dayStartMillis / DAY_LENGTH);
+            dayStart.setTargetValue((float) dayStartMillis / DAY_LENGTH);
+        else dayStart.setCurrentValue((float) dayStartMillis / DAY_LENGTH);
         postInvalidate();
     }
 
@@ -197,7 +197,7 @@ public class SunriseSunsetView extends View implements View.OnTouchListener {
      * @return The sunrise time, in milliseconds.
      */
     public long getSunrise() {
-        return (long) (dayStart.getTarget() * DAY_LENGTH);
+        return (long) (dayStart.getTargetValue() * DAY_LENGTH);
     }
 
     /**
@@ -223,8 +223,8 @@ public class SunriseSunsetView extends View implements View.OnTouchListener {
     public void setSunset(long dayEndMillis, boolean animate) {
         dayEndMillis %= DAY_LENGTH;
         if (animate)
-            dayEnd.to((float) dayEndMillis / DAY_LENGTH);
-        else dayEnd.setCurrent((float) dayEndMillis / DAY_LENGTH);
+            dayEnd.setTargetValue((float) dayEndMillis / DAY_LENGTH);
+        else dayEnd.setCurrentValue((float) dayEndMillis / DAY_LENGTH);
         postInvalidate();
     }
 
@@ -235,7 +235,7 @@ public class SunriseSunsetView extends View implements View.OnTouchListener {
      * @return The sunset time, in milliseconds.
      */
     public long getSunset() {
-        return (long) (dayEnd.getTarget() * DAY_LENGTH);
+        return (long) (dayEnd.getTargetValue() * DAY_LENGTH);
     }
 
     /**
@@ -255,14 +255,14 @@ public class SunriseSunsetView extends View implements View.OnTouchListener {
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
-        dayStart.next(true);
-        dayEnd.next(true);
+        dayStart.updateValue(true);
+        dayEnd.updateValue(true);
 
         float scaleX = getWidth() / 23f;
         float scaleY = getHeight() / 2f;
-        float interval = (dayEnd.val() - dayStart.val()) / 2;
-        float interval2 = (1 - dayEnd.val() + dayStart.val()) / 2;
-        float start = dayStart.val() - (1 - dayEnd.val() + dayStart.val());
+        float interval = (dayEnd.getDrawnValue() - dayStart.getDrawnValue()) / 2;
+        float interval2 = (1 - dayEnd.getDrawnValue() + dayStart.getDrawnValue()) / 2;
+        float start = dayStart.getDrawnValue() - (1 - dayEnd.getDrawnValue() + dayStart.getDrawnValue());
         interval *= 24 * scaleX;
         interval2 *= 24 * scaleX;
         start *= 24 * scaleX;
@@ -281,7 +281,7 @@ public class SunriseSunsetView extends View implements View.OnTouchListener {
         canvas.drawRect(0, (int) scaleY, (int) scaleX * hour, getHeight(), sunsetPaint);
         canvas.drawRect((int) scaleX * hour, 0, getWidth(), getHeight(), linePaint);
 
-        if (!dayStart.isTarget() || !dayEnd.isTarget())
+        if (!dayStart.isTargetValue() || !dayEnd.isTargetValue())
             postInvalidate();
     }
 
@@ -292,19 +292,19 @@ public class SunriseSunsetView extends View implements View.OnTouchListener {
             case MotionEvent.ACTION_DOWN -> {
                 moveBeginStart = null;
                 moveBeginEnd = null;
-                if (!dayStart.isTarget() || !dayEnd.isTarget())
+                if (!dayStart.isTargetValue() || !dayEnd.isTargetValue())
                     break;
-                if (Math.abs(horizontalDistance - dayStart.val()) < Math.abs(horizontalDistance - dayEnd.val()))
-                    moveBeginStart = dayStart.val() - horizontalDistance;
-                else moveBeginEnd = dayEnd.val() - horizontalDistance;
+                if (Math.abs(horizontalDistance - dayStart.getDrawnValue()) < Math.abs(horizontalDistance - dayEnd.getDrawnValue()))
+                    moveBeginStart = dayStart.getDrawnValue() - horizontalDistance;
+                else moveBeginEnd = dayEnd.getDrawnValue() - horizontalDistance;
             }
             case MotionEvent.ACTION_MOVE -> {
                 if (moveBeginStart != null)
-                    dayStart.to(Math.min(Math.min(dayEnd.getTarget() - DAY_HOUR, dayEnd.getTarget() - min),
-                            Math.max(Math.max(DAY_START, dayEnd.getTarget() - max), moveBeginStart + horizontalDistance)));
+                    dayStart.setTargetValue(Math.min(Math.min(dayEnd.getTargetValue() - DAY_HOUR, dayEnd.getTargetValue() - min),
+                            Math.max(Math.max(DAY_START, dayEnd.getTargetValue() - max), moveBeginStart + horizontalDistance)));
                 else if (moveBeginEnd != null)
-                    dayEnd.to(Math.min(Math.min(DAY_END, dayStart.getTarget() + max), Math.max(dayStart.getTarget() + DAY_HOUR,
-                            Math.max(moveBeginEnd + horizontalDistance, dayStart.getTarget() + min))));
+                    dayEnd.setTargetValue(Math.min(Math.min(DAY_END, dayStart.getTargetValue() + max), Math.max(dayStart.getTargetValue() + DAY_HOUR,
+                            Math.max(moveBeginEnd + horizontalDistance, dayStart.getTargetValue() + min))));
                 if (getParent() != null)
                     getParent().requestDisallowInterceptTouchEvent(true);
                 postInvalidate();
