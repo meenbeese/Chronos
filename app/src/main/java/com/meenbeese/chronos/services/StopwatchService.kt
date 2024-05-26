@@ -28,19 +28,26 @@ import java.lang.ref.WeakReference
 
 class StopwatchService : Service() {
     private val binder: IBinder = LocalBinder()
+
     private var listener: Listener? = null
     private var handler: Handler? = null
     private var runnable: Runnable? = null
+
     private var startTime: Long = 0
     private var pauseTime: Long = 0
     private var stopTime: Long = 0
+
     internal var laps: MutableList<Long>? = null
+
     val elapsedTime: Long
         get() = stopTime - startTime
+
     var lastLapTime: Long = 0
         private set
+
     var isRunning = false
         private set
+
     private var notificationText: String? = null
     private var notificationManager: NotificationManager? = null
     private var receiver: NotificationReceiver? = null
@@ -48,21 +55,25 @@ class StopwatchService : Service() {
     @SuppressLint("NewApi")
     override fun onCreate() {
         super.onCreate()
+
         receiver = NotificationReceiver(this)
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         laps = ArrayList()
         handler = Handler(Looper.getMainLooper())
+
         runnable = object : Runnable {
             override fun run() {
                 if (isRunning) {
                     val currentTime = System.currentTimeMillis() - startTime
                     var text = formatMillis(currentTime)
                     listener?.onTick(currentTime, text)
+
                     text = text.substring(0, text.length - 3)
                     if (notificationText == null || notificationText != text) {
                         startForeground(NOTIFICATION_ID, getNotification(text))
                         notificationText = text
                     }
+
                     handler?.removeCallbacks(this)
                     handler?.postDelayed(this, 10)
                 } else if (listener != null) {
@@ -71,12 +82,16 @@ class StopwatchService : Service() {
                 }
             }
         }
+
         startForeground(NOTIFICATION_ID, getNotification("0s"))
         handler?.postDelayed(runnable!!, 1000)
-        val filter = IntentFilter()
-        filter.addAction(ACTION_RESET)
-        filter.addAction(ACTION_TOGGLE)
-        filter.addAction(ACTION_LAP)
+
+        val filter = IntentFilter().apply {
+            addAction(ACTION_RESET)
+            addAction(ACTION_TOGGLE)
+            addAction(ACTION_LAP)
+        }
+
         registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED)
     }
 
@@ -93,13 +108,21 @@ class StopwatchService : Service() {
      * Reset the stopwatch, cancelling any notifications and setting everything to zero.
      */
     fun reset() {
-        if (isRunning) toggle()
+        if (isRunning) {
+            toggle()
+        }
+
         startTime = 0
         pauseTime = 0
+        lastLapTime = 0
+
         handler?.post(runnable!!)
         laps?.clear()
-        lastLapTime = 0
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) stopForeground(STOP_FOREGROUND_REMOVE)
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+        }
+
         listener?.onReset()
     }
 
@@ -110,11 +133,18 @@ class StopwatchService : Service() {
     fun toggle() {
         stopTime = System.currentTimeMillis()
         isRunning = !isRunning
+
         if (isRunning) {
-            if (startTime == 0L) startTime =
-                System.currentTimeMillis() else if (pauseTime != 0L) startTime += System.currentTimeMillis() - pauseTime
+            startTime = when {
+                startTime == 0L -> System.currentTimeMillis()
+                pauseTime != 0L -> startTime + System.currentTimeMillis() - pauseTime
+                else -> startTime
+            }
             handler?.post(runnable!!)
-        } else pauseTime = System.currentTimeMillis()
+        } else {
+            pauseTime = System.currentTimeMillis()
+        }
+
         notificationText = formatMillis(System.currentTimeMillis() - startTime)
         startForeground(NOTIFICATION_ID, getNotification(notificationText!!))
         listener?.onStateChanged(isRunning)
@@ -126,9 +156,12 @@ class StopwatchService : Service() {
     fun lap() {
         val lapTime = System.currentTimeMillis() - startTime
         val lapDiff = lapTime - lastLapTime
+
         laps?.add(lapDiff)
+
         val lastLastLapTime = lastLapTime
         lastLapTime = lapTime
+
         listener?.onLap(laps!!.size, lapTime, lastLastLapTime, lapDiff)
     }
 
@@ -139,13 +172,19 @@ class StopwatchService : Service() {
      * @return          A notification to use for this stopwatch.
      */
     private fun getNotification(time: String): Notification {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) notificationManager!!.createNotificationChannel(
-            NotificationChannel(
-                Chronos.NOTIFICATION_CHANNEL_STOPWATCH,
-                getString(R.string.title_stopwatch),
-                NotificationManager.IMPORTANCE_DEFAULT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationManager!!.createNotificationChannel(
+                NotificationChannel(
+                    Chronos.NOTIFICATION_CHANNEL_STOPWATCH,
+                    getString(R.string.title_stopwatch),
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
             )
-        )
+        }
+
+        val actionIcon = if (isRunning) R.drawable.ic_pause_notification else R.drawable.ic_play_notification
+        val actionText = if (isRunning) "Pause" else "Play"
+
         return NotificationCompat.Builder(this, Chronos.NOTIFICATION_CHANNEL_STOPWATCH)
             .setSmallIcon(R.drawable.ic_stopwatch_notification)
             .setContentTitle(getString(R.string.title_stopwatch))
@@ -163,29 +202,18 @@ class StopwatchService : Service() {
             )
             .setDeleteIntent(
                 PendingIntent.getBroadcast(
-                    this, 0, Intent(ACTION_RESET).setPackage(
-                        packageName
-                    ), PendingIntent.FLAG_IMMUTABLE
+                    this, 0, Intent(ACTION_RESET).setPackage(packageName), PendingIntent.FLAG_IMMUTABLE
+                )
+            )
+            .addAction(actionIcon, actionText,
+                PendingIntent.getBroadcast(
+                    this, 0, Intent(ACTION_TOGGLE), PendingIntent.FLAG_IMMUTABLE
                 )
             )
             .addAction(
-                if (isRunning) R.drawable.ic_pause_notification else R.drawable.ic_play_notification,
-                if (isRunning) "Pause" else "Play",
+                R.drawable.ic_lap_notification, "Lap",
                 PendingIntent.getBroadcast(
-                    this,
-                    0,
-                    Intent(ACTION_TOGGLE),
-                    PendingIntent.FLAG_IMMUTABLE
-                )
-            )
-            .addAction(
-                R.drawable.ic_lap_notification,
-                "Lap",
-                PendingIntent.getBroadcast(
-                    this,
-                    0,
-                    Intent(ACTION_LAP),
-                    PendingIntent.FLAG_IMMUTABLE
+                    this, 0, Intent(ACTION_LAP), PendingIntent.FLAG_IMMUTABLE
                 )
             )
             .build()
@@ -213,11 +241,7 @@ class StopwatchService : Service() {
     }
 
     private class NotificationReceiver(service: StopwatchService) : BroadcastReceiver() {
-        private val serviceReference: WeakReference<StopwatchService>
-
-        init {
-            serviceReference = WeakReference(service)
-        }
+        private val serviceReference: WeakReference<StopwatchService> = WeakReference(service)
 
         override fun onReceive(context: Context, intent: Intent) {
             val service = serviceReference.get()
