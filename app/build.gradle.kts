@@ -64,7 +64,7 @@ android {
 dependencies {
     // Core
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation ("androidx.preference:preference-ktx:1.2.1")
+    implementation("androidx.preference:preference-ktx:1.2.1")
 
     // Media
     implementation("androidx.media3:media3-exoplayer:1.3.1")
@@ -90,5 +90,4 @@ dependencies {
     // Misc
     implementation("com.afollestad:aesthetic:0.7.2")
     implementation("me.jfenn:timedatepickers:0.0.6")
-    implementation("me.jfenn:AndroidUtils:0.0.5")
 }

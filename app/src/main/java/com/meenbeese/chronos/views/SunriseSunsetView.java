@@ -13,7 +13,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import me.jfenn.androidutils.anim.AnimatedFloat;
+import com.meenbeese.chronos.utils.FloatUtils;
 
 import java.util.Calendar;
 
@@ -30,8 +30,8 @@ public class SunriseSunsetView extends View implements View.OnTouchListener {
     private Paint sunsetPaint;
     private Paint linePaint;
 
-    private AnimatedFloat dayStart;
-    private AnimatedFloat dayEnd;
+    private FloatUtils dayStart;
+    private FloatUtils dayEnd;
 
     private Float moveBeginStart;
     private Float moveBeginEnd;
@@ -55,8 +55,8 @@ public class SunriseSunsetView extends View implements View.OnTouchListener {
     }
 
     private void init() {
-        dayStart = new AnimatedFloat(0.25f);
-        dayEnd = new AnimatedFloat(0.75f);
+        dayStart = new FloatUtils(0.25f);
+        dayEnd = new FloatUtils(0.75f);
 
         sunrisePaint = new Paint();
         sunrisePaint.setAntiAlias(true);

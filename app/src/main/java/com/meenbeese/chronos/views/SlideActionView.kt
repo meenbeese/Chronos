@@ -18,8 +18,7 @@ import androidx.annotation.ColorInt
 import com.meenbeese.chronos.interfaces.SlideActionListener
 import com.meenbeese.chronos.utils.DimenUtils.dpToPx
 import com.meenbeese.chronos.utils.ImageUtils.toBitmap
-
-import me.jfenn.androidutils.anim.AnimatedFloat
+import com.meenbeese.chronos.utils.FloatUtils
 
 import kotlin.math.abs
 import kotlin.math.max
@@ -39,8 +38,8 @@ open class SlideActionView : View, OnTouchListener {
     private var leftImage: Bitmap? = null
     private var rightImage: Bitmap? = null
     private var listener: SlideActionListener? = null
-    private lateinit var selected: AnimatedFloat
-    private lateinit var ripples: MutableMap<Float, AnimatedFloat>
+    private lateinit var selected: FloatUtils
+    private lateinit var ripples: MutableMap<Float, FloatUtils>
 
     constructor(context: Context?) : super(context) {
         init()
@@ -63,7 +62,7 @@ open class SlideActionView : View, OnTouchListener {
         expandedHandleRadius = dpToPx(32f)
         selectionRadius = dpToPx(42f)
         rippleRadius = dpToPx(140f)
-        selected = AnimatedFloat(0f)
+        selected = FloatUtils(0f)
         ripples = HashMap()
 
         normalPaint = Paint()
@@ -300,7 +299,7 @@ open class SlideActionView : View, OnTouchListener {
     }
 
     private fun createRipple(rippleStart: Float) {
-        val ripple = AnimatedFloat(selectionRadius.toFloat())
+        val ripple = FloatUtils(selectionRadius.toFloat())
         ripple.to(rippleRadius.toFloat())
         ripples[rippleStart] = ripple
         if (listener != null) {
