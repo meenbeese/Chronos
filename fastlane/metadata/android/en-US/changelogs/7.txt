@@ -1,0 +1,2 @@
+Updated all dependencies and Kotlin to latest version
+Internal changes and optimizations for future rewrites
