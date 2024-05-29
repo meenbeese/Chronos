@@ -73,18 +73,18 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
         }
 
         val listener = object : SunriseSunsetView.SunriseListener {
-            override fun onSunriseChanged(sunriseSunsetView: SunriseSunsetView, l: Long) {
-                val hour = (l.toFloat() / HOUR_LENGTH).roundToInt()
+            override fun onSunriseChanged(view: SunriseSunsetView?, sunriseMillis: Long) {
+                val hour = (sunriseMillis.toFloat() / HOUR_LENGTH).roundToInt()
                 holder.sunriseTextView.text = getText(hour)
-                sunriseSunsetView.setSunrise(hour * HOUR_LENGTH, true)
+                view?.setSunrise(hour * HOUR_LENGTH, true)
                 PreferenceData.DAY_START.setValue(holder.context, hour)
                 holder.chronos?.updateTheme()
             }
 
-            override fun onSunsetChanged(sunriseSunsetView: SunriseSunsetView, l: Long) {
-                val hour = (l.toFloat() / HOUR_LENGTH).roundToInt()
+            override fun onSunsetChanged(view: SunriseSunsetView?, sunsetMillis: Long) {
+                val hour = (sunsetMillis.toFloat() / HOUR_LENGTH).roundToInt()
                 holder.sunsetTextView.text = getText(hour)
-                sunriseSunsetView.setSunset(hour * HOUR_LENGTH, true)
+                view?.setSunset(hour * HOUR_LENGTH, true)
                 PreferenceData.DAY_END.setValue(holder.context, hour)
                 holder.chronos?.updateTheme()
             }
@@ -103,12 +103,12 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
         }
 
         holder.sunriseView.setListener(object : SunriseSunsetView.SunriseListener {
-            override fun onSunriseChanged(sunriseSunsetView: SunriseSunsetView, l: Long) {
-                listener.onSunriseChanged(sunriseSunsetView, l)
+            override fun onSunriseChanged(view: SunriseSunsetView?, sunriseMillis: Long) {
+                listener.onSunriseChanged(view, sunriseMillis)
             }
 
-            override fun onSunsetChanged(sunriseSunsetView: SunriseSunsetView, l: Long) {
-                listener.onSunsetChanged(sunriseSunsetView, l)
+            override fun onSunsetChanged(view: SunriseSunsetView?, sunsetMillis: Long) {
+                listener.onSunsetChanged(view, sunsetMillis)
             }
         })
 
