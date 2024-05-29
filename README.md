@@ -53,7 +53,7 @@ Chronos is a user-driven project. We welcome any contribution, big or small.
 - **User Support:** Respond to issues and identify duplicates.
 - **Issue Reporting:** Report bugs and edge cases with relevant info.
 - **Localization:** Translate Chronos if it doesn't support your language.
-- **Documentation:** Write guides, explanations, README updates, user tutorials, or documentation.
+- **Documentation:** Write guides, explanations, README updates, or documentation.
 
 ### ✅ Other Support Methods
 
