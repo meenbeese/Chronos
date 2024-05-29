@@ -1,16 +1,13 @@
 package com.meenbeese.chronos.data.preference
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.TextView
-
-import androidx.appcompat.widget.AppCompatSpinner
 
 import com.afollestad.aesthetic.Aesthetic
 import com.meenbeese.chronos.Chronos
@@ -42,34 +39,23 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
 
     @SuppressLint("CheckResult")
     override fun bindViewHolder(holder: ViewHolder) {
-        holder.themeSpinner.adapter = ArrayAdapter.createFromResource(holder.itemView.context, R.array.array_themes, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter.createFromResource(
+            holder.itemView.context,
+            R.array.array_themes,
+            com.google.android.material.R.layout.support_simple_spinner_dropdown_item
+        )
 
-        val theme : Int = holder.chronos?.activityTheme ?: Chronos.THEME_DAY_NIGHT
-        run {
-            if (theme == Chronos.THEME_DAY_NIGHT) View.VISIBLE else View.GONE
-        }.let {
-            holder.sunriseLayout.visibility = it
-        }
+        holder.themeAutoCompleteTextView.setAdapter(adapter)
 
-        holder.themeSpinner.onItemSelectedListener = null
-        holder.themeSpinner.setSelection(theme)
-        holder.themeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            var selection: Int? = null
+        val theme: Int = holder.chronos?.activityTheme ?: Chronos.THEME_DAY_NIGHT
+        holder.themeAutoCompleteTextView.setText(adapter.getItem(theme), false)
 
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-                if (selection != null) {
-                    run {
-                        if (i == Chronos.THEME_DAY_NIGHT) View.VISIBLE else View.GONE
-                    }.let {
-                        holder.sunriseLayout.visibility = it
-                    }
-
-                    PreferenceData.THEME.setValue(adapterView.context, i)
-                    holder.chronos?.updateTheme()
-                } else selection = i
+        holder.themeAutoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
+            if (holder.themeAutoCompleteTextView.text.toString() == adapter.getItem(position)) {
+                PreferenceData.THEME.setValue(holder.itemView.context, position)
+                holder.chronos?.updateTheme()
+                holder.sunriseLayout.visibility = if (position == Chronos.THEME_DAY_NIGHT) View.VISIBLE else View.GONE
             }
-
-            override fun onNothingSelected(adapterView: AdapterView<*>) {}
         }
 
         val listener = object : SunriseSunsetView.SunriseListener {
@@ -145,14 +131,14 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
             .textColorSecondary()
             .take(1)
             .subscribe { textColorSecondary ->
-                holder.themeSpinner.supportBackgroundTintList = ColorStateList.valueOf(textColorSecondary)
+                holder.themeAutoCompleteTextView.setTextColor(textColorSecondary)
             }
 
         Aesthetic.get()
             .colorCardViewBackground()
             .take(1)
             .subscribe { colorForeground ->
-                holder.themeSpinner.setPopupBackgroundDrawable(ColorDrawable(colorForeground))
+                holder.themeAutoCompleteTextView.setDropDownBackgroundDrawable(ColorDrawable(colorForeground))
             }
     }
 
@@ -160,7 +146,7 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
      * Holds child views of the current item.
      */
     class ViewHolder(v: View) : BasePreferenceData.ViewHolder(v) {
-        val themeSpinner: AppCompatSpinner = v.findViewById(R.id.themeSpinner)
+        val themeAutoCompleteTextView: AutoCompleteTextView = v.findViewById(R.id.themeSpinner)
         val sunriseLayout: View = v.findViewById(R.id.sunriseLayout)
         val sunriseView: SunriseSunsetView = v.findViewById(R.id.sunriseView)
         val sunriseTextView: TextView = v.findViewById(R.id.sunriseTextView)

@@ -19,10 +19,20 @@
         android:textSize="16sp"
         tools:text="Title" />
 
-    <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/spinner"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" />
+        android:hint="@string/title_theme">
+
+        <AutoCompleteTextView
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:focusable="false"
+            android:hint="@string/title_theme" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>
