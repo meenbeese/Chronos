@@ -9,14 +9,14 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 import com.meenbeese.chronos.data.PreferenceData
 
 
-class FileChooserActivity : AppCompatActivity() {
+class FileChooserActivity : ComponentActivity() {
     private var preference: PreferenceData? = null
     private var type: String? = TYPE_IMAGE
     @SuppressLint("InlinedApi")

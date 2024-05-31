@@ -7,7 +7,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.Toast
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.utils.DimenUtils.getStatusBarHeight
@@ -31,7 +31,7 @@ class AboutPreferenceData(private val context: Context) : CustomPreferenceData(R
     }
 }
 
-class AboutActivity : AppCompatActivity() {
+class AboutActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val aboutPage: View = AboutPage(this)
