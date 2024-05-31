@@ -50,54 +50,52 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
                 DividerItemDecoration.VERTICAL
             )
         )
-        val dataList = ArrayList(
-            listOf(
-                ThemePreferenceData(),
-                ImageFilePreferenceData(
-                    PreferenceData.BACKGROUND_IMAGE,
-                    R.string.title_background_image
-                ),
-                BooleanPreferenceData(
-                    PreferenceData.RINGING_BACKGROUND_IMAGE,
-                    R.string.title_ringing_background_image,
-                    R.string.desc_ringing_background_image
-                ),
-                TimeZonesPreferenceData(
-                    PreferenceData.TIME_ZONE_ENABLED,
-                    R.string.title_time_zones
-                ),
-                RingtonePreferenceData(
-                    PreferenceData.DEFAULT_ALARM_RINGTONE,
-                    R.string.title_default_alarm_ringtone
-                ),
-                RingtonePreferenceData(
-                    PreferenceData.DEFAULT_TIMER_RINGTONE,
-                    R.string.title_default_timer_ringtone
-                ),
-                BooleanPreferenceData(
-                    PreferenceData.SLEEP_REMINDER,
-                    R.string.title_sleep_reminder,
-                    R.string.desc_sleep_reminder
-                ),
-                TimePreferenceData(
-                    PreferenceData.SLEEP_REMINDER_TIME,
-                    R.string.title_sleep_reminder_time
-                ),
-                BooleanPreferenceData(
-                    PreferenceData.SLOW_WAKE_UP,
-                    R.string.title_slow_wake_up,
-                    R.string.desc_slow_wake_up
-                ),
-                TimePreferenceData(
-                    PreferenceData.SLOW_WAKE_UP_TIME,
-                    R.string.title_slow_wake_up_time
-                )
+        val dataList = mutableListOf(
+            ThemePreferenceData(),
+            ImageFilePreferenceData(
+                PreferenceData.BACKGROUND_IMAGE,
+                R.string.title_background_image
+            ),
+            BooleanPreferenceData(
+                PreferenceData.RINGING_BACKGROUND_IMAGE,
+                R.string.title_ringing_background_image,
+                R.string.desc_ringing_background_image
+            ),
+            TimeZonesPreferenceData(
+                PreferenceData.TIME_ZONE_ENABLED,
+                R.string.title_time_zones
+            ),
+            RingtonePreferenceData(
+                PreferenceData.DEFAULT_ALARM_RINGTONE,
+                R.string.title_default_alarm_ringtone
+            ),
+            RingtonePreferenceData(
+                PreferenceData.DEFAULT_TIMER_RINGTONE,
+                R.string.title_default_timer_ringtone
+            ),
+            BooleanPreferenceData(
+                PreferenceData.SLEEP_REMINDER,
+                R.string.title_sleep_reminder,
+                R.string.desc_sleep_reminder
+            ),
+            TimePreferenceData(
+                PreferenceData.SLEEP_REMINDER_TIME,
+                R.string.title_sleep_reminder_time
+            ),
+            BooleanPreferenceData(
+                PreferenceData.SLOW_WAKE_UP,
+                R.string.title_slow_wake_up,
+                R.string.desc_slow_wake_up
+            ),
+            TimePreferenceData(
+                PreferenceData.SLOW_WAKE_UP_TIME,
+                R.string.title_slow_wake_up_time
             )
         )
         dataList.add(0, BatteryOptimizationPreferenceData())
         dataList.add(0, AlertWindowPreferenceData())
         dataList.add(AboutPreferenceData(requireContext()))
-        preferenceAdapter = PreferenceAdapter(dataList as ArrayList<BasePreferenceData<BasePreferenceData.ViewHolder>>)
+        preferenceAdapter = PreferenceAdapter(dataList as MutableList<BasePreferenceData<BasePreferenceData.ViewHolder>>)
         recyclerView.adapter = preferenceAdapter
         colorPrimarySubscription = get()
             .colorPrimary()
