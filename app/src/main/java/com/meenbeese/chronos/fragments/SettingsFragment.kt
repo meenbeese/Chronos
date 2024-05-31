@@ -36,6 +36,7 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
     private var preferenceAdapter: PreferenceAdapter? = null
     private var colorPrimarySubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,12 +45,7 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
         val v = inflater.inflate(R.layout.fragment_recycler, container, false)
         recyclerView = v.findViewById(R.id.recycler)
         recyclerView.layoutManager = GridLayoutManager(context, 1)
-        recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                recyclerView.context,
-                DividerItemDecoration.VERTICAL
-            )
-        )
+
         val dataList = mutableListOf(
             ThemePreferenceData(),
             ImageFilePreferenceData(
