@@ -31,9 +31,9 @@
 
 ## 📲 Installation
 
-<a href="https://apt.izzysoft.de/fdroid/index/apk/com.meenbeese.chronos"><img height="80" alt="Izzy Download" src="./assets/badges/izzy_install_badge.png"></a>
-<a href="https://github.com/meenbeese/Chronos/releases/latest"><img height="80" alt="APK Download" src="./assets/badges/apk_install_badge.png"></a>
-<a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/meenbeese/Chronos" src="./assets/badges/badge_obtainium.png"></a>
+<a href="https://apt.izzysoft.de/fdroid/index/apk/com.meenbeese.chronos"><img height="80" alt="Izzy Download" src="./assets/badges/izzy_install_badge.png" align="center"></a>
+<a href="https://github.com/meenbeese/Chronos/releases/latest"><img height="80" alt="APK Download" src="./assets/badges/apk_install_badge.png" align="center"></a>
+<a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/meenbeese/Chronos"><img height="56" alt="APK Download" src="./assets/badges/badge_obtainium.png" align="center"></a>
 
 ## ⚙️ Permissions
 
