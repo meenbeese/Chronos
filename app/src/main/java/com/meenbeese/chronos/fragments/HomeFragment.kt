@@ -91,7 +91,7 @@ class HomeFragment : BaseFragment() {
             }
         })
         val pagerAdapter = SimplePagerAdapter(
-            context, childFragmentManager,
+            childFragmentManager,
             AlarmsFragment.Instantiator(context),
             SettingsFragment.Instantiator(context)
         )
@@ -288,7 +288,6 @@ class HomeFragment : BaseFragment() {
             )
         }
         val timeAdapter = SimplePagerAdapter(
-            context,
             childFragmentManager,
             *fragments.toTypedArray<FragmentInstantiator>()
         )

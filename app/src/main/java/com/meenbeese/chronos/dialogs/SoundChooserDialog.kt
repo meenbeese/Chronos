@@ -59,7 +59,7 @@ class SoundChooserDialog : DialogFragment(), SoundChooserListener {
         ringtoneFragment.setListener(this)
         fileFragment.setListener(this)
         viewPager?.adapter = SimplePagerAdapter(
-            context, childFragmentManager,
+            childFragmentManager,
             AlarmSoundChooserFragment.Instantiator(view?.context, this),
             RingtoneSoundChooserFragment.Instantiator(view?.context, this),
             FileSoundChooserFragment.Instantiator(view?.context, this)

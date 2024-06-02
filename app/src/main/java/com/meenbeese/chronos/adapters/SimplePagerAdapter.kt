@@ -1,7 +1,5 @@
 package com.meenbeese.chronos.adapters
 
-import android.content.Context
-
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 
@@ -10,7 +8,6 @@ import com.meenbeese.chronos.interfaces.FragmentInstantiator
 
 
 class SimplePagerAdapter(
-    context: Context?,
     fragMan: FragmentManager,
     private vararg val fragments: FragmentInstantiator
 ) : FragmentStatePagerAdapter(
