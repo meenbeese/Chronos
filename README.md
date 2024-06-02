@@ -11,7 +11,19 @@
   <a href="https://liberapay.com/meenbeese/">
     <img src="https://img.shields.io/badge/liberapay-donate-yellow.svg?logo=liberapay" alt="Liberapay">
   </a>
-</div>
+  <br>
+  <a href="https://github.com/meenbeese/Chronos/releases/latest">
+  <img src="./assets/badges/apk_install_badge.png"
+    alt="Get it on GitHub" align="center" height="80" /></a>
+
+  <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/meenbeese/Chronos">
+  <img src="./assets/badges/badge_obtainium.png"
+    alt="Get it on Obtainium" align="center" height="54" /></a>
+
+  <a href="https://apt.izzysoft.de/fdroid/index/apk/com.meenbeese.chronos">
+  <img src="./assets/badges/izzy_install_badge.png"
+    alt="Get it on IzzyOnDroid" align="center" height="77" /></a>
+  </div>
 
 ## 🌄 Screenshots
 
@@ -28,12 +40,6 @@
 - Unique, minimal, efficient design
 - Portrait and landscape orientation
 - Countless default ringtones
-
-## 📲 Installation
-
-<a href="https://apt.izzysoft.de/fdroid/index/apk/com.meenbeese.chronos"><img height="80" alt="Izzy Download" src="./assets/badges/izzy_install_badge.png" align="center"></a>
-<a href="https://github.com/meenbeese/Chronos/releases/latest"><img height="80" alt="APK Download" src="./assets/badges/apk_install_badge.png" align="center"></a>
-<a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/meenbeese/Chronos"><img height="55" alt="Obtainium Download" src="./assets/badges/badge_obtainium.png" align="center"></a>
 
 ## ⚙️ Permissions
 
