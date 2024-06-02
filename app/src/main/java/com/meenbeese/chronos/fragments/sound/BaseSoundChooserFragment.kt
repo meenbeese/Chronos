@@ -7,8 +7,6 @@ import com.meenbeese.chronos.fragments.BasePagerFragment
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 
-import java.lang.ref.WeakReference
-
 
 abstract class BaseSoundChooserFragment : BasePagerFragment(), SoundChooserListener {
     private var listener: SoundChooserListener? = null
@@ -25,18 +23,12 @@ abstract class BaseSoundChooserFragment : BasePagerFragment(), SoundChooserListe
         listener = null
     }
 
-    internal abstract class Instantiator(context: Context?, listener: SoundChooserListener?) :
-        ContextFragmentInstantiator(
-            context!!
-        ) {
-        private val listener: WeakReference<SoundChooserListener>
-
-        init {
-            this.listener = WeakReference(listener)
-        }
+    internal abstract class Instantiator(
+        context: Context?,
+        private val listener: SoundChooserListener?
+    ) : ContextFragmentInstantiator(context!!) {
 
         override fun newInstance(position: Int): BasePagerFragment? {
-            val listener = listener.get()
             return listener?.let { newInstance(position, it) }
         }
 

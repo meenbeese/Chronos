@@ -22,7 +22,6 @@ import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.utils.FormatUtils.formatUnit
 
-import java.lang.ref.WeakReference
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
@@ -100,16 +99,9 @@ class SleepReminderService : Service() {
         return null
     }
 
-    private class ScreenReceiver(service: SleepReminderService) : BroadcastReceiver() {
-        private val serviceReference: WeakReference<SleepReminderService>
-
-        init {
-            serviceReference = WeakReference(service)
-        }
-
+    private class ScreenReceiver(private val service: SleepReminderService) : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val service = serviceReference.get()
-            service?.refreshState()
+            service.refreshState()
         }
     }
 

@@ -20,12 +20,11 @@ import com.meenbeese.chronos.fragments.StopwatchFragment
 import com.meenbeese.chronos.fragments.TimerFragment
 import com.meenbeese.chronos.receivers.TimerReceiver
 
-import java.lang.ref.WeakReference
-
 
 class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedListener, ActivityListener {
     private var chronos: Chronos? = null
-    private var fragmentRef: WeakReference<BaseFragment?>? = null
+    private var fragmentRef: BaseFragment? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
@@ -37,16 +36,14 @@ class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedList
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragment, fragment)
                 .commit()
-            fragmentRef = WeakReference(fragment)
+            fragmentRef = fragment
         } else {
             var fragment: BaseFragment? = TimerFragment()
-            if (fragmentRef == null || fragmentRef?.get()
-                    .also { fragment = it } == null
-            ) fragment = HomeFragment()
+            if (fragmentRef == null) fragment = HomeFragment()
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment, fragment!!)
                 .commit()
-            fragmentRef = WeakReference(fragment)
+            fragmentRef = fragment
         }
         supportFragmentManager.addOnBackStackChangedListener(this)
 
@@ -67,7 +64,7 @@ class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedList
         if (isActionableIntent(intent)) {
             val manager = supportFragmentManager
             val newFragment = createFragmentFor(intent)
-            val fragment = if (fragmentRef != null) fragmentRef?.get() else null
+            val fragment = if (fragmentRef != null) fragmentRef else null
             if (newFragment == null || newFragment == fragment) // Check that fragment isn't already displayed
                 return
             if (newFragment is HomeFragment && manager.backStackEntryCount > 0) // Clear the back stack
@@ -86,7 +83,7 @@ class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedList
             if (fragment is HomeFragment && newFragment !is HomeFragment) transaction.addToBackStack(
                 null
             )
-            fragmentRef = WeakReference(newFragment)
+            fragmentRef = newFragment
             transaction.commit()
         }
     }
@@ -100,7 +97,7 @@ class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedList
      * to the passed intent.
      */
     private fun createFragmentFor(intent: Intent): BaseFragment? {
-        val fragment = if (fragmentRef != null) fragmentRef?.get() else null
+        val fragment = if (fragmentRef != null) fragmentRef else null
         return when (intent.getIntExtra(EXTRA_FRAGMENT, -1)) {
             FRAGMENT_STOPWATCH -> {
                 fragment as? StopwatchFragment ?: StopwatchFragment()
@@ -163,7 +160,7 @@ class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedList
 
     override fun onBackStackChanged() {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment) as BaseFragment?
-        fragmentRef = WeakReference(fragment)
+        fragmentRef = fragment
     }
 
     override fun fetchFragmentManager(): FragmentManager {

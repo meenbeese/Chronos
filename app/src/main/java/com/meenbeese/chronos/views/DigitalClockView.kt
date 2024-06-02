@@ -19,7 +19,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 
-import java.lang.ref.WeakReference
 import java.util.Calendar
 import java.util.TimeZone
 
@@ -111,13 +110,7 @@ class DigitalClockView : View, OnGlobalLayoutListener, Subscribable {
         TimeZone.setDefault(defaultZone)
     }
 
-    private class UpdateThread(view: DigitalClockView) : Thread() {
-        private val viewReference: WeakReference<DigitalClockView>
-
-        init {
-            viewReference = WeakReference(view)
-        }
-
+    private class UpdateThread(private val view: DigitalClockView) : Thread() {
         override fun run() {
             while (true) {
                 try {
@@ -126,8 +119,7 @@ class DigitalClockView : View, OnGlobalLayoutListener, Subscribable {
                     return
                 }
                 Handler(Looper.getMainLooper()).post {
-                    val view = viewReference.get()
-                    view?.invalidate()
+                    view.invalidate()
                 }
             }
         }

@@ -23,8 +23,6 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.activities.MainActivity
 import com.meenbeese.chronos.utils.FormatUtils.formatMillis
 
-import java.lang.ref.WeakReference
-
 
 class StopwatchService : Service() {
     private val binder: IBinder = LocalBinder()
@@ -240,12 +238,9 @@ class StopwatchService : Service() {
         fun onLap(lapNum: Int, lapTime: Long, lastLapTime: Long, lapDiff: Long)
     }
 
-    private class NotificationReceiver(service: StopwatchService) : BroadcastReceiver() {
-        private val serviceReference: WeakReference<StopwatchService> = WeakReference(service)
-
+    private class NotificationReceiver(private val service: StopwatchService) : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val service = serviceReference.get()
-            if (intent.action != null && service != null) {
+            if (intent.action != null) {
                 when (intent.action) {
                     ACTION_RESET -> service.reset()
                     ACTION_TOGGLE -> service.toggle()
