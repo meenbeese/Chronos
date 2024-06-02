@@ -22,9 +22,9 @@ import io.reactivex.rxkotlin.subscribeBy
 
 
 class AlarmsFragment : BasePagerFragment() {
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var empty: View
     private lateinit var alarmsAdapter: AlarmsAdapter
+    private var empty: View? = null
+    private var recyclerView: RecyclerView? = null
     private var colorAccentSubscription: Disposable? = null
     private var colorForegroundSubscription: Disposable? = null
     private var textColorPrimarySubscription: Disposable? = null
@@ -39,9 +39,9 @@ class AlarmsFragment : BasePagerFragment() {
         recyclerView = v.findViewById(R.id.recycler)
         empty = v.findViewById(R.id.empty)
         (v.findViewById<View>(R.id.emptyText) as TextView).setText(R.string.msg_alarms_empty)
-        recyclerView.layoutManager = GridLayoutManager(context, 1)
-        alarmsAdapter = AlarmsAdapter(chronos!!, recyclerView, parentFragmentManager)
-        recyclerView.adapter = alarmsAdapter
+        recyclerView?.layoutManager = GridLayoutManager(context, 1)
+        alarmsAdapter = AlarmsAdapter(chronos!!, recyclerView!!, parentFragmentManager)
+        recyclerView?.adapter = alarmsAdapter
 
         colorAccentSubscription = get()
             .colorAccent()
@@ -77,18 +77,18 @@ class AlarmsFragment : BasePagerFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onAlarmsChanged() {
-        recyclerView.post { alarmsAdapter.notifyDataSetChanged() }
+        recyclerView?.post { alarmsAdapter.notifyDataSetChanged() }
         onChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onTimersChanged() {
-        recyclerView.post { alarmsAdapter.notifyDataSetChanged() }
+        recyclerView?.post { alarmsAdapter.notifyDataSetChanged() }
         onChanged()
     }
 
     private fun onChanged() {
-        empty.visibility = if (alarmsAdapter.itemCount > 0) View.GONE else View.VISIBLE
+        empty?.visibility = if (alarmsAdapter.itemCount > 0) View.GONE else View.VISIBLE
     }
 
     class Instantiator(context: Context?) : ContextFragmentInstantiator(context!!) {
