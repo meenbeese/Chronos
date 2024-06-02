@@ -58,7 +58,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:gravity="center"
-            android:text="1"
+            android:text="@string/number_one"
             android:textSize="32sp" />
 
         <TextView
@@ -68,7 +68,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:gravity="center"
-            android:text="2"
+            android:text="@string/number_two"
             android:textSize="32sp" />
 
         <TextView
@@ -78,7 +78,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:gravity="center"
-            android:text="3"
+            android:text="@string/number_three"
             android:textSize="32sp" />
 
     </LinearLayout>
@@ -99,7 +99,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:gravity="center"
-            android:text="4"
+            android:text="@string/number_four"
             android:textSize="32sp" />
 
         <TextView
@@ -109,7 +109,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:gravity="center"
-            android:text="5"
+            android:text="@string/number_five"
             android:textSize="32sp" />
 
         <TextView
@@ -119,7 +119,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:gravity="center"
-            android:text="6"
+            android:text="@string/number_six"
             android:textSize="32sp" />
 
     </LinearLayout>
@@ -140,7 +140,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:gravity="center"
-            android:text="7"
+            android:text="@string/number_seven"
             android:textSize="32sp" />
 
         <TextView
@@ -150,7 +150,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:gravity="center"
-            android:text="8"
+            android:text="@string/number_eight"
             android:textSize="32sp" />
 
         <TextView
@@ -160,7 +160,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:gravity="center"
-            android:text="9"
+            android:text="@string/number_nine"
             android:textSize="32sp" />
 
     </LinearLayout>
@@ -175,7 +175,7 @@
         android:layout_weight="1"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:gravity="center"
-        android:text="0"
+        android:text="@string/number_zero"
         android:textSize="32sp" />
 
 </LinearLayout>
