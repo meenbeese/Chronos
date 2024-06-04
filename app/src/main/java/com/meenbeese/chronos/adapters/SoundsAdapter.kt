@@ -131,12 +131,7 @@ class SoundsAdapter(private val chronos: Chronos, private val sounds: List<Sound
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val icon: ImageView
-        val title: TextView
-
-        init {
-            icon = itemView.findViewById(R.id.icon)
-            title = itemView.findViewById(R.id.title)
-        }
+        val icon: ImageView = itemView.findViewById(R.id.icon)
+        val title: TextView = itemView.findViewById(R.id.title)
     }
 }

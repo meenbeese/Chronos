@@ -11,6 +11,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.ImageView
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 
 import io.reactivex.disposables.CompositeDisposable
@@ -99,7 +100,7 @@ class HomeFragment : BaseFragment() {
             SpeedDialActionItem
                 .Builder(R.id.alarm_fab, R.drawable.ic_alarm_add)
                 .setLabel(R.string.title_set_alarm)
-                .setLabelBackgroundColor(getFabLabelBgColor())
+                .setLabelBackgroundColor(getFabLabelBgColor(requireContext()))
                 .setLabelClickable(true)
                 .create()
         )
@@ -107,7 +108,7 @@ class HomeFragment : BaseFragment() {
             SpeedDialActionItem
                 .Builder(R.id.timer_fab, R.drawable.ic_timer)
                 .setLabel(R.string.title_set_timer)
-                .setLabelBackgroundColor(getFabLabelBgColor())
+                .setLabelBackgroundColor(getFabLabelBgColor(requireContext()))
                 .setLabelClickable(true)
                 .create()
         )
@@ -115,7 +116,7 @@ class HomeFragment : BaseFragment() {
             SpeedDialActionItem
                 .Builder(R.id.stopwatch_fab, R.drawable.ic_stopwatch)
                 .setLabel(R.string.title_set_stopwatch)
-                .setLabelBackgroundColor(getFabLabelBgColor())
+                .setLabelBackgroundColor(getFabLabelBgColor(requireContext()))
                 .setLabelClickable(true)
                 .create()
         )
@@ -257,11 +258,11 @@ class HomeFragment : BaseFragment() {
     /**
      * Helper extension function to manage the background colors of the FAB label.
      */
-    private fun getFabLabelBgColor(): Int {
+    private fun getFabLabelBgColor(context: Context): Int {
         return if (chronos!!.isDarkTheme()) {
-            resources.getColor(R.color.colorNightPrimary)
+            ContextCompat.getColor(context, R.color.colorNightPrimary)
         } else {
-            resources.getColor(R.color.colorPrimary)
+            ContextCompat.getColor(context, R.color.colorPrimary)
         }
     }
 

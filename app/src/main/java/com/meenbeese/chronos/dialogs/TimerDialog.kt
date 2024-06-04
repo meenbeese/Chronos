@@ -33,10 +33,9 @@ class TimerDialog(context: Context, private val manager: FragmentManager) :
     private var time: TextView? = null
     private var backspace: ImageView? = null
     private var input = "000000"
-    private val chronos: Chronos
+    private val chronos: Chronos = context.applicationContext as Chronos
 
     init {
-        chronos = context.applicationContext as Chronos
         ringtone = SoundData.fromString(PreferenceData.DEFAULT_TIMER_RINGTONE.getValue(context, ""))
     }
 

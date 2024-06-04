@@ -17,7 +17,6 @@ import androidx.core.widget.CompoundButtonCompat
 import com.afollestad.aesthetic.Aesthetic
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.switchmaterial.SwitchMaterial
-import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 
 
