@@ -61,14 +61,8 @@ class TimeZonesAdapter(private val timeZones: List<String>) :
     }
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val time: TextView
-        val title: TextView
-        val checkBox: MaterialCheckBox
-
-        init {
-            time = v.findViewById(R.id.time)
-            title = v.findViewById(R.id.title)
-            checkBox = v.findViewById(R.id.checkbox)
-        }
+        val time: TextView = v.findViewById(R.id.time)
+        val title: TextView = v.findViewById(R.id.title)
+        val checkBox: MaterialCheckBox = v.findViewById(R.id.checkbox)
     }
 }
