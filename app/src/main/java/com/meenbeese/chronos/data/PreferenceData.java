@@ -14,17 +14,16 @@ public enum PreferenceData {
     THEME(Chronos.THEME_DAY_NIGHT),
     BACKGROUND_IMAGE("https://jfenn.me/images/headers/snowytrees.jpg"),
     RINGING_BACKGROUND_IMAGE(true),
-    DAY_AUTO(true),
-    DAY_START(6), //hours TODO: change to minutes
-    DAY_END(18), //hours
+    DAY_START(6), // hours TODO: change to minutes
+    DAY_END(18), // hours
     ALARM_LENGTH(0),
     TIMER_LENGTH(0),
     DEFAULT_ALARM_RINGTONE(null),
     DEFAULT_TIMER_RINGTONE(null),
     SLEEP_REMINDER(true),
-    SLEEP_REMINDER_TIME(25200000L), //milliseconds
+    SLEEP_REMINDER_TIME(25200000L), // millis
     SLOW_WAKE_UP(true),
-    SLOW_WAKE_UP_TIME(300000L), //milliseconds
+    SLOW_WAKE_UP_TIME(300000L), // millis
     ALARM_NAME("%d/ALARM_NAME", null),
     ALARM_TIME("%d/ALARM_TIME", (long) 0),
     ALARM_ENABLED("%d/ALARM_ENABLED", true),
@@ -99,9 +98,7 @@ public enum PreferenceData {
                         array[i] = prefs.contains(name + "-" + i) ? prefs.getBoolean(name + "-" + i, false) : null;
                     else if (array instanceof Integer[])
                         array[i] = prefs.contains(name + "-" + i) ? prefs.getInt(name + "-" + i, 0) : null;
-                    else if (array instanceof String[])
-                        array[i] = prefs.getString(name + "-" + i, "");
-                    else throw new TypeMismatchException(this);
+                    else array[i] = prefs.getString(name + "-" + i, "");
                 }
 
                 return (T) array;
@@ -111,25 +108,23 @@ public enum PreferenceData {
         } else if (prefs.contains(name)) {
             try {
                 if (type instanceof Boolean)
-                    return (T) new Boolean(prefs.getBoolean(name, (Boolean) defaultValue));
+                    return (T) Boolean.valueOf(prefs.getBoolean(name, (Boolean) defaultValue));
                 else if (type instanceof Long)
-                    return (T) new Long(prefs.getLong(name, (Long) defaultValue));
+                    return (T) Long.valueOf(prefs.getLong(name, (Long) defaultValue));
                 else if (type instanceof Integer)
-                    return (T) new Integer(prefs.getInt(name, (Integer) defaultValue));
+                    return (T) Integer.valueOf(prefs.getInt(name, (Integer) defaultValue));
                 else if (type instanceof String)
                     return (T) prefs.getString(name, (String) defaultValue);
             } catch (ClassCastException e) {
-                // error prevention
+                // Error prevention
                 if (type instanceof Long) {
                     try {
-                        return (T) new Long(prefs.getInt(name, ((Long) defaultValue).intValue()));
-                    } catch (ClassCastException ignored) {
-                    }
+                        return (T) Long.valueOf(prefs.getInt(name, ((Long) defaultValue).intValue()));
+                    } catch (ClassCastException ignored) {}
                 } else if (type instanceof Integer) {
                     try {
-                        return (T) new Integer((int) prefs.getLong(name, (Integer) defaultValue));
-                    } catch (ClassCastException ignored) {
-                    }
+                        return (T) Integer.valueOf((int) prefs.getLong(name, (Integer) defaultValue));
+                    } catch (ClassCastException ignored) {}
                 }
 
                 throw new TypeMismatchException(this, type.getClass());
@@ -179,7 +174,6 @@ public enum PreferenceData {
     }
 
     public static class TypeMismatchException extends RuntimeException {
-
         public TypeMismatchException(PreferenceData data) {
             this(data, null);
         }
@@ -189,7 +183,5 @@ public enum PreferenceData {
                     + (data.defaultValue != null ? ": expected " + data.defaultValue.getClass().getName()
                     + (expectedType != null ? ", got " + expectedType.getName() : "") : ""));
         }
-
     }
-
 }
