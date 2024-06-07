@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.provider.AlarmClock
 import android.provider.Settings
 
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentManager
 
 import com.afollestad.aesthetic.AestheticActivity
@@ -16,18 +15,19 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.fragments.BaseFragment
 import com.meenbeese.chronos.fragments.HomeFragment
+import com.meenbeese.chronos.fragments.SplashFragment
 import com.meenbeese.chronos.fragments.StopwatchFragment
 import com.meenbeese.chronos.fragments.TimerFragment
 import com.meenbeese.chronos.receivers.TimerReceiver
 
 
-class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedListener, ActivityListener {
+class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedListener,
+    ActivityListener {
     private var chronos: Chronos? = null
     private var fragmentRef: BaseFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen()
         setContentView(R.layout.activity_main)
         chronos = applicationContext as Chronos
         chronos?.setListener(this)
@@ -117,6 +117,7 @@ class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedList
             }
 
             else -> {
+                if (Intent.ACTION_MAIN == intent.action || intent.action == null) return SplashFragment()
                 val args = Bundle()
                 args.putString(HomeFragment.INTENT_ACTION, intent.action)
                 val newFragment: BaseFragment = HomeFragment()
