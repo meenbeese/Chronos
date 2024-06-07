@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.AlarmClock
 import android.provider.Settings
+import android.view.WindowManager
 
 import androidx.fragment.app.FragmentManager
 
@@ -29,6 +30,7 @@ class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        window.setFlags(LAYOUT_FLAG, LAYOUT_FLAG)
         chronos = applicationContext as Chronos
         chronos?.setListener(this)
         if (savedInstanceState == null) {
@@ -172,5 +174,6 @@ class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedList
         const val EXTRA_FRAGMENT = "com.meenbeese.chronos.MainActivity.EXTRA_FRAGMENT"
         const val FRAGMENT_TIMER = 0
         const val FRAGMENT_STOPWATCH = 2
+        const val LAYOUT_FLAG = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
     }
 }
