@@ -10,6 +10,7 @@ import android.widget.AutoCompleteTextView
 import android.widget.TextView
 
 import com.afollestad.aesthetic.Aesthetic
+import com.google.android.material.textfield.TextInputLayout
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
@@ -139,6 +140,9 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
             .take(1)
             .subscribe { colorForeground ->
                 holder.themeAutoCompleteTextView.setDropDownBackgroundDrawable(ColorDrawable(colorForeground))
+                holder.themeAutoCompleteTextView.setBackgroundColor(colorForeground)
+                holder.themeTextInputLayout.boxBackgroundColor = colorForeground
+                holder.themeTextInputLayout.setBackgroundColor(colorForeground)
             }
     }
 
@@ -147,6 +151,7 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
      */
     class ViewHolder(v: View) : BasePreferenceData.ViewHolder(v) {
         val themeAutoCompleteTextView: AutoCompleteTextView = v.findViewById(R.id.themeSpinner)
+        val themeTextInputLayout: TextInputLayout = v.findViewById(R.id.themeDropdown)
         val sunriseLayout: View = v.findViewById(R.id.sunriseLayout)
         val sunriseView: SunriseSunsetView = v.findViewById(R.id.sunriseView)
         val sunriseTextView: TextView = v.findViewById(R.id.sunriseTextView)

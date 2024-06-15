@@ -26,6 +26,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:id="@+id/themeDropdown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/title_theme">
