@@ -3,15 +3,14 @@ package com.meenbeese.chronos.data.preference
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Gravity
-import android.view.View
+import android.view.Gravity.CENTER
 import android.widget.Toast
 
 import androidx.activity.ComponentActivity
 
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.utils.DimenUtils.getStatusBarHeight
 import com.meenbeese.chronos.BuildConfig
+import com.meenbeese.chronos.activities.MainActivity.Companion.LAYOUT_FLAG
 
 import mehdi.sakout.aboutpage.AboutPage
 import mehdi.sakout.aboutpage.Element
@@ -34,43 +33,37 @@ class AboutPreferenceData(private val context: Context) : CustomPreferenceData(R
 class AboutActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val aboutPage: View = AboutPage(this)
+        window.setFlags(LAYOUT_FLAG, LAYOUT_FLAG)
+        setContentView(AboutPage(this)
             .setImage(R.mipmap.ic_launcher)
-            .setDescription("Chronos\n\n".plus(DESCRIPTION.trim()))
-            .addItem(Element().setTitle(VERSION).setGravity(1))
-            .addGroup("Connect with us")
-            .addGitHub("meenbeese/Chronos")
-            .addWebsite("https://meenbeese.is-a.dev")
-            .addEmail(EMAIL)
-            .addItem(copyrightsElement())
+            .setDescription("Chronos\n\n${DESCRIPTION.trim()}")
+            .addItem(Element().setTitle(VERSION).setGravity(CENTER))
+            .addGroup("Engage with Chronos")
+            .addGitHub("meenbeese/Chronos", "Fork GitHub repo")
+            .addWebsite(WEBSITE, "Visit my website")
+            .addEmail(EMAIL, "Send me an email")
+            .addItem(copyrightElement())
             .create()
-        aboutPage.setPadding(0, getStatusBarHeight(), 0, 0)
-        setContentView(aboutPage)
+        )
     }
 
-    private fun copyrightsElement(): Element {
+    private fun copyrightElement(): Element {
         val copyrightText = "Copyright $YEAR Meenbeese"
-        val copyrightsElement = Element()
+        return Element()
             .setTitle(copyrightText)
             .setIconDrawable(R.drawable.ic_copyright)
             .setAutoApplyIconTint(true)
             .setIconTint(mehdi.sakout.aboutpage.R.color.about_item_icon_color)
             .setIconNightTint(android.R.color.white)
-            .setGravity(Gravity.CENTER)
+            .setGravity(CENTER)
             .setOnClickListener {
-            Toast.makeText(
-                this@AboutActivity,
-                copyrightText,
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-        return copyrightsElement
+                Toast.makeText(this@AboutActivity, copyrightText, Toast.LENGTH_SHORT).show()
+            }
     }
 
     companion object {
-        const val EMAIL = "meenbeese@tutanota.com"
         const val DESCRIPTION =
-                "Simple, yet customizable alarm clock app focused on simplicity, usability and modern design.\n\n" +
+                "Simple, yet customizable alarm clock app focused on simplicity, usability and design.\n\n" +
                 "• Custom backgrounds & ringtones\n" +
                 "• No unnecessary permissions\n" +
                 "• Dark, Light, AMOLED themes\n" +
@@ -79,7 +72,9 @@ class AboutActivity : ComponentActivity() {
                 "• Portrait and landscape orientation\n" +
                 "• Countless default ringtones\n\n\n\n" +
                 "Made with ❤ in Canada."
+        const val EMAIL = "meenbeese@tutanota.com"
         const val VERSION = "Version ${BuildConfig.VERSION_NAME}"
+        const val WEBSITE = "https://meenbeese.is-a.dev"
         val YEAR = Calendar.getInstance().get(Calendar.YEAR)
     }
 }
