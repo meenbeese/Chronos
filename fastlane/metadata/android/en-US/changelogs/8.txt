@@ -1,0 +1,4 @@
+Crash fixes related to the timer
+Minor UI updates and tweaks
+Dependency and Gradle updates
+Translation updates for Spanish
