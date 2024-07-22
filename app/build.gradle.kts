@@ -78,7 +78,7 @@ dependencies {
     implementation("com.leinardi.android:speed-dial:3.3.0")
 
     // Image
-    implementation("io.coil-kt:coil:2.6.0")
+    implementation("io.coil-kt:coil:2.7.0")
 
     // About
     implementation("io.github.medyo:android-about-page:2.0.0")
