@@ -1,0 +1,1 @@
+Urgent fix to address app crash on launch (#68)
