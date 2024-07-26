@@ -21,6 +21,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
@@ -31,21 +32,19 @@ import com.afollestad.aesthetic.Aesthetic
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.switchmaterial.SwitchMaterial
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
-import com.meenbeese.chronos.dialogs.AestheticTimeSheetPickerDialog
 import com.meenbeese.chronos.dialogs.SoundChooserDialog
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.meenbeese.chronos.utils.DimenUtils
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.DaySwitch
 import com.meenbeese.chronos.views.ProgressLineView
-
-import me.jfenn.timedatepickers.dialogs.PickerDialog
-import me.jfenn.timedatepickers.views.LinearTimePickerView
 
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -299,22 +298,23 @@ class AlarmsAdapter(
 
         holder.time.text = FormatUtils.formatShort(chronos, alarm.time.time)
         holder.time.setOnClickListener { view ->
-            AestheticTimeSheetPickerDialog(view.context, alarm.time.get(Calendar.HOUR_OF_DAY), alarm.time.get(Calendar.MINUTE))
-                    .setListener(object : PickerDialog.OnSelectedListener<LinearTimePickerView> {
-                        override fun onSelect(dialog: PickerDialog<LinearTimePickerView>, view: LinearTimePickerView) {
-                            alarm.time.set(Calendar.HOUR_OF_DAY, view.hourOfDay)
-                            alarm.time.set(Calendar.MINUTE, view.minute)
-                            alarm.setTime(chronos, alarmManager, alarm.time.timeInMillis)
-                            alarm.setEnabled(chronos, alarmManager, true)
+            val picker = MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(alarm.time.get(Calendar.HOUR_OF_DAY))
+                .setMinute(alarm.time.get(Calendar.MINUTE))
+                .setTitleText("Select Time")
+                .build()
 
-                            notifyItemChanged(holder.bindingAdapterPosition)
-                        }
+            picker.addOnPositiveButtonClickListener {
+                alarm.time.set(Calendar.HOUR_OF_DAY, picker.hour)
+                alarm.time.set(Calendar.MINUTE, picker.minute)
+                alarm.setTime(chronos, alarmManager, alarm.time.timeInMillis)
+                alarm.setEnabled(chronos, alarmManager, true)
 
-                        override fun onCancel(dialog: PickerDialog<LinearTimePickerView>) {
-                            // ignore
-                        }
-                    })
-                    .show()
+                notifyItemChanged(holder.bindingAdapterPosition)
+            }
+
+            picker.show((view.context as FragmentActivity).supportFragmentManager, "MATERIAL_TIME_PICKER")
         }
 
         holder.nextTime.visibility = if (alarm.isEnabled) View.VISIBLE else View.GONE

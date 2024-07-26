@@ -9,17 +9,17 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.TextView
 
+import androidx.fragment.app.FragmentActivity
+
 import com.afollestad.aesthetic.Aesthetic
 import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
-import com.meenbeese.chronos.dialogs.AestheticTimeSheetPickerDialog
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.SunriseSunsetView
-
-import me.jfenn.timedatepickers.dialogs.PickerDialog
-import me.jfenn.timedatepickers.views.LinearTimePickerView
 
 import java.util.Calendar
 import java.util.Date
@@ -100,32 +100,41 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
         })
 
         holder.sunriseTextView.setOnClickListener { view ->
-            AestheticTimeSheetPickerDialog(view.context, holder.chronos?.dayStart ?: 1, 0)
-                .setListener(object : PickerDialog.OnSelectedListener<LinearTimePickerView> {
-                    override fun onSelect(dialog: PickerDialog<LinearTimePickerView>, view: LinearTimePickerView) {
-                        holder.chronos?.let { chronos ->
-                            if (view.hourOfDay < chronos.dayEnd)
-                                listener.onSunriseChanged(holder.sunriseView, view.hourOfDay * HOUR_LENGTH)
-                        }
-                    }
+            val picker = MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(holder.chronos?.dayStart ?: 1)
+                .setMinute(0)
+                .setTitleText("Select Sunrise Time")
+                .build()
 
-                    override fun onCancel(dialog: PickerDialog<LinearTimePickerView>) {}
-                })
-                .show()
+            picker.addOnPositiveButtonClickListener {
+                holder.chronos?.let { chronos ->
+                    if (picker.hour < chronos.dayEnd) {
+                        listener.onSunriseChanged(holder.sunriseView, picker.hour * HOUR_LENGTH)
+                    }
+                }
+            }
+
+            picker.show((view.context as FragmentActivity).supportFragmentManager, "MATERIAL_TIME_PICKER_SUNRISE")
         }
 
         holder.sunsetTextView.setOnClickListener { view ->
-            AestheticTimeSheetPickerDialog(view.context, holder.chronos?.dayEnd ?: 23, 0)
-                .setListener(object : PickerDialog.OnSelectedListener<LinearTimePickerView> {
-                    override fun onSelect(dialog: PickerDialog<LinearTimePickerView>, view: LinearTimePickerView) {
-                        holder.chronos?.let { chronos ->
-                            if (view.hourOfDay > chronos.dayStart)
-                                listener.onSunsetChanged(holder.sunriseView, view.hourOfDay * HOUR_LENGTH)
-                        }
-                    }
+            val picker = MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(holder.chronos?.dayEnd ?: 23)
+                .setMinute(0)
+                .setTitleText("Select Sunset Time")
+                .build()
 
-                    override fun onCancel(dialog: PickerDialog<LinearTimePickerView>) {}
-                }).show()
+            picker.addOnPositiveButtonClickListener {
+                holder.chronos?.let { chronos ->
+                    if (picker.hour > chronos.dayStart) {
+                        listener.onSunsetChanged(holder.sunriseView, picker.hour * HOUR_LENGTH)
+                    }
+                }
+            }
+
+            picker.show((view.context as FragmentActivity).supportFragmentManager, "MATERIAL_TIME_PICKER_SUNSET")
         }
 
         Aesthetic.get()
