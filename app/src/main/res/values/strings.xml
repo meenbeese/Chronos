@@ -92,4 +92,10 @@
     <string name="number_seven" translatable="false">7</string>
     <string name="number_eight" translatable="false">8</string>
     <string name="number_nine" translatable="false">9</string>
+
+    <string name="engage_title">Engage with Chronos</string>
+    <string name="fork_github">Fork GitHub repo</string>
+    <string name="visit_website">Visit my website</string>
+    <string name="send_email">Send me an email</string>
+    <string name="copyright_info">Copyright %1$d Meenbeese</string>
 </resources>
