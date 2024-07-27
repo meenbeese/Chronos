@@ -1,21 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="primary">#448AFF</color>
+    <color name="onPrimary">#FFFFFF</color>
+    <color name="primaryContainer">#B1C4E6</color>
+    <color name="onPrimaryContainer">#0E1C33</color>
+    <color name="secondary">#F5F5F5</color>
+    <color name="onSecondary">#FFFFFF</color>
+    <color name="secondaryContainer">#E6E6E6</color>
+    <color name="onSecondaryContainer">#333333</color>
+    <color name="tertiary">#FF5252</color>
+    <color name="onTertiary">#FFFFFF</color>
+    <color name="tertiaryContainer">#E6B4B4</color>
+    <color name="onTertiaryContainer">#331010</color>
+    <color name="error">#EA1919</color>
+    <color name="onError">#FFFFFF</color>
+    <color name="errorContainer">#E6A5A5</color>
+    <color name="onErrorContainer">#330606</color>
+    <color name="background">#FCFCFC</color>
+    <color name="onBackground">#313233</color>
+    <color name="surface">#FCFCFC</color>
+    <color name="onSurface">#313233</color>
+    <color name="surfaceVariant">#DBDFE6</color>
+    <color name="onSurfaceVariant">#575D66</color>
+    <color name="outline">#838B99</color>
+
     <color name="colorPrimary">#F5F5F5</color>
     <color name="colorPrimaryDark">#E0E0E0</color>
     <color name="colorAccent">#448AFF</color>
     <color name="colorForeground">#FFFFFF</color>
-
     <color name="textColorPrimary">#DE000000</color>
     <color name="textColorSecondary">#8A000000</color>
-
     <color name="colorNightPrimary">#212121</color>
     <color name="colorNightPrimaryDark">#000000</color>
     <color name="colorNightAccent">#FF5252</color>
     <color name="colorNightForeground">#424242</color>
-
     <color name="textColorPrimaryNight">#FFFFFF</color>
     <color name="textColorSecondaryNight">#B3FFFFFF</color>
-
     <color name="colorIndeterminateBackground">#30565656</color>
     <color name="colorIndeterminateText">#606060</color>
 </resources>
