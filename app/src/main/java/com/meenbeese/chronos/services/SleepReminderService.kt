@@ -30,6 +30,7 @@ class SleepReminderService : Service() {
     private var chronos: Chronos? = null
     private var powerManager: PowerManager? = null
     private var receiver: ScreenReceiver? = null
+
     override fun onCreate() {
         super.onCreate()
         chronos = applicationContext as Chronos
@@ -47,7 +48,7 @@ class SleepReminderService : Service() {
         super.onDestroy()
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         refreshState()
         return super.onStartCommand(intent, flags, startId)
     }
