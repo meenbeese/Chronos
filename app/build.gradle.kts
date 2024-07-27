@@ -80,9 +80,6 @@ dependencies {
     // Image
     implementation("io.coil-kt:coil:2.7.0")
 
-    // About
-    implementation("io.github.medyo:android-about-page:2.0.0")
-
     // Async
     implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
