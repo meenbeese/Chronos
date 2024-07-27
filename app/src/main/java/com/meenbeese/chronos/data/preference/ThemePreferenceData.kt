@@ -101,6 +101,7 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
 
         holder.sunriseTextView.setOnClickListener { view ->
             val picker = MaterialTimePicker.Builder()
+                .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
                 .setTimeFormat(LocaleUtils.getLocaleClockFormat())
                 .setHour(holder.chronos?.dayStart ?: 1)
                 .setMinute(0)
@@ -120,6 +121,7 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
 
         holder.sunsetTextView.setOnClickListener { view ->
             val picker = MaterialTimePicker.Builder()
+                .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
                 .setTimeFormat(LocaleUtils.getLocaleClockFormat())
                 .setHour(holder.chronos?.dayEnd ?: 23)
                 .setMinute(0)

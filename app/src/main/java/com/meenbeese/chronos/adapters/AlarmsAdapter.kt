@@ -299,6 +299,7 @@ class AlarmsAdapter(
         holder.time.text = FormatUtils.formatShort(chronos, alarm.time.time)
         holder.time.setOnClickListener { view ->
             val picker = MaterialTimePicker.Builder()
+                .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
                 .setTimeFormat(LocaleUtils.getLocaleClockFormat())
                 .setHour(alarm.time.get(Calendar.HOUR_OF_DAY))
                 .setMinute(alarm.time.get(Calendar.MINUTE))

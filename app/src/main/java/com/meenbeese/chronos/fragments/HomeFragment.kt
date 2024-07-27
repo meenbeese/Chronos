@@ -201,6 +201,7 @@ class HomeFragment : BaseFragment() {
      */
     private fun invokeAlarmScheduler() {
         val picker = MaterialTimePicker.Builder()
+            .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
             .setTimeFormat(getLocaleClockFormat())
             .setTitleText("Select Time")
             .build()
