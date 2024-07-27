@@ -28,6 +28,7 @@ import com.meenbeese.chronos.data.SoundData.fromString
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
+import com.meenbeese.chronos.utils.CoreHelper
 
 import java.util.Calendar
 
@@ -41,9 +42,11 @@ class Chronos : Application(), Player.Listener {
     private var currentRingtone: Ringtone? = null
     private var hlsMediaSourceFactory: HlsMediaSource.Factory? = null
     private var currentStream: String? = null
+
     @UnstableApi
     override fun onCreate() {
         super.onCreate()
+        CoreHelper.contextGetter = { this }
         listeners = ArrayList()
         alarms = ArrayList()
         timers = ArrayList()

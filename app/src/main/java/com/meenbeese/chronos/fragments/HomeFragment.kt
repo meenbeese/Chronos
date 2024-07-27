@@ -27,6 +27,7 @@ import com.meenbeese.chronos.dialogs.TimerDialog
 import com.meenbeese.chronos.interfaces.FragmentInstantiator
 import com.meenbeese.chronos.utils.DimenUtils.getStatusBarHeight
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImage
+import com.meenbeese.chronos.utils.LocaleUtils.getLocaleClockFormat
 import com.meenbeese.chronos.views.PageIndicatorView
 import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -34,7 +35,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCa
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
 
@@ -201,7 +201,7 @@ class HomeFragment : BaseFragment() {
      */
     private fun invokeAlarmScheduler() {
         val picker = MaterialTimePicker.Builder()
-            .setTimeFormat(TimeFormat.CLOCK_24H)
+            .setTimeFormat(getLocaleClockFormat())
             .setTitleText("Select Time")
             .build()
 

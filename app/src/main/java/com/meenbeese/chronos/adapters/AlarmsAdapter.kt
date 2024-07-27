@@ -33,7 +33,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
@@ -43,6 +42,7 @@ import com.meenbeese.chronos.dialogs.SoundChooserDialog
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.meenbeese.chronos.utils.DimenUtils
 import com.meenbeese.chronos.utils.FormatUtils
+import com.meenbeese.chronos.utils.LocaleUtils
 import com.meenbeese.chronos.views.DaySwitch
 import com.meenbeese.chronos.views.ProgressLineView
 
@@ -299,7 +299,7 @@ class AlarmsAdapter(
         holder.time.text = FormatUtils.formatShort(chronos, alarm.time.time)
         holder.time.setOnClickListener { view ->
             val picker = MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setTimeFormat(LocaleUtils.getLocaleClockFormat())
                 .setHour(alarm.time.get(Calendar.HOUR_OF_DAY))
                 .setMinute(alarm.time.get(Calendar.MINUTE))
                 .setTitleText("Select Time")

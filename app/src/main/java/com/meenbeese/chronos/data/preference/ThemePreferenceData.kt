@@ -14,11 +14,11 @@ import androidx.fragment.app.FragmentActivity
 import com.afollestad.aesthetic.Aesthetic
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.utils.FormatUtils
+import com.meenbeese.chronos.utils.LocaleUtils
 import com.meenbeese.chronos.views.SunriseSunsetView
 
 import java.util.Calendar
@@ -101,7 +101,7 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
 
         holder.sunriseTextView.setOnClickListener { view ->
             val picker = MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setTimeFormat(LocaleUtils.getLocaleClockFormat())
                 .setHour(holder.chronos?.dayStart ?: 1)
                 .setMinute(0)
                 .setTitleText("Select Sunrise Time")
@@ -120,7 +120,7 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
 
         holder.sunsetTextView.setOnClickListener { view ->
             val picker = MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setTimeFormat(LocaleUtils.getLocaleClockFormat())
                 .setHour(holder.chronos?.dayEnd ?: 23)
                 .setMinute(0)
                 .setTitleText("Select Sunset Time")
