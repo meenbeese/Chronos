@@ -304,6 +304,7 @@ class AlarmsAdapter(
                 .setHour(alarm.time.get(Calendar.HOUR_OF_DAY))
                 .setMinute(alarm.time.get(Calendar.MINUTE))
                 .setTitleText("Select Time")
+                .setTheme(R.style.ChronosTimePickerTheme)
                 .build()
 
             picker.addOnPositiveButtonClickListener {

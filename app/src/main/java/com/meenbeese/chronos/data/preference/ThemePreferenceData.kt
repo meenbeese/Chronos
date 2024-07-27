@@ -106,6 +106,7 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
                 .setHour(holder.chronos?.dayStart ?: 1)
                 .setMinute(0)
                 .setTitleText("Select Sunrise Time")
+                .setTheme(R.style.ChronosTimePickerTheme)
                 .build()
 
             picker.addOnPositiveButtonClickListener {
@@ -126,6 +127,7 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
                 .setHour(holder.chronos?.dayEnd ?: 23)
                 .setMinute(0)
                 .setTitleText("Select Sunset Time")
+                .setTheme(R.style.ChronosTimePickerTheme)
                 .build()
 
             picker.addOnPositiveButtonClickListener {

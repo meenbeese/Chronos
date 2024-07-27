@@ -204,6 +204,7 @@ class HomeFragment : BaseFragment() {
             .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
             .setTimeFormat(getLocaleClockFormat())
             .setTitleText("Select Time")
+            .setTheme(R.style.ChronosTimePickerTheme)
             .build()
 
         picker.addOnPositiveButtonClickListener {

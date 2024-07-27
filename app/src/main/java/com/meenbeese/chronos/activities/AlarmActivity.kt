@@ -1,5 +1,6 @@
 package com.meenbeese.chronos.activities
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.content.DialogInterface
 import android.content.Intent
@@ -73,6 +74,7 @@ class AlarmActivity : AestheticActivity(), SlideActionListener {
     private var isDarkSubscription: Disposable? = null
     private var isDark = false
 
+    @SuppressLint("NewApi")
     @UnstableApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,11 +111,11 @@ class AlarmActivity : AestheticActivity(), SlideActionListener {
         slowWakeMillis = PreferenceData.SLOW_WAKE_UP_TIME.getValue(this)
         val isAlarm = intent.hasExtra(EXTRA_ALARM)
         if (isAlarm) {
-            alarm = intent.getParcelableExtra(EXTRA_ALARM)
+            alarm = intent.getParcelableExtra(EXTRA_ALARM, AlarmData::class.java)
             isVibrate = alarm?.isVibrate == true
-            if (alarm?.hasSound() == true) sound = alarm?.getSound()
+            if (alarm?.hasSound() == true) sound = alarm?.sound
         } else if (intent.hasExtra(EXTRA_TIMER)) {
-            val timer = intent.getParcelableExtra<TimerData>(EXTRA_TIMER)
+            val timer = intent.getParcelableExtra(EXTRA_TIMER, TimerData::class.java)
             isVibrate = timer?.isVibrate == true
             if (timer?.hasSound() == true) sound = timer.sound
         } else finish()
