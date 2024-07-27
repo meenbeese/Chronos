@@ -1,11 +1,14 @@
 package com.meenbeese.chronos.fragments
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 
 import androidx.core.content.ContextCompat
 
@@ -16,7 +19,6 @@ import java.util.Calendar
 
 
 class AboutFragment : BaseFragment() {
-
     private var appIcon: ImageView? = null
     private var appName: TextView? = null
     private var appDescription: TextView? = null
@@ -51,15 +53,34 @@ class AboutFragment : BaseFragment() {
 
         forkGitHub = view.findViewById(R.id.fork_github)
         forkGitHub?.text = getString(R.string.fork_github)
+        forkGitHub?.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB))
+            startActivity(intent)
+        }
 
         visitWebsite = view.findViewById(R.id.visit_website)
         visitWebsite?.text = getString(R.string.visit_website)
+        visitWebsite?.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(WEBSITE))
+            startActivity(intent)
+        }
 
         sendEmail = view.findViewById(R.id.send_email)
         sendEmail?.text = getString(R.string.send_email)
+        sendEmail?.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:$EMAIL")
+                putExtra(Intent.EXTRA_SUBJECT, "Feedback for Chronos")
+            }
+            startActivity(intent)
+        }
 
         copyrightInfo = view.findViewById(R.id.copyright_info)
         copyrightInfo?.text = getString(R.string.copyright_info, YEAR)
+        copyrightInfo?.setOnClickListener {
+            val copyrightText = getString(R.string.copyright_info, YEAR)
+            Toast.makeText(requireContext(), copyrightText, Toast.LENGTH_SHORT).show()
+        }
 
         return view
     }
@@ -76,6 +97,7 @@ class AboutFragment : BaseFragment() {
                     "• Countless default ringtones\n\n\n\n" +
                     "Made with ❤ in Canada."
         const val EMAIL = "meenbeese@tutanota.com"
+        const val GITHUB = "https://github.com/meenbeese/Chronos"
         const val VERSION = "Version ${BuildConfig.VERSION_NAME}"
         const val WEBSITE = "https://meenbeese.is-a.dev"
         val YEAR = Calendar.getInstance().get(Calendar.YEAR)
