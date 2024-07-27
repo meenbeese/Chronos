@@ -18,6 +18,14 @@ class AboutPreferenceData(private val context: Context) : CustomPreferenceData(R
         if (context is FragmentActivity) {
             val fragmentManager = context.supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
+
+            fragmentTransaction.setCustomAnimations(
+                R.anim.fade_in,
+                R.anim.fade_out,
+                R.anim.fade_in,
+                R.anim.fade_out
+            )
+
             fragmentTransaction.replace(R.id.fragment, AboutFragment())
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()

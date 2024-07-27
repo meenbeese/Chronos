@@ -22,6 +22,8 @@ class AboutFragment : BaseFragment() {
     private var appIcon: ImageView? = null
     private var appName: TextView? = null
     private var appDescription: TextView? = null
+    private var featuresList: TextView? = null
+    private var madeWithLove: TextView? = null
     private var versionInfo: TextView? = null
     private var engageTitle: TextView? = null
     private var forkGitHub: TextView? = null
@@ -43,7 +45,13 @@ class AboutFragment : BaseFragment() {
         appName?.text = getString(R.string.app_name)
 
         appDescription = view.findViewById(R.id.app_description)
-        appDescription?.text = DESCRIPTION
+        appDescription?.text = getString(R.string.app_description)
+
+        featuresList = view.findViewById(R.id.features_list)
+        featuresList?.text = getString(R.string.feature_list)
+
+        madeWithLove = view.findViewById(R.id.made_with_love)
+        madeWithLove?.text = getString(R.string.made_with_love)
 
         versionInfo = view.findViewById(R.id.version_info)
         versionInfo?.text = VERSION
@@ -86,16 +94,6 @@ class AboutFragment : BaseFragment() {
     }
 
     companion object {
-        const val DESCRIPTION =
-            "Simple, yet customizable alarm clock app focused on simplicity, usability and design.\n\n" +
-                    "• Custom backgrounds & ringtones\n" +
-                    "• No unnecessary permissions\n" +
-                    "• Dark, Light, AMOLED themes\n" +
-                    "• Granular controls everywhere\n" +
-                    "• Unique, minimal, efficient design\n" +
-                    "• Portrait and landscape orientation\n" +
-                    "• Countless default ringtones\n\n\n\n" +
-                    "Made with ❤ in Canada."
         const val EMAIL = "meenbeese@tutanota.com"
         const val GITHUB = "https://github.com/meenbeese/Chronos"
         const val VERSION = "Version ${BuildConfig.VERSION_NAME}"
