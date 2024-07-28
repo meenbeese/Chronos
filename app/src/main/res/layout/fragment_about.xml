@@ -1,0 +1,192 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/colorNightPrimary">
+
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="48dp"
+        android:src="@mipmap/ic_launcher"
+        android:contentDescription="@string/app_name" />
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text=""
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/textColorPrimary"
+        android:layout_marginTop="16dp"
+        tools:text="Chronos" />
+
+    <TextView
+        android:id="@+id/app_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text=""
+        android:textSize="16sp"
+        android:textColor="@color/textColorSecondary"
+        android:layout_marginTop="8dp"
+        tools:text="Simple, yet customizable alarm clock app \n focused on simplicity, usability and design." />
+
+    <TextView
+        android:id="@+id/features_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text=""
+        android:textSize="16sp"
+        android:textColor="@color/textColorSecondary"
+        android:layout_marginTop="16dp"
+        tools:text="• Custom backgrounds &amp; ringtones\n• No unnecessary permissions\n• Dark, Light, AMOLED themes\n• Granular controls everywhere\n• Unique, minimal, efficient design\n• Portrait and landscape orientation\n• Countless default ringtones" />
+
+    <TextView
+        android:id="@+id/made_with_love"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text=""
+        android:textSize="16sp"
+        android:textColor="@color/textColorSecondary"
+        android:layout_marginTop="44dp"
+        android:layout_marginBottom="44dp"
+        tools:text="Made with ❤ in Canada." />
+
+    <TextView
+        android:id="@+id/version_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text=""
+        android:textSize="14sp"
+        android:textColor="@color/textColorSecondary"
+        tools:text="Version 1.0.0" />
+
+    <TextView
+        android:id="@+id/engage_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text=""
+        android:textSize="18sp"
+        android:textColor="@color/textColorPrimary"
+        android:layout_marginTop="24dp"
+        tools:text="Engage with Chronos" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/fork_github"
+                app:srcCompat="@drawable/ic_github"
+                app:tint="@color/textColorPrimary" />
+
+            <TextView
+                android:id="@+id/fork_github"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="16sp"
+                android:textColor="@color/colorAccent"
+                android:layout_marginStart="8dp"
+                tools:text="Fork GitHub repo" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/visit_website"
+                app:srcCompat="@drawable/ic_link"
+                app:tint="@color/textColorPrimary" />
+
+            <TextView
+                android:id="@+id/visit_website"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="16sp"
+                android:textColor="@color/colorAccent"
+                android:layout_marginStart="8dp"
+                tools:text="Visit my website" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/send_email"
+                app:srcCompat="@drawable/ic_email"
+                app:tint="@color/textColorPrimary" />
+
+            <TextView
+                android:id="@+id/send_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="16sp"
+                android:textColor="@color/colorAccent"
+                android:layout_marginStart="8dp"
+                tools:text="Send me an email" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="@string/copyright_info"
+            app:srcCompat="@drawable/ic_copyright"
+            app:tint="@color/textColorPrimary" />
+        <TextView
+            android:id="@+id/copyright_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="14sp"
+            android:textColor="@color/textColorSecondary"
+            android:layout_marginStart="8dp"
+            android:layout_gravity="center"
+            tools:text="Copyright YEAR Meenbeese" />
+    </LinearLayout>
+</LinearLayout>

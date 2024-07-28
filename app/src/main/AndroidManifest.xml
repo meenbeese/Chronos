@@ -62,11 +62,6 @@
             android:exported="false">
         </activity>
 
-        <activity
-            android:name=".data.preference.AboutActivity"
-            android:theme="@style/AppTheme"
-            android:exported="false"/>
-
         <service
             android:name=".services.SleepReminderService"
             android:exported="false"
