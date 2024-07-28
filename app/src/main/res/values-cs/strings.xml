@@ -48,7 +48,7 @@
     <string name="title_slow_wake_up">Pomalé probouzení</string>
     <string name="desc_slow_wake_up">Postupně zvyšuje jas a hlasitost, když budík vyzvání.</string>
     <string name="title_slow_wake_up_time">Doba pomalého probouzení</string>
-    <string name="title_about">O &amp; OSS licencích</string>
+    <string name="title_about">O Chronos</string>
     <string name="title_choose_time_zone">Vybrat časové pásmo</string>
     <string name="msg_sleep_reminder">Váš příští budík bude zvonit přibližně %s od teď. Abyste dosáhli určeného množství spánku v nastavení, měli byste jít hned do postele.</string>
     <string name="title_alarm_name">Název budíku</string>

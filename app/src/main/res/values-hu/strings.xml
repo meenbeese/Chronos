@@ -46,7 +46,7 @@
     <string name="title_slow_wake_up">Lassú ébresztés</string>
     <string name="desc_slow_wake_up">Fokozatosan növeli a fény- és hangerőt, ha az ébresztés csörög.</string>
     <string name="title_slow_wake_up_time">Lassú ébresztés időtartama</string>
-    <string name="title_about">Névjegy és nyílt forráskódú licencek</string>
+    <string name="title_about">A Chronosról</string>
     <string name="title_choose_time_zone">Válasszon időzónát</string>
     <string name="msg_sleep_reminder">A következő ébresztés körülbelül %s múlva fog csörögni. Hogy annyit aludjon, amennyit a beállítások menüben megadott, most kellene aludni mennie.</string>
     <string name="title_alarm_name">Ébresztés neve</string>

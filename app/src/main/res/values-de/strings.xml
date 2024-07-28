@@ -40,7 +40,7 @@
     <string name="title_slow_wake_up">Langsames Aufwachen</string>
     <string name="desc_slow_wake_up">Erhöhe nach und nach Helligkeit und Lautstärke, wenn ein Alarm klingelt.</string>
     <string name="title_slow_wake_up_time">Dauer des langsamen Aufwachens</string>
-    <string name="title_about">Über &amp; OSS Lizensen</string>
+    <string name="title_about">Über Chronos</string>
     <string name="title_choose_time_zone">Wähle eine Zeitzone</string>
     <string name="msg_sleep_reminder">Dein nächster Alarm klingelt ungefähr in ungefähr %s. Um deine in den Einstellungen angegebene Menge an Schlaf zu bekommen, solltest du jetzt ins Bett gehen.</string>
     <string name="title_alarm_name">Name des Alarms</string>

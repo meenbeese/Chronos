@@ -40,7 +40,7 @@
     <string name="title_slow_wake_up">Despertar lento</string>
     <string name="desc_slow_wake_up">Aumente gradualmente o brilho e o volume quando um alarme estiver tocando.</string>
     <string name="title_slow_wake_up_time">Duração do Despertar Lento</string>
-    <string name="title_about">Sobre &amp; Licenças OSS</string>
+    <string name="title_about">Sobre Chronos</string>
     <string name="title_choose_time_zone">Escolha um fuso horário</string>
     <string name="msg_sleep_reminder">Seu próximo alarme tocará aproximadamente% s a partir de agora. Para obter a quantidade especificada de sono no menu de configurações, você deve ir para a cama agora.</string>
     <string name="title_alarm_name">Nome do Alarme</string>

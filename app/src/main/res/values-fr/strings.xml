@@ -48,7 +48,7 @@
     <string name="title_slow_wake_up">Réveil doux</string>
     <string name="desc_slow_wake_up">Augmenter progressivement la luminosité et le volume lorsqu\'une alarme retentit.</string>
     <string name="title_slow_wake_up_time">Durée</string>
-    <string name="title_about">À propos &amp; OSS Licenses</string>
+    <string name="title_about">À propos de Chronos</string>
     <string name="title_choose_time_zone">Sélectionner un fuseau horaire</string>
     <string name="msg_sleep_reminder">Votre prochaine alarme sonnera dans environ %s à partir de maintenant. Pour obtenir la durée de sommeil spécifiée dans le menu des paramètres, vous devriez aller vous coucher maintenant.</string>
     <string name="title_alarm_name">Nom de l\'alarme</string>

@@ -48,7 +48,7 @@
   <string name="title_slow_wake_up">慢醒</string>
   <string name="desc_slow_wake_up">当闹铃响起时，逐渐增加亮度和音量。</string>
   <string name="title_slow_wake_up_time">慢醒持续时间</string>
-  <string name="title_about">关于 &amp; OSS许可证</string>
+  <string name="title_about">关于Chronos</string>
   <string name="title_choose_time_zone">选择一个时区</string>
   <string name="msg_sleep_reminder">你的下一个闹钟会在 %s 后响起，为了有充足的睡眠，赶紧睡觉！</string>
   <string name="title_alarm_name">闹钟名称</string>
