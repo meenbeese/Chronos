@@ -64,7 +64,7 @@ class FileChooserFragment : Fragment() {
         } else {
             Toast.makeText(requireContext(), "Please enable permission in settings.", Toast.LENGTH_SHORT).show()
         }
-        activity?.finish()
+        parentFragmentManager.popBackStack()
     }
 
     override fun onRequestPermissionsResult(
@@ -97,7 +97,7 @@ class FileChooserFragment : Fragment() {
                         documentId = documentId.substring(documentId.lastIndexOf(":") + 1)
                         cursor.close()
                     } else {
-                        activity?.finish()
+                        parentFragmentManager.popBackStack()
                         return
                     }
                     cursor = requireContext().contentResolver.query(
@@ -142,7 +142,7 @@ class FileChooserFragment : Fragment() {
                     documentId = documentId.substring(documentId.lastIndexOf(":") + 1)
                     cursor.close()
                 } else {
-                    activity?.finish()
+                    parentFragmentManager.popBackStack()
                     return
                 }
                 cursor = requireContext().contentResolver.query(
@@ -171,7 +171,7 @@ class FileChooserFragment : Fragment() {
             if (!name.isNullOrEmpty()) data.putExtra("name", name)
             activity?.setResult(ComponentActivity.RESULT_OK, data)
         }
-        activity?.finish()
+        parentFragmentManager.popBackStack()
     }
 
     companion object {
