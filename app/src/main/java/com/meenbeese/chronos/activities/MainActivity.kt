@@ -6,6 +6,7 @@ import android.provider.AlarmClock
 import android.provider.Settings
 import android.view.WindowManager
 
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentManager
 
 import com.afollestad.aesthetic.AestheticActivity
@@ -48,6 +49,17 @@ class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedList
             fragmentRef = fragment
         }
         supportFragmentManager.addOnBackStackChangedListener(this)
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val fragmentManager = supportFragmentManager
+                if (fragmentManager.backStackEntryCount > 0) {
+                    fragmentManager.popBackStack()
+                } else {
+                    finish()
+                }
+            }
+        })
 
         // Background permissions info
         if (!PreferenceData.INFO_BACKGROUND_PERMISSIONS.getValue(this, false)) {
