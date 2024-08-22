@@ -5,6 +5,7 @@ import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.AlarmManager
+import android.app.TimePickerDialog
 import android.content.Context
 import android.graphics.Color
 import android.os.Handler
@@ -36,16 +37,12 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
-import com.meenbeese.chronos.dialogs.AestheticTimeSheetPickerDialog
 import com.meenbeese.chronos.dialogs.SoundChooserDialog
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.meenbeese.chronos.utils.DimenUtils
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.DaySwitch
 import com.meenbeese.chronos.views.ProgressLineView
-
-import me.jfenn.timedatepickers.dialogs.PickerDialog
-import me.jfenn.timedatepickers.views.LinearTimePickerView
 
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -299,22 +296,19 @@ class AlarmsAdapter(
 
         holder.time.text = FormatUtils.formatShort(chronos, alarm.time.time)
         holder.time.setOnClickListener { view ->
-            AestheticTimeSheetPickerDialog(view.context, alarm.time.get(Calendar.HOUR_OF_DAY), alarm.time.get(Calendar.MINUTE))
-                    .setListener(object : PickerDialog.OnSelectedListener<LinearTimePickerView> {
-                        override fun onSelect(dialog: PickerDialog<LinearTimePickerView>, view: LinearTimePickerView) {
-                            alarm.time.set(Calendar.HOUR_OF_DAY, view.hourOfDay)
-                            alarm.time.set(Calendar.MINUTE, view.minute)
-                            alarm.setTime(chronos, alarmManager, alarm.time.timeInMillis)
-                            alarm.setEnabled(chronos, alarmManager, true)
+            val hour = alarm.time.get(Calendar.HOUR_OF_DAY)
+            val minute = alarm.time.get(Calendar.MINUTE)
 
-                            notifyItemChanged(holder.bindingAdapterPosition)
-                        }
+            val timePickerDialog = TimePickerDialog(view.context, { _, selectedHour, selectedMinute ->
+                alarm.time.set(Calendar.HOUR_OF_DAY, selectedHour)
+                alarm.time.set(Calendar.MINUTE, selectedMinute)
+                alarm.setTime(chronos, alarmManager, alarm.time.timeInMillis)
+                alarm.setEnabled(chronos, alarmManager, true)
 
-                        override fun onCancel(dialog: PickerDialog<LinearTimePickerView>) {
-                            // ignore
-                        }
-                    })
-                    .show()
+                notifyItemChanged(holder.bindingAdapterPosition)
+            }, hour, minute, true)
+
+            timePickerDialog.show()
         }
 
         holder.nextTime.visibility = if (alarm.isEnabled) View.VISIBLE else View.GONE

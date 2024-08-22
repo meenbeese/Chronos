@@ -1,6 +1,7 @@
 package com.meenbeese.chronos.data.preference
 
 import android.annotation.SuppressLint
+import android.app.TimePickerDialog
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
@@ -14,12 +15,8 @@ import com.google.android.material.textfield.TextInputLayout
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
-import com.meenbeese.chronos.dialogs.AestheticTimeSheetPickerDialog
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.SunriseSunsetView
-
-import me.jfenn.timedatepickers.dialogs.PickerDialog
-import me.jfenn.timedatepickers.views.LinearTimePickerView
 
 import java.util.Calendar
 import java.util.Date
@@ -100,32 +97,35 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
         })
 
         holder.sunriseTextView.setOnClickListener { view ->
-            AestheticTimeSheetPickerDialog(view.context, holder.chronos?.dayStart ?: 1, 0)
-                .setListener(object : PickerDialog.OnSelectedListener<LinearTimePickerView> {
-                    override fun onSelect(dialog: PickerDialog<LinearTimePickerView>, view: LinearTimePickerView) {
-                        holder.chronos?.let { chronos ->
-                            if (view.hourOfDay < chronos.dayEnd)
-                                listener.onSunriseChanged(holder.sunriseView, view.hourOfDay * HOUR_LENGTH)
-                        }
-                    }
+            val calendar = Calendar.getInstance()
+            val hour = calendar.get(Calendar.HOUR_OF_DAY)
+            val minute = calendar.get(Calendar.MINUTE)
 
-                    override fun onCancel(dialog: PickerDialog<LinearTimePickerView>) {}
-                })
-                .show()
+            val timePickerDialog = TimePickerDialog(view.context, { _, selectedHour, _ ->
+                holder.chronos?.let { chronos ->
+                    if (selectedHour < chronos.dayEnd) {
+                        listener.onSunriseChanged(holder.sunriseView, selectedHour * HOUR_LENGTH)
+                    }
+                }
+            }, hour, minute, true)
+
+            timePickerDialog.show()
         }
 
         holder.sunsetTextView.setOnClickListener { view ->
-            AestheticTimeSheetPickerDialog(view.context, holder.chronos?.dayEnd ?: 23, 0)
-                .setListener(object : PickerDialog.OnSelectedListener<LinearTimePickerView> {
-                    override fun onSelect(dialog: PickerDialog<LinearTimePickerView>, view: LinearTimePickerView) {
-                        holder.chronos?.let { chronos ->
-                            if (view.hourOfDay > chronos.dayStart)
-                                listener.onSunsetChanged(holder.sunriseView, view.hourOfDay * HOUR_LENGTH)
-                        }
-                    }
+            val calendar = Calendar.getInstance()
+            val hour = calendar.get(Calendar.HOUR_OF_DAY)
+            val minute = calendar.get(Calendar.MINUTE)
 
-                    override fun onCancel(dialog: PickerDialog<LinearTimePickerView>) {}
-                }).show()
+            val timePickerDialog = TimePickerDialog(view.context, { _, selectedHour, _ ->
+                holder.chronos?.let { chronos ->
+                    if (selectedHour > chronos.dayStart) {
+                        listener.onSunsetChanged(holder.sunriseView, selectedHour * HOUR_LENGTH)
+                    }
+                }
+            }, hour, minute, true)
+
+            timePickerDialog.show()
         }
 
         Aesthetic.get()

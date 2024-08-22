@@ -86,5 +86,4 @@ dependencies {
 
     // Misc
     implementation("com.afollestad:aesthetic:0.7.2")
-    implementation("me.jfenn:timedatepickers:0.0.6")
 }

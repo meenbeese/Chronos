@@ -1,6 +1,7 @@
 package com.meenbeese.chronos.fragments
 
 import android.app.AlarmManager
+import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.provider.AlarmClock
@@ -22,7 +23,6 @@ import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
 import com.meenbeese.chronos.data.PreferenceData
-import com.meenbeese.chronos.dialogs.AestheticTimeSheetPickerDialog
 import com.meenbeese.chronos.dialogs.TimerDialog
 import com.meenbeese.chronos.interfaces.FragmentInstantiator
 import com.meenbeese.chronos.utils.DimenUtils.getStatusBarHeight
@@ -35,10 +35,6 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
-
-import me.jfenn.timedatepickers.dialogs.PickerDialog
-import me.jfenn.timedatepickers.dialogs.PickerDialog.OnSelectedListener
-import me.jfenn.timedatepickers.views.LinearTimePickerView
 
 import java.util.Calendar
 import java.util.TimeZone
@@ -202,24 +198,21 @@ class HomeFragment : BaseFragment() {
      * a new alarm.
      */
     private fun invokeAlarmScheduler() {
-        AestheticTimeSheetPickerDialog(view.context)
-            .setListener(object : OnSelectedListener<LinearTimePickerView> {
-                override fun onSelect(
-                    dialog: PickerDialog<LinearTimePickerView>,
-                    view: LinearTimePickerView
-                ) {
-                    val manager = view.context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                    val alarm = chronos!!.newAlarm()
-                    alarm.time[Calendar.HOUR_OF_DAY] = view.hourOfDay
-                    alarm.time[Calendar.MINUTE] = view.minute
-                    alarm.setTime(chronos, manager, alarm.time.timeInMillis)
-                    alarm.setEnabled(context, manager, true)
-                    chronos?.onAlarmsChanged()
-                }
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
 
-                override fun onCancel(dialog: PickerDialog<LinearTimePickerView>) {}
-            })
-            .show()
+        val timePickerDialog = TimePickerDialog(view.context, { _, selectedHour, selectedMinute ->
+            val manager = view.context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val alarm = chronos!!.newAlarm()
+            alarm.time[Calendar.HOUR_OF_DAY] = selectedHour
+            alarm.time[Calendar.MINUTE] = selectedMinute
+            alarm.setTime(chronos, manager, alarm.time.timeInMillis)
+            alarm.setEnabled(context, manager, true)
+            chronos?.onAlarmsChanged()
+        }, hour, minute, true)
+
+        timePickerDialog.show()
     }
 
     /**
