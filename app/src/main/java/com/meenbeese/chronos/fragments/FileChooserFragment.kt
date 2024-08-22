@@ -1,4 +1,4 @@
-package com.meenbeese.chronos.activities
+package com.meenbeese.chronos.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -10,25 +10,24 @@ import android.provider.MediaStore
 import android.widget.Toast
 
 import androidx.activity.ComponentActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 
 import com.meenbeese.chronos.data.PreferenceData
 
 
-class FileChooserActivity : ComponentActivity() {
+class FileChooserFragment : Fragment() {
     private var preference: PreferenceData? = null
     private var type: String? = TYPE_IMAGE
+
     @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val data = intent
+        val data = arguments
         data?.let {
-            if (it.hasExtra(EXTRA_PREF) && it.getSerializableExtra(EXTRA_PREF) is PreferenceData)
-                preference = it.getSerializableExtra(
-                    EXTRA_PREF
-                ) as PreferenceData?
-            if (it.hasExtra(EXTRA_TYPE)) type = it.getStringExtra(EXTRA_TYPE)
+            if (it.containsKey(EXTRA_PREF) && it.getSerializable(EXTRA_PREF) is PreferenceData)
+                preference = it.getSerializable(EXTRA_PREF) as PreferenceData?
+            if (it.containsKey(EXTRA_TYPE)) type = it.getString(EXTRA_TYPE)
         }
         val permission: String
         val requestCode: Int
@@ -40,11 +39,10 @@ class FileChooserActivity : ComponentActivity() {
             requestCode = REQUEST_IMAGE_PERMISSION
         }
         if (ContextCompat.checkSelfPermission(
-                this,
+                requireContext(),
                 permission
             ) == PackageManager.PERMISSION_GRANTED
-        ) startIntent() else ActivityCompat.requestPermissions(
-            this,
+        ) startIntent() else requestPermissions(
             arrayOf(permission),
             requestCode
         )
@@ -53,13 +51,13 @@ class FileChooserActivity : ComponentActivity() {
     private fun startIntent() {
         val requestCode = if (TYPE_AUDIO == type) REQUEST_AUDIO else REQUEST_IMAGE
         val intent = Intent()
-        intent.setType(type)
+        intent.type = type
         if (TYPE_AUDIO == type) {
             intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
-            intent.setAction(Intent.ACTION_OPEN_DOCUMENT)
+            intent.action = Intent.ACTION_OPEN_DOCUMENT
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         } else {
-            intent.setAction(Intent.ACTION_GET_CONTENT)
+            intent.action = Intent.ACTION_GET_CONTENT
         }
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         startActivityForResult(intent, requestCode)
@@ -78,24 +76,23 @@ class FileChooserActivity : ComponentActivity() {
                 if (shouldShowRequestPermissionRationale(permissions[0])) {
                     // Permission denied. Show a message asking for permission.
                     Toast.makeText(
-                        this,
+                        requireContext(),
                         "Permission is necessary for this feature.",
                         Toast.LENGTH_SHORT
                     ).show()
-                    ActivityCompat.requestPermissions(
-                        this, arrayOf(
-                            permissions[0]
-                        ), requestCode
+                    requestPermissions(
+                        arrayOf(permissions[0]),
+                        requestCode
                     )
                 } else {
                     // Permission hard denied twice. Show a different message.
                     Toast.makeText(
-                        this,
+                        requireContext(),
                         "Please enable permission in settings.",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                finish()
+                activity?.finish()
             }
         }
     }
@@ -103,22 +100,22 @@ class FileChooserActivity : ComponentActivity() {
     @Deprecated("Deprecated")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK && data != null) {
+        if (requestCode == REQUEST_IMAGE && resultCode == ComponentActivity.RESULT_OK && data != null) {
             var path = data.dataString
             if (TYPE_IMAGE == type) {
                 var cursor: Cursor? = null
                 try {
-                    cursor = contentResolver.query(data.data!!, null, null, null, null)
+                    cursor = requireContext().contentResolver.query(data.data!!, null, null, null, null)
                     var documentId: String
                     if (cursor != null && cursor.moveToFirst()) {
                         documentId = cursor.getString(0)
                         documentId = documentId.substring(documentId.lastIndexOf(":") + 1)
                         cursor.close()
                     } else {
-                        finish()
+                        activity?.finish()
                         return
                     }
-                    cursor = contentResolver.query(
+                    cursor = requireContext().contentResolver.query(
                         MediaStore.Images.Media.getContentUri("external"),
                         null,
                         MediaStore.Images.Media._ID + " = ? ",
@@ -135,7 +132,7 @@ class FileChooserActivity : ComponentActivity() {
                 } catch (e: Exception) {
                     e.printStackTrace()
                     Toast.makeText(
-                        this,
+                        requireContext(),
                         "An error has occurred when choosing media.",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -143,16 +140,16 @@ class FileChooserActivity : ComponentActivity() {
                     if (cursor != null && !cursor.isClosed) cursor.close()
                 }
             }
-            preference?.setValue(this, path)
-        } else if (requestCode == REQUEST_AUDIO && resultCode == RESULT_OK && data != null && TYPE_AUDIO == type) {
+            preference?.setValue(requireContext(), path)
+        } else if (requestCode == REQUEST_AUDIO && resultCode == ComponentActivity.RESULT_OK && data != null && TYPE_AUDIO == type) {
             var name: String? = null
             var cursor: Cursor? = null
             try {
-                contentResolver.takePersistableUriPermission(
+                requireContext().contentResolver.takePersistableUriPermission(
                     data.data!!,
                     Intent.FLAG_GRANT_READ_URI_PERMISSION
                 )
-                cursor = contentResolver.query(data.data!!, null, null, null, null)
+                cursor = requireContext().contentResolver.query(data.data!!, null, null, null, null)
                 var documentId: String
                 if (cursor != null) {
                     cursor.moveToFirst()
@@ -160,10 +157,10 @@ class FileChooserActivity : ComponentActivity() {
                     documentId = documentId.substring(documentId.lastIndexOf(":") + 1)
                     cursor.close()
                 } else {
-                    finish()
+                    activity?.finish()
                     return
                 }
-                cursor = contentResolver.query(
+                cursor = requireContext().contentResolver.query(
                     MediaStore.Audio.Media.getContentUri("external"),
                     null,
                     MediaStore.Audio.Media._ID + " = ? ",
@@ -179,7 +176,7 @@ class FileChooserActivity : ComponentActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(
-                    this,
+                    requireContext(),
                     "An error has occurred when choosing media.",
                     Toast.LENGTH_SHORT
                 ).show()
@@ -187,19 +184,28 @@ class FileChooserActivity : ComponentActivity() {
                 if (cursor != null && !cursor.isClosed) cursor.close()
             }
             if (!name.isNullOrEmpty()) data.putExtra("name", name)
-            setResult(RESULT_OK, data)
+            activity?.setResult(ComponentActivity.RESULT_OK, data)
         }
-        finish()
+        activity?.finish()
     }
 
     companion object {
-        private const val REQUEST_IMAGE = 284
-        private const val REQUEST_AUDIO = 285
-        private const val REQUEST_IMAGE_PERMISSION = 726
-        private const val REQUEST_AUDIO_PERMISSION = 727
-        const val EXTRA_TYPE = "meenbeese.chronos.FileChooserActivity.EXTRA_TYPE"
-        const val EXTRA_PREF = "meenbeese.chronos.FileChooserActivity.EXTRA_PREFERENCE"
+        const val EXTRA_PREF = "extra_pref"
+        const val EXTRA_TYPE = "extra_type"
         const val TYPE_IMAGE = "image/*"
         const val TYPE_AUDIO = "audio/*"
+        const val REQUEST_IMAGE_PERMISSION = 1001
+        const val REQUEST_AUDIO_PERMISSION = 1002
+        const val REQUEST_IMAGE = 1003
+        const val REQUEST_AUDIO = 1004
+
+        fun newInstance(preference: PreferenceData?, type: String?): FileChooserFragment {
+            val fragment = FileChooserFragment()
+            val args = Bundle()
+            args.putSerializable(EXTRA_PREF, preference)
+            args.putString(EXTRA_TYPE, type)
+            fragment.arguments = args
+            return fragment
+        }
     }
 }

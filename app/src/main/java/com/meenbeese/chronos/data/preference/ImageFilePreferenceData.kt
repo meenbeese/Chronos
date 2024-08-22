@@ -1,8 +1,8 @@
 package com.meenbeese.chronos.data.preference
 
-import android.content.Intent
+import androidx.fragment.app.FragmentActivity
 
-import com.meenbeese.chronos.activities.FileChooserActivity
+import com.meenbeese.chronos.fragments.FileChooserFragment
 import com.meenbeese.chronos.data.PreferenceData
 
 
@@ -15,9 +15,11 @@ class ImageFilePreferenceData(private val preference: PreferenceData, name: Int)
     override fun getValueName(holder: ViewHolder): String = ""
 
     override fun onClick(holder: ViewHolder) {
-        holder.context.startActivity(Intent(holder.context, FileChooserActivity::class.java).apply {
-            putExtra(FileChooserActivity.EXTRA_PREF, preference)
-            putExtra(FileChooserActivity.EXTRA_TYPE, "image/*")
-        })
+        val fragment = FileChooserFragment.newInstance(preference, "image/*")
+        val activity = holder.context as FragmentActivity
+        activity.supportFragmentManager.beginTransaction()
+            .replace(android.R.id.content, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

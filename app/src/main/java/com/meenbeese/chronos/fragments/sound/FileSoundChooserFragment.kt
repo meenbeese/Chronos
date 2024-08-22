@@ -5,16 +5,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
+import androidx.fragment.app.FragmentActivity
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.activities.FileChooserActivity
+import com.meenbeese.chronos.fragments.FileChooserFragment
 import com.meenbeese.chronos.adapters.SoundsAdapter
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.fragments.BasePagerFragment
@@ -24,6 +25,7 @@ import com.meenbeese.chronos.interfaces.SoundChooserListener
 class FileSoundChooserFragment : BaseSoundChooserFragment() {
     private lateinit var prefs: SharedPreferences
     private lateinit var sounds: MutableList<SoundData>
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,9 +60,12 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
     }
 
     private fun launchFileChooser() {
-        val intent = Intent(context, FileChooserActivity::class.java)
-        intent.putExtra(FileChooserActivity.EXTRA_TYPE, TYPE_AUDIO)
-        startActivityForResult(intent, REQUEST_AUDIO)
+        val fragment = FileChooserFragment.newInstance(null, TYPE_AUDIO)
+        val activity = context as FragmentActivity
+        activity.supportFragmentManager.beginTransaction()
+            .replace(android.R.id.content, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     @Deprecated("Deprecated in Java")
