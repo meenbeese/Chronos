@@ -1,6 +1,7 @@
 package com.meenbeese.chronos.fragments
 
-import android.Manifest
+import android.Manifest.permission.READ_MEDIA_AUDIO
+import android.Manifest.permission.READ_MEDIA_IMAGES
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -23,44 +24,47 @@ class FileChooserFragment : Fragment() {
     @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val data = arguments
-        data?.let {
-            if (it.containsKey(EXTRA_PREF) && it.getSerializable(EXTRA_PREF) is PreferenceData)
-                preference = it.getSerializable(EXTRA_PREF) as PreferenceData?
-            if (it.containsKey(EXTRA_TYPE)) type = it.getString(EXTRA_TYPE)
+        arguments?.let { data ->
+            preference = data.getSerializable(EXTRA_PREF, PreferenceData::class.java)
+            type = data.getString(EXTRA_TYPE)
         }
-        val permission: String
-        val requestCode: Int
-        if (TYPE_AUDIO == type) {
-            permission = Manifest.permission.READ_MEDIA_AUDIO
-            requestCode = REQUEST_AUDIO_PERMISSION
+
+        val (permission, requestCode) = when (type) {
+            TYPE_AUDIO -> READ_MEDIA_AUDIO to REQUEST_AUDIO_PERMISSION
+            else -> READ_MEDIA_IMAGES to REQUEST_IMAGE_PERMISSION
+        }
+
+        if (ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
+            startIntent()
         } else {
-            permission = Manifest.permission.READ_MEDIA_IMAGES
-            requestCode = REQUEST_IMAGE_PERMISSION
+            requestPermissions(arrayOf(permission), requestCode)
         }
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                permission
-            ) == PackageManager.PERMISSION_GRANTED
-        ) startIntent() else requestPermissions(
-            arrayOf(permission),
-            requestCode
-        )
     }
 
     private fun startIntent() {
         val requestCode = if (TYPE_AUDIO == type) REQUEST_AUDIO else REQUEST_IMAGE
-        val intent = Intent()
-        intent.type = type
-        if (TYPE_AUDIO == type) {
-            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
-            intent.action = Intent.ACTION_OPEN_DOCUMENT
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        } else {
-            intent.action = Intent.ACTION_GET_CONTENT
+        val intent = Intent().apply {
+            type = this@FileChooserFragment.type
+            action = if (TYPE_AUDIO == this@FileChooserFragment.type) {
+                addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                Intent.ACTION_OPEN_DOCUMENT
+            } else {
+                Intent.ACTION_GET_CONTENT
+            }
+            addCategory(Intent.CATEGORY_OPENABLE)
         }
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
         startActivityForResult(intent, requestCode)
+    }
+
+    private fun handlePermissionDenied(permission: String, requestCode: Int) {
+        if (shouldShowRequestPermissionRationale(permission)) {
+            Toast.makeText(requireContext(), "Permission is necessary for this feature.", Toast.LENGTH_SHORT).show()
+            requestPermissions(arrayOf(permission), requestCode)
+        } else {
+            Toast.makeText(requireContext(), "Please enable permission in settings.", Toast.LENGTH_SHORT).show()
+        }
+        activity?.finish()
     }
 
     override fun onRequestPermissionsResult(
@@ -73,26 +77,7 @@ class FileChooserFragment : Fragment() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startIntent()
             } else {
-                if (shouldShowRequestPermissionRationale(permissions[0])) {
-                    // Permission denied. Show a message asking for permission.
-                    Toast.makeText(
-                        requireContext(),
-                        "Permission is necessary for this feature.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    requestPermissions(
-                        arrayOf(permissions[0]),
-                        requestCode
-                    )
-                } else {
-                    // Permission hard denied twice. Show a different message.
-                    Toast.makeText(
-                        requireContext(),
-                        "Please enable permission in settings.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                activity?.finish()
+                handlePermissionDenied(permissions[0], requestCode)
             }
         }
     }
