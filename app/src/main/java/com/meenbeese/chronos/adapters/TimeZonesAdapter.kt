@@ -19,8 +19,9 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 
-class TimeZonesAdapter(private val timeZones: List<String>) :
-    RecyclerView.Adapter<TimeZonesAdapter.ViewHolder>() {
+class TimeZonesAdapter(
+    private val timeZones: List<String>
+) : RecyclerView.Adapter<TimeZonesAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_time_zone, parent, false)

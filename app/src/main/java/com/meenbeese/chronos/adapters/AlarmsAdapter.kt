@@ -55,7 +55,11 @@ import java.util.concurrent.TimeUnit
  * View adapter for the "alarms" list; displays all timers and
  * alarms currently stored in the application.
  */
-class AlarmsAdapter(private val chronos: Chronos, private val recycler: RecyclerView, private val fragmentManager: FragmentManager) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AlarmsAdapter(
+    private val chronos: Chronos,
+    private val recycler: RecyclerView,
+    private val fragmentManager: FragmentManager
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val alarmManager: AlarmManager? = chronos.getSystemService(Context.ALARM_SERVICE) as? AlarmManager?
     private val timers: List<TimerData> = chronos.timers
