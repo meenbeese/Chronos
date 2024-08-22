@@ -25,13 +25,14 @@ import com.google.android.material.tabs.TabLayout
 class SoundChooserDialog : DialogFragment(), SoundChooserListener {
     private var listener: SoundChooserListener? = null
     private var view: View? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, R.style.AppTheme)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         dialog?.window?.attributes?.let { params ->
             params.windowAnimations = R.style.SlideDialogAnimation
         }
