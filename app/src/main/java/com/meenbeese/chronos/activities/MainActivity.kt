@@ -7,6 +7,7 @@ import android.provider.Settings
 import android.view.WindowManager
 
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.fragment.app.FragmentManager
 
 import com.afollestad.aesthetic.AestheticActivity
@@ -30,8 +31,12 @@ class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        window.setFlags(LAYOUT_FLAG, LAYOUT_FLAG)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
         chronos = applicationContext as Chronos
         chronos?.setListener(this)
         if (savedInstanceState == null) {
@@ -187,6 +192,5 @@ class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedList
         const val EXTRA_FRAGMENT = "com.meenbeese.chronos.MainActivity.EXTRA_FRAGMENT"
         const val FRAGMENT_TIMER = 0
         const val FRAGMENT_STOPWATCH = 2
-        const val LAYOUT_FLAG = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
     }
 }
