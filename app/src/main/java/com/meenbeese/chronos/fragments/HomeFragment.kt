@@ -59,6 +59,7 @@ class HomeFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         view = inflater.inflate(R.layout.fragment_home, container, false)
+
         val viewPager = view.findViewById<ViewPager>(R.id.viewPager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
         timePager = view.findViewById(R.id.timePager)
@@ -67,15 +68,16 @@ class HomeFragment : BaseFragment() {
         background = view.findViewById(R.id.background)
         overlay = view.findViewById(R.id.overlay)
         speedDialView = view.findViewById(R.id.speedDial)
+
         behavior = BottomSheetBehavior.from(bottomSheet)
         behavior.isHideable = false
         behavior.addBottomSheetCallback(object : BottomSheetCallback() {
             private var statusBarHeight = -1
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 speedDialView.close()
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED)
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     bottomSheet.setPadding(0, 0, 0, 0)
-                else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     if (statusBarHeight < 0) statusBarHeight = requireContext().getStatusBarHeight()
                     bottomSheet.setPadding(0, statusBarHeight, 0, 0)
                 }
@@ -87,11 +89,66 @@ class HomeFragment : BaseFragment() {
                 bottomSheet.setPadding(0, (slideOffset * statusBarHeight).toInt(), 0, 0)
             }
         })
+
         val pagerAdapter = SimplePagerAdapter(
             childFragmentManager,
             AlarmsFragment.Instantiator(context),
             SettingsFragment.Instantiator(context)
         )
+        viewPager.adapter = pagerAdapter
+        tabLayout.setupWithViewPager(viewPager)
+        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                if (tab.position > 0) {
+                    speedDialView.hide()
+                    shouldCollapseBack = behavior.state != BottomSheetBehavior.STATE_EXPANDED
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                } else {
+                    speedDialView.show()
+                    if (shouldCollapseBack) {
+                        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                        shouldCollapseBack = false
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
+        setSpeedDialView()
+
+        setClockFragments()
+
+        view.viewTreeObserver?.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                view.viewTreeObserver?.removeOnGlobalLayoutListener(this)
+                behavior.peekHeight = view.measuredHeight / 2
+                view.findViewById<View>(R.id.timeContainer)?.layoutParams =
+                    CoordinatorLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        view.measuredHeight / 2
+                    )
+            }
+        })
+
+        colorPrimarySubscription = get()
+            .colorPrimary()
+            .subscribeBy(
+                onNext = { integer: Int ->
+                    speedDialView.updateColors()
+                    bottomSheet.setBackgroundColor(integer)
+                    overlay.setBackgroundColor(integer)
+                },
+                onError = { it.printStackTrace() }
+            ).also { disposables.add(it) }
+
+        handleIntentActions()
+
+        return view
+    }
+
+    private fun setSpeedDialView() {
         speedDialView.addActionItem(
             SpeedDialActionItem
                 .Builder(R.id.alarm_fab, R.drawable.ic_alarm_add)
@@ -116,50 +173,6 @@ class HomeFragment : BaseFragment() {
                 .setLabelClickable(true)
                 .create()
         )
-        viewPager?.adapter = pagerAdapter
-        tabLayout?.setupWithViewPager(viewPager)
-        tabLayout?.addOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                if (tab.position > 0) {
-                    speedDialView.hide()
-                    shouldCollapseBack = behavior.state != BottomSheetBehavior.STATE_EXPANDED
-                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                } else {
-                    setClockFragments()
-                    speedDialView.show()
-                    if (shouldCollapseBack) {
-                        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                        shouldCollapseBack = false
-                    }
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {}
-        })
-        setClockFragments()
-        view.viewTreeObserver?.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                view.viewTreeObserver?.removeOnGlobalLayoutListener(this)
-                behavior.peekHeight = view.measuredHeight / 2
-                view.findViewById<View>(R.id.timeContainer)?.layoutParams =
-                    CoordinatorLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        view.measuredHeight / 2
-                    )
-            }
-        })
-        colorPrimarySubscription = get()
-            .colorPrimary()
-            .subscribeBy(
-                onNext = { integer: Int ->
-                    speedDialView.updateColors()
-                    bottomSheet.setBackgroundColor(integer)
-                    overlay.setBackgroundColor(integer)
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-
         speedDialView.setOnActionSelectedListener { actionItem ->
             speedDialView.close()
             when (actionItem.id) {
@@ -181,8 +194,13 @@ class HomeFragment : BaseFragment() {
             }
             false
         }
+    }
 
-        // Check actions passed from MainActivity; open timer/alarm schedulers if necessary
+    /**
+     * Check actions passed from MainActivity; open timer/alarm
+     * schedulers if necessary.
+     */
+    private fun handleIntentActions() {
         val args = arguments
         val action = args?.getString(INTENT_ACTION, null)
         if (AlarmClock.ACTION_SET_ALARM == action) {
@@ -190,7 +208,6 @@ class HomeFragment : BaseFragment() {
         } else if (AlarmClock.ACTION_SET_TIMER == action) {
             view.post { invokeTimerScheduler() }
         }
-        return view
     }
 
     /**
