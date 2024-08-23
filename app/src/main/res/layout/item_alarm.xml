@@ -123,87 +123,73 @@
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp">
 
-                <FrameLayout
+                <LinearLayout
+                    android:id="@+id/ringtone"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    android:minWidth="72dp"
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/ringtone"
+                    <ImageView
+                        android:id="@+id/ringtoneImage"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginBottom="4dp"
+                        android:scaleType="centerInside"
+                        app:srcCompat="@drawable/ic_ringtone_disabled"
+                        tools:alpha="0.333"
+                        tools:tint="@color/textColorPrimaryNight" />
+
+                    <TextView
+                        android:id="@+id/ringtoneText"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:gravity="center"
-                        android:minWidth="72dp"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:text="@string/title_none"
+                        android:textAlignment="center"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="14sp" />
 
-                        <ImageView
-                            android:id="@+id/ringtoneImage"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginBottom="4dp"
-                            android:scaleType="centerInside"
-                            app:srcCompat="@drawable/ic_ringtone_disabled"
-                            tools:alpha="0.333"
-                            tools:tint="@color/textColorPrimaryNight" />
+                </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/ringtoneText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:lines="1"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:text="@string/title_none"
-                            android:textAlignment="center"
-                            android:textColor="?android:textColorPrimary"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
-
-                </FrameLayout>
-
-                <FrameLayout
+                <LinearLayout
+                    android:id="@+id/vibrate"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    android:minWidth="72dp"
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/vibrate"
+                    <ImageView
+                        android:id="@+id/vibrateImage"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginBottom="4dp"
+                        android:scaleType="centerInside"
+                        app:srcCompat="@drawable/ic_vibrate_to_none"
+                        tools:tint="@color/textColorPrimaryNight" />
+
+                    <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:gravity="center"
-                        android:minWidth="72dp"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:text="@string/title_vibrate"
+                        android:textAlignment="center"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="14sp" />
 
-                        <ImageView
-                            android:id="@+id/vibrateImage"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginBottom="4dp"
-                            android:scaleType="centerInside"
-                            app:srcCompat="@drawable/ic_vibrate_to_none"
-                            tools:tint="@color/textColorPrimaryNight" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:lines="1"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:text="@string/title_vibrate"
-                            android:textAlignment="center"
-                            android:textColor="?android:textColorPrimary"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
-
-                </FrameLayout>
+                </LinearLayout>
 
             </LinearLayout>
 
