@@ -1,5 +1,6 @@
 package com.meenbeese.chronos.activities
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -12,6 +13,8 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.HapticFeedbackConstants
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
@@ -171,15 +174,17 @@ class AlarmActivity : AestheticActivity(), SlideActionListener {
         )
     }
 
+    @SuppressLint("InlinedApi")
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        window.addFlags(
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                    or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                    or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                    or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-                    or WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        window.insetsController?.let { controller ->
+            controller.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+            controller.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+
+        window.setDecorFitsSystemWindows(false)
     }
 
     override fun onDestroy() {
