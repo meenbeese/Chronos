@@ -1,7 +1,6 @@
 package com.meenbeese.chronos.activities
 
 import android.app.AlarmManager
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.media.AudioManager
@@ -208,53 +207,50 @@ class AlarmActivity : AestheticActivity(), SlideActionListener {
 
     override fun onSlideLeft() {
         val minutes = intArrayOf(2, 5, 10, 20, 30, 60)
-        val names = arrayOfNulls<CharSequence>(minutes.size + 1)
-        for (i in minutes.indices) {
-            names[i] = formatUnit(this@AlarmActivity, minutes[i])
+        val names = Array<CharSequence?>(minutes.size + 1) { i ->
+            if (i < minutes.size) formatUnit(this@AlarmActivity, minutes[i]) else getString(R.string.title_snooze_custom)
         }
-        names[minutes.size] = getString(R.string.title_snooze_custom)
+
         stopAnnoyance()
-        MaterialAlertDialogBuilder(
-            this@AlarmActivity,
-            if (isDark) com.google.android.material.R.style.Theme_MaterialComponents_Dialog_Alert else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog_Alert
-        )
-            .setItems(names) { _: DialogInterface?, which: Int ->
+
+        val style = if (isDark) com.google.android.material.R.style.Theme_MaterialComponents_Dialog_Alert else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog_Alert
+        MaterialAlertDialogBuilder(this@AlarmActivity, style)
+            .setItems(names) { _, which ->
                 if (which < minutes.size) {
-                    val timer: TimerData = chronos!!.newTimer()
-                    timer.setDuration(
-                        TimeUnit.MINUTES.toMillis(
-                            minutes[which].toLong()
-                        ), chronos
-                    )
-                    timer.setVibrate(this@AlarmActivity, isVibrate)
-                    timer.setSound(this@AlarmActivity, sound)
-                    timer[chronos] = ((this@AlarmActivity.getSystemService(ALARM_SERVICE) as AlarmManager?)!!)
+                    chronos!!.newTimer().apply {
+                        setDuration(TimeUnit.MINUTES.toMillis(minutes[which].toLong()), chronos)
+                        setVibrate(this@AlarmActivity, isVibrate)
+                        setSound(this@AlarmActivity, sound)
+                        this[chronos] = getSystemService(ALARM_SERVICE) as AlarmManager
+                    }
                     chronos?.onTimerStarted()
                     finish()
                 } else {
-                    val timerDialog = TimeChooserDialog(this@AlarmActivity)
-                    timerDialog.setListener(object : OnTimeChosenListener {
-                        override fun onTimeChosen(hours: Int, minutes: Int, seconds: Int) {
-                            val timer: TimerData? = chronos?.newTimer()
-                            timer?.setVibrate(this@AlarmActivity, isVibrate)
-                            timer?.setSound(this@AlarmActivity, sound)
-                            timer?.setDuration(
-                                (TimeUnit.HOURS.toMillis(hours.toLong())
-                                        + TimeUnit.MINUTES.toMillis(minutes.toLong())
-                                        + TimeUnit.SECONDS.toMillis(seconds.toLong())),
-                                chronos
-                            )
-                            timer!![chronos] = ((getSystemService(ALARM_SERVICE) as AlarmManager?)!!)
-                            chronos?.onTimerStarted()
-                            finish()
-                        }
-                    })
-                    timerDialog.show()
+                    TimeChooserDialog(this@AlarmActivity).apply {
+                        setListener(object : OnTimeChosenListener {
+                            override fun onTimeChosen(hours: Int, minutes: Int, seconds: Int) {
+                                chronos?.newTimer()?.apply {
+                                    setVibrate(this@AlarmActivity, isVibrate)
+                                    setSound(this@AlarmActivity, sound)
+                                    setDuration(
+                                        TimeUnit.HOURS.toMillis(hours.toLong()) +
+                                                TimeUnit.MINUTES.toMillis(minutes.toLong()) +
+                                                TimeUnit.SECONDS.toMillis(seconds.toLong()),
+                                        chronos
+                                    )
+                                    this[chronos] = getSystemService(ALARM_SERVICE) as AlarmManager
+                                }
+                                chronos?.onTimerStarted()
+                                finish()
+                            }
+                        })
+                        show()
+                    }
                 }
             }
-            .setNegativeButton(android.R.string.cancel
-            ) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
+            .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
             .show()
+
         overlay?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
     }
 
