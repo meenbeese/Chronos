@@ -3,6 +3,7 @@ package com.meenbeese.chronos.fragments
 import android.Manifest.permission.READ_MEDIA_AUDIO
 import android.Manifest.permission.READ_MEDIA_IMAGES
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
@@ -10,7 +11,6 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
 
-import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
@@ -85,7 +85,7 @@ class FileChooserFragment : Fragment() {
     @Deprecated("Deprecated")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE && resultCode == ComponentActivity.RESULT_OK && data != null) {
+        if (requestCode == REQUEST_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             var path = data.dataString
             if (TYPE_IMAGE == type) {
                 var cursor: Cursor? = null
@@ -126,7 +126,7 @@ class FileChooserFragment : Fragment() {
                 }
             }
             preference?.setValue(requireContext(), path)
-        } else if (requestCode == REQUEST_AUDIO && resultCode == ComponentActivity.RESULT_OK && data != null && TYPE_AUDIO == type) {
+        } else if (requestCode == REQUEST_AUDIO && resultCode == Activity.RESULT_OK && data != null && TYPE_AUDIO == type) {
             var name: String? = null
             var cursor: Cursor? = null
             try {
@@ -169,7 +169,7 @@ class FileChooserFragment : Fragment() {
                 if (cursor != null && !cursor.isClosed) cursor.close()
             }
             if (!name.isNullOrEmpty()) data.putExtra("name", name)
-            activity?.setResult(ComponentActivity.RESULT_OK, data)
+            activity?.setResult(Activity.RESULT_OK, data)
         }
         parentFragmentManager.popBackStack()
     }
