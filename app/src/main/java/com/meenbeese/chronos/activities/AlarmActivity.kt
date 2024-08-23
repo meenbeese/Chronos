@@ -19,11 +19,10 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 
+import androidx.activity.ComponentActivity
 import androidx.media3.common.util.UnstableApi
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 
-import com.afollestad.aesthetic.Aesthetic.Companion.get
-import com.afollestad.aesthetic.AestheticActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
@@ -43,17 +42,13 @@ import com.meenbeese.chronos.utils.FormatUtils.getShortFormat
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImage
 import com.meenbeese.chronos.views.SlideActionView
 
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.subscribeBy
-
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
 import kotlin.math.min
 
 
-class AlarmActivity : AestheticActivity(), SlideActionListener {
+class AlarmActivity : ComponentActivity(), SlideActionListener {
     private var overlay: View? = null
     private var time: TextView? = null
     private var chronos: Chronos? = null
@@ -71,8 +66,6 @@ class AlarmActivity : AestheticActivity(), SlideActionListener {
     private var volumeRange = 0
     private var handler: Handler? = null
     private var runnable: Runnable? = null
-    private var textColorPrimaryInverseSubscription: Disposable? = null
-    private var isDarkSubscription: Disposable? = null
     private var isDark = false
 
     @UnstableApi
@@ -81,29 +74,15 @@ class AlarmActivity : AestheticActivity(), SlideActionListener {
         setContentView(R.layout.activity_alarm)
         chronos = applicationContext as Chronos
         overlay = findViewById(R.id.overlay)
-        val date = findViewById<TextView>(R.id.date)
+        isDark = chronos!!.isDarkTheme()
         time = findViewById(R.id.time)
+
+        val date = findViewById<TextView>(R.id.date)
         val actionView = findViewById<SlideActionView>(R.id.slideView)
-        val disposables = CompositeDisposable()
 
         // Lock orientation
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
-        textColorPrimaryInverseSubscription = get()
-            .textColorPrimaryInverse()
-            .subscribeBy(
-                onNext = { integer: Int? ->
-                    overlay?.setBackgroundColor(integer!!)
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-        isDarkSubscription = get()
-            .isDark
-            .subscribeBy(
-                onNext = { aBoolean: Boolean ->
-                    isDark = aBoolean
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
+
         actionView.setLeftIcon(VectorDrawableCompat.create(resources, R.drawable.ic_snooze, theme)!!)
         actionView.setRightIcon(VectorDrawableCompat.create(resources, R.drawable.ic_close, theme)!!)
         actionView.setListener(this)
@@ -189,8 +168,6 @@ class AlarmActivity : AestheticActivity(), SlideActionListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        textColorPrimaryInverseSubscription?.dispose()
-        isDarkSubscription?.dispose()
         stopAnnoyance()
     }
 
