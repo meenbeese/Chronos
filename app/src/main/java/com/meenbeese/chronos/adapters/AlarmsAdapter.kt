@@ -298,8 +298,9 @@ class AlarmsAdapter(
         holder.time.setOnClickListener { view ->
             val hour = alarm.time.get(Calendar.HOUR_OF_DAY)
             val minute = alarm.time.get(Calendar.MINUTE)
+            val style = if (chronos.isDarkTheme()) 0 else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog
 
-            val timePickerDialog = TimePickerDialog(view.context, { _, selectedHour, selectedMinute ->
+            val timePickerDialog = TimePickerDialog(view.context, style, { _, selectedHour, selectedMinute ->
                 alarm.time.set(Calendar.HOUR_OF_DAY, selectedHour)
                 alarm.time.set(Calendar.MINUTE, selectedMinute)
                 alarm.setTime(chronos, alarmManager, alarm.time.timeInMillis)

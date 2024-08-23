@@ -201,8 +201,9 @@ class HomeFragment : BaseFragment() {
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
+        val style = if (chronos!!.isDarkTheme()) 0 else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog
 
-        val timePickerDialog = TimePickerDialog(view.context, { _, selectedHour, selectedMinute ->
+        val timePickerDialog = TimePickerDialog(view.context, style, { _, selectedHour, selectedMinute ->
             val manager = view.context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val alarm = chronos!!.newAlarm()
             alarm.time[Calendar.HOUR_OF_DAY] = selectedHour

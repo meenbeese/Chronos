@@ -63,7 +63,8 @@ class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedList
 
         // Background permissions info
         if (!PreferenceData.INFO_BACKGROUND_PERMISSIONS.getValue(this, false)) {
-            val alert = MaterialAlertDialogBuilder(this, if(chronos!!.isDarkTheme()) com.google.android.material.R.style.Theme_MaterialComponents_Dialog_Alert else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog_Alert)
+            val style = if (chronos!!.isDarkTheme()) com.google.android.material.R.style.Theme_MaterialComponents_Dialog_Alert else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog_Alert
+            val alert = MaterialAlertDialogBuilder(this, style)
             alert.setTitle(getString(R.string.info_background_permissions_title))
             alert.setMessage(getString(R.string.info_background_permissions_body))
             alert.setPositiveButton(applicationContext.getString(android.R.string.ok)){_, _ ->  PreferenceData.INFO_BACKGROUND_PERMISSIONS.setValue(this@MainActivity, true)

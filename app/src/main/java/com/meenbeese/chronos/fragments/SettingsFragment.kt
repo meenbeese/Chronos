@@ -46,7 +46,7 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
         recyclerView.layoutManager = GridLayoutManager(context, 1)
 
         val dataList = mutableListOf(
-            ThemePreferenceData(),
+            ThemePreferenceData(context),
             ImageFilePreferenceData(
                 PreferenceData.BACKGROUND_IMAGE,
                 R.string.title_background_image

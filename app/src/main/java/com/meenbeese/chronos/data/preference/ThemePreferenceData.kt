@@ -2,6 +2,7 @@ package com.meenbeese.chronos.data.preference
 
 import android.annotation.SuppressLint
 import android.app.TimePickerDialog
+import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
@@ -30,7 +31,9 @@ const val HOUR_LENGTH = 3600000L
  * Allow the user to choose the theme of the
  * application.
  */
-class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>() {
+class ThemePreferenceData(context: Context?) : BasePreferenceData<ThemePreferenceData.ViewHolder>() {
+    var chronos: Chronos = context?.applicationContext as Chronos
+
     override fun getViewHolder(inflater: LayoutInflater, parent: ViewGroup): BasePreferenceData.ViewHolder {
         return ViewHolder(inflater.inflate(R.layout.item_preference_theme, parent, false))
     }
@@ -100,8 +103,9 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
             val calendar = Calendar.getInstance()
             val hour = calendar.get(Calendar.HOUR_OF_DAY)
             val minute = calendar.get(Calendar.MINUTE)
+            val style = if (chronos.isDarkTheme()) 0 else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog
 
-            val timePickerDialog = TimePickerDialog(view.context, { _, selectedHour, _ ->
+            val timePickerDialog = TimePickerDialog(view.context, style, { _, selectedHour, _ ->
                 holder.chronos?.let { chronos ->
                     if (selectedHour < chronos.dayEnd) {
                         listener.onSunriseChanged(holder.sunriseView, selectedHour * HOUR_LENGTH)
@@ -116,8 +120,9 @@ class ThemePreferenceData : BasePreferenceData<ThemePreferenceData.ViewHolder>()
             val calendar = Calendar.getInstance()
             val hour = calendar.get(Calendar.HOUR_OF_DAY)
             val minute = calendar.get(Calendar.MINUTE)
+            val style = if (chronos.isDarkTheme()) 0 else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog
 
-            val timePickerDialog = TimePickerDialog(view.context, { _, selectedHour, _ ->
+            val timePickerDialog = TimePickerDialog(view.context, style, { _, selectedHour, _ ->
                 holder.chronos?.let { chronos ->
                     if (selectedHour > chronos.dayStart) {
                         listener.onSunsetChanged(holder.sunriseView, selectedHour * HOUR_LENGTH)
