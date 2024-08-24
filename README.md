@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./fastlane/metadata/android/en-US/images/icon.png" width="15%" alt="Chronos Logo">
+  <img src="./fastlane/metadata/android/en-US/images/icon.png" width="20%" alt="Chronos Logo">
   <h1>Chronos</h1>
   <p>A simple, quick, and intuitive alarm clock with many useful features.</p>
   <img src="https://forthebadge.com/images/badges/built-for-android.svg" alt="Built for Android">
@@ -73,6 +73,8 @@ If you can't contribute directly, consider these options:
 ## ✏️ Acknowledgements
 
 Thanks to Chronos' contributors, the developers of our dependencies, and our users. Please support them with tips or thank-you notes if you like their work :)
+
+<a target="_blank" href="https://icons8.com/icon/2YPST59G2xJZ/clock">Clock</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 
 ## 🏗️ Building From Source
 
