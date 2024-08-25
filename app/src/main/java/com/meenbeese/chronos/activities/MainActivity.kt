@@ -18,7 +18,7 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.fragments.BaseFragment
 import com.meenbeese.chronos.fragments.HomeFragment
-import com.meenbeese.chronos.fragments.SplashFragment
+//import com.meenbeese.chronos.fragments.SplashFragment
 import com.meenbeese.chronos.fragments.StopwatchFragment
 import com.meenbeese.chronos.fragments.TimerFragment
 import com.meenbeese.chronos.receivers.TimerReceiver
@@ -137,7 +137,7 @@ class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedList
             }
 
             else -> {
-                if (Intent.ACTION_MAIN == intent.action || intent.action == null) return SplashFragment()
+//                if (Intent.ACTION_MAIN == intent.action || intent.action == null) return SplashFragment()
                 val args = Bundle()
                 args.putString(HomeFragment.INTENT_ACTION, intent.action)
                 val newFragment: BaseFragment = HomeFragment()
