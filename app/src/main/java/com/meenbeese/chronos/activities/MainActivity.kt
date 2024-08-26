@@ -8,6 +8,7 @@ import android.view.WindowManager
 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentManager
 
 import com.afollestad.aesthetic.AestheticActivity
@@ -18,7 +19,6 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.fragments.BaseFragment
 import com.meenbeese.chronos.fragments.HomeFragment
-//import com.meenbeese.chronos.fragments.SplashFragment
 import com.meenbeese.chronos.fragments.StopwatchFragment
 import com.meenbeese.chronos.fragments.TimerFragment
 import com.meenbeese.chronos.receivers.TimerReceiver
@@ -31,6 +31,7 @@ class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         window.setFlags(
