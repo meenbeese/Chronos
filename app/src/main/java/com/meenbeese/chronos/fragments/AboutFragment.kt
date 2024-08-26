@@ -12,6 +12,9 @@ import android.widget.Toast
 
 import androidx.core.content.ContextCompat
 
+import coil.load
+import coil.transform.CircleCropTransformation
+
 import com.meenbeese.chronos.BuildConfig
 import com.meenbeese.chronos.R
 
@@ -39,7 +42,9 @@ class AboutFragment : BaseFragment() {
         val view = inflater.inflate(R.layout.fragment_about, container, false)
 
         appIcon = view.findViewById(R.id.app_icon)
-        appIcon?.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.mipmap.ic_launcher))
+        appIcon?.load(ContextCompat.getDrawable(requireContext(), R.mipmap.ic_launcher_round)) {
+            transformations(CircleCropTransformation())
+        }
 
         appName = view.findViewById(R.id.app_name)
         appName?.text = getString(R.string.app_name)
