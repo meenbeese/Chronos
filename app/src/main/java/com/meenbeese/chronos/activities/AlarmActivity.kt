@@ -1,9 +1,7 @@
 package com.meenbeese.chronos.activities
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
@@ -13,10 +11,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.HapticFeedbackConstants
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowInsetsController
 import android.view.WindowManager
-import android.widget.ImageView
 import android.widget.TextView
 
 import androidx.activity.ComponentActivity
@@ -72,98 +67,92 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm)
+
         chronos = applicationContext as Chronos
         overlay = findViewById(R.id.overlay)
         isDark = chronos!!.isDarkTheme()
         time = findViewById(R.id.time)
-
         val date = findViewById<TextView>(R.id.date)
         val actionView = findViewById<SlideActionView>(R.id.slideView)
-
-        // Lock orientation
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
 
         actionView.setLeftIcon(VectorDrawableCompat.create(resources, R.drawable.ic_snooze, theme)!!)
         actionView.setRightIcon(VectorDrawableCompat.create(resources, R.drawable.ic_close, theme)!!)
         actionView.setListener(this)
+
         isSlowWake = PreferenceData.SLOW_WAKE_UP.getValue(this)
         slowWakeMillis = PreferenceData.SLOW_WAKE_UP_TIME.getValue(this)
-        val isAlarm = intent.hasExtra(EXTRA_ALARM)
-        if (isAlarm) {
-            alarm = intent.getParcelableExtra(EXTRA_ALARM)
-            isVibrate = alarm?.isVibrate == true
-            if (alarm?.hasSound() == true) sound = alarm?.getSound()
-        } else if (intent.hasExtra(EXTRA_TIMER)) {
-            val timer = intent.getParcelableExtra<TimerData>(EXTRA_TIMER)
-            isVibrate = timer?.isVibrate == true
-            if (timer?.hasSound() == true) sound = timer.sound
-        } else finish()
+
+        when {
+            intent.hasExtra(EXTRA_ALARM) -> {
+                alarm = intent.getParcelableExtra(EXTRA_ALARM)
+                isVibrate = alarm?.isVibrate == true
+                sound = alarm?.getSound()
+            }
+            intent.hasExtra(EXTRA_TIMER) -> {
+                val timer = intent.getParcelableExtra<TimerData>(EXTRA_TIMER)
+                isVibrate = timer?.isVibrate == true
+                sound = timer?.sound
+            }
+            else -> finish()
+        }
+
         date.text = format(Date(), FormatUtils.FORMAT_DATE + ", " + getShortFormat(this))
-        if (sound != null && !sound!!.isSetVolumeSupported) {
-            // Use the backup method if it is not supported
-            audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
-            originalVolume = audioManager!!.getStreamVolume(AudioManager.STREAM_ALARM)
-            if (isSlowWake) {
-                minVolume = 0
-                volumeRange = originalVolume - minVolume
-                currentVolume = minVolume
-                audioManager?.setStreamVolume(AudioManager.STREAM_ALARM, minVolume, 0)
+
+        sound?.let {
+            if (!it.isSetVolumeSupported) {
+                audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+                originalVolume = audioManager!!.getStreamVolume(AudioManager.STREAM_ALARM)
+                if (isSlowWake) {
+                    minVolume = 0
+                    volumeRange = originalVolume - minVolume
+                    currentVolume = minVolume
+                    audioManager?.setStreamVolume(AudioManager.STREAM_ALARM, minVolume, 0)
+                }
             }
         }
+
         vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
         triggerMillis = System.currentTimeMillis()
         handler = Handler(Looper.getMainLooper())
         runnable = object : Runnable {
             override fun run() {
                 val elapsedMillis = System.currentTimeMillis() - triggerMillis
-                val text = formatMillis(elapsedMillis)
-                time?.text = "-${text.dropLast(3)}"
+                time?.text = "-${formatMillis(elapsedMillis).dropLast(3)}"
+
                 if (isVibrate) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) vibrator!!.vibrate(
-                        VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)
-                    ) else vibrator?.vibrate(500)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        vibrator!!.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
+                    } else {
+                        vibrator?.vibrate(500)
+                    }
                 }
-                if (sound != null && !sound!!.isPlaying(chronos!!)) sound!!.play(chronos!!)
-                if (alarm != null && isSlowWake) {
-                    val slowWakeProgress = elapsedMillis.toFloat() / slowWakeMillis
-                    window.addFlags(WindowManager.LayoutParams.FLAGS_CHANGED)
-                    if (sound != null && sound!!.isSetVolumeSupported) {
-                        val newVolume = min(1f, slowWakeProgress)
-                        sound?.setVolume(chronos!!, newVolume)
-                    } else if (currentVolume < originalVolume) {
-                        // Backup volume setting behavior
-                        val newVolume = minVolume + min(
-                            originalVolume.toFloat(),
-                            slowWakeProgress * volumeRange
-                        ).toInt()
-                        if (newVolume != currentVolume) {
-                            audioManager?.setStreamVolume(AudioManager.STREAM_ALARM, newVolume, 0)
-                            currentVolume = newVolume
+
+                sound?.let {
+                    if (!it.isPlaying(chronos!!)) it.play(chronos!!)
+                    if (alarm != null && isSlowWake) {
+                        val slowWakeProgress = elapsedMillis.toFloat() / slowWakeMillis
+                        window.addFlags(WindowManager.LayoutParams.FLAGS_CHANGED)
+                        if (it.isSetVolumeSupported) {
+                            it.setVolume(chronos!!, min(1f, slowWakeProgress))
+                        } else if (currentVolume < originalVolume) {
+                            val newVolume = minVolume + min(originalVolume.toFloat(), slowWakeProgress * volumeRange).toInt()
+                            if (newVolume != currentVolume) {
+                                audioManager?.setStreamVolume(AudioManager.STREAM_ALARM, newVolume, 0)
+                                currentVolume = newVolume
+                            }
                         }
                     }
                 }
+
                 handler?.postDelayed(this, 1000)
             }
         }
         handler?.post(runnable!!)
         sound?.play(chronos!!)
         refreshSleepTime(chronos!!)
-        if (PreferenceData.RINGING_BACKGROUND_IMAGE.getValue(this)) getBackgroundImage(
-            (findViewById<View>(R.id.background) as ImageView)
-        )
-    }
-
-    @SuppressLint("InlinedApi")
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
-        window.insetsController?.let { controller ->
-            controller.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-            controller.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        if (PreferenceData.RINGING_BACKGROUND_IMAGE.getValue(this)) {
+            getBackgroundImage(findViewById(R.id.background)!!)
         }
-
-        window.setDecorFitsSystemWindows(false)
     }
 
     override fun onDestroy() {
