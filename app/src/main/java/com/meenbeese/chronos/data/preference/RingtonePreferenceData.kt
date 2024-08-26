@@ -13,7 +13,10 @@ import com.meenbeese.chronos.interfaces.SoundChooserListener
  * that can be recreated into a SoundData
  * object).
  */
-class RingtonePreferenceData(private val preference: PreferenceData, name: Int) : CustomPreferenceData(name) {
+class RingtonePreferenceData(
+    private val preference: PreferenceData,
+    name: Int
+) : CustomPreferenceData(name) {
     override fun getValueName(holder: ViewHolder): String {
         return preference.getValue(holder.context, "")?.let{ sound ->
             if (sound.isNotEmpty())

@@ -13,7 +13,9 @@ import com.meenbeese.chronos.R
  * and text value of a preference to a basic
  * item view.
  */
-abstract class CustomPreferenceData(private val name: Int) : BasePreferenceData<CustomPreferenceData.ViewHolder>() {
+abstract class CustomPreferenceData(
+    private val name: Int
+) : BasePreferenceData<CustomPreferenceData.ViewHolder>() {
     /**
      * Get the name of the current value of the preference.
      */

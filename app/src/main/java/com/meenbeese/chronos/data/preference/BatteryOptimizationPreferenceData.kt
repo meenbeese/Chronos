@@ -17,7 +17,8 @@ import com.meenbeese.chronos.R
  * A preference item allowing the user to select to
  * ignore battery optimizations to improve stability.
  */
-class BatteryOptimizationPreferenceData : CustomPreferenceData(R.string.title_ignore_battery_optimizations) {
+class BatteryOptimizationPreferenceData
+    : CustomPreferenceData(R.string.title_ignore_battery_optimizations) {
     override fun getValueName(holder: ViewHolder): String? = null
 
     override fun onClick(holder: ViewHolder) {

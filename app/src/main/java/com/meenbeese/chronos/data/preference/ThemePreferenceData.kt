@@ -31,7 +31,9 @@ const val HOUR_LENGTH = 3600000L
  * Allow the user to choose the theme of the
  * application.
  */
-class ThemePreferenceData(context: Context?) : BasePreferenceData<ThemePreferenceData.ViewHolder>() {
+class ThemePreferenceData(
+    context: Context?
+) : BasePreferenceData<ThemePreferenceData.ViewHolder>() {
     var chronos: Chronos = context?.applicationContext as Chronos
 
     override fun getViewHolder(inflater: LayoutInflater, parent: ViewGroup): BasePreferenceData.ViewHolder {

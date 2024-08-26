@@ -10,7 +10,10 @@ import java.util.concurrent.TimeUnit
 /**
  * A preference item that holds / displays a time value.
  */
-class TimePreferenceData(private val preference: PreferenceData, name: Int) : CustomPreferenceData(name) {
+class TimePreferenceData(
+    private val preference: PreferenceData,
+    name: Int
+) : CustomPreferenceData(name) {
     override fun getValueName(holder: ViewHolder): String {
         return FormatUtils.formatMillis(preference.getValue(holder.context)).run {
             substring(0, length - 3)

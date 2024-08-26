@@ -13,7 +13,10 @@ import java.util.TimeZone
  * from multiple time zones (preference is a boolean,
  * should have a parameter for the zone id).
  */
-class TimeZonesPreferenceData(private val preference: PreferenceData, title: Int) : CustomPreferenceData(title) {
+class TimeZonesPreferenceData(
+    private val preference: PreferenceData,
+    title: Int
+) : CustomPreferenceData(title) {
     override fun getValueName(holder: ViewHolder): String {
         var i = 0
         for (id in TimeZone.getAvailableIDs()) {

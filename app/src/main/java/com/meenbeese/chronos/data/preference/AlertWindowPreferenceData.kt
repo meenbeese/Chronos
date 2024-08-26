@@ -27,7 +27,8 @@ import com.meenbeese.chronos.R
  *
  * @see https://developer.android.com/guide/components/activities/background-starts
  */
-class AlertWindowPreferenceData : BasePreferenceData<AlertWindowPreferenceData.ViewHolder>() {
+class AlertWindowPreferenceData
+    : BasePreferenceData<AlertWindowPreferenceData.ViewHolder>() {
     override fun getViewHolder(inflater: LayoutInflater, parent: ViewGroup): BasePreferenceData.ViewHolder {
         return ViewHolder(inflater.inflate(R.layout.item_preference_boolean, parent, false))
     }
