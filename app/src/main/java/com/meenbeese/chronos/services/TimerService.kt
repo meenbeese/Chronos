@@ -7,7 +7,6 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
-import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -54,7 +53,7 @@ class TimerService : Service() {
 
     private val notification: Notification?
         get() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) notificationManager?.createNotificationChannel(
+            notificationManager?.createNotificationChannel(
                 NotificationChannel(
                     Chronos.NOTIFICATION_CHANNEL_TIMERS,
                     "Timers",

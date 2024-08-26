@@ -11,7 +11,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Binder
-import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -117,10 +116,6 @@ class StopwatchService : Service() {
         handler?.post(runnable!!)
         laps?.clear()
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            stopForeground(STOP_FOREGROUND_REMOVE)
-        }
-
         listener?.onReset()
     }
 
@@ -170,15 +165,13 @@ class StopwatchService : Service() {
      * @return          A notification to use for this stopwatch.
      */
     private fun getNotification(time: String): Notification {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationManager!!.createNotificationChannel(
-                NotificationChannel(
-                    Chronos.NOTIFICATION_CHANNEL_STOPWATCH,
-                    getString(R.string.title_stopwatch),
-                    NotificationManager.IMPORTANCE_DEFAULT
-                )
+        notificationManager!!.createNotificationChannel(
+            NotificationChannel(
+                Chronos.NOTIFICATION_CHANNEL_STOPWATCH,
+                getString(R.string.title_stopwatch),
+                NotificationManager.IMPORTANCE_DEFAULT
             )
-        }
+        )
 
         val actionIcon = if (isRunning) R.drawable.ic_pause_notification else R.drawable.ic_play_notification
         val actionText = if (isRunning) "Pause" else "Play"

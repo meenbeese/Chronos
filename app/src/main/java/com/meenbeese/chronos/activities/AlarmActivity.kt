@@ -3,7 +3,6 @@ package com.meenbeese.chronos.activities
 import android.app.AlarmManager
 import android.content.Intent
 import android.media.AudioManager
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -120,11 +119,7 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
                 time?.text = "-${formatMillis(elapsedMillis).dropLast(3)}"
 
                 if (isVibrate) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        vibrator!!.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
-                    } else {
-                        vibrator?.vibrate(500)
-                    }
+                    vibrator!!.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
                 }
 
                 sound?.let {

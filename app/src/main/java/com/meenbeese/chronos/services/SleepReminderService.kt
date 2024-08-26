@@ -61,7 +61,7 @@ class SleepReminderService : Service() {
         if (powerManager!!.isInteractive) {
             val nextAlarm = getSleepyAlarm(chronos)
             if (nextAlarm != null) {
-                val builder: NotificationCompat.Builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val builder: NotificationCompat.Builder = run {
                     val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                     manager.createNotificationChannel(
                         NotificationChannel(
@@ -71,7 +71,7 @@ class SleepReminderService : Service() {
                         )
                     )
                     NotificationCompat.Builder(this, "sleepReminder")
-                } else NotificationCompat.Builder(this)
+                }
                 startForeground(
                     540, builder.setContentTitle(getString(R.string.title_sleep_reminder))
                         .setContentText(
@@ -93,7 +93,7 @@ class SleepReminderService : Service() {
             }
         }
         stopForeground(STOP_FOREGROUND_REMOVE)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) stopSelf()
+        stopSelf()
     }
 
     override fun onBind(intent: Intent): IBinder? {
