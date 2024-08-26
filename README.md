@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./fastlane/metadata/android/en-US/images/icon.png" width="20%" alt="Chronos Logo">
+  <img src="./fastlane/metadata/android/en-US/images/icon.png" width="128px" alt="Chronos Logo">
   <h1>Chronos</h1>
   <p>A simple, quick, and intuitive alarm clock with many useful features.</p>
   <img src="https://forthebadge.com/images/badges/built-for-android.svg" alt="Built for Android">
@@ -28,7 +28,7 @@
 ## 🌄 Screenshots
 
 <div align="center">
-    <img src="./assets/images/home.png" alt="Home" style="width: 24%"> <img src="./assets/images/alarms.png" alt="Alarms" style="width: 24%"> <img src="./assets/images/timers.png" alt="Timers" style="width: 24%"> <img src="./assets/images/themes.png" alt="Themes" style="width: 24%">
+    <img src="./assets/images/home.png" alt="Home" style="width: 25%"><img src="./assets/images/alarms.png" alt="Alarms" style="width: 25%"><img src="./assets/images/timers.png" alt="Timers" style="width: 25%"><img src="./assets/images/themes.png" alt="Themes" style="width: 25%">
 </div>
 
 ## ⭐ Features
