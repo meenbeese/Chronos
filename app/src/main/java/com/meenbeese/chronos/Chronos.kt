@@ -24,7 +24,7 @@ import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.afollestad.aesthetic.AutoSwitchMode
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.PreferenceData
-import com.meenbeese.chronos.data.SoundData.fromString
+import com.meenbeese.chronos.data.SoundData.Companion.fromString
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
