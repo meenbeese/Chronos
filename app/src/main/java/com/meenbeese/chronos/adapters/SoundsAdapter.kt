@@ -1,9 +1,6 @@
 package com.meenbeese.chronos.adapters
 
-import android.animation.ArgbEvaluator
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +11,6 @@ import androidx.media3.common.util.UnstableApi
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
-import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.SoundData
@@ -79,42 +75,6 @@ class SoundsAdapter(
 
     @SuppressLint("CheckResult")
     private fun setPlaying(holder: ViewHolder, isPlaying: Boolean, isAnimated: Boolean) {
-        (if (isPlaying) get().colorPrimary() else get().textColorPrimary()).take(1)
-            .subscribe { integer: Int? ->
-                if (isAnimated) {
-                    val animator = ValueAnimator.ofObject(
-                        ArgbEvaluator(),
-                        holder.title.textColors.defaultColor,
-                        integer
-                    )
-                    animator.setDuration(300)
-                    animator.addUpdateListener { valueAnimator: ValueAnimator ->
-                        val color = valueAnimator.animatedValue as Int
-                        holder.title.setTextColor(color)
-                        holder.icon.setColorFilter(color)
-                    }
-                    animator.start()
-                } else {
-                    holder.title.setTextColor(integer!!)
-                    holder.icon.setColorFilter(integer)
-                }
-            }
-        get().textColorPrimary().take(1).subscribe { integer: Int? ->
-            if (isAnimated) {
-                val animator = ValueAnimator.ofObject(
-                    ArgbEvaluator(),
-                    if (isPlaying) Color.TRANSPARENT else integer,
-                    if (isPlaying) integer else Color.TRANSPARENT
-                )
-                animator.setDuration(300)
-                animator.addUpdateListener { valueAnimator: ValueAnimator ->
-                    holder.itemView.setBackgroundColor(
-                        valueAnimator.animatedValue as Int
-                    )
-                }
-                animator.start()
-            } else holder.itemView.setBackgroundColor((if (isPlaying) integer else Color.TRANSPARENT)!!)
-        }
         if (isAnimated) {
             val drawable = AnimatedVectorDrawableCompat.create(
                 chronos, if (isPlaying) R.drawable.ic_play_to_pause else R.drawable.ic_pause_to_play

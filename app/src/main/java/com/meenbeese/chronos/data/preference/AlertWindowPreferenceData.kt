@@ -3,8 +3,6 @@ package com.meenbeese.chronos.data.preference
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.net.Uri
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -12,9 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-import androidx.core.widget.CompoundButtonCompat
-
-import com.afollestad.aesthetic.Aesthetic
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.meenbeese.chronos.R
@@ -45,23 +40,6 @@ class AlertWindowPreferenceData
                 showAlert(holder)
             } else showActivity(holder.context)
         }
-
-        Aesthetic.get()
-            .colorAccent()
-            .take(1)
-            .subscribe { colorAccent ->
-                Aesthetic.get()
-                    .textColorPrimary()
-                    .take(1)
-                    .subscribe { textColorPrimary ->
-                        CompoundButtonCompat.setButtonTintList(holder.toggle, ColorStateList(
-                            arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked)),
-                            intArrayOf(Color.argb(100, Color.red(textColorPrimary), Color.green(textColorPrimary), Color.blue(textColorPrimary)), colorAccent)
-                        ))
-
-                        holder.toggle.setTextColor(textColorPrimary)
-                    }
-            }
     }
 
     private fun showAlert(holder: ViewHolder) {

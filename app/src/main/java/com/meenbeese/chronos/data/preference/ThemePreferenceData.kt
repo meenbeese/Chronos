@@ -3,7 +3,6 @@ package com.meenbeese.chronos.data.preference
 import android.annotation.SuppressLint
 import android.app.TimePickerDialog
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.TextView
 
-import com.afollestad.aesthetic.Aesthetic
 import com.google.android.material.textfield.TextInputLayout
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
@@ -56,7 +54,6 @@ class ThemePreferenceData(
         holder.themeAutoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
             if (holder.themeAutoCompleteTextView.text.toString() == adapter.getItem(position)) {
                 PreferenceData.THEME.setValue(holder.itemView.context, position)
-                holder.chronos?.updateTheme()
                 holder.sunriseLayout.visibility = if (position == Chronos.THEME_DAY_NIGHT) View.VISIBLE else View.GONE
             }
         }
@@ -67,7 +64,6 @@ class ThemePreferenceData(
                 holder.sunriseTextView.text = getText(hour)
                 view?.setSunrise(hour * HOUR_LENGTH, true)
                 PreferenceData.DAY_START.setValue(holder.context, hour)
-                holder.chronos?.updateTheme()
             }
 
             override fun onSunsetChanged(view: SunriseSunsetView?, sunsetMillis: Long) {
@@ -75,7 +71,6 @@ class ThemePreferenceData(
                 holder.sunsetTextView.text = getText(hour)
                 view?.setSunset(hour * HOUR_LENGTH, true)
                 PreferenceData.DAY_END.setValue(holder.context, hour)
-                holder.chronos?.updateTheme()
             }
 
             private fun getText(hour: Int): String = Calendar.getInstance().apply {
@@ -134,23 +129,6 @@ class ThemePreferenceData(
 
             timePickerDialog.show()
         }
-
-        Aesthetic.get()
-            .textColorSecondary()
-            .take(1)
-            .subscribe { textColorSecondary ->
-                holder.themeAutoCompleteTextView.setTextColor(textColorSecondary)
-            }
-
-        Aesthetic.get()
-            .colorCardViewBackground()
-            .take(1)
-            .subscribe { colorForeground ->
-                holder.themeAutoCompleteTextView.setDropDownBackgroundDrawable(ColorDrawable(colorForeground))
-                holder.themeAutoCompleteTextView.setBackgroundColor(colorForeground)
-                holder.themeTextInputLayout.boxBackgroundColor = colorForeground
-                holder.themeTextInputLayout.setBackgroundColor(colorForeground)
-            }
     }
 
     /**

@@ -1,17 +1,13 @@
 package com.meenbeese.chronos.data.preference
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
 import androidx.annotation.StringRes
-import androidx.core.widget.CompoundButtonCompat
 
-import com.afollestad.aesthetic.Aesthetic
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
@@ -37,23 +33,6 @@ class BooleanPreferenceData(
         holder.toggle.setOnCheckedChangeListener(null)
         holder.toggle.isChecked = preference.getValue(holder.itemView.context, false) ?: false
         holder.toggle.setOnCheckedChangeListener { compoundButton, b -> preference.setValue(compoundButton.context, b) }
-
-        Aesthetic.get()
-            .colorAccent()
-            .take(1)
-            .subscribe { colorAccent ->
-                Aesthetic.get()
-                    .textColorPrimary()
-                    .take(1)
-                    .subscribe { textColorPrimary ->
-                        CompoundButtonCompat.setButtonTintList(holder.toggle, ColorStateList(
-                            arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked)),
-                            intArrayOf(Color.argb(100, Color.red(textColorPrimary), Color.green(textColorPrimary), Color.blue(textColorPrimary)), colorAccent)
-                        ))
-
-                        holder.toggle.setTextColor(textColorPrimary)
-                    }
-            }
     }
 
     /**

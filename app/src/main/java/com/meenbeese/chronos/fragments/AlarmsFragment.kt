@@ -14,21 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.AlarmsAdapter
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
-import com.afollestad.aesthetic.Aesthetic.Companion.get
-
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.subscribeBy
 
 
 class AlarmsFragment : BasePagerFragment() {
     private lateinit var alarmsAdapter: AlarmsAdapter
     private var empty: View? = null
     private var recyclerView: RecyclerView? = null
-    private var colorAccentSubscription: Disposable? = null
-    private var colorForegroundSubscription: Disposable? = null
-    private var textColorPrimarySubscription: Disposable? = null
-    private val disposables = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,32 +34,9 @@ class AlarmsFragment : BasePagerFragment() {
         alarmsAdapter = AlarmsAdapter(chronos!!, recyclerView!!, parentFragmentManager)
         recyclerView?.adapter = alarmsAdapter
 
-        colorAccentSubscription = get()
-            .colorAccent()
-            .subscribeBy(
-                onNext = { integer: Int? -> alarmsAdapter.colorAccent = integer!! },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-        colorForegroundSubscription = get()
-            .colorCardViewBackground()
-            .subscribeBy(
-                onNext = { integer: Int? -> alarmsAdapter.colorForeground = integer!! },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-        textColorPrimarySubscription = get()
-            .textColorPrimary()
-            .subscribeBy(
-                onNext = { integer: Int? -> alarmsAdapter.textColorPrimary = integer!! },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
         onChanged()
 
         return v
-    }
-
-    override fun onDestroyView() {
-        disposables.dispose()
-        super.onDestroyView()
     }
 
     override fun getTitle(context: Context?): String? {

@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 
+import androidx.activity.ComponentDialog
 import androidx.fragment.app.FragmentManager
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
@@ -18,13 +19,12 @@ import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.fragments.TimerFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
-import com.afollestad.aesthetic.Aesthetic.Companion.get
 
 import java.util.concurrent.TimeUnit
 
 
 class TimerDialog(context: Context, private val manager: FragmentManager) :
-    AestheticDialog(context), View.OnClickListener {
+    ComponentDialog(context), View.OnClickListener {
     private var ringtoneImage: ImageView? = null
     private var ringtoneText: TextView? = null
     private var vibrateImage: ImageView? = null
@@ -117,14 +117,6 @@ class TimerDialog(context: Context, private val manager: FragmentManager) :
             }
         }
         findViewById<View>(R.id.cancel)?.setOnClickListener { dismiss() }
-        get()
-            .textColorPrimary()
-            .take(1)
-            .subscribe { integer: Int ->
-                ringtoneImage?.setColorFilter(integer)
-                vibrateImage?.setColorFilter(integer)
-                backspace?.setColorFilter(integer)
-            }
     }
 
     private fun input(character: String) {

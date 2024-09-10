@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 
+import androidx.activity.ComponentDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -14,7 +15,7 @@ import com.meenbeese.chronos.adapters.TimeZonesAdapter
 import java.util.TimeZone
 
 
-class TimeZoneChooserDialog(context: Context?) : AestheticDialog(context) {
+class TimeZoneChooserDialog(context: Context?) : ComponentDialog(context!!) {
     private val excludedIds = arrayOfNulls<String>(0)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

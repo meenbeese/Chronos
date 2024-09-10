@@ -15,10 +15,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.subscribeBy
-
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
@@ -28,7 +24,6 @@ import com.meenbeese.chronos.interfaces.FragmentInstantiator
 import com.meenbeese.chronos.utils.DimenUtils.getStatusBarHeight
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImage
 import com.meenbeese.chronos.views.PageIndicatorView
-import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.tabs.TabLayout
@@ -50,8 +45,6 @@ class HomeFragment : BaseFragment() {
     private lateinit var speedDialView: SpeedDialView
     private lateinit var behavior: BottomSheetBehavior<*>
     private var shouldCollapseBack = false
-    private var colorPrimarySubscription: Disposable? = null
-    private val disposables = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -131,17 +124,6 @@ class HomeFragment : BaseFragment() {
                     )
             }
         })
-
-        colorPrimarySubscription = get()
-            .colorPrimary()
-            .subscribeBy(
-                onNext = { integer: Int ->
-                    speedDialView.updateColors()
-                    bottomSheet.setBackgroundColor(integer)
-                    overlay.setBackgroundColor(integer)
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
 
         handleIntentActions()
 
@@ -307,11 +289,6 @@ class HomeFragment : BaseFragment() {
         timeIndicator.setViewPager(timePager)
         timeIndicator.visibility = if (fragments.size > 1) View.VISIBLE else View.GONE
         getBackgroundImage(background)
-    }
-
-    override fun onDestroyView() {
-        disposables.dispose()
-        super.onDestroyView()
     }
 
     companion object {

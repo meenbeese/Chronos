@@ -8,16 +8,10 @@ import android.view.View
 import android.view.animation.AnticipateOvershootInterpolator
 import android.view.animation.DecelerateInterpolator
 
-import com.afollestad.aesthetic.Aesthetic
-import com.meenbeese.chronos.interfaces.Subscribable
 import com.meenbeese.chronos.utils.DimenUtils
 
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.subscribeBy
 
-
-class DaySwitch : View, View.OnClickListener, Subscribable {
+class DaySwitch : View, View.OnClickListener {
 
     private var accentPaint: Paint = Paint().apply {
         color = Color.BLACK
@@ -36,11 +30,6 @@ class DaySwitch : View, View.OnClickListener, Subscribable {
         textSize = DimenUtils.dpToPx(18f).toFloat()
         textAlign = Paint.Align.CENTER
     }
-
-    private var colorAccentSubscription: Disposable? = null
-    private var textColorPrimarySubscription: Disposable? = null
-    private var textColorPrimaryInverseSubscription: Disposable? = null
-    private val disposables = CompositeDisposable()
 
     private var checked: Float = 0f
 
@@ -88,59 +77,11 @@ class DaySwitch : View, View.OnClickListener, Subscribable {
         invalidate()
     }
 
-    override fun subscribe() {
-        colorAccentSubscription = Aesthetic.get()
-            .colorAccent()
-            .subscribeBy(
-                onNext = { integer ->
-                    accentPaint.color = integer
-                    invalidate()
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-
-        textColorPrimarySubscription = Aesthetic.get()
-            .textColorPrimary()
-            .subscribeBy(
-                onNext = { integer ->
-                    textColorPrimary = integer
-                    textPaint.color = integer
-                    invalidate()
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-
-        textColorPrimaryInverseSubscription = Aesthetic.get()
-            .textColorPrimaryInverse()
-            .subscribeBy(
-                onNext = { integer ->
-                    textColorPrimaryInverse = integer
-                    clippedTextPaint.color = integer
-                    invalidate()
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-    }
-
-    override fun unsubscribe() {
-        disposables.clear()
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        subscribe()
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        unsubscribe()
-    }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         text?.let { str ->
-            // calculate text size to not extend past circle radius ( - 4dp for padding)
+            // Calculate text size to not extend past circle radius ( - 4dp for padding)
             val textWidth = textPaint.measureText(str)
             val circleWidth = DimenUtils.dpToPx(32f)
             if (textWidth > circleWidth) {

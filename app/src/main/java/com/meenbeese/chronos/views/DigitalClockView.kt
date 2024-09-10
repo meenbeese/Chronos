@@ -11,13 +11,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 
-import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.meenbeese.chronos.interfaces.Subscribable
 import com.meenbeese.chronos.utils.FormatUtils
-
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.subscribeBy
 
 import java.util.Calendar
 import java.util.TimeZone
@@ -27,8 +22,6 @@ class DigitalClockView : View, OnGlobalLayoutListener, Subscribable {
     private var paint: Paint? = null
     private var thread: UpdateThread? = null
     private var timezone: TimeZone? = null
-    private var textColorPrimarySubscription: Disposable? = null
-    private val disposables = CompositeDisposable()
 
     constructor(context: Context?) : super(context) {
         init()
@@ -62,22 +55,12 @@ class DigitalClockView : View, OnGlobalLayoutListener, Subscribable {
         viewTreeObserver.addOnGlobalLayoutListener(this)
         if (thread == null) thread = UpdateThread(this)
         thread?.start()
-        textColorPrimarySubscription = get()
-            .textColorPrimary()
-            .subscribeBy(
-                onNext = { integer: Int ->
-                    paint?.color = integer
-                    invalidate()
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
     }
 
     override fun unsubscribe() {
         viewTreeObserver.removeOnGlobalLayoutListener(this)
         thread?.interrupt()
         thread = null
-        disposables.clear()
     }
 
     override fun onAttachedToWindow() {

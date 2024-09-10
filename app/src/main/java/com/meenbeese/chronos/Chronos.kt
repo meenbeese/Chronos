@@ -2,13 +2,11 @@ package com.meenbeese.chronos
 
 import android.app.Application
 import android.content.Intent
-import android.graphics.Color
 import android.media.Ringtone
 import android.net.Uri
 import android.os.Build
 import android.widget.Toast
 
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.MediaItem
@@ -20,8 +18,6 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.MediaSource
 
-import com.afollestad.aesthetic.Aesthetic.Companion.get
-import com.afollestad.aesthetic.AutoSwitchMode
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.data.SoundData.Companion.fromString
@@ -41,6 +37,7 @@ class Chronos : Application(), Player.Listener {
     private var currentRingtone: Ringtone? = null
     private var hlsMediaSourceFactory: HlsMediaSource.Factory? = null
     private var currentStream: String? = null
+
     @UnstableApi
     override fun onCreate() {
         super.onCreate()
@@ -167,61 +164,6 @@ class Chronos : Application(), Player.Listener {
             startForegroundService(Intent(this, TimerService::class.java))
         } else {
             startService(Intent(this, TimerService::class.java))
-        }
-    }
-
-    /**
-     * Update the application theme.
-     */
-    fun updateTheme() {
-        if (isNight) {
-            get()
-                .isDark(true)
-                .lightStatusBarMode(AutoSwitchMode.OFF)
-                .colorPrimary(ContextCompat.getColor(this, R.color.colorNightPrimary))
-                .colorStatusBar(Color.TRANSPARENT)
-                .colorNavigationBar(ContextCompat.getColor(this, R.color.colorNightPrimaryDark))
-                .colorAccent(ContextCompat.getColor(this, R.color.colorNightAccent))
-                .colorCardViewBackground(ContextCompat.getColor(this, R.color.colorNightForeground))
-                .colorWindowBackground(ContextCompat.getColor(this, R.color.colorNightPrimaryDark))
-                .textColorPrimary(ContextCompat.getColor(this, R.color.textColorPrimaryNight))
-                .textColorSecondary(ContextCompat.getColor(this, R.color.textColorSecondaryNight))
-                .textColorPrimaryInverse(ContextCompat.getColor(this, R.color.textColorPrimary))
-                .textColorSecondaryInverse(ContextCompat.getColor(this, R.color.textColorSecondary))
-                .apply()
-        } else {
-            val theme = activityTheme
-            if (theme == THEME_DAY || theme == THEME_DAY_NIGHT) {
-                get()
-                    .isDark(false)
-                    .lightStatusBarMode(AutoSwitchMode.ON)
-                    .colorPrimary(ContextCompat.getColor(this, R.color.colorPrimary))
-                    .colorStatusBar(Color.TRANSPARENT)
-                    .colorNavigationBar(ContextCompat.getColor(this, R.color.colorPrimaryDark))
-                    .colorAccent(ContextCompat.getColor(this, R.color.colorAccent))
-                    .colorCardViewBackground(ContextCompat.getColor(this, R.color.colorForeground))
-                    .colorWindowBackground(ContextCompat.getColor(this, R.color.colorPrimaryDark))
-                    .textColorPrimary(ContextCompat.getColor(this, R.color.textColorPrimary))
-                    .textColorSecondary(ContextCompat.getColor(this, R.color.textColorSecondary))
-                    .textColorPrimaryInverse(ContextCompat.getColor(this, R.color.textColorPrimaryNight))
-                    .textColorSecondaryInverse(ContextCompat.getColor(this, R.color.textColorSecondaryNight))
-                    .apply()
-            } else if (theme == THEME_AMOLED) {
-                get()
-                    .isDark(true)
-                    .lightStatusBarMode(AutoSwitchMode.OFF)
-                    .colorPrimary(Color.BLACK)
-                    .colorStatusBar(Color.TRANSPARENT)
-                    .colorNavigationBar(Color.BLACK)
-                    .colorAccent(Color.WHITE)
-                    .colorCardViewBackground(Color.BLACK)
-                    .colorWindowBackground(Color.BLACK)
-                    .textColorPrimary(Color.WHITE)
-                    .textColorSecondary(Color.WHITE)
-                    .textColorPrimaryInverse(Color.BLACK)
-                    .textColorSecondaryInverse(Color.BLACK)
-                    .apply()
-            }
         }
     }
 
@@ -370,7 +312,6 @@ class Chronos : Application(), Player.Listener {
 
     fun setListener(listener: ActivityListener?) {
         this.listener = listener
-        if (listener != null) updateTheme()
     }
 
     override fun onPlaybackStateChanged(playbackState: Int) {
