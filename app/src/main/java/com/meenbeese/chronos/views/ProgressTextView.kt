@@ -10,13 +10,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 
-import com.afollestad.aesthetic.Aesthetic
-import com.meenbeese.chronos.interfaces.Subscribable
 import com.meenbeese.chronos.utils.DimenUtils
-
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.subscribeBy
 
 import kotlin.math.cos
 import kotlin.math.min
@@ -27,7 +21,7 @@ import kotlin.math.sin
  * Display a progress circle with text in
  * the center.
  */
-class ProgressTextView : View, Subscribable {
+class ProgressTextView : View {
 
     private var progress: Long = 0
     private var maxProgress: Long = 0
@@ -62,63 +56,9 @@ class ProgressTextView : View, Subscribable {
         isFakeBoldText = true
     }
 
-    private var colorAccentSubscription: Disposable? = null
-    private var textColorPrimarySubscription: Disposable? = null
-    private var textColorSecondarySubscription: Disposable? = null
-    private val disposables = CompositeDisposable()
-
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-    override fun subscribe() {
-        colorAccentSubscription = Aesthetic.get()
-            .colorAccent()
-            .subscribeBy(
-                onNext = { integer ->
-                    linePaint.color = integer
-                    circlePaint.color = integer
-                    invalidate()
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-
-        textColorPrimarySubscription = Aesthetic.get()
-            .textColorPrimary()
-            .subscribeBy(
-                onNext = { integer ->
-                    textPaint.color = integer
-                    referenceCirclePaint.color = integer
-                    invalidate()
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-
-        textColorSecondarySubscription = Aesthetic.get()
-            .textColorSecondary()
-            .subscribeBy(
-                onNext = { integer ->
-                    backgroundPaint.color = integer
-                    backgroundPaint.alpha = 50
-                    invalidate()
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-    }
-
-    override fun unsubscribe() {
-        disposables.clear()
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        subscribe()
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        unsubscribe()
-    }
 
     /**
      * Set the text (time) to display in the center

@@ -34,7 +34,7 @@
 
     </LinearLayout>
 
-    <com.meenbeese.chronos.views.AestheticCheckBoxView
+    <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/checkbox"
         android:layout_gravity="center_vertical"
         android:layout_width="wrap_content"

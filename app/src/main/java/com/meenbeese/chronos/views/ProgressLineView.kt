@@ -7,19 +7,12 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 
-import com.afollestad.aesthetic.Aesthetic
-import com.meenbeese.chronos.interfaces.Subscribable
-
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.subscribeBy
-
 
 /**
  * Display a progress line, with a given foreground/background
  * color set.
  */
-class ProgressLineView : View, Subscribable {
+class ProgressLineView : View {
 
     private var backgroundPaint: Paint = Paint().apply {
         style = Paint.Style.FILL
@@ -34,51 +27,9 @@ class ProgressLineView : View, Subscribable {
     private var progress: Float = 0f
     private var drawnProgress: Float = 0f
 
-    private var colorAccentSubscription: Disposable? = null
-    private var textColorPrimarySubscription: Disposable? = null
-    private val disposables = CompositeDisposable()
-
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-    override fun subscribe() {
-        colorAccentSubscription = Aesthetic.get()
-            .colorAccent()
-            .subscribeBy(
-                onNext = { integer ->
-                    linePaint.color = integer
-                    linePaint.alpha = 100
-                    postInvalidate()
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-
-        textColorPrimarySubscription = Aesthetic.get()
-            .textColorPrimary()
-            .subscribeBy(
-                onNext = { integer ->
-                backgroundPaint.color = integer
-                backgroundPaint.alpha = 30
-                postInvalidate()
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-    }
-
-    override fun unsubscribe() {
-        disposables.clear()
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        subscribe()
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        unsubscribe()
-    }
 
     fun update(progress: Float) {
         this.progress = progress

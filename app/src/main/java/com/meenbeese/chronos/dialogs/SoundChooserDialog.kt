@@ -18,7 +18,6 @@ import com.meenbeese.chronos.fragments.sound.AlarmSoundChooserFragment
 import com.meenbeese.chronos.fragments.sound.FileSoundChooserFragment
 import com.meenbeese.chronos.fragments.sound.RingtoneSoundChooserFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
-import com.afollestad.aesthetic.Aesthetic.Companion.get
 import com.google.android.material.tabs.TabLayout
 
 
@@ -45,12 +44,6 @@ class SoundChooserDialog : DialogFragment(), SoundChooserListener {
         savedInstanceState: Bundle?
     ): View? {
         view = inflater.inflate(R.layout.dialog_sound_chooser, container, false)
-        get()
-            .colorPrimary()
-            .take(1)
-            .subscribe { integer: Int ->
-                view?.setBackgroundColor(integer)
-            }
         val tabLayout = view?.findViewById<TabLayout>(R.id.tabLayout)
         val viewPager = view?.findViewById<ViewPager>(R.id.viewPager)
         val alarmFragment = AlarmSoundChooserFragment()

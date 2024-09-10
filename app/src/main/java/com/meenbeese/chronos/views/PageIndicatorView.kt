@@ -9,16 +9,10 @@ import android.view.View
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 
-import com.afollestad.aesthetic.Aesthetic.Companion.get
-import com.meenbeese.chronos.interfaces.Subscribable
 import com.meenbeese.chronos.utils.DimenUtils
 
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.subscribeBy
 
-
-class PageIndicatorView : View, OnPageChangeListener, Subscribable {
+class PageIndicatorView : View, OnPageChangeListener {
     var actualPosition = 0
         private set
     var positionOffset = 0f
@@ -28,9 +22,6 @@ class PageIndicatorView : View, OnPageChangeListener, Subscribable {
     private var engine: IndicatorEngine? = null
     private var textColorPrimary = 0
     private var textColorSecondary = 0
-    private var textColorPrimarySubscription: Disposable? = null
-    private var textColorSecondarySubscription: Disposable? = null
-    private val disposables = CompositeDisposable()
 
     constructor(context: Context?) : super(context) {
         init()
@@ -52,44 +43,6 @@ class PageIndicatorView : View, OnPageChangeListener, Subscribable {
         engine = IndicatorEngine()
         engine?.onInitEngine(this)
         totalPages = 2
-    }
-
-    override fun subscribe() {
-        textColorPrimarySubscription = get()
-            .textColorPrimary()
-            .subscribeBy(
-                onNext = { integer: Int ->
-                    textColorPrimary = integer
-                    engine?.updateTextColors(this@PageIndicatorView)
-                    invalidate()
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-
-        textColorSecondarySubscription = get()
-            .textColorSecondary()
-            .subscribeBy(
-                onNext = { integer: Int ->
-                    textColorSecondary = integer
-                    engine?.updateTextColors(this@PageIndicatorView)
-                    invalidate()
-                },
-                onError = { it.printStackTrace() }
-            ).also { disposables.add(it) }
-    }
-
-    override fun unsubscribe() {
-        disposables.clear()
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        subscribe()
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        unsubscribe()
     }
 
     override fun onDraw(canvas: Canvas) {

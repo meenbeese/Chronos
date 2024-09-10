@@ -7,13 +7,14 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 
+import androidx.activity.ComponentDialog
+
 import com.meenbeese.chronos.R
-import com.afollestad.aesthetic.Aesthetic.Companion.get
 
 import java.util.concurrent.TimeUnit
 
 
-class TimeChooserDialog(context: Context?) : AestheticDialog(context), View.OnClickListener {
+class TimeChooserDialog(context: Context?) : ComponentDialog(context!!), View.OnClickListener {
     private var time: TextView? = null
     private var backspace: ImageView? = null
     private var input = "000000"
@@ -68,12 +69,6 @@ class TimeChooserDialog(context: Context?) : AestheticDialog(context), View.OnCl
             }
         }
         findViewById<View>(R.id.cancel)?.setOnClickListener { dismiss() }
-        get()
-            .textColorPrimary()
-            .take(1)
-            .subscribe { integer: Int ->
-                backspace?.setColorFilter(integer)
-            }
     }
 
     private fun input(character: String) {

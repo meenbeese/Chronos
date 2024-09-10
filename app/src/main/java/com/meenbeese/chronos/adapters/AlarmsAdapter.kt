@@ -1,7 +1,5 @@
 package com.meenbeese.chronos.adapters
 
-import android.animation.Animator
-import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -28,7 +26,6 @@ import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
-import com.afollestad.aesthetic.Aesthetic
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -208,34 +205,6 @@ class AlarmsAdapter(
 
         if (visibility != holder.extra.visibility) {
             holder.extra.visibility = visibility
-            Aesthetic.get()
-                    .colorPrimary()
-                    .take(1)
-                    .subscribe { integer ->
-                        ValueAnimator.ofObject(
-                                ArgbEvaluator(),
-                                if (isExpanded) integer else colorForeground,
-                                if (isExpanded) colorForeground else integer
-                        ).apply {
-                            addUpdateListener { animation ->
-                                (animation.animatedValue as? Int)?.let { color ->
-                                    holder.itemView.setBackgroundColor(color)
-                                }
-                            }
-                            addListener(object : Animator.AnimatorListener {
-                                override fun onAnimationStart(animation: Animator) {}
-
-                                override fun onAnimationEnd(animation: Animator) {
-                                    holder.itemView.setBackgroundColor(if (isExpanded) colorForeground else Color.TRANSPARENT)
-                                }
-
-                                override fun onAnimationCancel(animation: Animator) {}
-
-                                override fun onAnimationRepeat(animation: Animator) {}
-                            })
-                            start()
-                        }
-                    }
 
             ValueAnimator.ofFloat(
                     if (isExpanded) 0f else DimenUtils.dpToPx(2f).toFloat(),

@@ -8,10 +8,10 @@ import android.view.WindowManager
 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentManager
 
-import com.afollestad.aesthetic.AestheticActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.Chronos.ActivityListener
@@ -24,7 +24,7 @@ import com.meenbeese.chronos.fragments.TimerFragment
 import com.meenbeese.chronos.receivers.TimerReceiver
 
 
-class MainActivity : AestheticActivity(), FragmentManager.OnBackStackChangedListener,
+class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedListener,
     ActivityListener {
     private var chronos: Chronos? = null
     private var fragmentRef: BaseFragment? = null

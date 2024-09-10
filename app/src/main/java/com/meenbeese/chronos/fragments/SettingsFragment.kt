@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
+import androidx.core.util.Consumer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -24,17 +25,11 @@ import com.meenbeese.chronos.data.preference.ThemePreferenceData
 import com.meenbeese.chronos.data.preference.TimePreferenceData
 import com.meenbeese.chronos.data.preference.TimeZonesPreferenceData
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
-import com.afollestad.aesthetic.Aesthetic.Companion.get
-
-import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
 
 
 class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
     private lateinit var recyclerView: RecyclerView
     private var preferenceAdapter: PreferenceAdapter? = null
-    private var colorPrimarySubscription: Disposable? = null
-    private var textColorPrimarySubscription: Disposable? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -92,19 +87,8 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
         dataList.add(AboutPreferenceData(requireContext()))
         preferenceAdapter = PreferenceAdapter(dataList as MutableList<BasePreferenceData<BasePreferenceData.ViewHolder>>)
         recyclerView.adapter = preferenceAdapter
-        colorPrimarySubscription = get()
-            .colorPrimary()
-            .subscribe(this)
-        textColorPrimarySubscription = get()
-            .textColorPrimary()
-            .subscribe(this)
-        return v
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        colorPrimarySubscription?.dispose()
-        textColorPrimarySubscription?.dispose()
+        return v
     }
 
     override fun getTitle(context: Context?): String? {
