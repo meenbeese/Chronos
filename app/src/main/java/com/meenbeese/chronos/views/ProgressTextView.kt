@@ -9,6 +9,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
+import com.meenbeese.chronos.R
 
 import com.meenbeese.chronos.utils.DimenUtils
 
@@ -50,6 +51,7 @@ class ProgressTextView : View {
     }
 
     private var textPaint: Paint = Paint().apply {
+        color = R.color.textColorPrimary
         isAntiAlias = true
         textAlign = Paint.Align.CENTER
         textSize = DimenUtils.spToPx(34f).toFloat()
