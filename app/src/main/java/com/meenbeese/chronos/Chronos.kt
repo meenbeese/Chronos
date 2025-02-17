@@ -6,8 +6,8 @@ import android.media.Ringtone
 import android.net.Uri
 import android.os.Build
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.MediaItem
@@ -169,7 +169,7 @@ class Chronos : Application(), Player.Listener {
         }
     }
 
-    private val isNight: Boolean
+    val isNight: Boolean
         /**
          * Determine if the theme should be a night theme.
          *
@@ -177,9 +177,9 @@ class Chronos : Application(), Player.Listener {
          */
         get() {
             val time = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
-            return (time < dayStart || time > dayEnd) && activityTheme == THEME_DAY_NIGHT || activityTheme == THEME_NIGHT
+            return time < dayStart || time > dayEnd
         }
-    var activityTheme: Int = THEME_DAY_NIGHT
+    var activityTheme: Int = THEME_AUTO
         private set
     val dayStart: Int
         /**
@@ -200,7 +200,7 @@ class Chronos : Application(), Player.Listener {
         get() = currentRingtone != null && currentRingtone!!.isPlaying
 
     fun isDarkTheme(): Boolean {
-        return activityTheme == THEME_NIGHT || activityTheme == THEME_AMOLED || (activityTheme == THEME_DAY_NIGHT && isNight)
+        return activityTheme == THEME_NIGHT || activityTheme == THEME_AMOLED || (activityTheme == THEME_AUTO && isNight)
     }
 
     fun playRingtone(ringtone: Ringtone) {
@@ -349,7 +349,7 @@ class Chronos : Application(), Player.Listener {
     }
 
     companion object {
-        const val THEME_DAY_NIGHT = 0
+        const val THEME_AUTO = 0
         const val THEME_DAY = 1
         const val THEME_NIGHT = 2
         const val THEME_AMOLED = 3

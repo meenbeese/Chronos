@@ -11,7 +11,7 @@ import com.meenbeese.chronos.Chronos;
 
 public enum PreferenceData {
     INFO_BACKGROUND_PERMISSIONS(false),
-    THEME(Chronos.THEME_DAY_NIGHT),
+    THEME(Chronos.THEME_AUTO),
     BACKGROUND_IMAGE("https://jfenn.me/images/headers/snowytrees.jpg"),
     RINGING_BACKGROUND_IMAGE(true),
     DAY_START(6), // hours TODO: change to minutes
