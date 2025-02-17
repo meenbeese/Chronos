@@ -99,10 +99,10 @@ class AboutFragment : BaseFragment() {
     }
 
     companion object {
-        const val EMAIL = "meenbeese@tutanota.com"
+        const val EMAIL = "kuzeybilgin@proton.me"
         const val GITHUB = "https://github.com/meenbeese/Chronos"
         const val VERSION = "Version ${BuildConfig.VERSION_NAME}"
-        const val WEBSITE = "https://meenbeese.is-a.dev"
+        const val WEBSITE = "https://kuzey.is-a.dev"
         val YEAR = Calendar.getInstance().get(Calendar.YEAR)
     }
 }
