@@ -14,13 +14,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
-import com.meenbeese.chronos.utils.FormatUtils
-import com.meenbeese.chronos.views.SunriseSunsetView
 
 import java.util.Calendar
-import java.util.Date
-
-import kotlin.math.roundToInt
 
 
 const val HOUR_LENGTH = 3600000L
@@ -59,44 +54,6 @@ class ThemePreferenceData(
             }
         }
 
-        val listener = object : SunriseSunsetView.SunriseListener {
-            override fun onSunriseChanged(view: SunriseSunsetView?, sunriseMillis: Long) {
-                val hour = (sunriseMillis.toFloat() / HOUR_LENGTH).roundToInt()
-                holder.sunriseTextView.text = getText(hour)
-                view?.setSunrise(hour * HOUR_LENGTH, true)
-                PreferenceData.DAY_START.setValue(holder.context, hour)
-            }
-
-            override fun onSunsetChanged(view: SunriseSunsetView?, sunsetMillis: Long) {
-                val hour = (sunsetMillis.toFloat() / HOUR_LENGTH).roundToInt()
-                holder.sunsetTextView.text = getText(hour)
-                view?.setSunset(hour * HOUR_LENGTH, true)
-                PreferenceData.DAY_END.setValue(holder.context, hour)
-            }
-
-            private fun getText(hour: Int): String = Calendar.getInstance().apply {
-                set(Calendar.HOUR_OF_DAY, hour)
-                set(Calendar.MINUTE, 0)
-            }.run {
-                FormatUtils.formatShort(holder.context, Date(timeInMillis))
-            }
-        }
-
-        holder.chronos?.let { chronos ->
-            listener.onSunriseChanged(holder.sunriseView, chronos.dayStart * HOUR_LENGTH)
-            listener.onSunsetChanged(holder.sunriseView, chronos.dayEnd * HOUR_LENGTH)
-        }
-
-        holder.sunriseView.setListener(object : SunriseSunsetView.SunriseListener {
-            override fun onSunriseChanged(view: SunriseSunsetView?, sunriseMillis: Long) {
-                listener.onSunriseChanged(view, sunriseMillis)
-            }
-
-            override fun onSunsetChanged(view: SunriseSunsetView?, sunsetMillis: Long) {
-                listener.onSunsetChanged(view, sunsetMillis)
-            }
-        })
-
         holder.sunriseTextView.setOnClickListener { view ->
             val calendar = Calendar.getInstance()
             val hour = calendar.get(Calendar.HOUR_OF_DAY)
@@ -106,7 +63,7 @@ class ThemePreferenceData(
             val timePickerDialog = TimePickerDialog(view.context, style, { _, selectedHour, _ ->
                 holder.chronos?.let { chronos ->
                     if (selectedHour < chronos.dayEnd) {
-                        listener.onSunriseChanged(holder.sunriseView, selectedHour * HOUR_LENGTH)
+//                        listener.onSunriseChanged(holder.sunriseView, selectedHour * HOUR_LENGTH)
                     }
                 }
             }, hour, minute, true)
@@ -123,7 +80,7 @@ class ThemePreferenceData(
             val timePickerDialog = TimePickerDialog(view.context, style, { _, selectedHour, _ ->
                 holder.chronos?.let { chronos ->
                     if (selectedHour > chronos.dayStart) {
-                        listener.onSunsetChanged(holder.sunriseView, selectedHour * HOUR_LENGTH)
+//                        listener.onSunsetChanged(holder.sunriseView, selectedHour * HOUR_LENGTH)
                     }
                 }
             }, hour, minute, true)
@@ -156,7 +113,6 @@ class ThemePreferenceData(
     class ViewHolder(v: View) : BasePreferenceData.ViewHolder(v) {
         val themeAutoCompleteTextView: AutoCompleteTextView = v.findViewById(R.id.themeSpinner)
         val sunriseLayout: View = v.findViewById(R.id.sunriseLayout)
-        val sunriseView: SunriseSunsetView = v.findViewById(R.id.sunriseView)
         val sunriseTextView: TextView = v.findViewById(R.id.sunriseTextView)
         val sunsetTextView: TextView = v.findViewById(R.id.sunsetTextView)
     }
