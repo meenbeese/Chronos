@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.widget.Toast
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.MediaItem
@@ -46,6 +47,7 @@ class Chronos : Application(), Player.Listener {
         timers = ArrayList()
         player = ExoPlayer.Builder(this).build()
         player?.addListener(this)
+        activityTheme = PreferenceData.THEME.getValue(this)
         val dataSourceFactory = DefaultDataSource.Factory(this)
         hlsMediaSourceFactory = HlsMediaSource.Factory(dataSourceFactory)
         val alarmLength = PreferenceData.ALARM_LENGTH.getValue<Int>(this)
@@ -167,7 +169,7 @@ class Chronos : Application(), Player.Listener {
         }
     }
 
-    private val isNight: Boolean
+    val isNight: Boolean
         /**
          * Determine if the theme should be a night theme.
          *
@@ -175,18 +177,10 @@ class Chronos : Application(), Player.Listener {
          */
         get() {
             val time = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
-            return (time < dayStart || time > dayEnd) && activityTheme == THEME_DAY_NIGHT || activityTheme == THEME_NIGHT
+            return time < dayStart || time > dayEnd
         }
-    val activityTheme: Int
-        /**
-         * Get the theme to be used for activities and things. Despite
-         * what the name implies, it does not return a theme resource,
-         * but rather one of Chronos.THEME_DAY_NIGHT, Chronos.THEME_DAY,
-         * Chronos.THEME_NIGHT, or Chronos.THEME_AMOLED.
-         *
-         * @return          The theme to be used for activities.
-         */
-        get() = PreferenceData.THEME.getValue(this)
+    var activityTheme: Int = THEME_AUTO
+        private set
     val dayStart: Int
         /**
          * @return the hour of the start of the day (24h), as specified by the user
@@ -206,7 +200,7 @@ class Chronos : Application(), Player.Listener {
         get() = currentRingtone != null && currentRingtone!!.isPlaying
 
     fun isDarkTheme(): Boolean {
-        return activityTheme == THEME_NIGHT || activityTheme == THEME_AMOLED || (activityTheme == THEME_DAY_NIGHT && isNight)
+        return activityTheme == THEME_NIGHT || activityTheme == THEME_AMOLED || (activityTheme == THEME_AUTO && isNight)
     }
 
     fun playRingtone(ringtone: Ringtone) {
@@ -335,6 +329,15 @@ class Chronos : Application(), Player.Listener {
     val fragmentManager: FragmentManager?
         get() = if (listener != null) listener!!.fetchFragmentManager() else null
 
+    /**
+     * Recreate the current activity to apply the new theme.
+     */
+    fun recreate() {
+        listener?.let {
+            it.getActivity()?.recreate()
+        }
+    }
+
     interface ChronosListener {
         fun onAlarmsChanged()
         fun onTimersChanged()
@@ -342,10 +345,11 @@ class Chronos : Application(), Player.Listener {
 
     interface ActivityListener {
         fun fetchFragmentManager(): FragmentManager?
+        fun getActivity(): AppCompatActivity?
     }
 
     companion object {
-        const val THEME_DAY_NIGHT = 0
+        const val THEME_AUTO = 0
         const val THEME_DAY = 1
         const val THEME_NIGHT = 2
         const val THEME_AMOLED = 3
