@@ -14,6 +14,10 @@ import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 
 /**
  * Allow the user to choose the theme of the
@@ -28,6 +32,7 @@ class ThemePreferenceData(
         return ViewHolder(inflater.inflate(R.layout.item_preference_theme, parent, false))
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("CheckResult")
     override fun bindViewHolder(holder: ViewHolder) {
         val adapter = ArrayAdapter.createFromResource(
@@ -39,11 +44,15 @@ class ThemePreferenceData(
         holder.themeAutoCompleteTextView.setAdapter(adapter)
 
         val theme: Int = holder.chronos?.activityTheme ?: Chronos.THEME_AUTO
-        holder.themeAutoCompleteTextView.setText(adapter.getItem(theme), false)
+        if (theme != -1) {
+            holder.themeAutoCompleteTextView.setText(adapter.getItem(theme), false)
+        }
 
         holder.themeAutoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
             if (holder.themeAutoCompleteTextView.text.toString() == adapter.getItem(position)) {
-                PreferenceData.THEME.setValue(holder.itemView.context, position)
+                GlobalScope.launch {
+                    PreferenceData.THEME.setValue(holder.itemView.context, position)
+                }
                 applyTheme(position)
             }
         }

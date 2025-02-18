@@ -13,7 +13,7 @@ class RestoreOnBootReceiver : BroadcastReceiver() {
         val chronos = context.applicationContext as Chronos
         val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         for (alarm in chronos.alarms) {
-            if (alarm.isEnabled) alarm[context] = manager
+            if (alarm.isEnabled) alarm.set(context)
         }
         for (timer in chronos.timers) {
             if (timer.remainingMillis > 0) timer.setAlarm(context, manager)

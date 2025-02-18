@@ -13,6 +13,11 @@ import androidx.activity.ComponentDialog
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 
 class BackgroundPermissionsDialog(context: Context) : ComponentDialog(context) {
 
@@ -26,15 +31,19 @@ class BackgroundPermissionsDialog(context: Context) : ComponentDialog(context) {
 
         cancelButton.setOnClickListener { dismiss() }
         okButton.setOnClickListener {
-            PreferenceData.INFO_BACKGROUND_PERMISSIONS.setValue(context, true)
-            context.startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION))
-            dismiss()
+            CoroutineScope(Dispatchers.IO).launch {
+                PreferenceData.INFO_BACKGROUND_PERMISSIONS.setValue(context, true)
+
+                withContext(Dispatchers.Main) {
+                    context.startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION))
+                    dismiss()
+                }
+            }
         }
     }
 
     override fun show() {
         super.show()
-        val window = window
         window?.setLayout(
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT

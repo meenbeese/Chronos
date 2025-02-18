@@ -4,6 +4,10 @@ import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.dialogs.TimeChooserDialog
 import com.meenbeese.chronos.utils.FormatUtils
 
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 import java.util.concurrent.TimeUnit
 
 
@@ -20,6 +24,7 @@ class TimePreferenceData(
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onClick(holder: ViewHolder) {
         val dialog = run {
             var seconds = TimeUnit.MILLISECONDS.toSeconds(preference.getValue(holder.context)).toInt()
@@ -34,7 +39,11 @@ class TimePreferenceData(
         dialog.setListener(object : TimeChooserDialog.OnTimeChosenListener {
             override fun onTimeChosen(hours: Int, minutes: Int, seconds: Int) {
                 val totalSeconds = seconds + TimeUnit.HOURS.toSeconds(hours.toLong()).toInt() + TimeUnit.MINUTES.toSeconds(minutes.toLong()).toInt()
-                preference.setValue(holder.context, TimeUnit.SECONDS.toMillis(totalSeconds.toLong()))
+
+                GlobalScope.launch {
+                    preference.setValue(holder.context, TimeUnit.SECONDS.toMillis(totalSeconds.toLong()))
+                }
+
                 bindViewHolder(holder)
             }
         })

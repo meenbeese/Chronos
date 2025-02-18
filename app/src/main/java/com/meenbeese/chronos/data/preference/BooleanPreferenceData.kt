@@ -12,6 +12,10 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 
 /**
  * Allow the user to choose from a simple boolean
@@ -26,13 +30,21 @@ class BooleanPreferenceData(
         return ViewHolder(inflater.inflate(R.layout.item_preference_boolean, parent, false))
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("CheckResult")
     override fun bindViewHolder(holder: ViewHolder) {
         holder.title.setText(title)
         holder.description.setText(description)
+
+        val currentValue = preference.getValue<Boolean>(holder.itemView.context)
+
         holder.toggle.setOnCheckedChangeListener(null)
-        holder.toggle.isChecked = preference.getValue(holder.itemView.context, false) ?: false
-        holder.toggle.setOnCheckedChangeListener { compoundButton, b -> preference.setValue(compoundButton.context, b) }
+        holder.toggle.isChecked = currentValue
+        holder.toggle.setOnCheckedChangeListener { compoundButton, b ->
+            GlobalScope.launch {
+                preference.setValue(compoundButton.context, b)
+            }
+        }
     }
 
     /**
