@@ -7,8 +7,10 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
 
-import coil.load
-import coil.transform.RoundedCornersTransformation
+import coil3.load
+import coil3.request.crossfade
+import coil3.request.transformations
+import coil3.transform.RoundedCornersTransformation
 
 import com.meenbeese.chronos.data.PreferenceData
 

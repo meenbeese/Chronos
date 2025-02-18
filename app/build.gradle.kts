@@ -81,5 +81,5 @@ dependencies {
     implementation("com.leinardi.android:speed-dial:3.3.0")
 
     // Image
-    implementation("io.coil-kt:coil:2.7.0")
+    implementation("io.coil-kt.coil3:coil:3.1.0")
 }
