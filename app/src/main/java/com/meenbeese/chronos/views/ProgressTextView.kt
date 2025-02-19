@@ -4,7 +4,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.Rect
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
@@ -34,35 +34,29 @@ class ProgressTextView : View {
 
     private val lineColor = ContextCompat.getColor(context, R.color.colorAccent)
     private val circleColor = ContextCompat.getColor(context, R.color.textColorPrimary)
-    private val referenceCircleColor = ContextCompat.getColor(context, R.color.colorAccent)
     private val backgroundColor = ContextCompat.getColor(context, R.color.colorIndeterminateText)
     private val textColorPrimary = ContextCompat.getColor(context, R.color.colorIndeterminateText)
 
-    private var linePaint: Paint = Paint().apply {
+    private var linePaint = Paint().apply {
         isAntiAlias = true
         style = Paint.Style.STROKE
         strokeWidth = padding.toFloat()
         color = lineColor
     }
 
-    private var circlePaint: Paint = Paint().apply {
+    private var circlePaint = Paint().apply {
         isAntiAlias = true
         color = circleColor
     }
 
-    private var referenceCirclePaint: Paint = Paint().apply {
-        isAntiAlias = true
-        color = referenceCircleColor
-    }
-
-    private var backgroundPaint: Paint = Paint().apply {
+    private var backgroundPaint = Paint().apply {
         isAntiAlias = true
         style = Paint.Style.STROKE
         strokeWidth = padding.toFloat()
         color = backgroundColor
     }
 
-    private var textPaint: Paint = Paint().apply {
+    private var textPaint = Paint().apply {
         color = textColorPrimary
         isAntiAlias = true
         textAlign = Paint.Align.CENTER
@@ -138,30 +132,48 @@ class ProgressTextView : View {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        val size = measuredWidth
-        setMeasuredDimension(size, size)
+        val width = MeasureSpec.getSize(widthMeasureSpec)
+        val height = MeasureSpec.getSize(heightMeasureSpec)
+
+        val desiredWidth = (width * 1.0).toInt()
+        val desiredHeight = (height * 0.9).toInt()
+        setMeasuredDimension(desiredWidth, desiredHeight)
     }
 
     override fun onDraw(canvas: Canvas) {
         val size = min(width, height)
         val sidePadding = padding * 3
-        canvas.drawCircle((size / 2).toFloat(), (size / 2).toFloat(), (size / 2 - sidePadding).toFloat(), if (maxProgress in 1 until progress) linePaint else backgroundPaint)
+        val radius = (size / 2 - sidePadding).toFloat()
+        val rectF = RectF(
+            (width / 2 - radius),
+            (height / 2 - radius),
+            (width / 2 + radius),
+            (height / 2 + radius)
+        )
 
         if (maxProgress > 0) {
-            val angle = 360f * progress / maxProgress
-            val referenceAngle = 360f * referenceProgress / maxProgress
+            val sweepAngle = 360f * progress / maxProgress
 
-            val path = Path()
-            path.arcTo(RectF(sidePadding.toFloat(), sidePadding.toFloat(), (size - sidePadding).toFloat(), (size - sidePadding).toFloat()), -90f, angle, true)
-            canvas.drawPath(path, linePaint)
+            // Draw remaining arc (gray)
+            canvas.drawArc(rectF, -90f + sweepAngle, 360f - sweepAngle, false, backgroundPaint)
 
-            canvas.drawCircle(size / 2 + cos((angle - 90) * Math.PI / 180).toFloat() * (size / 2 - sidePadding), size / 2 + sin((angle - 90) * Math.PI / 180).toFloat() * (size / 2 - sidePadding), (2 * padding).toFloat(), circlePaint)
-            if (referenceProgress != 0L)
-                canvas.drawCircle(size / 2 + cos((referenceAngle - 90) * Math.PI / 180).toFloat() * (size / 2 - sidePadding), size / 2 + sin((referenceAngle - 90) * Math.PI / 180).toFloat() * (size / 2 - sidePadding), (2 * padding).toFloat(), referenceCirclePaint)
+            // Draw progress arc (blue)
+            canvas.drawArc(rectF, -90f, sweepAngle, false, linePaint)
+
+            val progressX = width / 2 + cos((sweepAngle - 90) * Math.PI / 180).toFloat() * radius
+            val progressY = height / 2 + sin((sweepAngle - 90) * Math.PI / 180).toFloat() * radius
+
+            canvas.drawCircle(progressX, progressY, (2 * padding).toFloat(), circlePaint)
         }
 
         text?.let { str ->
-            canvas.drawText(str, (size / 2).toFloat(), size / 2 - (textPaint.descent() + textPaint.ascent()) / 2, textPaint)
+            val textBounds = Rect()
+            textPaint.getTextBounds(str, 0, str.length, textBounds)
+
+            val xPos = (width / 2).toFloat()
+            val yPos = (height / 2).toFloat()
+
+            canvas.drawText(str, xPos, yPos, textPaint)
         }
     }
 }
