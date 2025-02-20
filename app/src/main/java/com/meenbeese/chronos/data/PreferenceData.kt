@@ -24,37 +24,37 @@ private val Context.dataStore by preferencesDataStore(
 
 
 enum class PreferenceData(private val key: Preferences.Key<*>, private val defaultValue: Any?) {
-    INFO_BACKGROUND_PERMISSIONS(booleanPreferencesKey("info_background_permissions"), false),
-    THEME(intPreferencesKey("theme"), Chronos.THEME_AUTO),
-    BACKGROUND_IMAGE(stringPreferencesKey("background_image"), "https://jfenn.me/images/headers/snowytrees.jpg"),
-    RINGING_BACKGROUND_IMAGE(booleanPreferencesKey("ringing_background_image"), true),
-    DAY_START(intPreferencesKey("day_start"), 6), // TODO: Change to minutes if needed
-    DAY_END(intPreferencesKey("day_end"), 18),
-    ALARM_LENGTH(intPreferencesKey("alarm_length"), 0),
-    TIMER_LENGTH(intPreferencesKey("timer_length"), 0),
-    DEFAULT_ALARM_RINGTONE(stringPreferencesKey("default_alarm_ringtone"), null),
-    DEFAULT_TIMER_RINGTONE(stringPreferencesKey("default_timer_ringtone"), null),
-    SLEEP_REMINDER(booleanPreferencesKey("sleep_reminder"), true),
-    SLEEP_REMINDER_TIME(longPreferencesKey("sleep_reminder_time"), 25200000L),
-    SLOW_WAKE_UP(booleanPreferencesKey("slow_wake_up"), true),
-    SLOW_WAKE_UP_TIME(longPreferencesKey("slow_wake_up_time"), 300000L),
+    INFO_BACKGROUND_PERMISSIONS(booleanPreferencesKey(name = "info_background_permissions"), defaultValue = false),
+    THEME(intPreferencesKey(name = "theme"), defaultValue = Chronos.THEME_AUTO),
+    BACKGROUND_IMAGE(stringPreferencesKey(name = "background_image"), defaultValue = "https://jfenn.me/images/headers/snowytrees.jpg"),
+    RINGING_BACKGROUND_IMAGE(booleanPreferencesKey(name = "ringing_background_image"), defaultValue = true),
+    DAY_START(intPreferencesKey(name = "day_start"), defaultValue = 6),
+    DAY_END(intPreferencesKey(name = "day_end"), defaultValue = 18),
+    ALARM_LENGTH(intPreferencesKey(name = "alarm_length"), defaultValue = 0),
+    TIMER_LENGTH(intPreferencesKey(name = "timer_length"), defaultValue = 0),
+    DEFAULT_ALARM_RINGTONE(stringPreferencesKey(name = "default_alarm_ringtone"), defaultValue = null),
+    DEFAULT_TIMER_RINGTONE(stringPreferencesKey(name = "default_timer_ringtone"), defaultValue = null),
+    SLEEP_REMINDER(booleanPreferencesKey(name = "sleep_reminder"), defaultValue = true),
+    SLEEP_REMINDER_TIME(longPreferencesKey(name = "sleep_reminder_time"), defaultValue = 25200000L),
+    SLOW_WAKE_UP(booleanPreferencesKey(name = "slow_wake_up"), defaultValue = true),
+    SLOW_WAKE_UP_TIME(longPreferencesKey(name = "slow_wake_up_time"), defaultValue = 300000L),
 
     // Alarm Settings
-    ALARM_NAME(stringPreferencesKey("alarm_name"), "%d/ALARM_NAME"),
-    ALARM_TIME(longPreferencesKey("alarm_time"), 0L),
-    ALARM_ENABLED(booleanPreferencesKey("alarm_enabled"), true),
-    ALARM_DAY_ENABLED(booleanPreferencesKey("alarm_day_enabled"), false),
-    ALARM_VIBRATE(booleanPreferencesKey("alarm_vibrate"), true),
-    ALARM_SOUND(stringPreferencesKey("alarm_sound"), ""),
+    ALARM_NAME(stringPreferencesKey(name = "alarm_name"), defaultValue = "%d/ALARM_NAME"),
+    ALARM_TIME(longPreferencesKey(name = "alarm_time"), defaultValue = 0L),
+    ALARM_ENABLED(booleanPreferencesKey(name = "alarm_enabled"), defaultValue = true),
+    ALARM_DAY_ENABLED(booleanPreferencesKey(name = "alarm_day_enabled"), defaultValue = false),
+    ALARM_VIBRATE(booleanPreferencesKey(name = "alarm_vibrate"), defaultValue = true),
+    ALARM_SOUND(stringPreferencesKey(name = "alarm_sound"), defaultValue = ""),
 
     // Timer Settings
-    TIMER_DURATION(intPreferencesKey("timer_duration"), 600000),
-    TIMER_END_TIME(longPreferencesKey("timer_end_time"), 0L),
-    TIMER_VIBRATE(booleanPreferencesKey("timer_vibrate"), true),
-    TIMER_SOUND(stringPreferencesKey("timer_sound"), ""),
+    TIMER_DURATION(intPreferencesKey(name = "timer_duration"), defaultValue = 600000),
+    TIMER_END_TIME(longPreferencesKey(name = "timer_end_time"), defaultValue = 0L),
+    TIMER_VIBRATE(booleanPreferencesKey(name = "timer_vibrate"), defaultValue = true),
+    TIMER_SOUND(stringPreferencesKey(name = "timer_sound"), defaultValue = ""),
 
     // Time Zone
-    TIME_ZONE_ENABLED(booleanPreferencesKey("time_zone_enabled"), false);
+    TIME_ZONE_ENABLED(booleanPreferencesKey(name = "time_zone_enabled"), defaultValue = false);
 
     @Suppress("UNCHECKED_CAST")
     fun <T> getValue(context: Context): T {
