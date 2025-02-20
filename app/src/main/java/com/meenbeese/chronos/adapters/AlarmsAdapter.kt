@@ -116,7 +116,7 @@ class AlarmsAdapter(
 
     private fun onBindAlarmViewHolderRepeat(holder: AlarmViewHolder, alarm: AlarmData) {
         holder.repeat.setOnCheckedChangeListener(null)
-        holder.repeat.isChecked = alarm.isRepeat
+        holder.repeat.isChecked = alarm.isRepeat()
         holder.repeat.setOnCheckedChangeListener { _, b ->
             for (i in 0 until alarm.days.size) {
                 alarm.days[i] = b
@@ -131,14 +131,14 @@ class AlarmsAdapter(
             recycler.post { notifyDataSetChanged() }
         }
 
-        holder.days.visibility = if (alarm.isRepeat) View.VISIBLE else View.GONE
+        holder.days.visibility = if (alarm.isRepeat()) View.VISIBLE else View.GONE
 
         val listener : DaySwitch.OnCheckedChangeListener = object : DaySwitch.OnCheckedChangeListener {
             override fun onCheckedChanged(daySwitch: DaySwitch, isChecked: Boolean) {
                 alarm.days[holder.days.indexOfChild(daySwitch)] = isChecked
                 alarm.setDays(chronos, alarm.days)
 
-                if (!alarm.isRepeat) {
+                if (!alarm.isRepeat()) {
                     notifyItemChanged(holder.bindingAdapterPosition)
                 } else {
                     // If the view isn't going to change size in the recycler,
@@ -169,7 +169,7 @@ class AlarmsAdapter(
     private fun onBindAlarmViewHolderToggles(holder: AlarmViewHolder, alarm: AlarmData) {
         holder.ringtoneImage.setImageResource(if (alarm.hasSound()) R.drawable.ic_ringtone else R.drawable.ic_ringtone_disabled)
         holder.ringtoneImage.alpha = if (alarm.hasSound()) 1f else 0.333f
-        holder.ringtoneText.text = if (alarm.hasSound()) alarm.getSound()?.name else chronos.getString(R.string.title_sound_none)
+        holder.ringtoneText.text = if (alarm.hasSound()) alarm.sound?.name else chronos.getString(R.string.title_sound_none)
         holder.ringtone.setOnClickListener {
             val dialog = SoundChooserDialog()
             dialog.setListener(object : SoundChooserListener {
@@ -254,7 +254,7 @@ class AlarmsAdapter(
         holder.enable.setOnCheckedChangeListener(null)
         holder.enable.isChecked = alarm.isEnabled
         holder.enable.setOnCheckedChangeListener { _, b ->
-            alarm.setEnabled(chronos, alarmManager, b)
+            alarm.setEnabled(chronos, b)
 
             val transition = AutoTransition()
             transition.duration = 200
@@ -272,8 +272,8 @@ class AlarmsAdapter(
             val timePickerDialog = TimePickerDialog(view.context, style, { _, selectedHour, selectedMinute ->
                 alarm.time.set(Calendar.HOUR_OF_DAY, selectedHour)
                 alarm.time.set(Calendar.MINUTE, selectedMinute)
-                alarm.setTime(chronos, alarmManager, alarm.time.timeInMillis)
-                alarm.setEnabled(chronos, alarmManager, true)
+                alarm.setTime(chronos, alarm.time.timeInMillis)
+                alarm.setEnabled(chronos, true)
 
                 notifyItemChanged(holder.bindingAdapterPosition)
             }, hour, minute, true)
@@ -283,7 +283,7 @@ class AlarmsAdapter(
 
         holder.nextTime.visibility = if (alarm.isEnabled) View.VISIBLE else View.GONE
 
-        val nextAlarm = alarm.next
+        val nextAlarm = alarm.getNext()
         if (alarm.isEnabled && nextAlarm != null) {
             // Minutes in a week: 10080
             // Maximum value of an integer: 2147483647
@@ -298,7 +298,7 @@ class AlarmsAdapter(
             onBindAlarmViewHolderRepeat(holder, alarm)
             onBindAlarmViewHolderToggles(holder, alarm)
         } else {
-            holder.repeatIndicator.alpha = if (alarm.isRepeat) 1f else 0.333f
+            holder.repeatIndicator.alpha = if (alarm.isRepeat()) 1f else 0.333f
             holder.soundIndicator.alpha = if (alarm.hasSound()) 1f else 0.333f
             holder.vibrateIndicator.alpha = if (alarm.isVibrate) 1f else 0.333f
         }

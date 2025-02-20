@@ -4,6 +4,8 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.dialogs.TimeZoneChooserDialog
 
+import kotlinx.coroutines.runBlocking
+
 import java.util.Locale
 import java.util.TimeZone
 
@@ -17,10 +19,15 @@ class TimeZonesPreferenceData(
     private val preference: PreferenceData,
     title: Int
 ) : CustomPreferenceData(title) {
+
     override fun getValueName(holder: ViewHolder): String {
         var i = 0
-        for (id in TimeZone.getAvailableIDs()) {
-            if (preference.getSpecificValue(holder.context, id)) i++
+        runBlocking {
+            for (id in TimeZone.getAvailableIDs()) {
+                if (preference.getValue(holder.context)) {
+                    i++
+                }
+            }
         }
 
         return String.format(Locale.getDefault(), holder.context.getString(R.string.msg_time_zones_selected), i)

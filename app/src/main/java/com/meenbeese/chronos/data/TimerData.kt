@@ -10,6 +10,10 @@ import android.os.Parcelable.Creator
 
 import com.meenbeese.chronos.receivers.TimerReceiver
 
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 import kotlin.math.max
 
 
@@ -40,26 +44,17 @@ open class TimerData : Parcelable {
         this.id = id
     }
 
-    constructor(id: Int, context: Context?) {
+    constructor(id: Int, context: Context) {
         this.id = id
-        duration = try {
-            PreferenceData.TIMER_DURATION.getSpecificValue(context, id)
-        } catch (e: ClassCastException) {
-            PreferenceData.TIMER_DURATION.getSpecificValue(context, id)
+        duration = PreferenceData.TIMER_DURATION.getValue(context)
+        endTime = PreferenceData.TIMER_END_TIME.getValue(context)
+        isVibrate = PreferenceData.TIMER_VIBRATE.getValue(context)
+        val defaultSound: String = if (PreferenceData.DEFAULT_TIMER_RINGTONE.getValue<String>(context).isNotEmpty()) {
+            PreferenceData.DEFAULT_TIMER_RINGTONE.getValue(context)
+        } else {
+            PreferenceData.TIMER_SOUND.getValue(context)
         }
-        endTime = try {
-            PreferenceData.TIMER_END_TIME.getSpecificValue(context, id)
-        } catch (e: ClassCastException) {
-            PreferenceData.TIMER_END_TIME.getSpecificValue(context, id)
-        }
-        isVibrate = PreferenceData.TIMER_VIBRATE.getSpecificValue(context, id)
-        sound = SoundData.fromString(
-            PreferenceData.TIMER_SOUND.getSpecificOverriddenValue(
-                context,
-                PreferenceData.DEFAULT_TIMER_RINGTONE.getValue(context, ""),
-                id
-            )
-        )
+        sound = SoundData.fromString(defaultSound)
     }
 
     /**
@@ -68,15 +63,14 @@ open class TimerData : Parcelable {
      * @param id            The new id to be assigned
      * @param context       An active context instance.
      */
+    @OptIn(DelicateCoroutinesApi::class)
     fun onIdChanged(id: Int, context: Context) {
-        PreferenceData.TIMER_DURATION.setValue(context, duration, id)
-        PreferenceData.TIMER_END_TIME.setValue(context, endTime, id)
-        PreferenceData.TIMER_VIBRATE.setValue(context, isVibrate, id)
-        PreferenceData.TIMER_SOUND.setValue(
-            context,
-            if (sound != null) sound.toString() else null,
-            id
-        )
+        GlobalScope.launch {
+            PreferenceData.TIMER_DURATION.setValue(context, duration)
+            PreferenceData.TIMER_END_TIME.setValue(context, endTime)
+            PreferenceData.TIMER_VIBRATE.setValue(context, isVibrate)
+            PreferenceData.TIMER_SOUND.setValue(context, if (sound != null) sound.toString() else null)
+        }
         onRemoved(context)
         this.id = id
         if (isSet) set(context, context.getSystemService(Context.ALARM_SERVICE) as AlarmManager)
@@ -87,12 +81,15 @@ open class TimerData : Parcelable {
      *
      * @param context       An active context instance.
      */
+    @OptIn(DelicateCoroutinesApi::class)
     fun onRemoved(context: Context) {
         cancel(context, context.getSystemService(Context.ALARM_SERVICE) as AlarmManager)
-        PreferenceData.TIMER_DURATION.setValue<Any>(context, null, id)
-        PreferenceData.TIMER_END_TIME.setValue<Any>(context, null, id)
-        PreferenceData.TIMER_VIBRATE.setValue<Any>(context, null, id)
-        PreferenceData.TIMER_SOUND.setValue<Any>(context, null, id)
+        GlobalScope.launch {
+            PreferenceData.TIMER_DURATION.setValue(context, 0)
+            PreferenceData.TIMER_END_TIME.setValue<Any>(context, 0L)
+            PreferenceData.TIMER_VIBRATE.setValue<Any>(context, false)
+            PreferenceData.TIMER_SOUND.setValue<Any>(context, "")
+        }
     }
 
     val isSet: Boolean
@@ -117,9 +114,10 @@ open class TimerData : Parcelable {
      * @param duration      The total length of the timer, in milliseconds.
      * @param context       An active Context instance.
      */
-    fun setDuration(duration: Long, context: Context?) {
+    @OptIn(DelicateCoroutinesApi::class)
+    fun setDuration(duration: Long, context: Context) {
         this.duration = duration
-        PreferenceData.TIMER_DURATION.setValue(context, duration, id)
+        GlobalScope.launch { PreferenceData.TIMER_DURATION.setValue(context, duration) }
     }
 
     /**
@@ -128,9 +126,10 @@ open class TimerData : Parcelable {
      * @param context       An active Context instance.
      * @param isVibrate     Whether the timer should vibrate.
      */
-    fun setVibrate(context: Context?, isVibrate: Boolean) {
+    @OptIn(DelicateCoroutinesApi::class)
+    fun setVibrate(context: Context, isVibrate: Boolean) {
         this.isVibrate = isVibrate
-        PreferenceData.TIMER_VIBRATE.setValue(context, isVibrate, id)
+        GlobalScope.launch { PreferenceData.TIMER_VIBRATE.setValue(context, isVibrate) }
     }
 
     /**
@@ -150,9 +149,10 @@ open class TimerData : Parcelable {
      * @param sound         A [SoundData](./SoundData) defining the sound that
      *                      the timer should make.
      */
-    fun setSound(context: Context?, sound: SoundData?) {
+    @OptIn(DelicateCoroutinesApi::class)
+    fun setSound(context: Context, sound: SoundData?) {
         this.sound = sound
-        PreferenceData.TIMER_SOUND.setValue(context, sound?.toString(), id)
+        GlobalScope.launch { PreferenceData.TIMER_SOUND.setValue(context, sound?.toString()) }
     }
 
     /**
@@ -161,10 +161,11 @@ open class TimerData : Parcelable {
      * @param context       An active context instance.
      * @param manager       The AlarmManager to schedule the timer on.
      */
-    operator fun set(context: Context?, manager: AlarmManager) {
+    @OptIn(DelicateCoroutinesApi::class)
+    operator fun set(context: Context, manager: AlarmManager) {
         endTime = System.currentTimeMillis() + duration
         setAlarm(context, manager)
-        PreferenceData.TIMER_END_TIME.setValue(context, endTime, id)
+        GlobalScope.launch { PreferenceData.TIMER_END_TIME.setValue(context, endTime) }
     }
 
     /**
@@ -183,10 +184,11 @@ open class TimerData : Parcelable {
      * @param context       An active context instance.
      * @param manager       The AlarmManager that the alert was scheduled on.
      */
-    fun cancel(context: Context?, manager: AlarmManager) {
+    @OptIn(DelicateCoroutinesApi::class)
+    fun cancel(context: Context, manager: AlarmManager) {
         endTime = 0
         manager.cancel(getIntent(context))
-        PreferenceData.TIMER_END_TIME.setValue(context, endTime, id)
+        GlobalScope.launch { PreferenceData.TIMER_END_TIME.setValue(context, endTime) }
     }
 
     /**

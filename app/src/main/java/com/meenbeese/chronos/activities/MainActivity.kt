@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         })
 
         // Background permissions info
-        if (!PreferenceData.INFO_BACKGROUND_PERMISSIONS.getValue(this, false)) {
+        if (!PreferenceData.INFO_BACKGROUND_PERMISSIONS.getValue<Boolean>(this)) {
             val backgroundPermissionsDialog = BackgroundPermissionsDialog(this)
             backgroundPermissionsDialog.show()
         }

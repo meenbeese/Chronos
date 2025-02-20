@@ -26,6 +26,10 @@ import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
 
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 import java.util.Calendar
 
 
@@ -47,7 +51,7 @@ class Chronos : Application(), Player.Listener {
         timers = ArrayList()
         player = ExoPlayer.Builder(this).build()
         player?.addListener(this)
-        activityTheme = PreferenceData.THEME.getValue(this)
+        activityTheme = PreferenceData.THEME.getValue<Int>(this).mapTheme()
         val dataSourceFactory = DefaultDataSource.Factory(this)
         hlsMediaSourceFactory = HlsMediaSource.Factory(dataSourceFactory)
         val alarmLength = PreferenceData.ALARM_LENGTH.getValue<Int>(this)
@@ -75,8 +79,8 @@ class Chronos : Application(), Player.Listener {
      * @return          The newly instantiated [AlarmData](./data/AlarmData).
      */
     fun newAlarm(): AlarmData {
-        val alarm = AlarmData(alarms.size, Calendar.getInstance())
-        alarm.sound = fromString(PreferenceData.DEFAULT_ALARM_RINGTONE.getValue(this, ""))
+        val alarm = AlarmData(id = alarms.size, time = Calendar.getInstance())
+        alarm.sound = fromString(PreferenceData.DEFAULT_ALARM_RINGTONE.getValue(this))
         alarms.add(alarm)
         onAlarmCountChanged()
         return alarm
@@ -101,8 +105,11 @@ class Chronos : Application(), Player.Listener {
     /**
      * Update preferences to show that the alarm count has been changed.
      */
+    @OptIn(DelicateCoroutinesApi::class)
     private fun onAlarmCountChanged() {
-        PreferenceData.ALARM_LENGTH.setValue(this, alarms.size)
+        GlobalScope.launch {
+            PreferenceData.ALARM_LENGTH.setValue(this@Chronos, alarms.size)
+        }
     }
 
     /**
@@ -145,8 +152,11 @@ class Chronos : Application(), Player.Listener {
     /**
      * Update the preferences to show that the timer count has been changed.
      */
+    @OptIn(DelicateCoroutinesApi::class)
     private fun onTimerCountChanged() {
-        PreferenceData.TIMER_LENGTH.setValue(this, timers.size)
+        GlobalScope.launch {
+            PreferenceData.TIMER_LENGTH.setValue(this@Chronos, timers.size)
+        }
     }
 
     /**
@@ -355,5 +365,15 @@ class Chronos : Application(), Player.Listener {
         const val THEME_AMOLED = 3
         const val NOTIFICATION_CHANNEL_STOPWATCH = "stopwatch"
         const val NOTIFICATION_CHANNEL_TIMERS = "timers"
+
+        fun Int.mapTheme(): Int {
+            return when (this) {
+                0 -> THEME_AUTO
+                1 -> THEME_DAY
+                2 -> THEME_NIGHT
+                3 -> THEME_AMOLED
+                else -> -1
+            }
+        }
     }
 }

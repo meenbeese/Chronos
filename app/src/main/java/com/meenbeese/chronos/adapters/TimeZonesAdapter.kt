@@ -12,6 +12,12 @@ import com.google.android.material.checkbox.MaterialCheckBox
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
@@ -29,6 +35,7 @@ class TimeZonesAdapter(
         )
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val timeZone = TimeZone.getTimeZone(timeZones[position])
         val offsetMillis = timeZone.rawOffset
@@ -41,20 +48,16 @@ class TimeZonesAdapter(
         )
         holder.title.text = timeZone.getDisplayName(Locale.getDefault())
         holder.itemView.setOnClickListener { holder.checkBox.toggle() }
+
         holder.checkBox.setOnCheckedChangeListener(null)
-        holder.checkBox.isChecked = PreferenceData.TIME_ZONE_ENABLED.getSpecificValue<Any>(
-            holder.itemView.context,
-            timeZone.id
-        ) as Boolean
+        holder.checkBox.isChecked = PreferenceData.TIME_ZONE_ENABLED.getValue(holder.itemView.context)
+
         holder.checkBox.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
-            val timeZone1 = TimeZone.getTimeZone(
-                timeZones[holder.bindingAdapterPosition]
-            )
-            PreferenceData.TIME_ZONE_ENABLED.setValue(
-                holder.itemView.context,
-                isChecked,
-                timeZone1.id
-            )
+            GlobalScope.launch {
+                withContext(Dispatchers.Main) {
+                    PreferenceData.TIME_ZONE_ENABLED.setValue(holder.itemView.context, isChecked)
+                }
+            }
         }
     }
 

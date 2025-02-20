@@ -1,7 +1,5 @@
 package com.meenbeese.chronos.fragments
 
-import android.app.AlarmManager
-import android.content.Context
 import android.os.Bundle
 import android.provider.AlarmClock
 import android.view.LayoutInflater
@@ -19,6 +17,7 @@ import com.meenbeese.chronos.adapters.SimplePagerAdapter
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.dialogs.TimerDialog
 import com.meenbeese.chronos.dialogs.TimePickerDialog
+import com.meenbeese.chronos.interfaces.FragmentInstantiator
 import com.meenbeese.chronos.utils.DimenUtils.getStatusBarHeight
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImage
 import com.meenbeese.chronos.views.PageIndicatorView
@@ -208,12 +207,11 @@ class HomeFragment : BaseFragment() {
         val timeChooserDialog = TimePickerDialog(view.context)
         timeChooserDialog.setListener(object : TimePickerDialog.OnTimeChosenListener {
             override fun onTimeChosen(hour: Int, minute: Int) {
-                val manager = view.context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 val alarm = chronos!!.newAlarm()
                 alarm.time[hourNow] = hour
                 alarm.time[minuteNow] = minute
-                alarm.setTime(chronos, manager, alarm.time.timeInMillis)
-                alarm.setEnabled(context, manager, true)
+                alarm.setTime(chronos!!, alarm.time.timeInMillis)
+                alarm.setEnabled(context!!, true)
                 chronos?.onAlarmsChanged()
             }
         })
@@ -238,7 +236,7 @@ class HomeFragment : BaseFragment() {
         fragments.add(ClockFragment.Instantiator(context, null))
 
         for (id in TimeZone.getAvailableIDs()) {
-            if (PreferenceData.TIME_ZONE_ENABLED.getSpecificValue(context, id)) {
+            if (PreferenceData.TIME_ZONE_ENABLED.getValue<Boolean>(requireContext())) {
                 fragments.add(ClockFragment.Instantiator(context, id))
             }
         }

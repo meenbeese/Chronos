@@ -36,7 +36,7 @@ class TimerDialog(context: Context, private val manager: FragmentManager) :
     private val chronos: Chronos = context.applicationContext as Chronos
 
     init {
-        ringtone = SoundData.fromString(PreferenceData.DEFAULT_TIMER_RINGTONE.getValue(context, ""))
+        ringtone = SoundData.fromString(PreferenceData.DEFAULT_TIMER_RINGTONE.getValue(context))
     }
 
     @SuppressLint("CheckResult")

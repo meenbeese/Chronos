@@ -16,6 +16,10 @@ import androidx.fragment.app.Fragment
 
 import com.meenbeese.chronos.data.PreferenceData
 
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 
 class FileChooserFragment : Fragment() {
     private var preference: PreferenceData? = null
@@ -97,6 +101,7 @@ class FileChooserFragment : Fragment() {
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun handleImageResult(uri: Uri) {
         var path: String? = null
         var cursor: Cursor? = null
@@ -113,7 +118,9 @@ class FileChooserFragment : Fragment() {
         } finally {
             cursor?.close()
         }
-        preference?.setValue(requireContext(), path)
+        GlobalScope.launch {
+            preference?.setValue(requireContext(), path)
+        }
         callback?.invoke("Image File", path ?: "")
         parentFragmentManager.popBackStack()
     }

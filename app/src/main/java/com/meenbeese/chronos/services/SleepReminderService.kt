@@ -79,7 +79,7 @@ class SleepReminderService : Service() {
                                 getString(R.string.msg_sleep_reminder),
                                 formatUnit(
                                     this,
-                                    TimeUnit.MILLISECONDS.toMinutes(nextAlarm.next!!.timeInMillis - System.currentTimeMillis())
+                                    TimeUnit.MILLISECONDS.toMinutes(nextAlarm.getNext()!!.timeInMillis - System.currentTimeMillis())
                                         .toInt()
                                 )
                             )
@@ -115,14 +115,16 @@ class SleepReminderService : Service() {
          * sleep alert, or null if there isn't one.
          */
         fun getSleepyAlarm(chronos: Chronos?): AlarmData? {
-            if (PreferenceData.SLEEP_REMINDER.getValue(chronos)) {
+            val context = chronos?.applicationContext ?: return null
+
+            if (PreferenceData.SLEEP_REMINDER.getValue(context)) {
                 val nextAlarm = getNextWakeAlarm(chronos)
                 if (nextAlarm != null) {
-                    val nextTrigger = nextAlarm.next!!
-                    nextTrigger[Calendar.MINUTE] =
-                        nextTrigger[Calendar.MINUTE] - TimeUnit.MILLISECONDS.toMinutes(
-                            PreferenceData.SLEEP_REMINDER_TIME.getValue(chronos)
-                        ).toInt()
+                    val nextTrigger = nextAlarm.getNext()!!
+                    nextTrigger[Calendar.MINUTE] -= TimeUnit.MILLISECONDS.toMinutes(
+                        PreferenceData.SLEEP_REMINDER_TIME.getValue(context)
+                    ).toInt()
+
                     if (Calendar.getInstance().after(nextTrigger)) return nextAlarm
                 }
             }
@@ -147,8 +149,8 @@ class SleepReminderService : Service() {
             val alarms = chronos!!.alarms
             var nextAlarm: AlarmData? = null
             for (alarm in alarms) {
-                val next = alarm.next
-                if (alarm.isEnabled && next!!.before(nextNoon) && next.after(nextDay) && (nextAlarm == null || nextAlarm.next!!
+                val next = alarm.getNext()
+                if (alarm.isEnabled && next!!.before(nextNoon) && next.after(nextDay) && (nextAlarm == null || nextAlarm.getNext()!!
                         .after(next))
                 ) nextAlarm = alarm
             }

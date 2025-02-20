@@ -91,7 +91,7 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
             intent.hasExtra(EXTRA_ALARM) -> {
                 alarm = intent.getParcelableExtra(EXTRA_ALARM)
                 isVibrate = alarm?.isVibrate == true
-                sound = alarm?.getSound()
+                sound = alarm?.sound
             }
             intent.hasExtra(EXTRA_TIMER) -> {
                 val timer = intent.getParcelableExtra<TimerData>(EXTRA_TIMER)
@@ -189,10 +189,10 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
             override fun onSnoozeDurationSelected(which: Int) {
                 if (which < minutes.size) {
                     chronos!!.newTimer().apply {
-                        setDuration(TimeUnit.MINUTES.toMillis(minutes[which].toLong()), chronos)
+                        setDuration(TimeUnit.MINUTES.toMillis(minutes[which].toLong()), chronos!!)
                         setVibrate(this@AlarmActivity, isVibrate)
                         setSound(this@AlarmActivity, sound)
-                        this[chronos] = getSystemService(ALARM_SERVICE) as AlarmManager
+                        this[chronos!!] = getSystemService(ALARM_SERVICE) as AlarmManager
                     }
                     chronos?.onTimerStarted()
                     finish()
@@ -207,9 +207,9 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
                                         TimeUnit.HOURS.toMillis(hours.toLong()) +
                                                 TimeUnit.MINUTES.toMillis(minutes.toLong()) +
                                                 TimeUnit.SECONDS.toMillis(seconds.toLong()),
-                                        chronos
+                                        chronos!!
                                     )
-                                    this[chronos] = getSystemService(ALARM_SERVICE) as AlarmManager
+                                    this[chronos!!] = getSystemService(ALARM_SERVICE) as AlarmManager
                                 }
                                 chronos?.onTimerStarted()
                                 finish()

@@ -1,14 +1,15 @@
 package com.meenbeese.chronos.fragments.sound
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.datastore.preferences.core.edit
 
+import androidx.datastore.preferences.core.stringSetPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.FragmentActivity
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -18,41 +19,46 @@ import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.fragments.BasePagerFragment
 import com.meenbeese.chronos.fragments.FileChooserFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+
+val Context.dataStore by preferencesDataStore(name = "user_preferences")
 
 
 class FileSoundChooserFragment : BaseSoundChooserFragment() {
-    private lateinit var prefs: SharedPreferences
     private lateinit var sounds: MutableList<SoundData>
 
+    private val PREF_FILES_KEY = stringSetPreferencesKey("previousFiles")
+
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_sound_chooser_file, container, false)
-        prefs = context?.let { PreferenceManager.getDefaultSharedPreferences(it) }!!
+
         view.findViewById<View>(R.id.addAudioFile).setOnClickListener { launchFileChooser() }
         val recycler = view.findViewById<RecyclerView>(R.id.recycler)
-        val previousFiles = ArrayList(prefs.getStringSet(PREF_FILES, HashSet())!!)
-        previousFiles.sortWith { o1, o2 ->
-            try {
-                Integer.parseInt(o1.split(SEPARATOR.toRegex())[0]) - Integer.parseInt(o2.split(SEPARATOR.toRegex())[0])
-            } catch (e: NumberFormatException) {
-                0
+
+        GlobalScope.launch(Dispatchers.Main) {
+            val previousFiles = loadPreviousFiles()
+
+            sounds = ArrayList()
+            for (string in previousFiles) {
+                val parts = string.split(SEPARATOR.toRegex()).toTypedArray()
+                sounds.add(SoundData(parts[1], SoundData.TYPE_RINGTONE, parts[2]))
             }
+
+            recycler.layoutManager = LinearLayoutManager(context)
+
+            val adapter = SoundsAdapter(chronos!!, sounds)
+            adapter.setListener(this@FileSoundChooserFragment)
+            recycler.adapter = adapter
         }
-
-        sounds = ArrayList()
-        for (string in previousFiles) {
-            val parts = string.split(SEPARATOR.toRegex()).toTypedArray()
-            sounds.add(SoundData(parts[1], SoundData.TYPE_RINGTONE, parts[2]))
-        }
-
-        recycler.layoutManager = LinearLayoutManager(context)
-
-        val adapter = SoundsAdapter(chronos!!, sounds)
-        adapter.setListener(this)
-        recycler.adapter = adapter
 
         return view
     }
@@ -69,16 +75,39 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
             .commit()
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onSoundChosen(sound: SoundData?) {
         super.onSoundChosen(sound)
         sound?.let {
             sounds.remove(it)
             sounds.add(0, it)
-            val files: MutableSet<String> = HashSet()
-            for (i in sounds.indices) {
-                files.add(i.toString() + SEPARATOR + sounds[i].name + SEPARATOR + sounds[i].url)
+
+            GlobalScope.launch {
+                savePreviousFiles()
             }
-            prefs.edit()?.putStringSet(PREF_FILES, files)?.apply()
+        }
+    }
+
+    private suspend fun loadPreviousFiles(): List<String> {
+        val preferences = context?.dataStore?.data?.first()
+        val previousFiles = preferences?.get(PREF_FILES_KEY) ?: emptySet()
+        return previousFiles.toList().sortedWith { o1, o2 ->
+            try {
+                Integer.parseInt(o1.split(SEPARATOR.toRegex())[0]) - Integer.parseInt(o2.split(SEPARATOR.toRegex())[0])
+            } catch (e: NumberFormatException) {
+                0
+            }
+        }
+    }
+
+    private suspend fun savePreviousFiles() {
+        val files: MutableSet<String> = HashSet()
+        for (i in sounds.indices) {
+            files.add(i.toString() + SEPARATOR + sounds[i].name + SEPARATOR + sounds[i].url)
+        }
+
+        context?.dataStore?.edit { preferences ->
+            preferences[PREF_FILES_KEY] = files
         }
     }
 
@@ -105,6 +134,5 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
     companion object {
         private const val TYPE_AUDIO = "audio/*"
         private const val SEPARATOR = ":ChronosFileSound:"
-        private const val PREF_FILES = "previousFiles"
     }
 }
