@@ -1,26 +1,25 @@
 package com.meenbeese.chronos.adapters
 
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
 
-import com.meenbeese.chronos.fragments.BasePagerFragment
 import com.meenbeese.chronos.interfaces.FragmentInstantiator
 
 
 class SimplePagerAdapter(
-    fragMan: FragmentManager,
+    fragment: Fragment,
     private vararg val fragments: FragmentInstantiator
-) : FragmentStatePagerAdapter(fragMan, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+) : FragmentStateAdapter(fragment) {
 
-    override fun getItem(position: Int): BasePagerFragment {
+    override fun getItemCount(): Int {
+        return fragments.size
+    }
+
+    override fun createFragment(position: Int): Fragment {
         return fragments[position].newInstance(position)!!
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
-        return fragments[position].getTitle(position)
-    }
-
-    override fun getCount(): Int {
-        return fragments.size
+    fun getTitle(position: Int): String {
+        return fragments[position].getTitle(position) ?: ""
     }
 }

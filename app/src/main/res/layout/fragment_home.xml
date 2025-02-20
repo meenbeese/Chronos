@@ -23,11 +23,11 @@
             android:layout_height="match_parent"
             android:alpha="0.5" />
 
-        <androidx.viewpager.widget.ViewPager
+        <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/timePager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/fragment_clock"/>
+            tools:listitem="@layout/fragment_clock" />
 
         <com.meenbeese.chronos.views.PageIndicatorView
             android:id="@+id/pageIndicator"
@@ -56,12 +56,12 @@
             app:tabSelectedTextColor="@color/textColorSecondary"
             app:tabIndicatorColor="@color/colorAccent" />
 
-        <androidx.viewpager.widget.ViewPager
+        <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:listitem="@layout/fragment_recycler"/>
+            tools:listitem="@layout/fragment_recycler" />
 
     </LinearLayout>
 

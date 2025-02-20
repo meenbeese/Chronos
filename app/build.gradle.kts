@@ -67,7 +67,9 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation("androidx.fragment:fragment-ktx:1.8.6")
     implementation("androidx.preference:preference-ktx:1.2.1")
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
 
     // Media
     implementation("androidx.media3:media3-exoplayer:1.4.1")

@@ -6,13 +6,12 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 
-import androidx.viewpager.widget.ViewPager
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import androidx.viewpager2.widget.ViewPager2
 
 import com.meenbeese.chronos.utils.DimenUtils
 
 
-class PageIndicatorView : View, OnPageChangeListener {
+class PageIndicatorView : View {
     var actualPosition = 0
         private set
     var positionOffset = 0f
@@ -55,22 +54,29 @@ class PageIndicatorView : View, OnPageChangeListener {
         engine?.let { setMeasuredDimension(it.measuredWidth, it.measuredHeight) }
     }
 
-    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-        actualPosition = position
-        this.positionOffset = positionOffset
-        invalidate()
-    }
-
-    override fun onPageSelected(position: Int) {}
-    override fun onPageScrollStateChanged(state: Int) {}
-
     /**
      * You must call this AFTER setting the Adapter for the ViewPager, or it won't display the right amount of points.
      */
-    fun setViewPager(viewPager: ViewPager) {
-        viewPager.addOnPageChangeListener(this)
-        totalPages = viewPager.adapter!!.count
+    fun setViewPager(viewPager: ViewPager2) {
+        totalPages = viewPager.adapter?.itemCount ?: 0
         invalidate()
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                actualPosition = position
+                this@PageIndicatorView.positionOffset = positionOffset
+                invalidate()
+            }
+
+            override fun onPageSelected(position: Int) {
+                actualPosition = position
+                invalidate()
+            }
+        })
     }
 
     private class IndicatorEngine {

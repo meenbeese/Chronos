@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.fragment.app.DialogFragment
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
@@ -19,6 +19,7 @@ import com.meenbeese.chronos.fragments.sound.FileSoundChooserFragment
 import com.meenbeese.chronos.fragments.sound.RingtoneSoundChooserFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 
 class SoundChooserDialog : DialogFragment(), SoundChooserListener {
@@ -44,21 +45,26 @@ class SoundChooserDialog : DialogFragment(), SoundChooserListener {
         savedInstanceState: Bundle?
     ): View? {
         view = inflater.inflate(R.layout.dialog_sound_chooser, container, false)
+
         val tabLayout = view?.findViewById<TabLayout>(R.id.tabLayout)
-        val viewPager = view?.findViewById<ViewPager>(R.id.viewPager)
-        val alarmFragment = AlarmSoundChooserFragment()
-        val ringtoneFragment = RingtoneSoundChooserFragment()
-        val fileFragment = FileSoundChooserFragment()
-        alarmFragment.setListener(this)
-        ringtoneFragment.setListener(this)
-        fileFragment.setListener(this)
-        viewPager?.adapter = SimplePagerAdapter(
-            childFragmentManager,
+        val viewPager = view?.findViewById<ViewPager2>(R.id.viewPager)
+
+        val fragments = arrayOf(
             AlarmSoundChooserFragment.Instantiator(view?.context, this),
             RingtoneSoundChooserFragment.Instantiator(view?.context, this),
             FileSoundChooserFragment.Instantiator(view?.context, this)
         )
-        tabLayout?.setupWithViewPager(viewPager)
+
+        viewPager?.adapter = SimplePagerAdapter(this, *fragments)
+
+        tabLayout?.let { tl ->
+            viewPager?.let { vp ->
+                TabLayoutMediator(tl, vp) { tab, position ->
+                    tab.text = fragments[position].getTitle(position)
+                }.attach()
+            }
+        }
+
         return view
     }
 

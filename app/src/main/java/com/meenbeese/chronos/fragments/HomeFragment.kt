@@ -12,14 +12,13 @@ import android.widget.ImageView
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.dialogs.TimerDialog
 import com.meenbeese.chronos.dialogs.TimePickerDialog
-import com.meenbeese.chronos.interfaces.FragmentInstantiator
 import com.meenbeese.chronos.utils.DimenUtils.getStatusBarHeight
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImage
 import com.meenbeese.chronos.views.PageIndicatorView
@@ -27,6 +26,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import com.google.android.material.tabs.TabLayoutMediator
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
 
@@ -36,7 +36,7 @@ import java.util.TimeZone
 
 class HomeFragment : BaseFragment() {
     private lateinit var view: View
-    private lateinit var timePager: ViewPager
+    private lateinit var timePager: ViewPager2
     private lateinit var timeIndicator: PageIndicatorView
     private lateinit var bottomSheet: View
     private lateinit var background: ImageView
@@ -52,7 +52,7 @@ class HomeFragment : BaseFragment() {
     ): View {
         view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        val viewPager = view.findViewById<ViewPager>(R.id.viewPager)
+        val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
         timePager = view.findViewById(R.id.timePager)
         bottomSheet = view.findViewById(R.id.bottomSheet)
@@ -83,12 +83,16 @@ class HomeFragment : BaseFragment() {
         })
 
         val pagerAdapter = SimplePagerAdapter(
-            childFragmentManager,
+            this,
             AlarmsFragment.Instantiator(context),
             SettingsFragment.Instantiator(context)
         )
         viewPager.adapter = pagerAdapter
-        tabLayout.setupWithViewPager(viewPager)
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = pagerAdapter.getTitle(position)
+        }.attach()
+
         tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if (tab.position > 0) {
@@ -109,7 +113,6 @@ class HomeFragment : BaseFragment() {
         })
 
         setSpeedDialView()
-
         setClockFragments()
 
         view.viewTreeObserver?.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
@@ -233,22 +236,23 @@ class HomeFragment : BaseFragment() {
      * Update the time zones displayed in the clock fragments pager.
      */
     private fun setClockFragments() {
-        val fragments: MutableList<FragmentInstantiator> = ArrayList()
+        val fragments = mutableListOf<ClockFragment.Instantiator>()
+
         fragments.add(ClockFragment.Instantiator(context, null))
+
         for (id in TimeZone.getAvailableIDs()) {
-            if (PreferenceData.TIME_ZONE_ENABLED.getSpecificValue(context, id)) fragments.add(
-                ClockFragment.Instantiator(
-                    context, id
-                )
-            )
+            if (PreferenceData.TIME_ZONE_ENABLED.getSpecificValue(context, id)) {
+                fragments.add(ClockFragment.Instantiator(context, id))
+            }
         }
-        val timeAdapter = SimplePagerAdapter(
-            childFragmentManager,
-            *fragments.toTypedArray<FragmentInstantiator>()
-        )
+
+        val timeAdapter = SimplePagerAdapter(this, *fragments.toTypedArray())
         timePager.adapter = timeAdapter
+
         timeIndicator.setViewPager(timePager)
+
         timeIndicator.visibility = if (fragments.size > 1) View.VISIBLE else View.GONE
+
         getBackgroundImage(background)
     }
 
