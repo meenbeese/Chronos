@@ -12,6 +12,7 @@ import com.meenbeese.chronos.data.preference.BasePreferenceData.ViewHolder
 class PreferenceAdapter(
     private val items: MutableList<BasePreferenceData<ViewHolder>>
 ) : RecyclerView.Adapter<ViewHolder>() {
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int

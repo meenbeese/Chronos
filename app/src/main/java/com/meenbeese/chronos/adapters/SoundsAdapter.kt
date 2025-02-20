@@ -22,8 +22,10 @@ class SoundsAdapter(
     private val chronos: Chronos,
     private val sounds: List<SoundData>
 ) : RecyclerView.Adapter<SoundsAdapter.ViewHolder>() {
+
     private var currentlyPlaying = -1
     private var listener: SoundChooserListener? = null
+
     fun setListener(listener: SoundChooserListener?) {
         this.listener = listener
     }

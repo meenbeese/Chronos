@@ -70,8 +70,9 @@ class AlarmsAdapter(
     var colorForeground = Color.TRANSPARENT
         set(colorForeground) {
             field = colorForeground
-            if (expandedPosition > 0)
+            if (expandedPosition > 0) {
                 recycler.post { notifyItemChanged(expandedPosition) }
+            }
         }
 
     var textColorPrimary = Color.WHITE
@@ -81,10 +82,11 @@ class AlarmsAdapter(
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == 0)
+        return if (viewType == 0) {
             TimerViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timer, parent, false))
-        else
+        } else {
             AlarmViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_alarm, parent, false), chronos)
+        }
     }
 
     private fun onBindTimerViewHolder(holder: TimerViewHolder) {
@@ -207,8 +209,8 @@ class AlarmsAdapter(
             holder.extra.visibility = visibility
 
             ValueAnimator.ofFloat(
-                    if (isExpanded) 0f else DimenUtils.dpToPx(2f).toFloat(),
-                    if (isExpanded) DimenUtils.dpToPx(2f).toFloat() else 0f
+                if (isExpanded) 0f else DimenUtils.dpToPx(2f).toFloat(),
+                if (isExpanded) DimenUtils.dpToPx(2f).toFloat() else 0f
             ).apply {
                 addUpdateListener { animation ->
                     (animation.animatedValue as? Float)?.let { elevation ->
@@ -242,11 +244,9 @@ class AlarmsAdapter(
         holder.name.isCursorVisible = false
         holder.name.clearFocus()
         holder.nameUnderline.visibility = if (isExpanded) View.VISIBLE else View.GONE
-
         holder.name.setText(alarm.getName(chronos))
 
-        if (isExpanded)
-             holder.name.setOnClickListener(null)
+        if (isExpanded) holder.name.setOnClickListener(null)
         else holder.name.setOnClickListener { holder.itemView.callOnClick()}
 
         holder.name.setOnFocusChangeListener { _, hasFocus -> holder.name.isCursorVisible = hasFocus && holder.bindingAdapterPosition == expandedPosition }
@@ -364,7 +364,6 @@ class AlarmsAdapter(
         return if (alarmPosition in (alarms.indices))
             alarms[alarmPosition]
         else null
-
     }
 
     /**
