@@ -43,7 +43,6 @@ class HomeFragment : BaseFragment() {
     private lateinit var overlay: View
     private lateinit var speedDialView: SpeedDialView
     private lateinit var behavior: BottomSheetBehavior<*>
-    private var shouldCollapseBack = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -95,16 +94,15 @@ class HomeFragment : BaseFragment() {
 
         tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                if (tab.position > 0) {
-                    speedDialView.hide()
-                    shouldCollapseBack = behavior.state != BottomSheetBehavior.STATE_EXPANDED
-                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                } else {
+                if (tab.position == 0) {
                     speedDialView.show()
-                    if (shouldCollapseBack) {
-                        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                        shouldCollapseBack = false
-                    }
+                    behavior.isDraggable = true
+                    behavior.peekHeight = view.measuredHeight / 2
+                    behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                } else {
+                    speedDialView.hide()
+                    behavior.isDraggable = false
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 }
             }
 
@@ -118,7 +116,6 @@ class HomeFragment : BaseFragment() {
         view.viewTreeObserver?.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 view.viewTreeObserver?.removeOnGlobalLayoutListener(this)
-                behavior.peekHeight = view.measuredHeight / 2
                 view.findViewById<View>(R.id.timeContainer)?.layoutParams =
                     CoordinatorLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
