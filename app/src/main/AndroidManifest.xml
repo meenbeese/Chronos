@@ -24,6 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppSplash"
         android:enableOnBackInvokedCallback="true"
+        android:supportsRtl="true"
         tools:targetApi="tiramisu">
 
         <activity

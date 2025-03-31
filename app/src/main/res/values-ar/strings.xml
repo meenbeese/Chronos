@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Chronos</string>
+
+    <string name="info_background_permissions_title">التنبيهات والوصول في الخلفية</string>
+    <string name="info_background_permissions_body">أصبحت إصدارات أندرويد الأحدث غير موثوقة بشكل متزايد في بدء تشغيل التطبيقات من الخلفية دون تدخل المستخدم؛ مع إدخال وضع Doze/App Standby في أندرويد 6.0، أصبحت متطلبات بدء تشغيل التطبيق غامضة وغالبًا ما تكون خاصة بالجهاز.\n\nعلى هذا النحو، في حين أنه ليس شرطًا دائمًا لعمل هذا التطبيق، فمن المستحسن بشدة أن تمنح إذن \"العرض فوق التطبيقات الأخرى\" (System Overlays) في الصفحة التالية. سيمنح هذا Chronos استثناءً من متطلبات أندرويد المعتادة لبدء تشغيل تطبيق دون تدخل المستخدم، وسيسمح له بالعمل بشكل أكثر موثوقية.</string>
+
+    <string name="title_alarm">المنبه %d</string>
+    <string name="title_alarm_next">بعد %s من الآن.</string>
+    <string name="title_none">لا شيء</string>
+    <string name="title_vibrate">اهتزاز</string>
+    <string name="title_repeat">تكرار</string>
+    <string name="title_set_alarm">ضبط المنبه</string>
+    <string name="title_set_timer">ضبط المؤقت</string>
+    <string name="title_set_stopwatch">ضبط ساعة الإيقاف</string>
+    <string name="title_lap">دورة</string>
+    <string name="title_stopwatch">ساعة الإيقاف</string>
+    <string name="title_stopwatch_share">%s ساعة إيقاف: %s</string>
+    <string name="title_lap_number" translatable="false">#%d</string>
+    <string name="title_time">الوقت: %s</string>
+    <string name="title_lap_time">الدورة: %s</string>
+    <string name="title_total_time">الإجمالي: %s</string>
+    <string name="title_share_results">مشاركة النتائج…</string>
+    <string name="msg_delete_confirmation">هل أنت متأكد من رغبتك في حذف %s؟</string>
+    <string name="title_delete">حذف</string>
+    <string name="title_start_timer">بدء المؤقت</string>
+    <string name="title_sunrise">شروق الشمس</string>
+    <string name="title_sunset">غروب الشمس</string>
+    <string name="title_theme">السمة</string>
+    <string name="title_appearance">المظهر</string>
+    <string name="title_sound_none">بدون</string>
+    <string name="title_snooze">غفوة</string>
+    <string name="title_alarms">المنبهات</string>
+    <string name="title_settings">الإعدادات</string>
+    <string name="title_ringtones">نغمات الرنين</string>
+    <string name="word_day">يوم</string>
+    <string name="word_days">أيام</string>
+    <string name="word_minute">دقيقة</string>
+    <string name="word_minutes">دقائق</string>
+    <string name="word_hour">ساعة</string>
+    <string name="word_hours">ساعات</string>
+    <string name="word_join">و</string>
+    <string name="title_snooze_custom">مخصص…</string>
+    <string name="msg_snoozed_until">غفوة حتى %s</string>
+    <string name="title_time_zones">المناطق الزمنية</string>
+    <string name="title_behavior">السلوك</string>
+    <string name="title_default_alarm_ringtone">نغمة المنبه الافتراضية</string>
+    <string name="title_default_timer_ringtone">نغمة المؤقت الافتراضية</string>
+    <string name="title_sleep_reminder">تذكير النوم</string>
+    <string name="desc_sleep_reminder">إرسال إشعار يذكرك بالنوم قبل وقت معين من رنين المنبه إذا كنت تستخدم هاتفك.</string>
+    <string name="title_sleep_reminder_time">وقت تذكير النوم</string>
+    <string name="desc_sleep_reminder_time">قبل %1$d ساعات</string>
+    <string name="title_slow_wake_up">استيقاظ بطيء</string>
+    <string name="desc_slow_wake_up">زيادة السطوع ومستوى الصوت تدريجيًا عند رنين المنبه.</string>
+    <string name="title_slow_wake_up_time">مدة الاستيقاظ البطيء</string>
+    <string name="title_about">حول Chronos</string>
+    <string name="title_choose_time_zone">اختر منطقة زمنية</string>
+    <string name="msg_sleep_reminder">سينطلق منبهك القادم بعد حوالي %s من الآن. للحصول على مقدار النوم المحدد في قائمة الإعدادات، يجب أن تذهب إلى السرير الآن.</string>
+    <string name="title_alarm_name">اسم المنبه</string>
+    <string name="title_background_image">صورة خلفية مخصصة</string>
+    <string name="title_ringing_background_image">عرض صورة الخلفية دائمًا</string>
+    <string name="desc_ringing_background_image">تحديد ما إذا كان سيتم عرض صورة الخلفية عند رنين المنبه أو المؤقت.</string>
+    <string name="msg_alarms_empty">ليس لديك أي منبهات مضبوطة. اضغط على زر \'+\' لإنشاء واحد.</string>
+    <string name="msg_time_zones_selected">تم تحديد %d</string>
+    <string name="title_files">الملفات</string>
+    <string name="title_files_audio_files">ملفات صوتية</string>
+    <string name="title_files_add_audio">اختر ملفًا</string>
+    <string-array name="array_themes">
+        <item>تلقائي</item>
+        <item>نهاري</item>
+        <item>ليلي</item>
+        <item>AMOLED</item>
+    </string-array>
+
+    <string name="msg_battery_optimizations_switch_enable">قم بتشغيل المفتاح بجوار "Chronos". قد تحتاج إلى التمرير لأسفل… كثيرًا.</string>
+    <string name="title_ignore_battery_optimizations">تجاهل تحسينات البطارية</string>
+
+    <string name="day_sunday_abbr">أ</string>
+    <string name="day_monday_abbr">ن</string>
+    <string name="day_tuesday_abbr">ث</string>
+    <string name="day_wednesday_abbr">ر</string>
+    <string name="day_thursday_abbr">خ</string>
+    <string name="day_friday_abbr">ج</string>
+    <string name="day_saturday_abbr">س</string>
+
+    <string name="number_zero" translatable="false">0</string>
+    <string name="number_one" translatable="false">1</string>
+    <string name="number_two" translatable="false">2</string>
+    <string name="number_three" translatable="false">3</string>
+    <string name="number_four" translatable="false">4</string>
+    <string name="number_five" translatable="false">5</string>
+    <string name="number_six" translatable="false">6</string>
+    <string name="number_seven" translatable="false">7</string>
+    <string name="number_eight" translatable="false">8</string>
+    <string name="number_nine" translatable="false">9</string>
+
+    <string name="app_description">تطبيق منبه بسيط ولكنه قابل للتخصيص \n يركز على البساطة وسهولة الاستخدام والتصميم.</string>
+    <string name="feature_list">
+        • خلفيات ونغمات رنين مخصصة\n
+        • لا توجد أذونات غير ضرورية\n
+        • سمات داكنة، فاتحة، و AMOLED\n
+        • تحكم دقيق في كل مكان\n
+        • تصميم فريد، بسيط، وفعال\n
+        • دعم الوضعين الرأسي والأفقي\n
+        • نغمات رنين افتراضية لا حصر لها
+    </string>
+    <string name="made_with_love">صُنع بـ ❤ في كندا.</string>
+    <string name="engage_title">تفاعل مع Chronos</string>
+    <string name="fork_github">تفرع من مستودع جيثب</string>
+    <string name="visit_website">قم بزيارة موقعي الإلكتروني</string>
+    <string name="send_email">أرسل لي بريدًا إلكترونيًا</string>
+    <string name="copyright_info">حقوق النشر %1$d Kuzey Bilgin</string>
+    <string name="title_snooze_duration">اختر مدة الغفوة</string>
+</resources>
