@@ -75,7 +75,7 @@ dependencies {
     // Media
     implementation("androidx.media3:media3-exoplayer:1.6.0")
     implementation("androidx.media3:media3-exoplayer-hls:1.6.0")
-    implementation("androidx.media3:media3-ui:1.5.1")
+    implementation("androidx.media3:media3-ui:1.6.0")
 
     // Room DB
     ksp("androidx.room:room-compiler:2.6.1")
