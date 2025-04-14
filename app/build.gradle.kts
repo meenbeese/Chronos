@@ -80,7 +80,7 @@ dependencies {
     // Room DB
     ksp("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
-    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-runtime:2.7.0")
 
     // Material
     implementation("com.google.android.material:material:1.12.0")
