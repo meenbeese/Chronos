@@ -73,8 +73,8 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:1.1.0")
 
     // Media
-    implementation("androidx.media3:media3-exoplayer:1.6.0")
-    implementation("androidx.media3:media3-exoplayer-hls:1.6.0")
+    implementation("androidx.media3:media3-exoplayer:1.6.1")
+    implementation("androidx.media3:media3-exoplayer-hls:1.6.1")
     implementation("androidx.media3:media3-ui:1.6.0")
 
     // Room DB
