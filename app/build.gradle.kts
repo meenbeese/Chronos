@@ -89,7 +89,7 @@ dependencies {
     implementation("com.leinardi.android:speed-dial:3.3.0")
 
     // Image
-    implementation("io.coil-kt.coil3:coil:3.1.0")
+    implementation("io.coil-kt.coil3:coil:3.2.0")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
