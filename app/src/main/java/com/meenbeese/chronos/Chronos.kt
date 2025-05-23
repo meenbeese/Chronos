@@ -23,6 +23,7 @@ import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
+import com.meenbeese.chronos.db.AlarmDao
 import com.meenbeese.chronos.db.AlarmDatabase
 import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.db.AlarmViewModel
@@ -46,15 +47,21 @@ class Chronos : Application(), Player.Listener {
     private var hlsMediaSourceFactory: HlsMediaSource.Factory? = null
     private var currentStream: String? = null
 
-    val database = AlarmDatabase.getDatabase(this)
-    val alarmDao = database.alarmDao()
-    val repository = AlarmRepository(alarmDao)
-    val viewModel = AlarmViewModel(repository)
+    lateinit var database: AlarmDatabase
+    lateinit var alarmDao: AlarmDao
+    lateinit var repository: AlarmRepository
+    lateinit var viewModel: AlarmViewModel
 
     @OptIn(DelicateCoroutinesApi::class)
     @UnstableApi
     override fun onCreate() {
         super.onCreate()
+
+        database = AlarmDatabase.getDatabase(this)
+        alarmDao = database.alarmDao()
+        repository = AlarmRepository(alarmDao)
+        viewModel = AlarmViewModel(repository)
+
         listeners = ArrayList()
         alarms = ArrayList()
         timers = ArrayList()
