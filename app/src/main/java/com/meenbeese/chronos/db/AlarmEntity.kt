@@ -10,7 +10,7 @@ data class AlarmEntity(
     val name: String?,
     val timeInMillis: Long,
     val isEnabled: Boolean,
-    val days: List<Boolean>,
+    val days: MutableList<Boolean>,
     val isVibrate: Boolean,
     val sound: String?
 )

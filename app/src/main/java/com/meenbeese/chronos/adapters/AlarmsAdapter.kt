@@ -2,9 +2,7 @@ package com.meenbeese.chronos.adapters
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.app.AlarmManager
 import android.app.TimePickerDialog
-import android.content.Context
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
@@ -55,7 +53,6 @@ class AlarmsAdapter(
     private val fragmentManager: FragmentManager
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val alarmManager: AlarmManager? = chronos.getSystemService(Context.ALARM_SERVICE) as? AlarmManager?
     private val timers: List<TimerData> = chronos.timers
     private val alarms: List<AlarmData> = chronos.alarms
 
@@ -122,7 +119,7 @@ class AlarmsAdapter(
                 alarm.days[i] = b
             }
 
-            alarm.setDays(chronos, alarm.days)
+            alarm.days = alarm.days
 
             val transition = AutoTransition()
             transition.duration = 150
@@ -136,7 +133,7 @@ class AlarmsAdapter(
         val listener : DaySwitch.OnCheckedChangeListener = object : DaySwitch.OnCheckedChangeListener {
             override fun onCheckedChanged(daySwitch: DaySwitch, isChecked: Boolean) {
                 alarm.days[holder.days.indexOfChild(daySwitch)] = isChecked
-                alarm.setDays(chronos, alarm.days)
+                alarm.days = alarm.days
 
                 if (!alarm.isRepeat()) {
                     notifyItemChanged(holder.bindingAdapterPosition)
@@ -167,14 +164,14 @@ class AlarmsAdapter(
     }
 
     private fun onBindAlarmViewHolderToggles(holder: AlarmViewHolder, alarm: AlarmData) {
-        holder.ringtoneImage.setImageResource(if (alarm.hasSound()) R.drawable.ic_ringtone else R.drawable.ic_ringtone_disabled)
-        holder.ringtoneImage.alpha = if (alarm.hasSound()) 1f else 0.333f
-        holder.ringtoneText.text = if (alarm.hasSound()) alarm.sound?.name else chronos.getString(R.string.title_sound_none)
+        holder.ringtoneImage.setImageResource(if (alarm.sound != null) R.drawable.ic_ringtone else R.drawable.ic_ringtone_disabled)
+        holder.ringtoneImage.alpha = if (alarm.sound != null) 1f else 0.333f
+        holder.ringtoneText.text = if (alarm.sound != null) alarm.sound?.name else chronos.getString(R.string.title_sound_none)
         holder.ringtone.setOnClickListener {
             val dialog = SoundChooserDialog()
             dialog.setListener(object : SoundChooserListener {
                 override fun onSoundChosen(sound: SoundData?) {
-                    alarm.setSound(chronos, sound)
+                    alarm.sound = sound
                     onBindAlarmViewHolderToggles(holder, alarm)
                 }
             })
@@ -185,18 +182,20 @@ class AlarmsAdapter(
         holder.vibrateImage.setImageDrawable(vibrateDrawable)
         holder.vibrateImage.alpha = if (alarm.isVibrate) 1f else 0.333f
         holder.vibrate.setOnClickListener { view ->
-            alarm.setVibrate(chronos, !alarm.isVibrate)
+            alarm.isVibrate = !alarm.isVibrate
 
             val vibrateDrawable1 = AnimatedVectorDrawableCompat.create(chronos, if (alarm.isVibrate) R.drawable.ic_none_to_vibrate else R.drawable.ic_vibrate_to_none)
             if (vibrateDrawable1 != null) {
                 holder.vibrateImage.setImageDrawable(vibrateDrawable1)
                 vibrateDrawable1.start()
-            } else
+            } else {
                 holder.vibrateImage.setImageResource(if (alarm.isVibrate) R.drawable.ic_vibrate else R.drawable.ic_vibrate_none)
+            }
 
             holder.vibrateImage.animate().alpha(if (alarm.isVibrate) 1f else 0.333f).setDuration(250).start()
-            if (alarm.isVibrate)
+            if (alarm.isVibrate) {
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            }
         }
     }
 
@@ -244,7 +243,7 @@ class AlarmsAdapter(
         holder.name.isCursorVisible = false
         holder.name.clearFocus()
         holder.nameUnderline.visibility = if (isExpanded) View.VISIBLE else View.GONE
-        holder.name.setText(alarm.getName(chronos))
+        holder.name.setText(alarm.name)
 
         if (isExpanded) holder.name.setOnClickListener(null)
         else holder.name.setOnClickListener { holder.itemView.callOnClick()}
@@ -254,7 +253,7 @@ class AlarmsAdapter(
         holder.enable.setOnCheckedChangeListener(null)
         holder.enable.isChecked = alarm.isEnabled
         holder.enable.setOnCheckedChangeListener { _, b ->
-            alarm.setEnabled(chronos, b)
+            alarm.isEnabled = b
 
             val transition = AutoTransition()
             transition.duration = 200
@@ -272,8 +271,8 @@ class AlarmsAdapter(
             val timePickerDialog = TimePickerDialog(view.context, style, { _, selectedHour, selectedMinute ->
                 alarm.time.set(Calendar.HOUR_OF_DAY, selectedHour)
                 alarm.time.set(Calendar.MINUTE, selectedMinute)
-                alarm.setTime(chronos, alarm.time.timeInMillis)
-                alarm.setEnabled(chronos, true)
+                alarm.time = Calendar.getInstance().apply { timeInMillis = alarm.time.timeInMillis }
+                alarm.isEnabled = true
 
                 notifyItemChanged(holder.bindingAdapterPosition)
             }, hour, minute, true)
@@ -299,7 +298,7 @@ class AlarmsAdapter(
             onBindAlarmViewHolderToggles(holder, alarm)
         } else {
             holder.repeatIndicator.alpha = if (alarm.isRepeat()) 1f else 0.333f
-            holder.soundIndicator.alpha = if (alarm.hasSound()) 1f else 0.333f
+            holder.soundIndicator.alpha = if (alarm.sound != null) 1f else 0.333f
             holder.vibrateIndicator.alpha = if (alarm.isVibrate) 1f else 0.333f
         }
 
@@ -307,8 +306,8 @@ class AlarmsAdapter(
         holder.delete.visibility = if (isExpanded) View.VISIBLE else View.GONE
         holder.delete.setOnClickListener { view ->
             MaterialAlertDialogBuilder(view.context, if(chronos.isDarkTheme()) com.google.android.material.R.style.Theme_MaterialComponents_Dialog_Alert else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog_Alert)
-                .setMessage(chronos.getString(R.string.msg_delete_confirmation, alarm.getName(chronos)))
-                .setPositiveButton(view.context.getString(android.R.string.ok)){_, _ ->  chronos.removeAlarm(alarm)}
+                .setMessage(chronos.getString(R.string.msg_delete_confirmation, alarm.name))
+                .setPositiveButton(view.context.getString(android.R.string.ok)) { _, _ -> chronos.alarms.remove(alarm) }
                 .setNegativeButton(view.context.getString(android.R.string.cancel), null)
                 .show()
         }
@@ -423,7 +422,7 @@ class AlarmsAdapter(
 
                 override fun afterTextChanged(editable: Editable) {
                     if (bindingAdapterPosition < alarms.size) {
-                        alarms[bindingAdapterPosition].setName(chronos, editable.toString())
+                        alarms[bindingAdapterPosition].name = editable.toString()
                     }
                 }
             })

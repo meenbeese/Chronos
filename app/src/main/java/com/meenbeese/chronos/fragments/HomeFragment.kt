@@ -14,10 +14,9 @@ import androidx.viewpager2.widget.ViewPager2
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
+import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.dialogs.TimerDialog
-import com.meenbeese.chronos.dialogs.TimePickerDialog
-import com.meenbeese.chronos.interfaces.FragmentInstantiator
 import com.meenbeese.chronos.utils.DimenUtils.getStatusBarHeight
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImage
 import com.meenbeese.chronos.views.PageIndicatorView
@@ -201,20 +200,24 @@ class HomeFragment : BaseFragment() {
      * a new alarm.
      */
     private fun invokeAlarmScheduler() {
-        val hourNow = Calendar.HOUR_OF_DAY
-        val minuteNow = Calendar.MINUTE
+        val calendar = Calendar.getInstance()
+        val hourNow = calendar.get(Calendar.HOUR_OF_DAY)
+        val minuteNow = calendar.get(Calendar.MINUTE)
 
-        val timeChooserDialog = TimePickerDialog(view.context)
-        timeChooserDialog.setListener(object : TimePickerDialog.OnTimeChosenListener {
-            override fun onTimeChosen(hour: Int, minute: Int) {
-                val alarm = chronos!!.newAlarm()
-                alarm.time[hourNow] = hour
-                alarm.time[minuteNow] = minute
-                alarm.setTime(chronos!!, alarm.time.timeInMillis)
-                alarm.setEnabled(context!!, true)
-                chronos?.onAlarmsChanged()
-            }
-        })
+        val timeChooserDialog = android.app.TimePickerDialog(context, { _, hour, minute ->
+            val alarm = AlarmData(
+                id = 0,
+                time = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, hour)
+                    set(Calendar.MINUTE, minute)
+                    set(Calendar.SECOND, 0)
+                }
+            )
+
+            alarm.saveToDatabase(requireContext())
+            alarm.set(requireContext())
+        }, hourNow, minuteNow, true)
+
         timeChooserDialog.show()
     }
 

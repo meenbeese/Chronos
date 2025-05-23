@@ -1,24 +1,53 @@
 package com.meenbeese.chronos.receivers
 
-import android.app.AlarmManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 
-import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.activities.AlarmActivity
+import com.meenbeese.chronos.data.AlarmData
+import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.db.AlarmDatabase
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+import java.util.Calendar
 
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val chronos = context.applicationContext as Chronos
-        val alarm = chronos.alarms[intent.getIntExtra(EXTRA_ALARM_ID, 0)]
-        if (alarm.isRepeat()) alarm.set(context) else alarm.setEnabled(chronos, false)
-        chronos.onAlarmsChanged()
-        val ringer = Intent(context, AlarmActivity::class.java)
-        ringer.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        ringer.putExtra(AlarmActivity.EXTRA_ALARM, alarm)
-        context.startActivity(ringer)
+        val alarmId = intent.getIntExtra(EXTRA_ALARM_ID, 0)
+        val db = AlarmDatabase.getDatabase(context).alarmDao()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val alarmEntity = db.getAlarmById(alarmId)
+            alarmEntity?.let {
+                val alarm = AlarmData(
+                    id = it.id,
+                    name = it.name,
+                    time = Calendar.getInstance().apply { timeInMillis = it.timeInMillis },
+                    isEnabled = it.isEnabled,
+                    days = it.days,
+                    isVibrate = it.isVibrate,
+                    sound = it.sound?.let { soundStr -> SoundData.fromString(soundStr) }
+                )
+
+                if (alarm.getNext() != null) {
+                    alarm.set(context)
+                } else {
+                    alarm.isEnabled = false
+                    alarm.saveToDatabase(context)
+                }
+
+                val ringer = Intent(context, AlarmActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    putExtra(AlarmActivity.EXTRA_ALARM, alarm)
+                }
+                context.startActivity(ringer)
+            }
+        }
     }
 
     companion object {

@@ -21,8 +21,11 @@ import androidx.media3.exoplayer.source.MediaSource
 
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.PreferenceData
-import com.meenbeese.chronos.data.SoundData.Companion.fromString
+import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
+import com.meenbeese.chronos.db.AlarmDatabase
+import com.meenbeese.chronos.db.AlarmRepository
+import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
 
@@ -43,6 +46,12 @@ class Chronos : Application(), Player.Listener {
     private var hlsMediaSourceFactory: HlsMediaSource.Factory? = null
     private var currentStream: String? = null
 
+    val database = AlarmDatabase.getDatabase(this)
+    val alarmDao = database.alarmDao()
+    val repository = AlarmRepository(alarmDao)
+    val viewModel = AlarmViewModel(repository)
+
+    @OptIn(DelicateCoroutinesApi::class)
     @UnstableApi
     override fun onCreate() {
         super.onCreate()
@@ -52,17 +61,31 @@ class Chronos : Application(), Player.Listener {
         player = ExoPlayer.Builder(this).build()
         player?.addListener(this)
         activityTheme = PreferenceData.THEME.getValue<Int>(this).mapTheme()
+
         val dataSourceFactory = DefaultDataSource.Factory(this)
         hlsMediaSourceFactory = HlsMediaSource.Factory(dataSourceFactory)
-        val alarmLength = PreferenceData.ALARM_LENGTH.getValue<Int>(this)
-        for (id in 0 until alarmLength) {
-            alarms.add(AlarmData(id, this))
+
+        GlobalScope.launch {
+            val alarmEntities = alarmDao.getAllAlarms()
+            alarms.addAll(alarmEntities.map { entity ->
+                AlarmData(
+                    id = entity.id,
+                    name = entity.name,
+                    time = Calendar.getInstance().apply { timeInMillis = entity.timeInMillis },
+                    isEnabled = entity.isEnabled,
+                    days = entity.days,
+                    isVibrate = entity.isVibrate,
+                    sound = entity.sound?.let { soundStr -> SoundData.fromString(soundStr) }
+                )
+            })
         }
+
         val timerLength = PreferenceData.TIMER_LENGTH.getValue<Int>(this)
         for (id in 0 until timerLength) {
             val timer = TimerData(id, this)
             if (timer.isSet) timers.add(timer)
         }
+
         if (timerLength > 0) {
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
                 startForegroundService(Intent(this, TimerService::class.java))
@@ -71,54 +94,6 @@ class Chronos : Application(), Player.Listener {
             }
         }
         refreshSleepTime(this)
-    }
-
-    /**
-     * Create a new alarm, assigning it an unused preference id.
-     *
-     * @return          The newly instantiated [AlarmData](./data/AlarmData).
-     */
-    fun newAlarm(): AlarmData {
-        val alarm = AlarmData(id = alarms.size, time = Calendar.getInstance())
-        alarm.sound = fromString(PreferenceData.DEFAULT_ALARM_RINGTONE.getValue(this))
-        alarms.add(alarm)
-        onAlarmCountChanged()
-        return alarm
-    }
-
-    /**
-     * Remove an alarm and all of its its preferences.
-     *
-     * @param alarm     The alarm to be removed.
-     */
-    fun removeAlarm(alarm: AlarmData) {
-        alarm.onRemoved(this)
-        val index = alarms.indexOf(alarm)
-        alarms.removeAt(index)
-        for (i in index until alarms.size) {
-            alarms[i].onIdChanged(i, this)
-        }
-        onAlarmCountChanged()
-        onAlarmsChanged()
-    }
-
-    /**
-     * Update preferences to show that the alarm count has been changed.
-     */
-    @OptIn(DelicateCoroutinesApi::class)
-    private fun onAlarmCountChanged() {
-        GlobalScope.launch {
-            PreferenceData.ALARM_LENGTH.setValue(this@Chronos, alarms.size)
-        }
-    }
-
-    /**
-     * Notify the application of changes to the current alarms.
-     */
-    fun onAlarmsChanged() {
-        for (listener in listeners!!) {
-            listener.onAlarmsChanged()
-        }
     }
 
     /**

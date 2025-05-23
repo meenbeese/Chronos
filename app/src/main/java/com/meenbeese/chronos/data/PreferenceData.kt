@@ -39,14 +39,6 @@ enum class PreferenceData(private val key: Preferences.Key<*>, private val defau
     SLOW_WAKE_UP(booleanPreferencesKey(name = "slow_wake_up"), defaultValue = true),
     SLOW_WAKE_UP_TIME(longPreferencesKey(name = "slow_wake_up_time"), defaultValue = 300000L),
 
-    // Alarm Settings
-    ALARM_NAME(stringPreferencesKey(name = "alarm_name"), defaultValue = "%d/ALARM_NAME"),
-    ALARM_TIME(longPreferencesKey(name = "alarm_time"), defaultValue = 0L),
-    ALARM_ENABLED(booleanPreferencesKey(name = "alarm_enabled"), defaultValue = true),
-    ALARM_DAY_ENABLED(booleanPreferencesKey(name = "alarm_day_enabled"), defaultValue = false),
-    ALARM_VIBRATE(booleanPreferencesKey(name = "alarm_vibrate"), defaultValue = true),
-    ALARM_SOUND(stringPreferencesKey(name = "alarm_sound"), defaultValue = ""),
-
     // Timer Settings
     TIMER_DURATION(intPreferencesKey(name = "timer_duration"), defaultValue = 600000),
     TIMER_END_TIME(longPreferencesKey(name = "timer_end_time"), defaultValue = 0L),
