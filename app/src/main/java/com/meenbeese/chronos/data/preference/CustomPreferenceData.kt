@@ -25,7 +25,9 @@ abstract class CustomPreferenceData(
      */
     abstract fun onClick(holder: ViewHolder)
 
-    override fun getViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder = ViewHolder(inflater.inflate(R.layout.item_preference_custom, parent, false))
+    override fun getViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder {
+        return ViewHolder(inflater.inflate(R.layout.item_preference_custom, parent, false))
+    }
 
     override fun bindViewHolder(holder: ViewHolder) {
         holder.nameView.setText(name)
@@ -42,5 +44,6 @@ abstract class CustomPreferenceData(
     class ViewHolder(v: View) : BasePreferenceData.ViewHolder(v) {
         val nameView: TextView = v.findViewById(R.id.name)
         val valueNameView: TextView = v.findViewById(R.id.value)
+        val description: TextView = v.findViewById(R.id.description)
     }
 }

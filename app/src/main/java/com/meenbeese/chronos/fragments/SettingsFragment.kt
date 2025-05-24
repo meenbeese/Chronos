@@ -44,7 +44,8 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
             ThemePreferenceData(requireContext(), lifecycleScope),
             ImageFilePreferenceData(
                 PreferenceData.BACKGROUND_IMAGE,
-                R.string.title_background_image
+                R.string.title_background_image,
+                R.string.desc_background_image
             ),
             BooleanPreferenceData(
                 PreferenceData.RINGING_BACKGROUND_IMAGE,

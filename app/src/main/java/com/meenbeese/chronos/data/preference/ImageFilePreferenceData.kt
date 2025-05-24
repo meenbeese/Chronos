@@ -1,5 +1,6 @@
 package com.meenbeese.chronos.data.preference
 
+import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 
@@ -15,9 +16,15 @@ import kotlinx.coroutines.launch
  */
 class ImageFilePreferenceData(
     private val preference: PreferenceData,
-    name: Int
+    name: Int,
+    @StringRes private val description: Int
 ) : CustomPreferenceData(name) {
     override fun getValueName(holder: ViewHolder): String = ""
+
+    override fun bindViewHolder(holder: ViewHolder) {
+        super.bindViewHolder(holder)
+        holder.description.setText(description)
+    }
 
     override fun onClick(holder: ViewHolder) {
         val fragment = FileChooserFragment.newInstance(preference, "image/*")
