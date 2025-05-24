@@ -10,6 +10,7 @@ import android.widget.ImageView
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 
@@ -84,7 +85,11 @@ class HomeFragment : BaseFragment() {
             SettingsFragment.Instantiator(context)
         )
         viewPager.adapter = pagerAdapter
-        viewPager.post { attachScrollListenerToAlarms() }
+        viewPager.post {
+            if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                attachScrollListenerToAlarms()
+            }
+        }
 
         tabLayout.setup(speedDialView, behavior, view)
 
