@@ -27,7 +27,7 @@ private val Context.dataStore by preferencesDataStore(
 enum class PreferenceData(private val key: Preferences.Key<*>, private val defaultValue: Any?) {
     INFO_BACKGROUND_PERMISSIONS(booleanPreferencesKey(name = "info_background_permissions"), defaultValue = false),
     THEME(intPreferencesKey(name = "theme"), defaultValue = Chronos.THEME_AUTO),
-    BACKGROUND_IMAGE(stringPreferencesKey(name = "background_image"), defaultValue = "https://jfenn.me/images/headers/snowytrees.jpg"),
+    BACKGROUND_IMAGE(stringPreferencesKey(name = "background_image"), defaultValue = "drawable/snowytrees"),
     RINGING_BACKGROUND_IMAGE(booleanPreferencesKey(name = "ringing_background_image"), defaultValue = true),
     DAY_START(intPreferencesKey(name = "day_start"), defaultValue = 6),
     DAY_END(intPreferencesKey(name = "day_end"), defaultValue = 18),
