@@ -3,7 +3,6 @@ package com.meenbeese.chronos.fragments
 import android.os.Bundle
 import android.provider.AlarmClock
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
@@ -24,11 +23,10 @@ import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImage
 import com.meenbeese.chronos.views.PageIndicatorView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
+import com.meenbeese.chronos.views.CustomTabLayout
 
 import java.util.Calendar
 import java.util.TimeZone
@@ -51,7 +49,7 @@ class HomeFragment : BaseFragment() {
         view = inflater.inflate(R.layout.fragment_home, container, false)
 
         val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
-        val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
+        val tabLayout = view.findViewById<CustomTabLayout>(R.id.tabLayout)
         timePager = view.findViewById(R.id.timePager)
         bottomSheet = view.findViewById(R.id.bottomSheet)
         timeIndicator = view.findViewById(R.id.pageIndicator)
@@ -88,74 +86,11 @@ class HomeFragment : BaseFragment() {
         viewPager.adapter = pagerAdapter
         viewPager.post { attachScrollListenerToAlarms() }
 
+        tabLayout.setup(speedDialView, behavior, view)
+
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = pagerAdapter.getTitle(position)
         }.attach()
-
-        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                if (tab.position == 0) {
-                    speedDialView.show()
-                    behavior.isDraggable = true
-                    behavior.peekHeight = view.measuredHeight / 2
-                    behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                } else {
-                    speedDialView.hide()
-                    behavior.isDraggable = false
-                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {}
-        })
-
-        tabLayout.setOnTouchListener(object : View.OnTouchListener {
-            private var initialY = 0f
-            private var isDragging = false
-            private var initialX = 0f
-            private val clickThreshold = 10
-
-            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                event ?: return false
-
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        initialY = event.rawY
-                        initialX = event.rawX
-                        isDragging = false
-                    }
-                    MotionEvent.ACTION_MOVE -> {
-                        val dy = initialY - event.rawY
-                        val dx = initialX - event.rawX
-                        if (dy > 30) {
-                            if (behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
-                                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                            }
-                            isDragging = true
-                            return true
-                        }
-                    }
-                    MotionEvent.ACTION_UP -> {
-                        val dy = Math.abs(event.rawY - initialY)
-                        val dx = Math.abs(event.rawX - initialX)
-                        if (!isDragging && dy < clickThreshold && dx < clickThreshold) {
-                            v?.performClick()
-                            return false
-                        }
-                        if (isDragging) {
-                            return true
-                        }
-                    }
-                    MotionEvent.ACTION_CANCEL -> {
-                        if (isDragging) {
-                            return true
-                        }
-                    }
-                }
-                return false
-            }
-        })
 
         setSpeedDialView()
         setClockFragments()
