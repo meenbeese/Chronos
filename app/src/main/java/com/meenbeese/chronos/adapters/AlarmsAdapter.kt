@@ -57,24 +57,12 @@ class AlarmsAdapter(
 
     private var expandedPosition = -1
 
-    var colorAccent = Color.WHITE
-        set(colorAccent) {
-            field = colorAccent
-            recycler.post { notifyDataSetChanged() }
-        }
-
     var colorForeground = Color.TRANSPARENT
         set(colorForeground) {
             field = colorForeground
             if (expandedPosition > 0) {
                 recycler.post { notifyItemChanged(expandedPosition) }
             }
-        }
-
-    var textColorPrimary = Color.WHITE
-        set(textColorPrimary) {
-            field = textColorPrimary
-            recycler.post { notifyDataSetChanged() }
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -102,7 +90,6 @@ class AlarmsAdapter(
             }
         }
 
-        holder.stop.setColorFilter(textColorPrimary)
         holder.stop.setOnClickListener {
             getTimer(holder.bindingAdapterPosition)?.let { timer ->
                 chronos.removeTimer(timer)
@@ -310,16 +297,6 @@ class AlarmsAdapter(
                 .setNegativeButton(view.context.getString(android.R.string.cancel), null)
                 .show()
         }
-
-        holder.repeat.setTextColor(textColorPrimary)
-        holder.delete.setTextColor(textColorPrimary)
-        holder.ringtoneImage.setColorFilter(textColorPrimary)
-        holder.vibrateImage.setColorFilter(textColorPrimary)
-        holder.expandImage.setColorFilter(textColorPrimary)
-        holder.repeatIndicator.setColorFilter(textColorPrimary)
-        holder.soundIndicator.setColorFilter(textColorPrimary)
-        holder.vibrateIndicator.setColorFilter(textColorPrimary)
-        holder.nameUnderline.setBackgroundColor(textColorPrimary)
 
         onBindAlarmViewHolderExpansion(holder, position)
     }
