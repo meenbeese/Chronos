@@ -73,7 +73,14 @@ class FileChooserFragment : Fragment() {
             }
             addCategory(Intent.CATEGORY_OPENABLE)
             putExtra(Intent.EXTRA_MIME_TYPES, when (type) {
-                TYPE_IMAGE -> arrayOf("image/png", "image/jpeg", "image/webp")
+                TYPE_IMAGE -> arrayOf(
+                    "image/jpeg",
+                    "image/png",
+                    "image/webp",
+                    "image/gif",
+                    "image/bmp",
+                    "image/heif",
+                )
                 TYPE_AUDIO -> arrayOf("audio/mpeg", "audio/mp4", "audio/opus")
                 else -> arrayOf("*/*")
             })
@@ -102,25 +109,18 @@ class FileChooserFragment : Fragment() {
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun handleImageResult(uri: Uri) {
-        var path: String? = null
-        var cursor: Cursor? = null
         try {
-            cursor = requireContext().contentResolver.query(uri, null, null, null, null)
-            if (cursor != null && cursor.moveToFirst()) {
-                val columnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
-                if (columnIndex != -1) path = cursor.getString(columnIndex)
-                cursor.close()
-            }
-        } catch (e: Exception) {
+            requireContext().contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        } catch (e: SecurityException) {
             e.printStackTrace()
-            Toast.makeText(requireContext(), "An error has occurred when choosing media.", Toast.LENGTH_SHORT).show()
-        } finally {
-            cursor?.close()
+            Toast.makeText(requireContext(), "Permission error when selecting image.", Toast.LENGTH_SHORT).show()
         }
+
+        val path = uri.toString()
         GlobalScope.launch {
             preference?.setValue(requireContext(), path)
         }
-        callback?.invoke("Image File", path ?: "")
+        callback?.invoke("Image File", path)
         parentFragmentManager.popBackStack()
     }
 

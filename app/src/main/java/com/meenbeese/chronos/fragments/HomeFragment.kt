@@ -119,6 +119,11 @@ class HomeFragment : BaseFragment() {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        getBackgroundImage(background)
+    }
+
     private fun setSpeedDialView() {
         speedDialView.addActionItem(
             SpeedDialActionItem

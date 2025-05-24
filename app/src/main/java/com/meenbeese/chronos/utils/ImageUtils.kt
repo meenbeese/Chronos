@@ -15,6 +15,7 @@ import coil3.request.crossfade
 import coil3.request.transformations
 import coil3.transform.RoundedCornersTransformation
 
+import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 
 import java.io.File
@@ -53,28 +54,37 @@ object ImageUtils {
      */
     @JvmStatic
     fun getBackgroundImage(imageView: ImageView) {
-        val backgroundUrl = PreferenceData.BACKGROUND_IMAGE.getValue<String>(imageView.context)
+        val context = imageView.context
+        val backgroundUrl = PreferenceData.BACKGROUND_IMAGE.getValue<String>(context)
+
         if (backgroundUrl.isNotEmpty()) {
             when {
                 backgroundUrl.startsWith("drawable/") -> {
                     val resName = backgroundUrl.removePrefix("drawable/")
-                    val resId = imageView.context.resources.getIdentifier(resName, "drawable", imageView.context.packageName)
+                    val resId = context.resources.getIdentifier(resName, "drawable", context.packageName)
                     if (resId != 0) {
                         loadImageWithCoil(imageView, resId)
+                        return
                     }
                 }
                 backgroundUrl.startsWith("http") -> {
                     loadImageWithCoil(imageView, backgroundUrl.toUri())
+                    return
                 }
                 backgroundUrl.startsWith("content://") -> {
-                    val path = backgroundUrl.toUri().lastPathSegment?.let { segment ->
-                        if (segment.contains(":")) "/storage/" + segment.replaceFirst(":", "/") else backgroundUrl.toUri().path
-                    }
-                    path?.let { loadImageWithCoil(imageView, Uri.fromFile(File(it))) }
+                    val uri = backgroundUrl.toUri()
+                    loadImageWithCoil(imageView, uri)
+                    return
                 }
-                else -> loadImageWithCoil(imageView, Uri.fromFile(File(backgroundUrl)))
+                else -> {
+                    val file = File(backgroundUrl)
+                    loadImageWithCoil(imageView, Uri.fromFile(file))
+                    return
+                }
             }
         }
+
+        imageView.setImageResource(R.drawable.snowytrees)
     }
 
     private fun loadImageWithCoil(imageView: ImageView, uri: Uri) {
