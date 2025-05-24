@@ -41,7 +41,6 @@ import java.util.concurrent.TimeUnit
 
 import kotlin.math.min
 
-
 class AlarmActivity : ComponentActivity(), SlideActionListener {
     private var overlay: View? = null
     private var time: TextView? = null

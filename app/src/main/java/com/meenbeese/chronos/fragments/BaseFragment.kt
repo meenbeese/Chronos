@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.Chronos.ChronosListener
 
-
 abstract class BaseFragment : Fragment(), ChronosListener {
     protected var chronos: Chronos? = null
         private set

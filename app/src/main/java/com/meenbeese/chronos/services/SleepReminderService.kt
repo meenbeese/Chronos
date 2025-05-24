@@ -25,7 +25,6 @@ import com.meenbeese.chronos.utils.FormatUtils.formatUnit
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
-
 class SleepReminderService : Service() {
     private var chronos: Chronos? = null
     private var powerManager: PowerManager? = null

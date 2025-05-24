@@ -20,7 +20,6 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-
 class FileChooserFragment : Fragment() {
     private var preference: PreferenceData? = null
     private var type: String? = TYPE_IMAGE

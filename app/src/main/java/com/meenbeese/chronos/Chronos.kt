@@ -36,7 +36,6 @@ import kotlinx.coroutines.launch
 
 import java.util.Calendar
 
-
 class Chronos : Application(), Player.Listener {
     lateinit var alarms: ArrayList<AlarmData>
     lateinit var timers: ArrayList<TimerData>

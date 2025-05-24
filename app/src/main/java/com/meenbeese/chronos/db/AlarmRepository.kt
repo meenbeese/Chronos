@@ -3,7 +3,6 @@ package com.meenbeese.chronos.db
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-
 class AlarmRepository(private val alarmDao: AlarmDao) {
     suspend fun insert(alarm: AlarmEntity): Long = withContext(Dispatchers.IO) {
         alarmDao.insert(alarm)

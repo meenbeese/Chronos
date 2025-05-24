@@ -3,7 +3,6 @@ package com.meenbeese.chronos.utils
 import android.content.Context
 import android.content.res.Resources
 
-
 object DimenUtils {
     /**
      * Returns the height of the device's status bar in px.

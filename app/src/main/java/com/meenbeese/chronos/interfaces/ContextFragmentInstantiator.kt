@@ -2,7 +2,6 @@ package com.meenbeese.chronos.interfaces
 
 import android.content.Context
 
-
 abstract class ContextFragmentInstantiator(private val context: Context) : FragmentInstantiator {
 
     override fun getTitle(position: Int): String? {

@@ -16,7 +16,6 @@ import com.meenbeese.chronos.data.PreferenceData
 
 import java.io.File
 
-
 object ImageUtils {
     /**
      * Converts drawables to bitmaps.

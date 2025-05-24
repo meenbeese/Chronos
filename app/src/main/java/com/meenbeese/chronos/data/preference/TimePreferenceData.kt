@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 
 import java.util.concurrent.TimeUnit
 
-
 /**
  * A preference item that holds / displays a time value.
  */

@@ -12,7 +12,6 @@ import androidx.activity.ComponentDialog
 
 import com.meenbeese.chronos.R
 
-
 class SnoozeDurationDialog(context: Context, private val names: Array<CharSequence?>, private val listener: OnSnoozeDurationSelectedListener) : ComponentDialog(context) {
 
     interface OnSnoozeDurationSelectedListener {

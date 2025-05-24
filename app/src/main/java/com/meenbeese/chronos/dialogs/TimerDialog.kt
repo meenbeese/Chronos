@@ -22,7 +22,6 @@ import com.meenbeese.chronos.interfaces.SoundChooserListener
 
 import java.util.concurrent.TimeUnit
 
-
 class TimerDialog(context: Context, private val manager: FragmentManager) :
     ComponentDialog(context), View.OnClickListener {
     private var ringtoneImage: ImageView? = null

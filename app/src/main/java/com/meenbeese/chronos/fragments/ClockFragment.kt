@@ -13,7 +13,6 @@ import com.meenbeese.chronos.views.DigitalClockView
 
 import java.util.TimeZone
 
-
 class ClockFragment : BasePagerFragment() {
     private var timezone: String? = null
     override fun onCreateView(

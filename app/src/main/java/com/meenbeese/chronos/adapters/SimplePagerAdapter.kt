@@ -5,7 +5,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 import com.meenbeese.chronos.interfaces.FragmentInstantiator
 
-
 class SimplePagerAdapter(
     fragment: Fragment,
     private vararg val fragments: FragmentInstantiator

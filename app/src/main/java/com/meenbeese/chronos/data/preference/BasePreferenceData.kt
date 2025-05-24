@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.meenbeese.chronos.Chronos
 
-
 /**
  * A preference item to display and bind values
  * of preferences as a settings item.

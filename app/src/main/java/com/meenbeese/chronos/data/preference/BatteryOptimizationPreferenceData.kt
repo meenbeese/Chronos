@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat
 
 import com.meenbeese.chronos.R
 
-
 /**
  * A preference item allowing the user to select to
  * ignore battery optimizations to improve stability.

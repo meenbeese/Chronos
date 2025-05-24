@@ -11,7 +11,6 @@ import androidx.activity.ComponentDialog
 import com.google.android.material.button.MaterialButton
 import com.meenbeese.chronos.R
 
-
 class TimePickerDialog(context: Context?) : ComponentDialog(context!!), View.OnClickListener {
 
     private var timePicker: TimePicker? = null

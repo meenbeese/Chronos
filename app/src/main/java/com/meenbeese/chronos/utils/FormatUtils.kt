@@ -10,7 +10,6 @@ import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
-
 object FormatUtils {
     private const val FORMAT_12H = "h:mm:ss"
     private const val FORMAT_24H = "HH:mm:ss"

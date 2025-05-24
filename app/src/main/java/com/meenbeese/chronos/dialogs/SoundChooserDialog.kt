@@ -21,7 +21,6 @@ import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-
 class SoundChooserDialog : DialogFragment(), SoundChooserListener {
     private var listener: SoundChooserListener? = null
     private var view: View? = null

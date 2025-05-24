@@ -26,7 +26,6 @@ import com.meenbeese.chronos.data.preference.TimePreferenceData
 import com.meenbeese.chronos.data.preference.TimeZonesPreferenceData
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 
-
 class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
     private lateinit var recyclerView: RecyclerView
     private var preferenceAdapter: PreferenceAdapter? = null

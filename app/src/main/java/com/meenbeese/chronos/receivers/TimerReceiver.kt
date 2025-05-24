@@ -7,7 +7,6 @@ import android.content.Intent
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.activities.AlarmActivity
 
-
 class TimerReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val chronos = context.applicationContext as Chronos

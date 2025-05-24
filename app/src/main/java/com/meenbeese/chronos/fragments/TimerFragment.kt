@@ -14,7 +14,6 @@ import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.ProgressTextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-
 class TimerFragment : BaseFragment() {
     private lateinit var back: ImageView
     private lateinit var time: ProgressTextView

@@ -42,7 +42,6 @@ import com.meenbeese.chronos.views.ProgressLineView
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
-
 /**
  * View adapter for the "alarms" list; displays all timers and
  * alarms currently stored in the application.

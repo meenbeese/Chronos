@@ -7,7 +7,6 @@ import android.content.Intent
 
 import com.meenbeese.chronos.Chronos
 
-
 class RestoreOnBootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val chronos = context.applicationContext as Chronos

@@ -27,7 +27,6 @@ import com.meenbeese.chronos.fragments.StopwatchFragment
 import com.meenbeese.chronos.fragments.TimerFragment
 import com.meenbeese.chronos.receivers.TimerReceiver
 
-
 class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedListener,
     ActivityListener {
     private var chronos: Chronos? = null

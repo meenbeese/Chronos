@@ -7,7 +7,6 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 
-
 /**
  * Display a progress line, with a given foreground/background
  * color set.

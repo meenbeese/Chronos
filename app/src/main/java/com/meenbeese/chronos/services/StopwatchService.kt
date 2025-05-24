@@ -22,7 +22,6 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.activities.MainActivity
 import com.meenbeese.chronos.utils.FormatUtils.formatMillis
 
-
 class StopwatchService : Service() {
     private val binder: IBinder = LocalBinder()
 

@@ -5,7 +5,6 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
 
-
 /**
  * The AnimFloat class animates a float, to a granularity of
  * 0.1f. That is, if the difference between the target and current

@@ -22,7 +22,6 @@ import com.meenbeese.chronos.utils.FormatUtils.formatMillis
 import com.meenbeese.chronos.views.ProgressTextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-
 class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConnection {
     private lateinit var back: ImageView
     private lateinit var reset: ImageView

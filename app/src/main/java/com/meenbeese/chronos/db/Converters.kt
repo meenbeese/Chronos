@@ -2,7 +2,6 @@ package com.meenbeese.chronos.db
 
 import androidx.room.TypeConverter
 
-
 class Converters {
     @TypeConverter
     fun fromBooleanList(value: MutableList<Boolean>): String {

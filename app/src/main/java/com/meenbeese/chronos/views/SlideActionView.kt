@@ -25,7 +25,6 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 
-
 open class SlideActionView : View, OnTouchListener {
     private var position = -1f
     private var handleRadius = 0

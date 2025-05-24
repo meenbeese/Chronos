@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-
 /**
  * Allows the user to select from a set of
  * ringtone sounds (preference is a string

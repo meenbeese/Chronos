@@ -23,7 +23,6 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
-
 class AlarmData(
     var id: Int,
     var name: String? = null,

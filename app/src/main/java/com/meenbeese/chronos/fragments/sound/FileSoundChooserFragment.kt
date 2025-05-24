@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.datastore.preferences.core.edit
 
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.FragmentActivity
@@ -19,6 +19,7 @@ import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.fragments.BasePagerFragment
 import com.meenbeese.chronos.fragments.FileChooserFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
+
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -26,7 +27,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 val Context.dataStore by preferencesDataStore(name = "user_preferences")
-
 
 class FileSoundChooserFragment : BaseSoundChooserFragment() {
     private lateinit var sounds: MutableList<SoundData>

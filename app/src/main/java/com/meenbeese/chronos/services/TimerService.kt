@@ -20,7 +20,6 @@ import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.receivers.TimerReceiver
 import com.meenbeese.chronos.utils.FormatUtils.formatMillis
 
-
 class TimerService : Service() {
     private val binder: IBinder = LocalBinder()
     private val handler = Handler(Looper.getMainLooper())

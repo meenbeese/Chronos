@@ -2,7 +2,10 @@ package com.meenbeese.chronos.views
 
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Path
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AnticipateOvershootInterpolator
@@ -12,7 +15,6 @@ import androidx.core.content.ContextCompat
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.utils.DimenUtils
-
 
 class DaySwitch : View, View.OnClickListener {
 

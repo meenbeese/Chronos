@@ -22,7 +22,6 @@ private val Context.dataStore by preferencesDataStore(
     }
 )
 
-
 enum class PreferenceData(private val key: Preferences.Key<*>, private val defaultValue: Any?) {
     INFO_BACKGROUND_PERMISSIONS(booleanPreferencesKey(name = "info_background_permissions"), defaultValue = false),
     THEME(intPreferencesKey(name = "theme"), defaultValue = Chronos.THEME_AUTO),

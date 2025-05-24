@@ -17,7 +17,6 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 
-
 class SoundsAdapter(
     private val chronos: Chronos,
     private val sounds: List<SoundData>

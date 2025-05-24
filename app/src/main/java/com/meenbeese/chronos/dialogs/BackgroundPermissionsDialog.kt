@@ -18,7 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 class BackgroundPermissionsDialog(context: Context) : ComponentDialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 
 import kotlin.math.max
 
-
 open class TimerData : Parcelable {
     private var id: Int
 

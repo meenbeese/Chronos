@@ -15,7 +15,6 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.AlarmsAdapter
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 
-
 class AlarmsFragment : BasePagerFragment() {
     private lateinit var alarmsAdapter: AlarmsAdapter
     private var empty: View? = null

@@ -31,7 +31,6 @@ import com.leinardi.android.speeddial.SpeedDialView
 import java.util.Calendar
 import java.util.TimeZone
 
-
 class HomeFragment : BaseFragment() {
     private lateinit var view: View
     private lateinit var timePager: ViewPager2

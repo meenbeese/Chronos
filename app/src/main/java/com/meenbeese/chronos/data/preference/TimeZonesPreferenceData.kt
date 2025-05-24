@@ -9,7 +9,6 @@ import kotlinx.coroutines.runBlocking
 import java.util.Locale
 import java.util.TimeZone
 
-
 /**
  * A preference item allowing the user to select
  * from multiple time zones (preference is a boolean,

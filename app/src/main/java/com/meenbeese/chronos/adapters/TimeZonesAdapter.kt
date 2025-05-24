@@ -24,7 +24,6 @@ import java.util.concurrent.TimeUnit
 
 import kotlin.math.abs
 
-
 class TimeZonesAdapter(
     private val timeZones: List<String>
 ) : RecyclerView.Adapter<TimeZonesAdapter.ViewHolder>() {

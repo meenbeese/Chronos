@@ -21,7 +21,6 @@ import com.meenbeese.chronos.R
 
 import java.util.Calendar
 
-
 class AboutFragment : BaseFragment() {
     private var appIcon: ImageView? = null
     private var appName: TextView? = null

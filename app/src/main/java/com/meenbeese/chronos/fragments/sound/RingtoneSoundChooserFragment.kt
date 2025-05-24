@@ -16,7 +16,6 @@ import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.fragments.BasePagerFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 
-
 class RingtoneSoundChooserFragment : BaseSoundChooserFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,

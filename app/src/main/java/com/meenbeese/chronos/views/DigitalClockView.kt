@@ -17,7 +17,6 @@ import com.meenbeese.chronos.utils.FormatUtils
 import java.util.Calendar
 import java.util.TimeZone
 
-
 class DigitalClockView : View, OnGlobalLayoutListener, Subscribable {
     private var paint: Paint? = null
     private var thread: UpdateThread? = null

@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 
 import java.util.Calendar
 
-
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val alarmId = intent.getIntExtra(EXTRA_ALARM_ID, 0)

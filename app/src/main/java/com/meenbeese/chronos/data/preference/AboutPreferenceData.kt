@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentActivity
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.fragments.AboutFragment
 
-
 /**
  * A preference item that opens the application's about screen.
  */

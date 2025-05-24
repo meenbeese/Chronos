@@ -7,7 +7,6 @@ import com.meenbeese.chronos.fragments.BasePagerFragment
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 
-
 abstract class BaseSoundChooserFragment : BasePagerFragment(), SoundChooserListener {
     private var listener: SoundChooserListener? = null
     fun setListener(listener: SoundChooserListener?) {

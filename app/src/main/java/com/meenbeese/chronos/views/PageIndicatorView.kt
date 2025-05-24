@@ -10,7 +10,6 @@ import androidx.viewpager2.widget.ViewPager2
 
 import com.meenbeese.chronos.utils.DimenUtils
 
-
 class PageIndicatorView : View {
     var actualPosition = 0
         private set

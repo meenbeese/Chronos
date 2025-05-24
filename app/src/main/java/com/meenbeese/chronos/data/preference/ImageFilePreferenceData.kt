@@ -8,7 +8,6 @@ import com.meenbeese.chronos.data.PreferenceData
 
 import kotlinx.coroutines.launch
 
-
 /**
  * A preference item that allows the user to select
  * an image from a file (the resulting preference

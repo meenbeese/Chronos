@@ -9,7 +9,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-
 class ScrollableBottomSheetBehavior<V : View>(context: Context, attrs: AttributeSet?) :
     BottomSheetBehavior<V>(
         context, attrs

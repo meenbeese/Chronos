@@ -7,7 +7,6 @@ import android.widget.TextView
 
 import com.meenbeese.chronos.R
 
-
 /**
  * A simple preference item to bind a title
  * and text value of a preference to a basic

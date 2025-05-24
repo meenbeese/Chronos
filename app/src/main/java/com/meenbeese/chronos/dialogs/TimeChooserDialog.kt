@@ -13,7 +13,6 @@ import com.meenbeese.chronos.R
 
 import java.util.concurrent.TimeUnit
 
-
 class TimeChooserDialog(context: Context?) : ComponentDialog(context!!), View.OnClickListener {
     private var time: TextView? = null
     private var backspace: ImageView? = null

@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 
 import kotlinx.coroutines.launch
 
-
 class AlarmViewModel(private val repository: AlarmRepository) : ViewModel() {
     fun insert(alarm: AlarmEntity) = viewModelScope.launch {
         repository.insert(alarm)

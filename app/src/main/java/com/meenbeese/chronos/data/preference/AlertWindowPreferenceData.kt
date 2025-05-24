@@ -14,7 +14,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.meenbeese.chronos.R
 
-
 /**
  * A preference item allowing the user to grant the
  * overlay permissions / alert window to ignore background
