@@ -3,6 +3,7 @@ package com.meenbeese.chronos.fragments
 import android.os.Bundle
 import android.provider.AlarmClock
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
@@ -10,6 +11,7 @@ import android.widget.ImageView
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 
 import com.meenbeese.chronos.R
@@ -84,6 +86,7 @@ class HomeFragment : BaseFragment() {
             SettingsFragment.Instantiator(context)
         )
         viewPager.adapter = pagerAdapter
+        viewPager.post { attachScrollListenerToAlarms() }
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = pagerAdapter.getTitle(position)
@@ -107,16 +110,71 @@ class HomeFragment : BaseFragment() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
+        tabLayout.setOnTouchListener(object : View.OnTouchListener {
+            private var initialY = 0f
+            private var isDragging = false
+            private var initialX = 0f
+            private val clickThreshold = 10
+
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                event ?: return false
+
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        initialY = event.rawY
+                        initialX = event.rawX
+                        isDragging = false
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+                        val dy = initialY - event.rawY
+                        val dx = initialX - event.rawX
+                        if (dy > 30) {
+                            if (behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+                                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                            }
+                            isDragging = true
+                            return true
+                        }
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        val dy = Math.abs(event.rawY - initialY)
+                        val dx = Math.abs(event.rawX - initialX)
+                        if (!isDragging && dy < clickThreshold && dx < clickThreshold) {
+                            v?.performClick()
+                            return false
+                        }
+                        if (isDragging) {
+                            return true
+                        }
+                    }
+                    MotionEvent.ACTION_CANCEL -> {
+                        if (isDragging) {
+                            return true
+                        }
+                    }
+                }
+                return false
+            }
+        })
+
         setSpeedDialView()
         setClockFragments()
 
-        view.viewTreeObserver?.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+        view.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                view.viewTreeObserver?.removeOnGlobalLayoutListener(this)
+                view.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                val halfHeight = view.measuredHeight / 2
+                behavior.peekHeight = halfHeight
+
+                behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+                behavior.isDraggable = true
+
                 view.findViewById<View>(R.id.timeContainer)?.layoutParams =
                     CoordinatorLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
-                        view.measuredHeight / 2
+                        halfHeight
                     )
             }
         })
@@ -178,6 +236,36 @@ class HomeFragment : BaseFragment() {
             }
             false
         }
+    }
+
+    private fun attachScrollListenerToAlarms() {
+        val alarmsFragment = childFragmentManager.findFragmentByTag("f0") as? AlarmsFragment
+        val recyclerView = alarmsFragment?.recyclerView ?: return
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            private var lastStateChangeTime = 0L
+            private val debounceInterval = 300L
+
+            override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
+                val currentTime = System.currentTimeMillis()
+                val canScrollDown = rv.canScrollVertically(1)
+                val canScrollUp = rv.canScrollVertically(-1)
+
+                if (!canScrollDown && dy > 0 && behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+                    if (currentTime - lastStateChangeTime > debounceInterval) {
+                        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                        lastStateChangeTime = currentTime
+                    }
+                }
+
+                if (!canScrollUp && dy < 0 && behavior.state != BottomSheetBehavior.STATE_COLLAPSED) {
+                    if (currentTime - lastStateChangeTime > debounceInterval) {
+                        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                        lastStateChangeTime = currentTime
+                    }
+                }
+            }
+        })
     }
 
     /**

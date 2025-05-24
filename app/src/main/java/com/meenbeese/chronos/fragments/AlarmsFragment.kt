@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.meenbeese.chronos.R
@@ -18,7 +19,8 @@ import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 class AlarmsFragment : BasePagerFragment() {
     private lateinit var alarmsAdapter: AlarmsAdapter
     private var empty: View? = null
-    private var recyclerView: RecyclerView? = null
+    lateinit var recyclerView: RecyclerView
+    private var scrolledToEndListener: OnScrolledToEndListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,9 +31,21 @@ class AlarmsFragment : BasePagerFragment() {
         recyclerView = v.findViewById(R.id.recycler)
         empty = v.findViewById(R.id.empty)
         (v.findViewById<View>(R.id.emptyText) as TextView).setText(R.string.msg_alarms_empty)
-        recyclerView?.layoutManager = GridLayoutManager(context, 1)
-        alarmsAdapter = AlarmsAdapter(chronos!!, recyclerView!!, parentFragmentManager)
-        recyclerView?.adapter = alarmsAdapter
+        recyclerView.layoutManager = GridLayoutManager(context, 1)
+        alarmsAdapter = AlarmsAdapter(chronos!!, recyclerView, parentFragmentManager)
+        recyclerView.adapter = alarmsAdapter
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
+                val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition()
+                val totalItemCount = layoutManager.itemCount
+
+                if (lastVisibleItem == totalItemCount - 1 && totalItemCount > 0) {
+                    scrolledToEndListener?.onScrolledToEnd()
+                }
+            }
+        })
 
         onChanged()
 
@@ -44,13 +58,13 @@ class AlarmsFragment : BasePagerFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onAlarmsChanged() {
-        recyclerView?.post { alarmsAdapter.notifyDataSetChanged() }
+        recyclerView.post { alarmsAdapter.notifyDataSetChanged() }
         onChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onTimersChanged() {
-        recyclerView?.post { alarmsAdapter.notifyDataSetChanged() }
+        recyclerView.post { alarmsAdapter.notifyDataSetChanged() }
         onChanged()
     }
 
@@ -66,5 +80,9 @@ class AlarmsFragment : BasePagerFragment() {
         override fun newInstance(position: Int): BasePagerFragment {
             return AlarmsFragment()
         }
+    }
+
+    interface OnScrolledToEndListener {
+        fun onScrolledToEnd()
     }
 }
