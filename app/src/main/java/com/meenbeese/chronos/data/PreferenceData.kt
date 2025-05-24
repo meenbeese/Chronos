@@ -12,6 +12,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.meenbeese.chronos.Chronos
+import com.meenbeese.chronos.utils.Option
 
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -50,9 +51,16 @@ enum class PreferenceData(private val key: Preferences.Key<*>, private val defau
 
     @Suppress("UNCHECKED_CAST")
     fun <T> getValue(context: Context): T {
+        return getOption<T>(context).getOrElse(defaultValue as T)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T> getOption(context: Context): Option<T> {
         return runBlocking {
             val preferences = context.dataStore.data.first()
-            preferences[key] as? T ?: defaultValue as T
+            val value = preferences[key] as? T
+            if (value != null) Option.Some(value)
+            else (defaultValue as? T)?.let { Option.Some(it) } ?: Option.None
         }
     }
 

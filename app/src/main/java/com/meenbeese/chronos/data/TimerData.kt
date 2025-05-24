@@ -9,6 +9,7 @@ import android.os.Parcelable
 import android.os.Parcelable.Creator
 
 import com.meenbeese.chronos.receivers.TimerReceiver
+import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -53,7 +54,7 @@ open class TimerData : Parcelable {
         } else {
             PreferenceData.TIMER_SOUND.getValue(context)
         }
-        sound = SoundData.fromString(defaultSound)
+        sound = SoundData.fromString(defaultSound).toNullable()
     }
 
     /**
@@ -225,7 +226,12 @@ open class TimerData : Parcelable {
         duration = parcel.readLong()
         endTime = parcel.readLong()
         isVibrate = parcel.readByte().toInt() != 0
-        if (parcel.readByte().toInt() == 1) sound = SoundData.fromString(parcel.readString()!!)
+        if (parcel.readByte().toInt() == 1) {
+            val soundString = parcel.readString()
+            sound = soundString?.let { SoundData.fromString(it).toNullable() }
+        } else {
+            sound = null
+        }
     }
 
     companion object CREATOR : Creator<TimerData> {

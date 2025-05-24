@@ -27,7 +27,9 @@ class RingtonePreferenceData(
         val context = holder.context
         val sound = runBlocking { preference.getValue<String>(context) }
         return if (sound?.isNotEmpty() == true) {
-            SoundData.fromString(sound)?.name ?: context.getString(R.string.title_sound_none)
+            SoundData.fromString(sound)
+                .map { it.name }
+                .getOrElse(context.getString(R.string.title_sound_none))
         } else {
             context.getString(R.string.title_sound_none)
         }

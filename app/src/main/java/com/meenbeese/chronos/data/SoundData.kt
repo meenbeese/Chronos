@@ -10,16 +10,15 @@ import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.Chronos
+import com.meenbeese.chronos.utils.Option
 
 class SoundData(val name: String, val type: String, val url: String) {
-    private var ringtone: Ringtone? = null
+    private var ringtone: Option<Ringtone> = Option.None
 
     constructor(name: String, type: String, url: String, ringtone: Ringtone?) : this(
-        name,
-        type,
-        url
+        name, type, url
     ) {
-        this.ringtone = ringtone
+        this.ringtone = if (ringtone != null) Option.Some(ringtone) else Option.None
     }
 
     /**
@@ -32,14 +31,16 @@ class SoundData(val name: String, val type: String, val url: String) {
     @UnstableApi
     fun play(chronos: Chronos) {
         if (type == TYPE_RINGTONE && url.startsWith("content://")) {
-            if (ringtone == null) {
-                ringtone = RingtoneManager.getRingtone(chronos, Uri.parse(url))
-                ringtone?.audioAttributes = AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .build()
+            if (ringtone.isEmpty()) {
+                ringtone = Option.Some(
+                    RingtoneManager.getRingtone(chronos, Uri.parse(url)).apply {
+                        audioAttributes = AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_ALARM)
+                            .build()
+                    }
+                )
             }
-
-            chronos.playRingtone(ringtone!!)
+            ringtone.map { chronos.playRingtone(it) }
         } else {
             chronos.playStream(
                 url, type,
@@ -58,8 +59,7 @@ class SoundData(val name: String, val type: String, val url: String) {
      * @param chronos           The active Application instance.
      */
     fun stop(chronos: Chronos) {
-        if (ringtone != null) ringtone!!.stop()
-        else chronos.stopStream()
+        ringtone.map { it.stop() }.takeIf { ringtone.isDefined() } ?: chronos.stopStream()
     }
 
     /**
@@ -70,14 +70,16 @@ class SoundData(val name: String, val type: String, val url: String) {
     @UnstableApi
     fun preview(chronos: Chronos) {
         if (url.startsWith("content://")) {
-            if (ringtone == null) {
-                ringtone = RingtoneManager.getRingtone(chronos, Uri.parse(url))
-                ringtone?.audioAttributes = AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .build()
+            if (ringtone.isEmpty()) {
+                ringtone = Option.Some(
+                    RingtoneManager.getRingtone(chronos, Uri.parse(url)).apply {
+                        audioAttributes = AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_ALARM)
+                            .build()
+                    }
+                )
             }
-
-            chronos.playRingtone(ringtone!!)
+            ringtone.map { chronos.playRingtone(it) }
         } else {
             chronos.playStream(
                 url, type,
@@ -95,8 +97,7 @@ class SoundData(val name: String, val type: String, val url: String) {
      * @return                  True if "this" sound is playing.
      */
     fun isPlaying(chronos: Chronos): Boolean {
-        return if (ringtone != null) ringtone!!.isPlaying
-        else chronos.isPlayingStream(url)
+        return ringtone.map { it.isPlaying }.getOrElse(chronos.isPlayingStream(url))
     }
 
     /**
@@ -106,13 +107,13 @@ class SoundData(val name: String, val type: String, val url: String) {
      * @param volume            The volume between 0 and 1
      */
     fun setVolume(chronos: Chronos, volume: Float) {
-        if (ringtone != null) if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            ringtone!!.volume = volume
-        } else {
-            // Not possible
-            throw IllegalArgumentException("Attempted to set the ringtone volume on a device older than Android P.")
-        }
-        else chronos.setStreamVolume(volume)
+        ringtone.map {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                it.volume = volume
+            } else {
+                throw IllegalArgumentException("Attempted to set the ringtone volume on a device older than Android P.")
+            }
+        }.takeIf { ringtone.isDefined() } ?: chronos.setStreamVolume(volume)
     }
 
     val isSetVolumeSupported: Boolean
@@ -121,7 +122,7 @@ class SoundData(val name: String, val type: String, val url: String) {
          *
          * @return true if supported
          */
-        get() = ringtone == null || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+        get() = ringtone is Option.None || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
 
     /**
      * Returns an identifier string that can be used to recreate this
@@ -147,7 +148,7 @@ class SoundData(val name: String, val type: String, val url: String) {
         var result = name.hashCode()
         result = 31 * result + type.hashCode()
         result = 31 * result + url.hashCode()
-        result = 31 * result + (ringtone?.hashCode() ?: 0)
+        result = 31 * result + (ringtone.map { it.hashCode() }.getOrElse(0))
         return result
     }
 
@@ -164,16 +165,15 @@ class SoundData(val name: String, val type: String, val url: String) {
          * @return                  A recreated SoundData instance.
          */
         @JvmStatic
-        fun fromString(string: String): SoundData? {
+        fun fromString(string: String): Option<SoundData> {
             if (string.contains(SEPARATOR)) {
                 val data = string.split(SEPARATOR.toRegex()).dropLastWhile { it.isEmpty() }
                     .toTypedArray()
-                if (data.size == 3 && !data[0].isEmpty() && !data[1].isEmpty() && !data[2].isEmpty()) return SoundData(
-                    data[0], data[1], data[2]
-                )
+                if (data.size == 3 && data.all { it.isNotEmpty() }) {
+                    return Option.Some(SoundData(data[0], data[1], data[2]))
+                }
             }
-
-            return null
+            return Option.None
         }
     }
 }

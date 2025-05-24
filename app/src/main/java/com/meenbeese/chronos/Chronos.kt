@@ -31,6 +31,8 @@ import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
+import com.meenbeese.chronos.utils.Option
+import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -83,7 +85,7 @@ class Chronos : Application(), Player.Listener {
                     isEnabled = entity.isEnabled,
                     days = entity.days,
                     isVibrate = entity.isVibrate,
-                    sound = entity.sound?.let { soundStr -> SoundData.fromString(soundStr) }
+                    sound = entity.sound?.let { SoundData.fromString(it).toNullable() }
                 )
             })
         }

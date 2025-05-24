@@ -19,6 +19,7 @@ import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.fragments.TimerFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
+import com.meenbeese.chronos.utils.Option
 
 import java.util.concurrent.TimeUnit
 
@@ -35,7 +36,10 @@ class TimerDialog(context: Context, private val manager: FragmentManager) :
     private val chronos: Chronos = context.applicationContext as Chronos
 
     init {
-        ringtone = SoundData.fromString(PreferenceData.DEFAULT_TIMER_RINGTONE.getValue(context))
+        ringtone = when(val opt = SoundData.fromString(PreferenceData.DEFAULT_TIMER_RINGTONE.getValue(context))) {
+            is Option.Some -> opt.value
+            is Option.None -> null
+        }
     }
 
     @SuppressLint("CheckResult")

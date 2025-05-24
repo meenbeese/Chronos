@@ -9,12 +9,12 @@ import android.os.Parcel
 import android.os.Parcelable
 
 import com.meenbeese.chronos.activities.MainActivity
-import com.meenbeese.chronos.data.SoundData.Companion.fromString
 import com.meenbeese.chronos.db.AlarmDatabase
 import com.meenbeese.chronos.db.AlarmEntity
 import com.meenbeese.chronos.receivers.AlarmReceiver
 import com.meenbeese.chronos.services.SleepReminderService
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
+import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +44,7 @@ class AlarmData(
         isEnabled = parcel.readByte() != 0.toByte()
         days = MutableList(7) { parcel.readByte() != 0.toByte() }
         isVibrate = parcel.readByte() != 0.toByte()
-        sound = parcel.readString()?.let { fromString(it) }
+        sound = parcel.readString()?.let { SoundData.fromString(it).toNullable() }
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

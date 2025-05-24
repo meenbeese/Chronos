@@ -8,6 +8,7 @@ import com.meenbeese.chronos.activities.AlarmActivity
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.db.AlarmDatabase
+import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +31,7 @@ class AlarmReceiver : BroadcastReceiver() {
                     isEnabled = it.isEnabled,
                     days = it.days,
                     isVibrate = it.isVibrate,
-                    sound = it.sound?.let { soundStr -> SoundData.fromString(soundStr) }
+                    sound = it.sound?.let { SoundData.fromString(it).toNullable() }
                 )
 
                 if (alarm.getNext() != null) {
