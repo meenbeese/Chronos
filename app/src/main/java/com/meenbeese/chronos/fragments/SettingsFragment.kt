@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.core.util.Consumer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -40,7 +41,7 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
         recyclerView.layoutManager = GridLayoutManager(context, 1)
 
         val dataList = mutableListOf(
-            ThemePreferenceData(context),
+            ThemePreferenceData(requireContext(), lifecycleScope),
             ImageFilePreferenceData(
                 PreferenceData.BACKGROUND_IMAGE,
                 R.string.title_background_image

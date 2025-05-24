@@ -8,14 +8,11 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 
-import androidx.appcompat.app.AppCompatDelegate
-
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.data.PreferenceData
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 /**
@@ -23,9 +20,10 @@ import kotlinx.coroutines.launch
  * application.
  */
 class ThemePreferenceData(
-    context: Context?
+    context: Context,
+    private val scope: CoroutineScope
 ) : BasePreferenceData<ThemePreferenceData.ViewHolder>() {
-    var chronos: Chronos = context?.applicationContext as Chronos
+    var chronos: Chronos = context.applicationContext as Chronos
 
     override fun getViewHolder(inflater: LayoutInflater, parent: ViewGroup): BasePreferenceData.ViewHolder {
         return ViewHolder(inflater.inflate(R.layout.item_preference_theme, parent, false))
@@ -49,39 +47,12 @@ class ThemePreferenceData(
 
         holder.themeAutoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
             if (holder.themeAutoCompleteTextView.text.toString() == adapter.getItem(position)) {
-                GlobalScope.launch {
-                    PreferenceData.THEME.setValue(holder.itemView.context, position)
-                }
-                applyTheme(position)
-            }
-        }
-    }
-
-    private fun applyTheme(theme: Int) {
-        when (theme) {
-            Chronos.THEME_AUTO -> {
-                if (chronos.isNight) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    chronos.setTheme(R.style.AppTheme_Night)
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    chronos.setTheme(R.style.AppTheme)
+                scope.launch {
+                    chronos.applyAndSaveTheme(holder.itemView.context, position)
+                    chronos.recreate()
                 }
             }
-            Chronos.THEME_DAY -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                chronos.setTheme(R.style.AppTheme)
-            }
-            Chronos.THEME_NIGHT -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                chronos.setTheme(R.style.AppTheme_Night)
-            }
-            Chronos.THEME_AMOLED -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                chronos.setTheme(R.style.AppTheme_Amoled)
-            }
         }
-        chronos.recreate()
     }
 
     /**

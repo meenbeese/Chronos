@@ -79,8 +79,8 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
     }
 
     private fun applySavedTheme() {
-        val theme = chronos?.activityTheme
-        Log.d("MAIN", "Theme: $theme")
+        val theme = PreferenceData.THEME.getValue<Int>(this)
+        Log.d("MainActivity", "Theme: $theme")
 
         when (theme) {
             THEME_DAY -> {

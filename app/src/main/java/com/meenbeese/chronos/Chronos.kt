@@ -1,6 +1,7 @@
 package com.meenbeese.chronos
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.media.Ringtone
 import android.net.Uri
@@ -8,6 +9,7 @@ import android.os.Build
 import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.FragmentManager
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.MediaItem
@@ -192,6 +194,17 @@ class Chronos : Application(), Player.Listener {
 
     fun isDarkTheme(): Boolean {
         return activityTheme == THEME_NIGHT || activityTheme == THEME_AMOLED || (activityTheme == THEME_AUTO && isNight)
+    }
+
+    suspend fun applyAndSaveTheme(context: Context, theme: Int) {
+        activityTheme = theme
+        PreferenceData.THEME.setValue(context, theme)
+        when (theme) {
+            THEME_AUTO   -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            THEME_DAY    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            THEME_NIGHT  -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            THEME_AMOLED -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
     }
 
     fun playRingtone(ringtone: Ringtone) {

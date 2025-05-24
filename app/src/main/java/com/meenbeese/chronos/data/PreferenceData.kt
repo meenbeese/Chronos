@@ -1,6 +1,7 @@
 package com.meenbeese.chronos.data
 
 import android.content.Context
+import android.util.Log
 
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.Preferences
@@ -66,5 +67,6 @@ enum class PreferenceData(private val key: Preferences.Key<*>, private val defau
                 else -> throw IllegalArgumentException("Unsupported type")
             }
         }
+        Log.d("PreferenceData", "Saved $key = $value")
     }
 }
