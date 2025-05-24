@@ -4,9 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Parcel
 import android.os.Parcelable
-import android.os.Parcelable.Creator
 
 import com.meenbeese.chronos.receivers.TimerReceiver
 import com.meenbeese.chronos.utils.toNullable
@@ -14,48 +12,36 @@ import com.meenbeese.chronos.utils.toNullable
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 import kotlin.math.max
 
-open class TimerData : Parcelable {
-    private var id: Int
-
-    /**
-     * The total length of the timer.
-     *
-     * @return              The total length of the timer, in milliseconds.
-     */
-    var duration: Long = 600000
-        private set
-    private var endTime: Long = 0
-    @JvmField
-    var isVibrate = true
-
-    /**
-     * Get the [SoundData](./SoundData) sound specified for the timer.
-     *
-     * @return              An instance of SoundData describing the sound that
-     *                      the timer should make (or null).
-     */
-    @JvmField
+@Parcelize
+open class TimerData(
+    var id: Int,
+    var duration: Long = 600_000,
+    var endTime: Long = 0,
+    var isVibrate: Boolean = true,
     var sound: SoundData? = null
+) : Parcelable {
 
-    constructor(id: Int) {
-        this.id = id
-    }
-
-    constructor(id: Int, context: Context) {
-        this.id = id
+    constructor(id: Int, context: Context) : this(id) {
         duration = PreferenceData.TIMER_DURATION.getValue(context)
         endTime = PreferenceData.TIMER_END_TIME.getValue(context)
         isVibrate = PreferenceData.TIMER_VIBRATE.getValue(context)
-        val defaultSound: String = if (PreferenceData.DEFAULT_TIMER_RINGTONE.getValue<String>(context).isNotEmpty()) {
-            PreferenceData.DEFAULT_TIMER_RINGTONE.getValue(context)
-        } else {
-            PreferenceData.TIMER_SOUND.getValue(context)
-        }
+
+        val defaultSound: String = PreferenceData.DEFAULT_TIMER_RINGTONE.getValue<String>(context).takeIf {
+            it.isNotEmpty()
+        } ?: PreferenceData.TIMER_SOUND.getValue(context)
+
         sound = SoundData.fromString(defaultSound).toNullable()
     }
+
+    val isSet: Boolean
+        get() = endTime > System.currentTimeMillis()
+
+    val remainingMillis: Long
+        get() = max(endTime - System.currentTimeMillis(), 0)
 
     /**
      * Moves this TimerData's preferences to another "id".
@@ -92,22 +78,6 @@ open class TimerData : Parcelable {
         }
     }
 
-    val isSet: Boolean
-        /**
-         * Decides if the Timer has been set or should be ignored.
-         *
-         * @return              True if the timer should go off at some time in the future.
-         */
-        get() = endTime > System.currentTimeMillis()
-    val remainingMillis: Long
-        /**
-         * Get the remaining amount of milliseconds before the timer should go off. This
-         * may return a negative number.
-         *
-         * @return              The amount of milliseconds before the timer should go off.
-         */
-        get() = max(endTime - System.currentTimeMillis(), 0)
-
     /**
      * Set the duration of the timer.
      *
@@ -138,9 +108,7 @@ open class TimerData : Parcelable {
      * @return              A boolean defining whether a sound has been set
      * for the timer.
      */
-    fun hasSound(): Boolean {
-        return sound != null
-    }
+    fun hasSound(): Boolean = sound != null
 
     /**
      * Set the sound that the timer should make.
@@ -198,49 +166,14 @@ open class TimerData : Parcelable {
      * @return              A PendingIntent that will open the alert screen.
      */
     private fun getIntent(context: Context?): PendingIntent {
-        val intent = Intent(context, TimerReceiver::class.java)
-        intent.putExtra(TimerReceiver.EXTRA_TIMER_ID, id)
+        val intent = Intent(context, TimerReceiver::class.java).apply {
+            putExtra(TimerReceiver.EXTRA_TIMER_ID, id)
+        }
         return PendingIntent.getBroadcast(
             context,
             id,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    override fun writeToParcel(parcel: Parcel, i: Int) {
-        parcel.writeInt(id)
-        parcel.writeLong(duration)
-        parcel.writeLong(endTime)
-        parcel.writeByte((if (isVibrate) 1 else 0).toByte())
-        parcel.writeByte((if (sound != null) 1 else 0).toByte())
-        if (sound != null) parcel.writeString(sound.toString())
-    }
-
-    protected constructor(parcel: Parcel) {
-        id = parcel.readInt()
-        duration = parcel.readLong()
-        endTime = parcel.readLong()
-        isVibrate = parcel.readByte().toInt() != 0
-        if (parcel.readByte().toInt() == 1) {
-            val soundString = parcel.readString()
-            sound = soundString?.let { SoundData.fromString(it).toNullable() }
-        } else {
-            sound = null
-        }
-    }
-
-    companion object CREATOR : Creator<TimerData> {
-        override fun createFromParcel(parcel: Parcel): TimerData {
-            return TimerData(parcel)
-        }
-
-        override fun newArray(size: Int): Array<TimerData?> {
-            return arrayOfNulls(size)
-        }
     }
 }

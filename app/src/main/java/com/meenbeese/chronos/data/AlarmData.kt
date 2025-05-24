@@ -5,7 +5,6 @@ import android.app.AlarmManager.AlarmClockInfo
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Parcel
 import android.os.Parcelable
 
 import com.meenbeese.chronos.activities.MainActivity
@@ -14,15 +13,16 @@ import com.meenbeese.chronos.db.AlarmEntity
 import com.meenbeese.chronos.receivers.AlarmReceiver
 import com.meenbeese.chronos.services.SleepReminderService
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
-import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 import java.util.Calendar
 import java.util.Date
 
+@Parcelize
 class AlarmData(
     var id: Int,
     var name: String? = null,
@@ -32,32 +32,6 @@ class AlarmData(
     var isVibrate: Boolean = true,
     var sound: SoundData? = null
 ) : Parcelable {
-
-    companion object CREATOR : Parcelable.Creator<AlarmData> {
-        override fun createFromParcel(parcel: Parcel): AlarmData = AlarmData(parcel)
-        override fun newArray(size: Int): Array<AlarmData?> = arrayOfNulls(size)
-    }
-
-    constructor(parcel: Parcel) : this(parcel.readInt()) {
-        name = parcel.readString()
-        time.timeInMillis = parcel.readLong()
-        isEnabled = parcel.readByte() != 0.toByte()
-        days = MutableList(7) { parcel.readByte() != 0.toByte() }
-        isVibrate = parcel.readByte() != 0.toByte()
-        sound = parcel.readString()?.let { SoundData.fromString(it).toNullable() }
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(id)
-        parcel.writeString(name)
-        parcel.writeLong(time.timeInMillis)
-        parcel.writeByte(if (isEnabled) 1 else 0)
-        days.forEach { parcel.writeByte(if (it) 1 else 0) }
-        parcel.writeByte(if (isVibrate) 1 else 0)
-        parcel.writeString(sound?.toString())
-    }
-
-    override fun describeContents(): Int = 0
 
     fun saveToDatabase(context: Context) {
         val alarmDao = AlarmDatabase.getDatabase(context).alarmDao()
@@ -134,5 +108,5 @@ class AlarmData(
         return next
     }
 
-    fun isRepeat(): Boolean = days.count() > 1
+    fun isRepeat(): Boolean = days.count { it } > 1
 }

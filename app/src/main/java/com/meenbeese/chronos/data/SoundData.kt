@@ -5,6 +5,7 @@ import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
+import android.os.Parcelable
 
 import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
@@ -12,12 +13,20 @@ import androidx.media3.common.util.UnstableApi
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.utils.Option
 
-class SoundData(val name: String, val type: String, val url: String) {
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+class SoundData(
+    val name: String,
+    val type: String,
+    val url: String
+) : Parcelable {
+
+    @IgnoredOnParcel
     private var ringtone: Option<Ringtone> = Option.None
 
-    constructor(name: String, type: String, url: String, ringtone: Ringtone?) : this(
-        name, type, url
-    ) {
+    constructor(name: String, type: String, url: String, ringtone: Ringtone?) : this(name, type, url) {
         this.ringtone = if (ringtone != null) Option.Some(ringtone) else Option.None
     }
 
