@@ -43,8 +43,7 @@
 
 ## ⚙️ Permissions
 
-- `SET_ALARM`, `VIBRATE`, `WAKE_LOCK`: necessary for the core functionality of the app
-- `INTERNET`: fetching some of the graphical assets in the about page
+- `SET_ALARM`, `VIBRATE`, `WAKE_LOCK`: necessary for core functionality
 - `RECEIVE_BOOT_COMPLETED`: automatically re-scheduling alarms on startup
 - `READ_MEDIA_AUDIO`: setting custom ringtones for the alarms or timers
 - `READ_MEDIA_IMAGES`: setting custom background / header images in the settings
@@ -89,7 +88,7 @@ git clone https://github.com/meenbeese/Chronos.git
 ## 📝 License
 
 ```
-Copyright (C) 2024 Meenbeese
+Copyright (C) 2025 Kuzey Bilgin
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
