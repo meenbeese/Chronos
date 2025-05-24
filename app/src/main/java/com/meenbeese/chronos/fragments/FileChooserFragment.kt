@@ -24,6 +24,7 @@ class FileChooserFragment : Fragment() {
     private var preference: PreferenceData? = null
     private var type: String? = TYPE_IMAGE
     private var callback: ((String, String) -> Unit)? = null
+    private var hasLaunchedPicker = false
 
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
         if (isGranted) {
@@ -42,21 +43,32 @@ class FileChooserFragment : Fragment() {
     @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         arguments?.let { data ->
             preference = data.getSerializable(EXTRA_PREF, PreferenceData::class.java)
             type = data.getString(EXTRA_TYPE)
         }
+
+        hasLaunchedPicker = savedInstanceState?.getBoolean("hasLaunchedPicker") == true
 
         val permission = when (type) {
             TYPE_AUDIO -> READ_MEDIA_AUDIO
             else -> READ_MEDIA_IMAGES
         }
 
-        if (ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
-            startIntent()
-        } else {
-            requestPermissionLauncher.launch(permission)
+        if (!hasLaunchedPicker) {
+            hasLaunchedPicker = true
+            if (ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
+                startIntent()
+            } else {
+                requestPermissionLauncher.launch(permission)
+            }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("hasLaunchedPicker", hasLaunchedPicker)
     }
 
     private fun startIntent() {
