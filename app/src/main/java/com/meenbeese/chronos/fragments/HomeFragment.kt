@@ -7,16 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.ImageView
+import android.widget.Toast
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
-import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.dialogs.TimerDialog
 import com.meenbeese.chronos.utils.DimenUtils.getStatusBarHeight
@@ -27,6 +28,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCa
 import com.google.android.material.tabs.TabLayoutMediator
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
+import com.meenbeese.chronos.Chronos
+import com.meenbeese.chronos.db.AlarmEntity
+import com.meenbeese.chronos.db.AlarmViewModel
+import com.meenbeese.chronos.db.AlarmViewModelFactory
 import com.meenbeese.chronos.views.CustomTabLayout
 
 import java.util.Calendar
@@ -41,6 +46,7 @@ class HomeFragment : BaseFragment() {
     private lateinit var overlay: View
     private lateinit var speedDialView: SpeedDialView
     private lateinit var behavior: BottomSheetBehavior<*>
+    private lateinit var alarmViewModel: AlarmViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,6 +54,10 @@ class HomeFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         view = inflater.inflate(R.layout.fragment_home, container, false)
+
+        val app = requireActivity().application as Chronos
+        val factory = AlarmViewModelFactory(app.repository)
+        alarmViewModel = ViewModelProvider(this, factory)[AlarmViewModel::class.java]
 
         val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
         val tabLayout = view.findViewById<CustomTabLayout>(R.id.tabLayout)
@@ -240,17 +250,25 @@ class HomeFragment : BaseFragment() {
         val minuteNow = calendar.get(Calendar.MINUTE)
 
         val timeChooserDialog = android.app.TimePickerDialog(context, { _, hour, minute ->
-            val alarm = AlarmData(
-                id = 0,
-                time = Calendar.getInstance().apply {
-                    set(Calendar.HOUR_OF_DAY, hour)
-                    set(Calendar.MINUTE, minute)
-                    set(Calendar.SECOND, 0)
-                }
+            val time = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, hour)
+                set(Calendar.MINUTE, minute)
+                set(Calendar.SECOND, 0)
+            }.timeInMillis
+
+            val alarm = AlarmEntity(
+                name = null,
+                timeInMillis = time,
+                isEnabled = true,
+                days = MutableList(7) { false }, // All days off initially
+                isVibrate = true,
+                sound = null
             )
 
-            alarm.saveToDatabase(requireContext())
-            alarm.set(requireContext())
+            alarmViewModel.insert(alarm)
+
+            Toast.makeText(requireContext(), "Alarm set for $hour:$minute", Toast.LENGTH_SHORT).show()
+
         }, hourNow, minuteNow, true)
 
         timeChooserDialog.show()

@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
 
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentManager
@@ -49,11 +50,12 @@ import java.util.concurrent.TimeUnit
 class AlarmsAdapter(
     private val chronos: Chronos,
     private val recycler: RecyclerView,
-    private val fragmentManager: FragmentManager
+    private val fragmentManager: FragmentManager,
+    private val onDeleteAlarm: (AlarmData) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val timers: List<TimerData> = chronos.timers
-    private val alarms: List<AlarmData> = chronos.alarms
+    private var timers: MutableList<TimerData> = chronos.timers.toMutableList()
+    private var alarms: MutableList<AlarmData> = chronos.alarms.toMutableList()
 
     private var expandedPosition = -1
 
@@ -293,7 +295,25 @@ class AlarmsAdapter(
         holder.delete.setOnClickListener { view ->
             MaterialAlertDialogBuilder(view.context, if(chronos.isDarkTheme()) com.google.android.material.R.style.Theme_MaterialComponents_Dialog_Alert else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog_Alert)
                 .setMessage(chronos.getString(R.string.msg_delete_confirmation, alarm.name))
-                .setPositiveButton(view.context.getString(android.R.string.ok)) { _, _ -> chronos.alarms.remove(alarm) }
+                .setPositiveButton(view.context.getString(android.R.string.ok)) { _, _ ->
+                    val positionInAdapter = holder.bindingAdapterPosition
+                    if (positionInAdapter != RecyclerView.NO_POSITION) {
+                        alarms.remove(alarm)
+                        chronos.alarms.remove(alarm)
+
+                        notifyItemRemoved(positionInAdapter)
+
+                        if (expandedPosition == positionInAdapter) {
+                            expandedPosition = -1
+                        } else if (expandedPosition > positionInAdapter) {
+                            expandedPosition -= 1
+                        }
+
+                        onDeleteAlarm(alarm)
+
+                        Toast.makeText(holder.chronos.applicationContext, "Alarm has been removed", Toast.LENGTH_SHORT).show()
+                    }
+                }
                 .setNegativeButton(view.context.getString(android.R.string.cancel), null)
                 .show()
         }
@@ -315,6 +335,16 @@ class AlarmsAdapter(
 
     override fun getItemCount(): Int {
         return timers.size + alarms.size
+    }
+
+    fun updateTimers(newTimers: List<TimerData>) {
+        timers = newTimers.toMutableList()
+        notifyDataSetChanged()
+    }
+
+    fun updateAlarms(newAlarms: List<AlarmData>) {
+        alarms = newAlarms.toMutableList()
+        notifyDataSetChanged()
     }
 
     /**

@@ -28,10 +28,8 @@ import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.db.AlarmDao
 import com.meenbeese.chronos.db.AlarmDatabase
 import com.meenbeese.chronos.db.AlarmRepository
-import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
-import com.meenbeese.chronos.utils.Option
 import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -53,7 +51,6 @@ class Chronos : Application(), Player.Listener {
     lateinit var database: AlarmDatabase
     lateinit var alarmDao: AlarmDao
     lateinit var repository: AlarmRepository
-    lateinit var viewModel: AlarmViewModel
 
     @OptIn(DelicateCoroutinesApi::class)
     @UnstableApi
@@ -63,7 +60,6 @@ class Chronos : Application(), Player.Listener {
         database = AlarmDatabase.getDatabase(this)
         alarmDao = database.alarmDao()
         repository = AlarmRepository(alarmDao)
-        viewModel = AlarmViewModel(repository)
 
         listeners = ArrayList()
         alarms = ArrayList()

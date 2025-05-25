@@ -110,3 +110,15 @@ class AlarmData(
 
     fun isRepeat(): Boolean = days.count { it } > 1
 }
+
+fun AlarmData.toEntity(): AlarmEntity {
+    return AlarmEntity(
+        id = this.id,
+        name = this.name,
+        timeInMillis = this.time.timeInMillis,
+        isEnabled = this.isEnabled,
+        days = this.days,
+        isVibrate = this.isVibrate,
+        sound = this.sound?.toString()
+    )
+}
