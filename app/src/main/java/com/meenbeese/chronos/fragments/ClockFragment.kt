@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 
+import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 import com.meenbeese.chronos.views.DigitalClockView
@@ -22,7 +22,7 @@ class ClockFragment : BasePagerFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_clock, container, false)
         val clockView = view.findViewById<DigitalClockView>(R.id.timeView)
-        val timezoneView = view.findViewById<TextView>(R.id.timezone)
+        val timezoneView = view.findViewById<MaterialTextView>(R.id.timezone)
         if (arguments != null && requireArguments().containsKey(EXTRA_TIME_ZONE)) {
             timezone = arguments?.getString(EXTRA_TIME_ZONE)
             timezone?.let {

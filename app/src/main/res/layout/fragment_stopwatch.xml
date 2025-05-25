@@ -83,7 +83,7 @@
             app:srcCompat="@drawable/ic_play"
             app:tint="@color/colorPrimary" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/lap"
             android:layout_width="0dp"
             android:layout_height="match_parent"

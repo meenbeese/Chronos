@@ -4,11 +4,11 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 
 import androidx.annotation.StringRes
 
-import com.google.android.material.switchmaterial.SwitchMaterial
+import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 
@@ -50,8 +50,8 @@ class BooleanPreferenceData(
      * Holds child views of the current item.
      */
     inner class ViewHolder(v: View) : BasePreferenceData.ViewHolder(v) {
-        val title: TextView = v.findViewById(R.id.title)
-        val description: TextView = v.findViewById(R.id.description)
-        val toggle: SwitchMaterial = v.findViewById(R.id.toggle)
+        val title: MaterialTextView = v.findViewById(R.id.title)
+        val description: MaterialTextView = v.findViewById(R.id.description)
+        val toggle: MaterialSwitch = v.findViewById(R.id.toggle)
     }
 }

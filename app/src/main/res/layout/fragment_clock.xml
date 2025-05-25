@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         tools:text="10:00 PM"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/timezone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

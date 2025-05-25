@@ -11,23 +11,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.services.StopwatchService
 import com.meenbeese.chronos.utils.FormatUtils.formatMillis
 import com.meenbeese.chronos.views.ProgressTextView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConnection {
     private lateinit var back: ImageView
     private lateinit var reset: ImageView
     private lateinit var share: ImageView
-    private lateinit var lap: TextView
+    private lateinit var lap: MaterialTextView
     private lateinit var toggle: FloatingActionButton
     private lateinit var time: ProgressTextView
     private lateinit var lapsLayout: LinearLayout
@@ -164,7 +164,7 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
             lapDiff
         )
         val layout = LinearLayout(context)
-        val number = TextView(context)
+        val number = MaterialTextView(requireContext())
         number.text = getString(R.string.title_lap_number, lapNum)
         number.setTextColor(ContextCompat.getColor(requireContext(), R.color.textColorPrimary))
         layout.addView(number)
@@ -172,14 +172,14 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
         val layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT)
         layoutParams.weight = 1f
 
-        val lap = TextView(context)
+        val lap = MaterialTextView(requireContext())
         lap.layoutParams = layoutParams
         lap.gravity = GravityCompat.END
         lap.text = getString(R.string.title_lap_time, formatMillis(lapDiff))
         lap.setTextColor(ContextCompat.getColor(requireContext(), R.color.textColorPrimary))
         layout.addView(lap)
 
-        val total = TextView(context)
+        val total = MaterialTextView(requireContext())
         total.layoutParams = layoutParams
         total.gravity = GravityCompat.END
         total.text = getString(R.string.title_total_time, formatMillis(lapTime))

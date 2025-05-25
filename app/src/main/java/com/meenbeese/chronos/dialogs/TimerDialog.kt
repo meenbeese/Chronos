@@ -7,12 +7,12 @@ import android.os.Bundle
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 
 import androidx.activity.ComponentDialog
 import androidx.fragment.app.FragmentManager
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
+import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
@@ -26,11 +26,11 @@ import java.util.concurrent.TimeUnit
 class TimerDialog(context: Context, private val manager: FragmentManager) :
     ComponentDialog(context), View.OnClickListener {
     private var ringtoneImage: ImageView? = null
-    private var ringtoneText: TextView? = null
+    private var ringtoneText: MaterialTextView? = null
     private var vibrateImage: ImageView? = null
     private var ringtone: SoundData?
     private var isVibrate = true
-    private var time: TextView? = null
+    private var time: MaterialTextView? = null
     private var backspace: ImageView? = null
     private var input = "000000"
     private val chronos: Chronos = context.applicationContext as Chronos
@@ -157,6 +157,6 @@ class TimerDialog(context: Context, private val manager: FragmentManager) :
         }
 
     override fun onClick(view: View) {
-        if (view is TextView) input(view.text.toString()) else backspace()
+        if (view is MaterialTextView) input(view.text.toString()) else backspace()
     }
 }

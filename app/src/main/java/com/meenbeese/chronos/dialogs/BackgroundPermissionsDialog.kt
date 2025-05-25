@@ -6,10 +6,10 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.WindowManager
-import android.widget.Button
 
 import androidx.activity.ComponentDialog
 
+import com.google.android.material.button.MaterialButton
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 
@@ -25,8 +25,8 @@ class BackgroundPermissionsDialog(context: Context) : ComponentDialog(context) {
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_background_permissions, null)
         setContentView(view)
 
-        val cancelButton: Button = view.findViewById(R.id.cancelButton)
-        val okButton: Button = view.findViewById(R.id.okButton)
+        val cancelButton: MaterialButton = view.findViewById(R.id.cancelButton)
+        val okButton: MaterialButton = view.findViewById(R.id.okButton)
 
         cancelButton.setOnClickListener { dismiss() }
         okButton.setOnClickListener {

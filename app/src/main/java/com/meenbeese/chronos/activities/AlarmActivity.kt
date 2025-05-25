@@ -11,12 +11,12 @@ import android.os.Vibrator
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.WindowManager
-import android.widget.TextView
 
 import androidx.activity.ComponentActivity
 import androidx.media3.common.util.UnstableApi
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 
+import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
@@ -43,7 +43,7 @@ import kotlin.math.min
 
 class AlarmActivity : ComponentActivity(), SlideActionListener {
     private var overlay: View? = null
-    private var time: TextView? = null
+    private var time: MaterialTextView? = null
     private var chronos: Chronos? = null
     private var vibrator: Vibrator? = null
     private var audioManager: AudioManager? = null
@@ -76,7 +76,7 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
         overlay = findViewById(R.id.overlay)
         isDark = chronos!!.isDarkTheme()
         time = findViewById(R.id.time)
-        val date = findViewById<TextView>(R.id.date)
+        val date = findViewById<MaterialTextView>(R.id.date)
         val actionView = findViewById<SlideActionView>(R.id.slideView)
 
         actionView.setLeftIcon(VectorDrawableCompat.create(resources, R.drawable.ic_snooze, theme)!!)

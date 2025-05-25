@@ -5,16 +5,16 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 
 import androidx.activity.ComponentDialog
 
+import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.R
 
 import java.util.concurrent.TimeUnit
 
 class TimeChooserDialog(context: Context?) : ComponentDialog(context!!), View.OnClickListener {
-    private var time: TextView? = null
+    private var time: MaterialTextView? = null
     private var backspace: ImageView? = null
     private var input = "000000"
     private var listener: OnTimeChosenListener? = null
@@ -55,7 +55,7 @@ class TimeChooserDialog(context: Context?) : ComponentDialog(context!!), View.On
         findViewById<View>(R.id.nine)?.setOnClickListener(this)
         findViewById<View>(R.id.zero)?.setOnClickListener(this)
 
-        val startButton = findViewById<TextView>(R.id.start)
+        val startButton = findViewById<MaterialTextView>(R.id.start)
         startButton?.setText(android.R.string.ok)
         startButton?.setOnClickListener {
             if (input.toInt() > 0) {
@@ -95,7 +95,7 @@ class TimeChooserDialog(context: Context?) : ComponentDialog(context!!), View.On
     }
 
     override fun onClick(view: View) {
-        if (view is TextView) input(view.text.toString()) else backspace()
+        if (view is MaterialTextView) input(view.text.toString()) else backspace()
     }
 
     interface OnTimeChosenListener {

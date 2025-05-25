@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
-import android.widget.TextView
 
 import androidx.recyclerview.widget.RecyclerView
 
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 
@@ -65,8 +65,8 @@ class TimeZonesAdapter(
     }
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val time: TextView = v.findViewById(R.id.time)
-        val title: TextView = v.findViewById(R.id.title)
+        val time: MaterialTextView = v.findViewById(R.id.time)
+        val title: MaterialTextView = v.findViewById(R.id.title)
         val checkBox: MaterialCheckBox = v.findViewById(R.id.checkbox)
     }
 }

@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentManager
@@ -26,7 +25,8 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.checkbox.MaterialCheckBox
-import com.google.android.material.switchmaterial.SwitchMaterial
+import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
@@ -355,7 +355,7 @@ class AlarmsAdapter(
                 handler.post(field!!)
             }
 
-        val time: TextView = itemView.findViewById(R.id.time)
+        val time: MaterialTextView = itemView.findViewById(R.id.time)
         val stop: ImageView = itemView.findViewById(R.id.stop)
         val progress: ProgressLineView = itemView.findViewById(R.id.progress)
     }
@@ -366,19 +366,19 @@ class AlarmsAdapter(
     class AlarmViewHolder(v: View, val chronos: Chronos) : RecyclerView.ViewHolder(v) {
         val name: EditText = v.findViewById(R.id.name)
         val nameUnderline: View = v.findViewById(R.id.underline)
-        val enable: SwitchMaterial = v.findViewById(R.id.enable)
-        val time: TextView = v.findViewById(R.id.time)
-        val nextTime: TextView = v.findViewById(R.id.nextTime)
+        val enable: MaterialSwitch = v.findViewById(R.id.enable)
+        val time: MaterialTextView = v.findViewById(R.id.time)
+        val nextTime: MaterialTextView = v.findViewById(R.id.nextTime)
         val extra: View = v.findViewById(R.id.extra)
         val repeat: MaterialCheckBox = v.findViewById(R.id.repeat)
         val days: LinearLayout = v.findViewById(R.id.days)
         val ringtone: View = v.findViewById(R.id.ringtone)
         val ringtoneImage: ImageView = v.findViewById(R.id.ringtoneImage)
-        val ringtoneText: TextView = v.findViewById(R.id.ringtoneText)
+        val ringtoneText: MaterialTextView = v.findViewById(R.id.ringtoneText)
         val vibrate: View = v.findViewById(R.id.vibrate)
         val vibrateImage: ImageView = v.findViewById(R.id.vibrateImage)
         val expandImage: ImageView = v.findViewById(R.id.expandImage)
-        val delete: TextView = v.findViewById(R.id.delete)
+        val delete: MaterialTextView = v.findViewById(R.id.delete)
         val indicators: View = v.findViewById(R.id.indicators)
         val repeatIndicator: ImageView = v.findViewById(R.id.repeatIndicator)
         val soundIndicator: ImageView = v.findViewById(R.id.soundIndicator)

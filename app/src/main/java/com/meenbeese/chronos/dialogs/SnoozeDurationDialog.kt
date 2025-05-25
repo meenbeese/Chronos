@@ -5,11 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.ListView
 
 import androidx.activity.ComponentDialog
 
+import com.google.android.material.button.MaterialButton
 import com.meenbeese.chronos.R
 
 class SnoozeDurationDialog(context: Context, private val names: Array<CharSequence?>, private val listener: OnSnoozeDurationSelectedListener) : ComponentDialog(context) {
@@ -32,7 +32,7 @@ class SnoozeDurationDialog(context: Context, private val names: Array<CharSequen
             dismiss()
         }
 
-        val cancelButton: Button = view.findViewById(R.id.cancelButton)
+        val cancelButton: MaterialButton = view.findViewById(R.id.cancelButton)
         cancelButton.setOnClickListener { dismiss() }
     }
 

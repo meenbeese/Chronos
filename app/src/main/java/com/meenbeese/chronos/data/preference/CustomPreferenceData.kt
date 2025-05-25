@@ -3,8 +3,8 @@ package com.meenbeese.chronos.data.preference
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 
+import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.R
 
 /**
@@ -42,8 +42,8 @@ abstract class CustomPreferenceData(
      * Holds child views of the current item.
      */
     class ViewHolder(v: View) : BasePreferenceData.ViewHolder(v) {
-        val nameView: TextView = v.findViewById(R.id.name)
-        val valueNameView: TextView = v.findViewById(R.id.value)
-        val description: TextView = v.findViewById(R.id.description)
+        val nameView: MaterialTextView = v.findViewById(R.id.name)
+        val valueNameView: MaterialTextView = v.findViewById(R.id.value)
+        val description: MaterialTextView = v.findViewById(R.id.description)
     }
 }

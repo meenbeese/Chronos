@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 
 import androidx.core.content.ContextCompat
@@ -16,6 +15,7 @@ import coil3.load
 import coil3.request.transformations
 import coil3.transform.CircleCropTransformation
 
+import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.BuildConfig
 import com.meenbeese.chronos.R
 
@@ -23,16 +23,16 @@ import java.util.Calendar
 
 class AboutFragment : BaseFragment() {
     private var appIcon: ImageView? = null
-    private var appName: TextView? = null
-    private var appDescription: TextView? = null
-    private var featuresList: TextView? = null
-    private var madeWithLove: TextView? = null
-    private var versionInfo: TextView? = null
-    private var engageTitle: TextView? = null
-    private var forkGitHub: TextView? = null
-    private var visitWebsite: TextView? = null
-    private var sendEmail: TextView? = null
-    private var copyrightInfo: TextView? = null
+    private var appName: MaterialTextView? = null
+    private var appDescription: MaterialTextView? = null
+    private var featuresList: MaterialTextView? = null
+    private var madeWithLove: MaterialTextView? = null
+    private var versionInfo: MaterialTextView? = null
+    private var engageTitle: MaterialTextView? = null
+    private var forkGitHub: MaterialTextView? = null
+    private var visitWebsite: MaterialTextView? = null
+    private var sendEmail: MaterialTextView? = null
+    private var copyrightInfo: MaterialTextView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,

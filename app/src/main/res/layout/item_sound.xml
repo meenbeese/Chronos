@@ -18,7 +18,7 @@
         app:srcCompat="@drawable/ic_sound"
         android:layout_marginEnd="8dp" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
