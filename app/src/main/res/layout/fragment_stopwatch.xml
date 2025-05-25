@@ -71,7 +71,8 @@
             android:alpha="0"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/ic_reset" />
+            app:srcCompat="@drawable/ic_reset"
+            app:tint="@color/textColorPrimary" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/toggle"
@@ -79,7 +80,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="32dp"
             app:backgroundTint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_play" />
+            app:srcCompat="@drawable/ic_play"
+            app:tint="@color/colorPrimary" />
 
         <TextView
             android:id="@+id/lap"
@@ -91,7 +93,7 @@
             android:text="@string/title_lap"
             android:textAlignment="center"
             android:textAllCaps="true"
-            android:textColor="?android:textColorPrimary"
+            android:textColor="@color/textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold"
             android:visibility="invisible" />
@@ -105,7 +107,7 @@
             android:scaleType="centerInside"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_share"
-            tools:tint="@color/textColorPrimary" />
+            app:tint="@color/textColorPrimary" />
 
     </LinearLayout>
 

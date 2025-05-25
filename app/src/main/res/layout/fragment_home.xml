@@ -49,7 +49,11 @@
         <com.meenbeese.chronos.views.CustomTabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:tabBackground="@color/colorPrimary"
+            app:tabTextColor="@color/colorIndeterminateText"
+            app:tabSelectedTextColor="@color/textColorSecondary"
+            app:tabIndicatorColor="@color/colorAccent" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"

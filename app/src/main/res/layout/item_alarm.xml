@@ -66,7 +66,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
-                android:text="@string/title_repeat" />
+                android:text="@string/title_repeat"
+                app:tint="@color/textColorPrimary" />
 
             <LinearLayout
                 android:id="@+id/days"
@@ -141,8 +142,8 @@
                         android:layout_marginBottom="4dp"
                         android:scaleType="centerInside"
                         app:srcCompat="@drawable/ic_ringtone_disabled"
-                        tools:alpha="0.333"
-                        tools:tint="@color/textColorPrimary" />
+                        app:tint="@color/textColorPrimary"
+                        tools:alpha="0.333" />
 
                     <TextView
                         android:id="@+id/ringtoneText"
@@ -176,7 +177,7 @@
                         android:layout_marginBottom="4dp"
                         android:scaleType="centerInside"
                         app:srcCompat="@drawable/ic_vibrate_to_none"
-                        tools:tint="@color/textColorPrimary" />
+                        app:tint="@color/textColorPrimary" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -213,8 +214,8 @@
                 android:paddingEnd="8dp"
                 android:scaleType="centerInside"
                 android:tintMode="src_in"
-                app:tint="@color/colorAccent"
-                app:srcCompat="@drawable/ic_expand" />
+                app:srcCompat="@drawable/ic_expand"
+                app:tint="@color/textColorPrimary" />
 
             <LinearLayout
                 android:id="@+id/nameContainer"
@@ -251,7 +252,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginBottom="4dp"
-                    android:background="@color/textColorSecondary" />
+                    android:background="@color/textColorSecondary"
+                    app:tint="@color/textColorPrimary" />
 
             </LinearLayout>
 
@@ -268,7 +270,7 @@
                 android:text="@string/title_delete"
                 android:textAlignment="center"
                 android:textAllCaps="true"
-                android:textColor="?android:textColorPrimary"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -290,8 +292,8 @@
                     android:layout_gravity="center"
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/ic_repeat"
-                    tools:alpha="0.333"
-                    tools:tint="@color/textColorPrimary" />
+                    app:tint="@color/textColorPrimary"
+                    tools:alpha="0.333" />
 
                 <ImageView
                     android:id="@+id/soundIndicator"
@@ -299,10 +301,9 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:scaleType="centerInside"
-                    app:tint="?android:textColorSecondary"
                     app:srcCompat="@drawable/ic_sound"
-                    tools:alpha="0.333"
-                    tools:tint="@color/textColorPrimary" />
+                    app:tint="@color/textColorPrimary"
+                    tools:alpha="0.333" />
 
                 <ImageView
                     android:id="@+id/vibrateIndicator"
@@ -311,7 +312,7 @@
                     android:layout_gravity="center"
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/ic_vibrate"
-                    tools:tint="@color/textColorPrimary" />
+                    app:tint="@color/textColorPrimary" />
 
             </LinearLayout>
 

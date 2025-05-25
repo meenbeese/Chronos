@@ -32,9 +32,9 @@ class ProgressTextView : View {
     private var padding: Int = DimenUtils.dpToPx(4f)
 
     private val lineColor = ContextCompat.getColor(context, R.color.colorAccent)
-    private val circleColor = ContextCompat.getColor(context, R.color.textColorPrimary)
+    private val circleColor = ContextCompat.getColor(context, R.color.colorAccent)
     private val backgroundColor = ContextCompat.getColor(context, R.color.colorIndeterminateText)
-    private val textColorPrimary = ContextCompat.getColor(context, R.color.colorIndeterminateText)
+    private val textColorPrimary = ContextCompat.getColor(context, R.color.textColorPrimary)
 
     private var linePaint = Paint().apply {
         isAntiAlias = true

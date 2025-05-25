@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
@@ -30,7 +31,6 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
     private lateinit var toggle: FloatingActionButton
     private lateinit var time: ProgressTextView
     private lateinit var lapsLayout: LinearLayout
-    private var textColorPrimary = 0
     private var service: StopwatchService? = null
 
     override fun onCreateView(
@@ -166,21 +166,24 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
         val layout = LinearLayout(context)
         val number = TextView(context)
         number.text = getString(R.string.title_lap_number, lapNum)
-        number.setTextColor(textColorPrimary)
+        number.setTextColor(ContextCompat.getColor(requireContext(), R.color.textColorPrimary))
         layout.addView(number)
+
         val layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT)
         layoutParams.weight = 1f
+
         val lap = TextView(context)
         lap.layoutParams = layoutParams
         lap.gravity = GravityCompat.END
         lap.text = getString(R.string.title_lap_time, formatMillis(lapDiff))
-        lap.setTextColor(textColorPrimary)
+        lap.setTextColor(ContextCompat.getColor(requireContext(), R.color.textColorPrimary))
         layout.addView(lap)
+
         val total = TextView(context)
         total.layoutParams = layoutParams
         total.gravity = GravityCompat.END
         total.text = getString(R.string.title_total_time, formatMillis(lapTime))
-        total.setTextColor(textColorPrimary)
+        total.setTextColor(ContextCompat.getColor(requireContext(), R.color.textColorPrimary))
         layout.addView(total)
         lapsLayout.addView(layout, 0)
     }

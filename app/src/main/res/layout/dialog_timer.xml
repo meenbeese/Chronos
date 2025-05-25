@@ -73,7 +73,8 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/ic_vibrate" />
+            app:srcCompat="@drawable/ic_vibrate"
+            app:tint="@color/textColorPrimary" />
 
         <TextView
             android:layout_width="0dp"
