@@ -47,6 +47,7 @@ enum class PreferenceData(private val key: Preferences.Key<*>, private val defau
     TIMER_SOUND(stringPreferencesKey(name = "timer_sound"), defaultValue = ""),
 
     // Time Zone
+    TIME_ZONES(stringPreferencesKey(name = "time_zones"), defaultValue = ""),
     TIME_ZONE_ENABLED(booleanPreferencesKey(name = "time_zone_enabled"), defaultValue = false);
 
     @Suppress("UNCHECKED_CAST")

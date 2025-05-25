@@ -268,14 +268,21 @@ class HomeFragment : BaseFragment() {
     /**
      * Update the time zones displayed in the clock fragments pager.
      */
-    private fun setClockFragments() {
+    internal fun setClockFragments() {
         val fragments = mutableListOf<ClockFragment.Instantiator>()
 
+        // Always add the default/local time zone clock
         fragments.add(ClockFragment.Instantiator(context, null))
 
-        for (id in TimeZone.getAvailableIDs()) {
-            if (PreferenceData.TIME_ZONE_ENABLED.getValue<Boolean>(requireContext())) {
-                fragments.add(ClockFragment.Instantiator(context, id))
+        // Check if displaying additional time zones is enabled
+        if (PreferenceData.TIME_ZONE_ENABLED.getValue<Boolean>(requireContext())) {
+            val rawCsv = PreferenceData.TIME_ZONES.getValue<String>(requireContext())
+            val selectedIds = rawCsv.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+
+            for (id in selectedIds) {
+                if (TimeZone.getAvailableIDs().contains(id)) {
+                    fragments.add(ClockFragment.Instantiator(context, id))
+                }
             }
         }
 
@@ -283,7 +290,6 @@ class HomeFragment : BaseFragment() {
         timePager.adapter = timeAdapter
 
         timeIndicator.setViewPager(timePager)
-
         timeIndicator.visibility = if (fragments.size > 1) View.VISIBLE else View.GONE
 
         getBackgroundImage(background)

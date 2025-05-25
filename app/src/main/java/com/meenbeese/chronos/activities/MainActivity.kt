@@ -98,6 +98,11 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         }
     }
 
+    fun refreshClockFragments() {
+        val homeFragment = supportFragmentManager.findFragmentById(R.id.fragment) as? HomeFragment
+        homeFragment?.setClockFragments()
+    }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (isActionableIntent(intent)) {

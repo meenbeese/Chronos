@@ -14,13 +14,21 @@ import com.meenbeese.chronos.adapters.TimeZonesAdapter
 
 import java.util.TimeZone
 
-class TimeZoneChooserDialog(context: Context?) : ComponentDialog(context!!) {
+class TimeZoneChooserDialog(
+    context: Context,
+    private val selectedTimeZones: MutableSet<String>,
+    private val onSelectionDone: (Set<String>) -> Unit
+) : ComponentDialog(context) {
+
     private val excludedIds = arrayOfNulls<String>(0)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_time_zone_chooser)
+
         val recycler = findViewById<RecyclerView>(R.id.recycler)
         recycler?.layoutManager = LinearLayoutManager(context)
+
         val timeZones: MutableList<String> = ArrayList()
         for (id1 in TimeZone.getAvailableIDs()) {
             var isFine = true
@@ -38,9 +46,15 @@ class TimeZoneChooserDialog(context: Context?) : ComponentDialog(context!!) {
             }
             if (isFine) timeZones.add(id1)
         }
-        timeZones.sortWith(Comparator.comparingInt { id: String? -> TimeZone.getTimeZone(id).rawOffset })
-        recycler?.adapter = TimeZonesAdapter(timeZones)
-        findViewById<View>(R.id.ok)?.setOnClickListener { dismiss() }
+
+        timeZones.sortWith(Comparator.comparingInt { id -> TimeZone.getTimeZone(id).rawOffset })
+
+        recycler?.adapter = TimeZonesAdapter(timeZones, selectedTimeZones)
+
+        findViewById<View>(R.id.ok)?.setOnClickListener {
+            onSelectionDone(selectedTimeZones)
+            dismiss()
+        }
     }
 
     override fun show() {
