@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.ViewCompat
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
@@ -21,7 +20,7 @@ class ScrollableBottomSheetBehavior<V : View>(
         event: MotionEvent
     ): Boolean {
         val target = findScrollingChild(child)
-        return if (target != null && ViewCompat.canScrollVertically(target, -1)) {
+        return if (target != null && target.canScrollVertically(-1)) {
             false
         } else {
             super.onInterceptTouchEvent(parent, child, event)
