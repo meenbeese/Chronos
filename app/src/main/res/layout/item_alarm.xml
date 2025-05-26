@@ -38,8 +38,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
-                app:trackTint="@color/colorAccent"
-                app:thumbTint="@color/colorPrimary" />
+                app:trackTint="@color/switch_thumb_tint"
+                app:thumbTint="@color/switch_track_tint" />
 
         </FrameLayout>
 
@@ -69,7 +69,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
                 android:text="@string/title_repeat"
-                app:tint="@color/textColorPrimary" />
+                app:buttonTint="@color/checkbox_tint" />
 
             <LinearLayout
                 android:id="@+id/days"
