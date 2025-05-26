@@ -8,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.fragment.app.DialogFragment
+import androidx.media3.common.util.UnstableApi
 import androidx.viewpager2.widget.ViewPager2
 
-import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
 import com.meenbeese.chronos.data.SoundData
@@ -18,6 +18,7 @@ import com.meenbeese.chronos.fragments.sound.AlarmSoundChooserFragment
 import com.meenbeese.chronos.fragments.sound.FileSoundChooserFragment
 import com.meenbeese.chronos.fragments.sound.RingtoneSoundChooserFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
+import com.meenbeese.chronos.utils.AudioUtils
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -76,8 +77,9 @@ class SoundChooserDialog : DialogFragment(), SoundChooserListener {
         dismiss()
     }
 
+    @UnstableApi
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        (view?.context?.applicationContext as Chronos).stopCurrentSound()
+        AudioUtils.stopCurrentSound()
     }
 }

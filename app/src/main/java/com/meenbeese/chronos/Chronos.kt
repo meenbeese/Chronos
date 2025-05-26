@@ -3,23 +3,11 @@ package com.meenbeese.chronos
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.media.Ringtone
-import android.net.Uri
 import android.os.Build
-import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.FragmentManager
-import androidx.media3.common.AudioAttributes
-import androidx.media3.common.MediaItem
-import androidx.media3.common.PlaybackException
-import androidx.media3.common.Player
-import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.DefaultDataSource
-import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.hls.HlsMediaSource
-import androidx.media3.exoplayer.source.MediaSource
 
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.PreferenceData
@@ -30,6 +18,7 @@ import com.meenbeese.chronos.db.AlarmDatabase
 import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
+import com.meenbeese.chronos.utils.CoreHelper
 import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -38,24 +27,20 @@ import kotlinx.coroutines.launch
 
 import java.util.Calendar
 
-class Chronos : Application(), Player.Listener {
+class Chronos : Application() {
     lateinit var alarms: ArrayList<AlarmData>
     lateinit var timers: ArrayList<TimerData>
     private var listeners: MutableList<ChronosListener>? = null
     private var listener: ActivityListener? = null
-    private var player: ExoPlayer? = null
-    private var currentRingtone: Ringtone? = null
-    private var hlsMediaSourceFactory: HlsMediaSource.Factory? = null
-    private var currentStream: String? = null
 
     lateinit var database: AlarmDatabase
     lateinit var alarmDao: AlarmDao
     lateinit var repository: AlarmRepository
 
     @OptIn(DelicateCoroutinesApi::class)
-    @UnstableApi
     override fun onCreate() {
         super.onCreate()
+        CoreHelper.contextGetter = { this }
 
         database = AlarmDatabase.getDatabase(this)
         alarmDao = database.alarmDao()
@@ -64,12 +49,7 @@ class Chronos : Application(), Player.Listener {
         listeners = ArrayList()
         alarms = ArrayList()
         timers = ArrayList()
-        player = ExoPlayer.Builder(this).build()
-        player?.addListener(this)
         activityTheme = PreferenceData.THEME.getValue<Int>(this).mapTheme()
-
-        val dataSourceFactory = DefaultDataSource.Factory(this)
-        hlsMediaSourceFactory = HlsMediaSource.Factory(dataSourceFactory)
 
         GlobalScope.launch {
             val alarmEntities = alarmDao.getAllAlarms()
@@ -182,13 +162,6 @@ class Chronos : Application(), Player.Listener {
          * @return the hour of the end of the day (24h), as specified by the user
          */
         get() = PreferenceData.DAY_END.getValue(this)
-    private val isRingtonePlaying: Boolean
-        /**
-         * Determine if a ringtone is currently playing.
-         *
-         * @return          True if a ringtone is currently playing.
-         */
-        get() = currentRingtone != null && currentRingtone!!.isPlaying
 
     fun isDarkTheme(): Boolean {
         return activityTheme == THEME_NIGHT || activityTheme == THEME_AMOLED || (activityTheme == THEME_AUTO && isNight)
@@ -205,99 +178,6 @@ class Chronos : Application(), Player.Listener {
         }
     }
 
-    fun playRingtone(ringtone: Ringtone) {
-        if (!ringtone.isPlaying) {
-            stopCurrentSound()
-            ringtone.play()
-        }
-        currentRingtone = ringtone
-    }
-
-    /**
-     * Play a stream ringtone.
-     *
-     * @param url       The URL of the stream to be passed to ExoPlayer.
-     * @see [ExoPlayer Repo]
-     */
-    @UnstableApi
-    private fun playStream(url: String, type: String, factory: MediaSource.Factory?) {
-        stopCurrentSound()
-
-        // Create a MediaItem from the URL
-        val mediaItem: MediaItem = MediaItem.fromUri(Uri.parse(url))
-
-        // Error handling, including when this is a progressive stream
-        // rather than a HLS stream, is in onPlayerError
-        player?.setMediaSource(factory!!.createMediaSource(mediaItem))
-        player?.prepare()
-        player?.playWhenReady = true
-        currentStream = url
-    }
-
-    /**
-     * Play a stream ringtone.
-     *
-     * @param url       The URL of the stream to be passed to ExoPlayer.
-     * @see [ExoPlayer Repo]
-     */
-    @UnstableApi
-    private fun playStream(url: String, type: String) {
-        playStream(url, type, hlsMediaSourceFactory)
-    }
-
-    /**
-     * Play a stream ringtone.
-     *
-     * @param url           The URL of the stream to be passed to ExoPlayer.
-     * @param attributes    The attributes to play the stream with.
-     * @see [ExoPlayer Repo]
-     */
-    @UnstableApi
-    fun playStream(url: String, type: String, attributes: AudioAttributes?) {
-        player?.stop()
-        player = ExoPlayer.Builder(this)
-            .setAudioAttributes(attributes!!, true)
-            .build()
-        playStream(url, type)
-    }
-
-    /**
-     * Stop the currently playing stream.
-     */
-    fun stopStream() {
-        player?.stop()
-        currentStream = null
-    }
-
-    /**
-     * Sets the player volume to the given float.
-     *
-     * @param volume            The volume between 0 and 1
-     */
-    fun setStreamVolume(volume: Float) {
-        player?.volume = volume
-    }
-
-    /**
-     * Determine if the passed url matches the stream that is currently playing.
-     *
-     * @param url           The URL to match the current stream to.
-     * @return              True if the URL matches that of the currently playing
-     * stream.
-     */
-    fun isPlayingStream(url: String): Boolean {
-        return currentStream != null && currentStream == url
-    }
-
-    /**
-     * Stop the currently playing sound, regardless of whether it is a ringtone
-     * or a stream.
-     */
-    fun stopCurrentSound() {
-        if (isRingtonePlaying) currentRingtone?.stop()
-        stopStream()
-    }
-
     fun addListener(listener: ChronosListener) {
         listeners?.add(listener)
     }
@@ -308,24 +188,6 @@ class Chronos : Application(), Player.Listener {
 
     fun setListener(listener: ActivityListener?) {
         this.listener = listener
-    }
-
-    override fun onPlaybackStateChanged(playbackState: Int) {
-        when (playbackState) {
-            Player.STATE_BUFFERING, Player.STATE_READY, Player.STATE_IDLE -> {}
-            else -> currentStream = null
-        }
-    }
-
-    override fun onPlayerError(error: PlaybackException) {
-        currentStream = null
-        val exception: Throwable? = error.cause
-        exception?.printStackTrace()
-        Toast.makeText(
-            this,
-            exception?.javaClass?.name + ": " + exception?.message,
-            Toast.LENGTH_SHORT
-        ).show()
     }
 
     val fragmentManager: FragmentManager?

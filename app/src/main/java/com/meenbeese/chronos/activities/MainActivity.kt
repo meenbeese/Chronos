@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentManager
+import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.Chronos.ActivityListener
@@ -26,6 +27,7 @@ import com.meenbeese.chronos.fragments.HomeFragment
 import com.meenbeese.chronos.fragments.StopwatchFragment
 import com.meenbeese.chronos.fragments.TimerFragment
 import com.meenbeese.chronos.receivers.TimerReceiver
+import com.meenbeese.chronos.utils.AudioUtils
 
 class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedListener,
     ActivityListener {
@@ -198,9 +200,10 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         super.onSaveInstanceState(outState)
     }
 
+    @UnstableApi
     public override fun onPause() {
         super.onPause()
-        chronos?.stopCurrentSound()
+        AudioUtils.stopCurrentSound()
     }
 
     override fun onBackStackChanged() {

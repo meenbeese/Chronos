@@ -11,6 +11,7 @@ import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.Chronos
+import com.meenbeese.chronos.utils.AudioUtils
 import com.meenbeese.chronos.utils.Option
 
 import kotlinx.parcelize.IgnoredOnParcel
@@ -49,9 +50,9 @@ class SoundData(
                     }
                 )
             }
-            ringtone.map { chronos.playRingtone(it) }
+            ringtone.map { AudioUtils.playRingtone(it) }
         } else {
-            chronos.playStream(
+            AudioUtils.playStream(
                 url, type,
                 androidx.media3.common.AudioAttributes.Builder()
                     .setUsage(C.USAGE_ALARM)
@@ -67,8 +68,9 @@ class SoundData(
      *
      * @param chronos           The active Application instance.
      */
+    @UnstableApi
     fun stop(chronos: Chronos) {
-        ringtone.map { it.stop() }.takeIf { ringtone.isDefined() } ?: chronos.stopStream()
+        ringtone.map { it.stop() }.takeIf { ringtone.isDefined() } ?: AudioUtils.stopStream()
     }
 
     /**
@@ -88,9 +90,9 @@ class SoundData(
                     }
                 )
             }
-            ringtone.map { chronos.playRingtone(it) }
+            ringtone.map { AudioUtils.playRingtone(it) }
         } else {
-            chronos.playStream(
+            AudioUtils.playStream(
                 url, type,
                 androidx.media3.common.AudioAttributes.Builder()
                     .setUsage(C.USAGE_ALARM)
@@ -105,8 +107,9 @@ class SoundData(
      * @param chronos           The active Application instance.
      * @return                  True if "this" sound is playing.
      */
+    @UnstableApi
     fun isPlaying(chronos: Chronos): Boolean {
-        return ringtone.map { it.isPlaying }.getOrElse(chronos.isPlayingStream(url))
+        return ringtone.map { it.isPlaying }.getOrElse(AudioUtils.isPlayingStream(url))
     }
 
     /**
@@ -115,6 +118,7 @@ class SoundData(
      * @param chronos           The active Application instance.
      * @param volume            The volume between 0 and 1
      */
+    @UnstableApi
     fun setVolume(chronos: Chronos, volume: Float) {
         ringtone.map {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -122,7 +126,7 @@ class SoundData(
             } else {
                 throw IllegalArgumentException("Attempted to set the ringtone volume on a device older than Android P.")
             }
-        }.takeIf { ringtone.isDefined() } ?: chronos.setStreamVolume(volume)
+        }.takeIf { ringtone.isDefined() } ?: AudioUtils.setStreamVolume(volume)
     }
 
     val isSetVolumeSupported: Boolean
