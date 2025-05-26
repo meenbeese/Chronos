@@ -457,7 +457,7 @@ class AlarmsAdapter(
         val vibrate: View = v.findViewById(R.id.vibrate)
         val vibrateImage: ImageView = v.findViewById(R.id.vibrateImage)
         val expandImage: ImageView = v.findViewById(R.id.expandImage)
-        val delete: MaterialTextView = v.findViewById(R.id.delete)
+        val delete: ImageView = v.findViewById(R.id.delete)
         val indicators: View = v.findViewById(R.id.indicators)
         val repeatIndicator: ImageView = v.findViewById(R.id.repeatIndicator)
         val soundIndicator: ImageView = v.findViewById(R.id.soundIndicator)

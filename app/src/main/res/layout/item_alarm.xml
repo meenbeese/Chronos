@@ -259,22 +259,17 @@
 
             </LinearLayout>
 
-            <com.google.android.material.textview.MaterialTextView
+            <ImageView
                 android:id="@+id/delete"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="start|center_vertical"
+                android:layout_gravity="center_vertical"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:gravity="center"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="4dp"
-                android:text="@string/title_delete"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="@color/textColorPrimary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:padding="8dp"
+                android:contentDescription="@string/title_delete"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ic_delete"
+                app:tint="@color/textColorPrimary" />
 
             <LinearLayout
                 android:id="@+id/indicators"
