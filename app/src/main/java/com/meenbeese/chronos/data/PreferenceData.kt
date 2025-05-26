@@ -1,6 +1,7 @@
 package com.meenbeese.chronos.data
 
 import android.content.Context
+import android.preference.PreferenceManager
 import android.util.Log
 
 import androidx.datastore.preferences.SharedPreferencesMigration
@@ -20,7 +21,12 @@ import kotlinx.coroutines.runBlocking
 private val Context.dataStore by preferencesDataStore(
     name = "settings",
     produceMigrations = { context ->
-        listOf(SharedPreferencesMigration(context, "old_prefs_name"))
+        listOf(
+            SharedPreferencesMigration(
+                context,
+                PreferenceManager.getDefaultSharedPreferencesName(context)
+            )
+        )
     }
 )
 
@@ -31,7 +37,6 @@ enum class PreferenceData(private val key: Preferences.Key<*>, private val defau
     RINGING_BACKGROUND_IMAGE(booleanPreferencesKey(name = "ringing_background_image"), defaultValue = true),
     DAY_START(intPreferencesKey(name = "day_start"), defaultValue = 6),
     DAY_END(intPreferencesKey(name = "day_end"), defaultValue = 18),
-    ALARM_LENGTH(intPreferencesKey(name = "alarm_length"), defaultValue = 0),
     TIMER_LENGTH(intPreferencesKey(name = "timer_length"), defaultValue = 0),
     DEFAULT_ALARM_RINGTONE(stringPreferencesKey(name = "default_alarm_ringtone"), defaultValue = null),
     DEFAULT_TIMER_RINGTONE(stringPreferencesKey(name = "default_timer_ringtone"), defaultValue = null),
