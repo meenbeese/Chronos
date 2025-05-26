@@ -42,9 +42,15 @@ class AlarmsFragment : BasePagerFragment() {
         empty = v.findViewById(R.id.empty)
         (v.findViewById<View>(R.id.emptyText) as MaterialTextView).setText(R.string.msg_alarms_empty)
         recyclerView.layoutManager = GridLayoutManager(context, 1)
-        alarmsAdapter = AlarmsAdapter(chronos!!, recyclerView, parentFragmentManager) { alarmToDelete ->
-            alarmViewModel.delete(alarmToDelete.toEntity())
-        }
+        alarmsAdapter = AlarmsAdapter(
+            chronos!!,
+            recyclerView,
+            parentFragmentManager,
+            onDeleteAlarm = { alarmToDelete ->
+                alarmViewModel.delete(alarmToDelete.toEntity())
+            },
+            alarmViewModel = alarmViewModel
+        )
         recyclerView.adapter = alarmsAdapter
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {

@@ -6,8 +6,6 @@ import android.app.TimePickerDialog
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +31,8 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
+import com.meenbeese.chronos.data.toEntity
+import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.dialogs.SoundChooserDialog
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.meenbeese.chronos.utils.DimenUtils
@@ -51,7 +51,8 @@ class AlarmsAdapter(
     private val chronos: Chronos,
     private val recycler: RecyclerView,
     private val fragmentManager: FragmentManager,
-    private val onDeleteAlarm: (AlarmData) -> Unit
+    private val onDeleteAlarm: (AlarmData) -> Unit,
+    private val alarmViewModel: AlarmViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var timers: MutableList<TimerData> = chronos.timers.toMutableList()
@@ -72,6 +73,25 @@ class AlarmsAdapter(
             TimerViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timer, parent, false))
         } else {
             AlarmViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_alarm, parent, false), chronos)
+        }
+    }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        if (holder is AlarmViewHolder) {
+            saveAlarmNameIfNeeded(holder)
+        }
+        super.onViewRecycled(holder)
+    }
+
+    private fun saveAlarmNameIfNeeded(holder: AlarmViewHolder) {
+        val position = holder.bindingAdapterPosition
+        if (position != RecyclerView.NO_POSITION) {
+            val alarm = getAlarm(position)
+            val newName = holder.name.text.toString()
+            if (alarm != null && alarm.name != newName) {
+                alarm.name = newName
+                alarmViewModel.update(alarm.toEntity())
+            }
         }
     }
 
@@ -108,6 +128,7 @@ class AlarmsAdapter(
             }
 
             alarm.days = alarm.days
+            alarmViewModel.update(alarm.toEntity())
 
             val transition = AutoTransition()
             transition.duration = 150
@@ -122,6 +143,7 @@ class AlarmsAdapter(
             override fun onCheckedChanged(daySwitch: DaySwitch, isChecked: Boolean) {
                 alarm.days[holder.days.indexOfChild(daySwitch)] = isChecked
                 alarm.days = alarm.days
+                alarmViewModel.update(alarm.toEntity())
 
                 if (!alarm.isRepeat()) {
                     notifyItemChanged(holder.bindingAdapterPosition)
@@ -160,6 +182,7 @@ class AlarmsAdapter(
             dialog.setListener(object : SoundChooserListener {
                 override fun onSoundChosen(sound: SoundData?) {
                     alarm.sound = sound
+                    alarmViewModel.update(alarm.toEntity())
                     onBindAlarmViewHolderToggles(holder, alarm)
                 }
             })
@@ -171,6 +194,7 @@ class AlarmsAdapter(
         holder.vibrateImage.alpha = if (alarm.isVibrate) 1f else 0.333f
         holder.vibrate.setOnClickListener { view ->
             alarm.isVibrate = !alarm.isVibrate
+            alarmViewModel.update(alarm.toEntity())
 
             val vibrateDrawable1 = AnimatedVectorDrawableCompat.create(chronos, if (alarm.isVibrate) R.drawable.ic_none_to_vibrate else R.drawable.ic_vibrate_to_none)
             if (vibrateDrawable1 != null) {
@@ -212,6 +236,13 @@ class AlarmsAdapter(
         }
 
         holder.itemView.setOnClickListener {
+            if (expandedPosition != -1 && expandedPosition != holder.bindingAdapterPosition) {
+                val previousHolder = recycler.findViewHolderForAdapterPosition(expandedPosition)
+                if (previousHolder is AlarmViewHolder) {
+                    saveAlarmNameIfNeeded(previousHolder)
+                }
+            }
+
             expandedPosition = if (isExpanded) -1 else holder.bindingAdapterPosition
 
             val transition = AutoTransition()
@@ -231,17 +262,33 @@ class AlarmsAdapter(
         holder.name.isCursorVisible = false
         holder.name.clearFocus()
         holder.nameUnderline.visibility = if (isExpanded) View.VISIBLE else View.GONE
-        holder.name.setText(alarm.name)
+        if (holder.name.text.toString() != alarm.name) {
+            holder.name.setText(alarm.name)
+        }
 
-        if (isExpanded) holder.name.setOnClickListener(null)
-        else holder.name.setOnClickListener { holder.itemView.callOnClick()}
+        if (isExpanded) {
+            holder.name.setOnClickListener(null)
+        } else {
+            holder.name.setOnClickListener { holder.itemView.callOnClick()}
+        }
 
-        holder.name.setOnFocusChangeListener { _, hasFocus -> holder.name.isCursorVisible = hasFocus && holder.bindingAdapterPosition == expandedPosition }
+        holder.name.setOnFocusChangeListener { _, hasFocus ->
+            holder.name.isCursorVisible = hasFocus && holder.bindingAdapterPosition == expandedPosition
+
+            if (!hasFocus && holder.bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                val updatedAlarm = getAlarm(holder.bindingAdapterPosition)
+                if (updatedAlarm != null) {
+                    updatedAlarm.name = holder.name.text.toString()
+                    alarmViewModel.update(updatedAlarm.toEntity())
+                }
+            }
+        }
 
         holder.enable.setOnCheckedChangeListener(null)
         holder.enable.isChecked = alarm.isEnabled
         holder.enable.setOnCheckedChangeListener { _, b ->
             alarm.isEnabled = b
+            alarmViewModel.update(alarm.toEntity())
 
             val transition = AutoTransition()
             transition.duration = 200
@@ -261,6 +308,8 @@ class AlarmsAdapter(
                 alarm.time.set(Calendar.MINUTE, selectedMinute)
                 alarm.time = Calendar.getInstance().apply { timeInMillis = alarm.time.timeInMillis }
                 alarm.isEnabled = true
+
+                alarmViewModel.update(alarm.toEntity())
 
                 notifyItemChanged(holder.bindingAdapterPosition)
             }, hour, minute, true)
@@ -415,23 +464,5 @@ class AlarmsAdapter(
         val vibrateIndicator: ImageView = v.findViewById(R.id.vibrateIndicator)
 
         val alarms: List<AlarmData> = chronos.alarms
-
-        init {
-            name.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                    // ignore
-                }
-
-                override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                    // ignore
-                }
-
-                override fun afterTextChanged(editable: Editable) {
-                    if (bindingAdapterPosition < alarms.size) {
-                        alarms[bindingAdapterPosition].name = editable.toString()
-                    }
-                }
-            })
-        }
     }
 }
