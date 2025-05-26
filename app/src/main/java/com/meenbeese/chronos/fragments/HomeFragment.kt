@@ -28,6 +28,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCa
 import com.google.android.material.tabs.TabLayoutMediator
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
+import com.meenbeese.chronos.BuildConfig
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.db.AlarmEntity
 import com.meenbeese.chronos.db.AlarmViewModel
@@ -254,6 +255,10 @@ class HomeFragment : BaseFragment() {
                 set(Calendar.HOUR_OF_DAY, hour)
                 set(Calendar.MINUTE, minute)
                 set(Calendar.SECOND, 0)
+
+                if (BuildConfig.DEBUG) {
+                    add(Calendar.MINUTE, 1)
+                }
             }.timeInMillis
 
             val alarm = AlarmEntity(
