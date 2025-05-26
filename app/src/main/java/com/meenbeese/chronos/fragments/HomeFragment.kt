@@ -269,7 +269,7 @@ class HomeFragment : BaseFragment() {
 
             Toast.makeText(requireContext(), "Alarm set for $hour:$minute", Toast.LENGTH_SHORT).show()
 
-        }, hourNow, minuteNow, true)
+        }, hourNow, minuteNow, PreferenceData.MILITARY_TIME.getValue(requireContext()))
 
         timeChooserDialog.show()
     }

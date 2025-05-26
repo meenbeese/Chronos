@@ -56,6 +56,11 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
                 PreferenceData.TIME_ZONE_ENABLED,
                 R.string.title_time_zones
             ),
+            BooleanPreferenceData(
+                PreferenceData.MILITARY_TIME,
+                R.string.title_military_time,
+                R.string.desc_military_time
+            ),
             RingtonePreferenceData(
                 PreferenceData.DEFAULT_ALARM_RINGTONE,
                 R.string.title_default_alarm_ringtone

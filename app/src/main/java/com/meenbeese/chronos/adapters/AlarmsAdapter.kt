@@ -29,6 +29,7 @@ import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
+import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.data.toEntity
@@ -312,7 +313,7 @@ class AlarmsAdapter(
                 alarmViewModel.update(alarm.toEntity())
 
                 notifyItemChanged(holder.bindingAdapterPosition)
-            }, hour, minute, true)
+            }, hour, minute, PreferenceData.MILITARY_TIME.getValue(chronos))
 
             timePickerDialog.show()
         }

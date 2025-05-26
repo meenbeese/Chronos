@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.format.DateFormat
 
 import com.meenbeese.chronos.R
+import com.meenbeese.chronos.data.PreferenceData
 
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -17,6 +18,11 @@ object FormatUtils {
     private const val FORMAT_24H_SHORT = "HH:mm"
     const val FORMAT_DATE = "MMMM d yyyy"
 
+    private fun use24HourFormat(context: Context?): Boolean {
+        if (context == null) return false
+        return PreferenceData.MILITARY_TIME.getValue(context)
+    }
+
     /**
      * Get the proper hh:mm:ss time format to use, dependent on whether
      * 24-hour time is enabled in the system settings.
@@ -25,7 +31,7 @@ object FormatUtils {
      * @return              A string to format hh:mm:ss time.
      */
     private fun getFormat(context: Context?): String {
-        return if (DateFormat.is24HourFormat(context)) FORMAT_24H else FORMAT_12H
+        return if (use24HourFormat(context)) FORMAT_24H else FORMAT_12H
     }
 
     /**
@@ -37,7 +43,7 @@ object FormatUtils {
      */
     @JvmStatic
     fun getShortFormat(context: Context?): String {
-        return if (DateFormat.is24HourFormat(context)) FORMAT_24H_SHORT else FORMAT_12H_SHORT
+        return if (use24HourFormat(context)) FORMAT_24H_SHORT else FORMAT_12H_SHORT
     }
 
     /**
