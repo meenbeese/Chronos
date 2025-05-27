@@ -343,8 +343,11 @@ class AlarmsAdapter(
         holder.expandImage.animate().rotationX((if (isExpanded) 180 else 0).toFloat()).start()
         holder.delete.visibility = if (isExpanded) View.VISIBLE else View.GONE
         holder.delete.setOnClickListener { view ->
-            MaterialAlertDialogBuilder(view.context, if(chronos.isDarkTheme()) com.google.android.material.R.style.Theme_MaterialComponents_Dialog_Alert else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog_Alert)
-                .setMessage(chronos.getString(R.string.msg_delete_confirmation, alarm.name))
+            MaterialAlertDialogBuilder(view.context, if (chronos.isDarkTheme()) com.google.android.material.R.style.Theme_MaterialComponents_Dialog_Alert else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog_Alert)
+                .setMessage(chronos.getString(
+                    R.string.msg_delete_confirmation,
+                    alarm.name?.takeIf { it.isNotBlank() } ?: chronos.getString(R.string.default_alarm_label)
+                ))
                 .setPositiveButton(view.context.getString(android.R.string.ok)) { _, _ ->
                     val positionInAdapter = holder.bindingAdapterPosition
                     if (positionInAdapter != RecyclerView.NO_POSITION) {
