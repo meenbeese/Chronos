@@ -2,6 +2,7 @@ package com.meenbeese.chronos.utils
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -9,6 +10,7 @@ import android.widget.ImageView
 
 import androidx.core.net.toUri
 import androidx.core.graphics.createBitmap
+import androidx.core.graphics.get
 
 import coil3.load
 import coil3.request.crossfade
@@ -99,5 +101,33 @@ object ImageUtils {
             crossfade(true)
             transformations(RoundedCornersTransformation())
         }
+    }
+
+    fun isBitmapDark(bitmap: Bitmap, sampleSize: Int = 10): Boolean {
+        var darkPixels = 0
+        var totalPixels = 0
+
+        val stepX = bitmap.width / sampleSize
+        val stepY = bitmap.height / sampleSize
+
+        for (x in 0 until bitmap.width step stepX) {
+            for (y in 0 until bitmap.height step stepY) {
+                val color = bitmap[x, y]
+                if (isColorDark(color)) {
+                    darkPixels++
+                }
+                totalPixels++
+            }
+        }
+        return darkPixels >= totalPixels / 2
+    }
+
+    fun isColorDark(color: Int): Boolean {
+        val darkness = 1 - (
+            0.299 * Color.red(color) +
+            0.587 * Color.green(color) +
+            0.114 * Color.blue(color)
+        ) / 255
+        return darkness >= 0.5
     }
 }
