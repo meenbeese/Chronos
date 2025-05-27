@@ -1,7 +1,6 @@
 package com.meenbeese.chronos.fragments
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +9,7 @@ import android.widget.ImageView
 import android.widget.Toast
 
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 
 import coil3.load
 import coil3.request.transformations
@@ -67,14 +67,14 @@ class AboutFragment : BaseFragment() {
         forkGitHub = view.findViewById(R.id.fork_github)
         forkGitHub?.text = getString(R.string.fork_github)
         forkGitHub?.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB))
+            val intent = Intent(Intent.ACTION_VIEW, GITHUB.toUri())
             startActivity(intent)
         }
 
         visitWebsite = view.findViewById(R.id.visit_website)
         visitWebsite?.text = getString(R.string.visit_website)
         visitWebsite?.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(WEBSITE))
+            val intent = Intent(Intent.ACTION_VIEW, WEBSITE.toUri())
             startActivity(intent)
         }
 
@@ -82,7 +82,7 @@ class AboutFragment : BaseFragment() {
         sendEmail?.text = getString(R.string.send_email)
         sendEmail?.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO).apply {
-                data = Uri.parse("mailto:$EMAIL")
+                data = "mailto:$EMAIL".toUri()
                 putExtra(Intent.EXTRA_SUBJECT, "Feedback for Chronos")
             }
             startActivity(intent)

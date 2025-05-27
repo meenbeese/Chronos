@@ -3,10 +3,10 @@ package com.meenbeese.chronos.data
 import android.media.AudioAttributes
 import android.media.Ringtone
 import android.media.RingtoneManager
-import android.net.Uri
 import android.os.Build
 import android.os.Parcelable
 
+import androidx.core.net.toUri
 import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
 
@@ -43,7 +43,7 @@ class SoundData(
         if (type == TYPE_RINGTONE && url.startsWith("content://")) {
             if (ringtone.isEmpty()) {
                 ringtone = Option.Some(
-                    RingtoneManager.getRingtone(chronos, Uri.parse(url)).apply {
+                    RingtoneManager.getRingtone(chronos, url.toUri()).apply {
                         audioAttributes = AudioAttributes.Builder()
                             .setUsage(AudioAttributes.USAGE_ALARM)
                             .build()
@@ -83,7 +83,7 @@ class SoundData(
         if (url.startsWith("content://")) {
             if (ringtone.isEmpty()) {
                 ringtone = Option.Some(
-                    RingtoneManager.getRingtone(chronos, Uri.parse(url)).apply {
+                    RingtoneManager.getRingtone(chronos, url.toUri()).apply {
                         audioAttributes = AudioAttributes.Builder()
                             .setUsage(AudioAttributes.USAGE_ALARM)
                             .build()

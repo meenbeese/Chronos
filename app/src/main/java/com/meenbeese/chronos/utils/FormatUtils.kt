@@ -1,7 +1,6 @@
 package com.meenbeese.chronos.utils
 
 import android.content.Context
-import android.text.format.DateFormat
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
