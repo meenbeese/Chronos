@@ -60,19 +60,27 @@ class AlarmData(
 
     private fun setAlarm(context: Context, timeMillis: Long) {
         val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val alarmIntent = getIntent(context)
+        val serviceIntent = PendingIntent.getService(
+            context,
+            id,
+            Intent(context, SleepReminderService::class.java),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         manager.setAlarmClock(
             AlarmClockInfo(timeMillis, PendingIntent.getActivity(
-                context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE
+                context, id, Intent(context, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE
             )),
-            getIntent(context)
+            alarmIntent
         )
         manager.set(
             AlarmManager.RTC_WAKEUP,
-            timeMillis - 60000,
-            PendingIntent.getService(
-                context, 0, Intent(context, SleepReminderService::class.java), PendingIntent.FLAG_IMMUTABLE
-            )
+            timeMillis,
+            serviceIntent
         )
+
         refreshSleepTime(context)
     }
 
@@ -86,7 +94,10 @@ class AlarmData(
             putExtra(AlarmReceiver.EXTRA_ALARM_ID, id)
         }
         return PendingIntent.getBroadcast(
-            context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            context,
+            id,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
 
