@@ -10,6 +10,10 @@ class AlarmViewModel(private val repository: AlarmRepository) : ViewModel() {
         repository.insert(alarm)
     }
 
+    suspend fun insertAndReturnId(alarm: AlarmEntity): Long {
+        return repository.insert(alarm)
+    }
+
     fun update(alarm: AlarmEntity) = viewModelScope.launch {
         repository.update(alarm)
     }

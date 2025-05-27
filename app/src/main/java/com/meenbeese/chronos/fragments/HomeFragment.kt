@@ -30,10 +30,15 @@ import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
 import com.meenbeese.chronos.BuildConfig
 import com.meenbeese.chronos.Chronos
-import com.meenbeese.chronos.db.AlarmEntity
+import com.meenbeese.chronos.data.AlarmData
+import com.meenbeese.chronos.data.toEntity
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
 import com.meenbeese.chronos.views.CustomTabLayout
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 import java.util.Calendar
 import java.util.TimeZone
@@ -261,16 +266,23 @@ class HomeFragment : BaseFragment() {
                 }
             }.timeInMillis
 
-            val alarm = AlarmEntity(
+            val alarm = AlarmData(
+                id = 0,
                 name = null,
-                timeInMillis = time,
+                time = Calendar.getInstance().apply { timeInMillis = time },
                 isEnabled = true,
                 days = MutableList(7) { false }, // All days off initially
                 isVibrate = true,
                 sound = null
             )
 
-            alarmViewModel.insert(alarm)
+            CoroutineScope(Dispatchers.IO).launch {
+                val entity = alarm.toEntity()
+                val id = alarmViewModel.insertAndReturnId(entity)
+
+                alarm.id = id.toInt()
+                alarm.set(requireContext())
+            }
 
             Toast.makeText(requireContext(), "Alarm set for $hour:$minute", Toast.LENGTH_SHORT).show()
 
