@@ -1,6 +1,9 @@
 package com.meenbeese.chronos.activities
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.provider.AlarmClock
 import android.util.Log
@@ -10,6 +13,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentManager
 import androidx.media3.common.util.UnstableApi
@@ -38,6 +43,7 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         enableEdgeToEdge()
         applySavedTheme()
         setContentView(R.layout.activity_main)
+        requestNotificationPermissionIfNeeded()
         window.setFlags(
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
@@ -175,6 +181,20 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         }
     }
 
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    REQUEST_NOTIFICATION_PERMISSION
+                )
+            }
+        }
+    }
+
     /**
      * Determine if something needs to be done as a result
      * of the intent being sent to the activity - which has
@@ -208,6 +228,21 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         AudioUtils.stopCurrentSound()
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+            } else {
+                // Permission denied
+            }
+        }
+    }
+
     override fun onBackStackChanged() {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment) as BaseFragment?
         fragmentRef = fragment
@@ -225,5 +260,6 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         const val EXTRA_FRAGMENT = "com.meenbeese.chronos.MainActivity.EXTRA_FRAGMENT"
         const val FRAGMENT_TIMER = 0
         const val FRAGMENT_STOPWATCH = 2
+        private const val REQUEST_NOTIFICATION_PERMISSION = 1001
     }
 }

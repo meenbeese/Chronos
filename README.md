@@ -49,6 +49,7 @@
 - `READ_MEDIA_IMAGES`: setting custom background / header images in the settings
 - `FOREGROUND_SERVICE`: notifying you to sleep - see the "Sleep Reminder" option in the settings
 - `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`: please see [dontkillmyapp.com](https://dontkillmyapp.com/)
+- `POST_NOTIFICATIONS`: required on Android 13+ to show timer, alarm, and sleep reminder notifications
 
 ## 📝 Contribute to Chronos
 
