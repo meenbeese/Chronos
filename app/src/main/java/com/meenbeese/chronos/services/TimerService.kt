@@ -44,6 +44,11 @@ class TimerService : Service() {
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     }
 
+    override fun onTimeout(startId: Int, fgsType: Int) {
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf(startId)
+    }
+
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val notification = notification
         if (notification != null) {

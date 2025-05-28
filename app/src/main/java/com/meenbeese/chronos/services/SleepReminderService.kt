@@ -42,6 +42,11 @@ class SleepReminderService : Service() {
         registerReceiver(receiver, filter)
     }
 
+    override fun onTimeout(startId: Int, fgsType: Int) {
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf(startId)
+    }
+
     override fun onDestroy() {
         unregisterReceiver(receiver)
         super.onDestroy()

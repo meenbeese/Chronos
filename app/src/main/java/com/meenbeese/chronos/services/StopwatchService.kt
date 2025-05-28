@@ -91,6 +91,11 @@ class StopwatchService : Service() {
         registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED)
     }
 
+    override fun onTimeout(startId: Int, fgsType: Int) {
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf(startId)
+    }
+
     override fun onDestroy() {
         receiver?.let { unregisterReceiver(it) }
         super.onDestroy()
