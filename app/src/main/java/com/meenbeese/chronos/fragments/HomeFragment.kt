@@ -110,6 +110,15 @@ class HomeFragment : BaseFragment() {
             SettingsFragment.Instantiator(context)
         )
         viewPager.adapter = pagerAdapter
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val title = pagerAdapter.getTitle(position)
+                if (title == getString(R.string.title_settings)) {
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+            }
+        })
         viewPager.post {
             if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
                 attachScrollListenerToAlarms()
@@ -152,6 +161,17 @@ class HomeFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         getBackgroundImage(background)
+
+        val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
+        val currentPosition = viewPager.currentItem
+        val settingsTabIndex = 1
+
+        if (currentPosition == settingsTabIndex) {
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            behavior.isDraggable = false
+        } else {
+            behavior.isDraggable = true
+        }
     }
 
     private fun setSpeedDialView() {
