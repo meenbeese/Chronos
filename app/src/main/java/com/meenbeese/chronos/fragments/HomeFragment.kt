@@ -34,6 +34,7 @@ import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.toEntity
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
+import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.CustomTabLayout
 
 import kotlinx.coroutines.CoroutineScope
@@ -41,6 +42,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 import java.util.Calendar
+import java.util.Date
 import java.util.TimeZone
 
 class HomeFragment : BaseFragment() {
@@ -284,7 +286,8 @@ class HomeFragment : BaseFragment() {
                 alarm.set(requireContext())
             }
 
-            Toast.makeText(requireContext(), "Alarm set for $hour:$minute", Toast.LENGTH_SHORT).show()
+            val formattedTime = FormatUtils.formatShort(context, Date(time))
+            Toast.makeText(requireContext(), "Alarm set for $formattedTime", Toast.LENGTH_SHORT).show()
 
         }, hourNow, minuteNow, PreferenceData.MILITARY_TIME.getValue(requireContext()))
 
