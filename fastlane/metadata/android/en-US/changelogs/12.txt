@@ -1,0 +1,6 @@
+⚠️BACK UP YOUR ALARMS BEFORE UPDATING TO THIS VERSION!!⚠️
+
+Most of the app has been rewritten internally to be more robust.
+Many visual and UI bugs have been fixed as well.
+
+**Full Changelog**: https://github.com/meenbeese/Chronos/compare/v2025.1.0...v2025.2.0
