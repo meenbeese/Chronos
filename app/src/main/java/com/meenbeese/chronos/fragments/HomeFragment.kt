@@ -2,6 +2,7 @@ package com.meenbeese.chronos.fragments
 
 import android.os.Bundle
 import android.provider.AlarmClock
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,6 +67,12 @@ class HomeFragment : BaseFragment() {
         val app = requireActivity().application as Chronos
         val factory = AlarmViewModelFactory(app.repository)
         alarmViewModel = ViewModelProvider(this, factory)[AlarmViewModel::class.java]
+        alarmViewModel.alarms.observe(viewLifecycleOwner) { alarms ->
+            Log.d("HomeFragment", "Alarms updated: ${alarms.size}")
+            if (alarms.isEmpty() && behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
 
         val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
         val tabLayout = view.findViewById<CustomTabLayout>(R.id.tabLayout)

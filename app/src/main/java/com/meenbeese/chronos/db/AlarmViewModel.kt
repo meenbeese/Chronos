@@ -1,11 +1,14 @@
 package com.meenbeese.chronos.db
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import kotlinx.coroutines.launch
 
 class AlarmViewModel(private val repository: AlarmRepository) : ViewModel() {
+    val alarms: LiveData<List<AlarmEntity>> = repository.getAll()
+
     fun insert(alarm: AlarmEntity) = viewModelScope.launch {
         repository.insert(alarm)
     }

@@ -1,5 +1,7 @@
 package com.meenbeese.chronos.db
 
+import androidx.lifecycle.LiveData
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -20,7 +22,7 @@ class AlarmRepository(private val alarmDao: AlarmDao) {
         alarmDao.getAlarmById(id)
     }
 
-    suspend fun getAllAlarms(): List<AlarmEntity> = withContext(Dispatchers.IO) {
-        alarmDao.getAllAlarms()
+    fun getAll(): LiveData<List<AlarmEntity>> {
+        return alarmDao.getAllAlarms()
     }
 }

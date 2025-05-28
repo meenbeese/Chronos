@@ -52,8 +52,9 @@ class Chronos : Application() {
         timers = ArrayList()
         activityTheme = Theme.fromInt(PreferenceData.THEME.getValue(this))
 
-        GlobalScope.launch {
-            val alarmEntities = alarmDao.getAllAlarms()
+        val liveAlarms = alarmDao.getAllAlarms()
+        liveAlarms.observeForever { alarmEntities ->
+            alarms.clear()
             alarms.addAll(alarmEntities.map { entity ->
                 AlarmData(
                     id = entity.id,
