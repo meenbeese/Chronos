@@ -12,8 +12,8 @@ android {
         applicationId = "com.meenbeese.chronos"
         minSdk = 26
         targetSdk = 35
-        versionCode = 11
-        versionName = "2025.1.0"
+        versionCode = 12
+        versionName = "2025.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
