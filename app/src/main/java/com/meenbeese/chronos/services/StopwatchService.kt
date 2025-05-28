@@ -14,6 +14,7 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 
 import androidx.core.app.NotificationCompat
 
@@ -197,18 +198,27 @@ class StopwatchService : Service() {
             )
             .setDeleteIntent(
                 PendingIntent.getBroadcast(
-                    this, 0, Intent(ACTION_RESET).setPackage(packageName), PendingIntent.FLAG_IMMUTABLE
+                    this,
+                    REQUEST_CODE_RESET,
+                    Intent(ACTION_RESET).setPackage(packageName),
+                    PendingIntent.FLAG_IMMUTABLE
                 )
             )
             .addAction(actionIcon, actionText,
                 PendingIntent.getBroadcast(
-                    this, 0, Intent(ACTION_TOGGLE), PendingIntent.FLAG_IMMUTABLE
+                    this,
+                    REQUEST_CODE_TOGGLE,
+                    Intent(ACTION_TOGGLE).setPackage(packageName),
+                    PendingIntent.FLAG_IMMUTABLE
                 )
             )
             .addAction(
                 R.drawable.ic_lap_notification, "Lap",
                 PendingIntent.getBroadcast(
-                    this, 0, Intent(ACTION_LAP), PendingIntent.FLAG_IMMUTABLE
+                    this,
+                    REQUEST_CODE_LAP,
+                    Intent(ACTION_LAP).setPackage(packageName),
+                    PendingIntent.FLAG_IMMUTABLE
                 )
             )
             .build()
@@ -238,6 +248,7 @@ class StopwatchService : Service() {
     private class NotificationReceiver(private val service: StopwatchService) : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action != null) {
+                Log.d("StopwatchService", "Received action: ${intent.action}")
                 when (intent.action) {
                     ACTION_RESET -> service.reset()
                     ACTION_TOGGLE -> service.toggle()
@@ -248,6 +259,9 @@ class StopwatchService : Service() {
     }
 
     companion object {
+        private const val REQUEST_CODE_TOGGLE = 100
+        private const val REQUEST_CODE_RESET = 101
+        private const val REQUEST_CODE_LAP = 102
         private const val NOTIFICATION_ID = 247
         private const val ACTION_RESET = "meenbeese.chronos.StopwatchFragment.ACTION_RESET"
         private const val ACTION_TOGGLE = "meenbeese.chronos.StopwatchFragment.ACTION_TOGGLE"
