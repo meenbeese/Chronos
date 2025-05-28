@@ -16,9 +16,6 @@ import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.Chronos.ActivityListener
-import com.meenbeese.chronos.Chronos.Companion.THEME_AMOLED
-import com.meenbeese.chronos.Chronos.Companion.THEME_DAY
-import com.meenbeese.chronos.Chronos.Companion.THEME_NIGHT
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.dialogs.BackgroundPermissionsDialog
@@ -28,6 +25,7 @@ import com.meenbeese.chronos.fragments.StopwatchFragment
 import com.meenbeese.chronos.fragments.TimerFragment
 import com.meenbeese.chronos.receivers.TimerReceiver
 import com.meenbeese.chronos.utils.AudioUtils
+import com.meenbeese.chronos.utils.Theme
 
 class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedListener,
     ActivityListener {
@@ -81,21 +79,25 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
     }
 
     private fun applySavedTheme() {
-        val theme = PreferenceData.THEME.getValue<Int>(this)
-        Log.d("MainActivity", "Theme: $theme")
+        val theme = Theme.fromInt(PreferenceData.THEME.getValue(this))
+        Log.d("MainActivity", "Theme: ${theme.name}")
 
         when (theme) {
-            THEME_DAY -> {
+            Theme.DAY -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 setTheme(R.style.AppTheme)
             }
-            THEME_NIGHT -> {
+            Theme.NIGHT -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 setTheme(R.style.AppTheme_Night)
             }
-            THEME_AMOLED -> {
+            Theme.AMOLED -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 setTheme(R.style.AppTheme_Amoled)
+            }
+            else -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                setTheme(R.style.AppTheme)
             }
         }
     }

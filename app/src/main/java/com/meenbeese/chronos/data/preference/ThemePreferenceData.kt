@@ -10,6 +10,7 @@ import android.widget.AutoCompleteTextView
 
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
+import com.meenbeese.chronos.utils.Theme
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -32,24 +33,26 @@ class ThemePreferenceData(
     @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("CheckResult")
     override fun bindViewHolder(holder: ViewHolder) {
+        val context = holder.itemView.context
         val adapter = ArrayAdapter.createFromResource(
-            holder.itemView.context,
+            context,
             R.array.array_themes,
             com.google.android.material.R.layout.support_simple_spinner_dropdown_item
         )
 
         holder.themeAutoCompleteTextView.setAdapter(adapter)
 
-        val theme: Int = holder.chronos?.activityTheme ?: Chronos.THEME_AUTO
-        if (theme != -1) {
-            holder.themeAutoCompleteTextView.setText(adapter.getItem(theme), false)
-        }
+        val theme: Theme = holder.chronos?.activityTheme ?: Theme.AUTO
+        holder.themeAutoCompleteTextView.setText(adapter.getItem(theme.value), false)
 
         holder.themeAutoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
             if (holder.themeAutoCompleteTextView.text.toString() == adapter.getItem(position)) {
-                scope.launch {
-                    chronos.applyAndSaveTheme(holder.itemView.context, position)
-                    chronos.recreate()
+                val selectedTheme = Theme.fromInt(position)
+                holder.chronos?.let { chronos ->
+                    scope.launch {
+                        chronos.applyAndSaveTheme(context, selectedTheme)
+                        chronos.recreate()
+                    }
                 }
             }
         }

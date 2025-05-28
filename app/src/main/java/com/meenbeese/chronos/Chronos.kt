@@ -19,6 +19,7 @@ import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.utils.CoreHelper
+import com.meenbeese.chronos.utils.Theme
 import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -49,7 +50,7 @@ class Chronos : Application() {
         listeners = ArrayList()
         alarms = ArrayList()
         timers = ArrayList()
-        activityTheme = PreferenceData.THEME.getValue<Int>(this).mapTheme()
+        activityTheme = Theme.fromInt(PreferenceData.THEME.getValue(this))
 
         GlobalScope.launch {
             val alarmEntities = alarmDao.getAllAlarms()
@@ -150,7 +151,7 @@ class Chronos : Application() {
             val time = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
             return time < dayStart || time > dayEnd
         }
-    var activityTheme: Int = THEME_AUTO
+    var activityTheme: Theme = Theme.AUTO
         private set
     val dayStart: Int
         /**
@@ -164,17 +165,19 @@ class Chronos : Application() {
         get() = PreferenceData.DAY_END.getValue(this)
 
     fun isDarkTheme(): Boolean {
-        return activityTheme == THEME_NIGHT || activityTheme == THEME_AMOLED || (activityTheme == THEME_AUTO && isNight)
+        return activityTheme == Theme.NIGHT ||
+               activityTheme == Theme.AMOLED ||
+               (activityTheme == Theme.AUTO && isNight)
     }
 
-    suspend fun applyAndSaveTheme(context: Context, theme: Int) {
+    suspend fun applyAndSaveTheme(context: Context, theme: Theme) {
         activityTheme = theme
-        PreferenceData.THEME.setValue(context, theme)
+        PreferenceData.THEME.setValue(context, theme.value)
         when (theme) {
-            THEME_AUTO   -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            THEME_DAY    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            THEME_NIGHT  -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            THEME_AMOLED -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            Theme.AUTO   -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            Theme.DAY    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            Theme.NIGHT,
+            Theme.AMOLED -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
     }
 
@@ -213,21 +216,7 @@ class Chronos : Application() {
     }
 
     companion object {
-        const val THEME_AUTO = 0
-        const val THEME_DAY = 1
-        const val THEME_NIGHT = 2
-        const val THEME_AMOLED = 3
         const val NOTIFICATION_CHANNEL_STOPWATCH = "stopwatch"
         const val NOTIFICATION_CHANNEL_TIMERS = "timers"
-
-        fun Int.mapTheme(): Int {
-            return when (this) {
-                0 -> THEME_AUTO
-                1 -> THEME_DAY
-                2 -> THEME_NIGHT
-                3 -> THEME_AMOLED
-                else -> -1
-            }
-        }
     }
 }
