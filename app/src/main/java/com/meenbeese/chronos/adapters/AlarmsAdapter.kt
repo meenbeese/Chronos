@@ -2,7 +2,6 @@ package com.meenbeese.chronos.adapters
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.app.TimePickerDialog
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
@@ -35,6 +34,7 @@ import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.data.toEntity
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.dialogs.SoundChooserDialog
+import com.meenbeese.chronos.dialogs.TimePickerDialog
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.meenbeese.chronos.utils.DimenUtils
 import com.meenbeese.chronos.utils.FormatUtils
@@ -300,20 +300,24 @@ class AlarmsAdapter(
 
         holder.time.text = FormatUtils.formatShort(chronos, alarm.time.time)
         holder.time.setOnClickListener { view ->
+            val context = view.context
             val hour = alarm.time.get(Calendar.HOUR_OF_DAY)
             val minute = alarm.time.get(Calendar.MINUTE)
-            val style = if (chronos.isDarkTheme()) 0 else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog
 
-            val timePickerDialog = TimePickerDialog(view.context, style, { _, selectedHour, selectedMinute ->
+            val timePickerDialog = TimePickerDialog(
+                context = context,
+                initialHour = hour,
+                initialMinute = minute,
+                is24HourClock = PreferenceData.MILITARY_TIME.getValue(context)
+            ) { selectedHour, selectedMinute ->
                 alarm.time.set(Calendar.HOUR_OF_DAY, selectedHour)
                 alarm.time.set(Calendar.MINUTE, selectedMinute)
                 alarm.time = Calendar.getInstance().apply { timeInMillis = alarm.time.timeInMillis }
                 alarm.isEnabled = true
 
                 alarmViewModel.update(alarm.toEntity())
-
                 notifyItemChanged(holder.bindingAdapterPosition)
-            }, hour, minute, PreferenceData.MILITARY_TIME.getValue(chronos))
+            }
 
             timePickerDialog.show()
         }
