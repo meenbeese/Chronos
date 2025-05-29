@@ -44,6 +44,7 @@ class ThemePreferenceData(
 
         val theme: Theme = holder.chronos?.activityTheme ?: Theme.AUTO
         holder.themeAutoCompleteTextView.setText(adapter.getItem(theme.value), false)
+        holder.themeAutoCompleteTextView.setDropDownBackgroundResource(R.color.colorForeground)
 
         holder.themeAutoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
             if (holder.themeAutoCompleteTextView.text.toString() == adapter.getItem(position)) {
