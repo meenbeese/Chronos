@@ -35,6 +35,7 @@ import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.toEntity
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
+import com.meenbeese.chronos.dialogs.TimePickerDialog
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.CustomTabLayout
 
@@ -284,7 +285,12 @@ class HomeFragment : BaseFragment() {
         val hourNow = calendar.get(Calendar.HOUR_OF_DAY)
         val minuteNow = calendar.get(Calendar.MINUTE)
 
-        val timeChooserDialog = android.app.TimePickerDialog(context, { _, hour, minute ->
+        TimePickerDialog(
+            context = requireContext(),
+            initialHour = hourNow,
+            initialMinute = minuteNow,
+            is24HourClock = PreferenceData.MILITARY_TIME.getValue(requireContext())
+        ) { hour, minute ->
             val time = Calendar.getInstance().apply {
                 set(Calendar.HOUR_OF_DAY, hour)
                 set(Calendar.MINUTE, minute)
@@ -315,10 +321,7 @@ class HomeFragment : BaseFragment() {
 
             val formattedTime = FormatUtils.formatShort(context, Date(time))
             Toast.makeText(requireContext(), "Alarm set for $formattedTime", Toast.LENGTH_SHORT).show()
-
-        }, hourNow, minuteNow, PreferenceData.MILITARY_TIME.getValue(requireContext()))
-
-        timeChooserDialog.show()
+        }.show()
     }
 
     /**
@@ -326,8 +329,7 @@ class HomeFragment : BaseFragment() {
      * a timer.
      */
     private fun invokeTimerScheduler() {
-        TimerDialog(requireContext(), parentFragmentManager)
-            .show()
+        TimerDialog(requireContext(), parentFragmentManager).show()
     }
 
     /**
