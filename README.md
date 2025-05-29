@@ -28,7 +28,7 @@
 ## 🌄 Screenshots
 
 <div align="center">
-    <img src="./assets/images/home.png" alt="Home" style="width: 25%"><img src="./assets/images/alarms.png" alt="Alarms" style="width: 25%"><img src="./assets/images/timers.png" alt="Timers" style="width: 25%"><img src="./assets/images/themes.png" alt="Themes" style="width: 25%">
+    <img src="./assets/images/1.png" alt="Home" style="width: 25%"><img src="./assets/images/2.png" alt="Alarms" style="width: 25%"><img src="./assets/images/3.png" alt="Timers" style="width: 25%"><img src="./assets/images/4.png" alt="Themes" style="width: 25%">
 </div>
 
 ## ⭐ Features
