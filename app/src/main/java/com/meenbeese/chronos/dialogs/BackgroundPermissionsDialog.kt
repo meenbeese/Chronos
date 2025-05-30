@@ -4,14 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.view.LayoutInflater
 import android.view.WindowManager
 
 import androidx.activity.ComponentDialog
 
-import com.google.android.material.button.MaterialButton
-import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.databinding.DialogBackgroundPermissionsBinding
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,17 +17,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class BackgroundPermissionsDialog(context: Context) : ComponentDialog(context) {
+    private var _binding: DialogBackgroundPermissionsBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val view = LayoutInflater.from(context).inflate(R.layout.dialog_background_permissions, null)
-        setContentView(view)
+        _binding = DialogBackgroundPermissionsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val cancelButton: MaterialButton = view.findViewById(R.id.cancelButton)
-        val okButton: MaterialButton = view.findViewById(R.id.okButton)
-
-        cancelButton.setOnClickListener { dismiss() }
-        okButton.setOnClickListener {
+        binding.cancelButton.setOnClickListener { dismiss() }
+        binding.okButton.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
                 PreferenceData.INFO_BACKGROUND_PERMISSIONS.setValue(context, true)
 
@@ -47,5 +44,10 @@ class BackgroundPermissionsDialog(context: Context) : ComponentDialog(context) {
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT
         )
+    }
+
+    override fun onStop() {
+        super.onStop()
+        _binding = null
     }
 }

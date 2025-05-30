@@ -2,15 +2,13 @@ package com.meenbeese.chronos.dialogs
 
 import android.content.Context
 import android.os.Bundle
-import android.view.View
 import android.view.WindowManager
 
 import androidx.activity.ComponentDialog
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
-import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.TimeZonesAdapter
+import com.meenbeese.chronos.databinding.DialogTimeZoneChooserBinding
 
 import java.util.TimeZone
 
@@ -22,12 +20,15 @@ class TimeZoneChooserDialog(
 
     private val excludedIds = arrayOfNulls<String>(0)
 
+    private var _binding: DialogTimeZoneChooserBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dialog_time_zone_chooser)
+        _binding = DialogTimeZoneChooserBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val recycler = findViewById<RecyclerView>(R.id.recycler)
-        recycler?.layoutManager = LinearLayoutManager(context)
+        binding.recycler.layoutManager = LinearLayoutManager(context)
 
         val timeZones: MutableList<String> = ArrayList()
         for (id1 in TimeZone.getAvailableIDs()) {
@@ -49,9 +50,9 @@ class TimeZoneChooserDialog(
 
         timeZones.sortWith(Comparator.comparingInt { id -> TimeZone.getTimeZone(id).rawOffset })
 
-        recycler?.adapter = TimeZonesAdapter(timeZones, selectedTimeZones)
+        binding.recycler.adapter = TimeZonesAdapter(timeZones, selectedTimeZones)
 
-        findViewById<View>(R.id.ok)?.setOnClickListener {
+        binding.ok.setOnClickListener {
             onSelectionDone(selectedTimeZones)
             dismiss()
         }
@@ -64,5 +65,10 @@ class TimeZoneChooserDialog(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT
         )
+    }
+
+    override fun onStop() {
+        super.onStop()
+        _binding = null
     }
 }

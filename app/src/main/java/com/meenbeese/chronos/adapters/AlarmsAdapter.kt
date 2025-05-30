@@ -9,9 +9,6 @@ import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.Toast
 
 import androidx.core.view.ViewCompat
@@ -22,9 +19,6 @@ import androidx.transition.TransitionManager
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.checkbox.MaterialCheckBox
-import com.google.android.material.materialswitch.MaterialSwitch
-import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
@@ -32,6 +26,8 @@ import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.data.toEntity
+import com.meenbeese.chronos.databinding.ItemAlarmBinding
+import com.meenbeese.chronos.databinding.ItemTimerBinding
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.dialogs.SoundChooserDialog
 import com.meenbeese.chronos.dialogs.TimePickerDialog
@@ -39,7 +35,6 @@ import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.meenbeese.chronos.utils.DimenUtils
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.DaySwitch
-import com.meenbeese.chronos.views.ProgressLineView
 
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -71,9 +66,11 @@ class AlarmsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == 0) {
-            TimerViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timer, parent, false))
+            val binding = ItemTimerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            TimerViewHolder(binding)
         } else {
-            AlarmViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_alarm, parent, false), chronos)
+            val binding = ItemAlarmBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            AlarmViewHolder(binding, chronos)
         }
     }
 
@@ -431,45 +428,44 @@ class AlarmsAdapter(
     /**
      * ViewHolder for timer items.
      */
-    class TimerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class TimerViewHolder(val binding: ItemTimerBinding) : RecyclerView.ViewHolder(binding.root) {
         val handler = Handler(Looper.getMainLooper())
         var runnable: Runnable? = null
             set(runnable) {
                 if (field != null)
                     handler.removeCallbacks(field!!)
-
                 field = runnable
                 handler.post(field!!)
             }
 
-        val time: MaterialTextView = itemView.findViewById(R.id.time)
-        val stop: ImageView = itemView.findViewById(R.id.stop)
-        val progress: ProgressLineView = itemView.findViewById(R.id.progress)
+        val time = binding.time
+        val stop = binding.stop
+        val progress = binding.progress
     }
 
     /**
      * ViewHolder for alarm items.
      */
-    class AlarmViewHolder(v: View, val chronos: Chronos) : RecyclerView.ViewHolder(v) {
-        val name: EditText = v.findViewById(R.id.name)
-        val nameUnderline: View = v.findViewById(R.id.underline)
-        val enable: MaterialSwitch = v.findViewById(R.id.enable)
-        val time: MaterialTextView = v.findViewById(R.id.time)
-        val nextTime: MaterialTextView = v.findViewById(R.id.nextTime)
-        val extra: View = v.findViewById(R.id.extra)
-        val repeat: MaterialCheckBox = v.findViewById(R.id.repeat)
-        val days: LinearLayout = v.findViewById(R.id.days)
-        val ringtone: View = v.findViewById(R.id.ringtone)
-        val ringtoneImage: ImageView = v.findViewById(R.id.ringtoneImage)
-        val ringtoneText: MaterialTextView = v.findViewById(R.id.ringtoneText)
-        val vibrate: View = v.findViewById(R.id.vibrate)
-        val vibrateImage: ImageView = v.findViewById(R.id.vibrateImage)
-        val expandImage: ImageView = v.findViewById(R.id.expandImage)
-        val delete: ImageView = v.findViewById(R.id.delete)
-        val indicators: View = v.findViewById(R.id.indicators)
-        val repeatIndicator: ImageView = v.findViewById(R.id.repeatIndicator)
-        val soundIndicator: ImageView = v.findViewById(R.id.soundIndicator)
-        val vibrateIndicator: ImageView = v.findViewById(R.id.vibrateIndicator)
+    class AlarmViewHolder(val binding: ItemAlarmBinding, val chronos: Chronos) : RecyclerView.ViewHolder(binding.root) {
+        val name = binding.name
+        val nameUnderline = binding.underline
+        val enable = binding.enable
+        val time = binding.time
+        val nextTime = binding.nextTime
+        val extra = binding.extra
+        val repeat = binding.repeat
+        val days = binding.days
+        val ringtone = binding.ringtone
+        val ringtoneImage = binding.ringtoneImage
+        val ringtoneText = binding.ringtoneText
+        val vibrate = binding.vibrate
+        val vibrateImage = binding.vibrateImage
+        val expandImage = binding.expandImage
+        val delete = binding.delete
+        val indicators = binding.indicators
+        val repeatIndicator = binding.repeatIndicator
+        val soundIndicator = binding.soundIndicator
+        val vibrateIndicator = binding.vibrateIndicator
 
         val alarms: List<AlarmData> = chronos.alarms
     }

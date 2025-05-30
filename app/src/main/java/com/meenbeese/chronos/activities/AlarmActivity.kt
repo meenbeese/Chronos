@@ -16,13 +16,13 @@ import androidx.activity.ComponentActivity
 import androidx.media3.common.util.UnstableApi
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 
-import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
+import com.meenbeese.chronos.databinding.ActivityAlarmBinding
 import com.meenbeese.chronos.dialogs.SnoozeDurationDialog
 import com.meenbeese.chronos.dialogs.TimeChooserDialog
 import com.meenbeese.chronos.dialogs.TimeChooserDialog.OnTimeChosenListener
@@ -34,7 +34,6 @@ import com.meenbeese.chronos.utils.FormatUtils.formatMillis
 import com.meenbeese.chronos.utils.FormatUtils.formatUnit
 import com.meenbeese.chronos.utils.FormatUtils.getShortFormat
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImage
-import com.meenbeese.chronos.views.SlideActionView
 
 import java.util.Date
 import java.util.concurrent.TimeUnit
@@ -42,11 +41,11 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.min
 
 class AlarmActivity : ComponentActivity(), SlideActionListener {
-    private var overlay: View? = null
-    private var time: MaterialTextView? = null
+    private lateinit var binding: ActivityAlarmBinding
     private var chronos: Chronos? = null
     private var vibrator: Vibrator? = null
     private var audioManager: AudioManager? = null
+
     private var triggerMillis: Long = 0
     private var alarm: AlarmData? = null
     private var sound: SoundData? = null
@@ -64,7 +63,9 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
     @UnstableApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_alarm)
+        binding = ActivityAlarmBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         window.setFlags(
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
@@ -73,15 +74,11 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
         actionBar?.hide()
 
         chronos = applicationContext as Chronos
-        overlay = findViewById(R.id.overlay)
         isDark = chronos!!.isDarkTheme()
-        time = findViewById(R.id.time)
-        val date = findViewById<MaterialTextView>(R.id.date)
-        val actionView = findViewById<SlideActionView>(R.id.slideView)
 
-        actionView.setLeftIcon(VectorDrawableCompat.create(resources, R.drawable.ic_snooze, theme)!!)
-        actionView.setRightIcon(VectorDrawableCompat.create(resources, R.drawable.ic_close, theme)!!)
-        actionView.setListener(this)
+        binding.slideView.setLeftIcon(VectorDrawableCompat.create(resources, R.drawable.ic_snooze, theme)!!)
+        binding.slideView.setRightIcon(VectorDrawableCompat.create(resources, R.drawable.ic_close, theme)!!)
+        binding.slideView.setListener(this)
 
         isSlowWake = PreferenceData.SLOW_WAKE_UP.getValue(this)
         slowWakeMillis = PreferenceData.SLOW_WAKE_UP_TIME.getValue(this)
@@ -100,7 +97,7 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
             else -> finish()
         }
 
-        date.text = format(Date(), FormatUtils.FORMAT_DATE + ", " + getShortFormat(this))
+        binding.date.text = format(Date(), FormatUtils.FORMAT_DATE + ", " + getShortFormat(this))
 
         sound?.let {
             if (!it.isSetVolumeSupported) {
@@ -121,7 +118,7 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
         runnable = object : Runnable {
             override fun run() {
                 val elapsedMillis = System.currentTimeMillis() - triggerMillis
-                time?.text = "-${formatMillis(elapsedMillis).dropLast(3)}"
+                binding.time.text = "-${formatMillis(elapsedMillis).dropLast(3)}"
 
                 if (isVibrate) {
                     vibrator!!.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
@@ -147,11 +144,13 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
                 handler?.postDelayed(this, 1000)
             }
         }
+
         handler?.post(runnable!!)
         sound?.play(chronos!!)
         refreshSleepTime(chronos!!)
+
         if (PreferenceData.RINGING_BACKGROUND_IMAGE.getValue(this)) {
-            getBackgroundImage(findViewById(R.id.background)!!)
+            getBackgroundImage(binding.background)
         }
     }
 
@@ -221,11 +220,11 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
         })
         snoozeDurationDialog.show()
 
-        overlay?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+        binding.overlay.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
     }
 
     override fun onSlideRight() {
-        overlay?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+        binding.overlay.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
         finish()
     }
 

@@ -1,15 +1,12 @@
 package com.meenbeese.chronos.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 
 import androidx.recyclerview.widget.RecyclerView
 
-import com.google.android.material.checkbox.MaterialCheckBox
-import com.google.android.material.textview.MaterialTextView
-import com.meenbeese.chronos.R
+import com.meenbeese.chronos.databinding.ItemTimeZoneBinding
 
 import java.util.Locale
 import java.util.TimeZone
@@ -23,9 +20,8 @@ class TimeZonesAdapter(
 ) : RecyclerView.Adapter<TimeZonesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_time_zone, parent, false)
-        )
+        val binding = ItemTimeZoneBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -34,7 +30,7 @@ class TimeZonesAdapter(
         val offsetMillis = timeZone.rawOffset
 
         // Format offset as GMT+/-hh:mm
-        holder.time.text = String.format(
+        holder.binding.time.text = String.format(
             Locale.getDefault(),
             "GMT%s%02d:%02d",
             if (offsetMillis >= 0) "+" else "-",
@@ -42,15 +38,16 @@ class TimeZonesAdapter(
             TimeUnit.MILLISECONDS.toMinutes(abs(offsetMillis.toLong())) % TimeUnit.HOURS.toMinutes(1)
         )
 
-        holder.title.text = timeZone.getDisplayName(Locale.getDefault())
-        holder.checkBox.setOnCheckedChangeListener(null)
-        holder.checkBox.isChecked = selected.contains(timeZoneId)
+        holder.binding.title.text = timeZone.getDisplayName(Locale.getDefault())
 
-        holder.itemView.setOnClickListener {
-            holder.checkBox.toggle()
+        holder.binding.checkbox.setOnCheckedChangeListener(null)
+        holder.binding.checkbox.isChecked = selected.contains(timeZoneId)
+
+        holder.binding.root.setOnClickListener {
+            holder.binding.checkbox.toggle()
         }
 
-        holder.checkBox.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
+        holder.binding.checkbox.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {
                 selected.add(timeZoneId)
             } else {
@@ -63,9 +60,5 @@ class TimeZonesAdapter(
         return timeZones.size
     }
 
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val time: MaterialTextView = v.findViewById(R.id.time)
-        val title: MaterialTextView = v.findViewById(R.id.title)
-        val checkBox: MaterialCheckBox = v.findViewById(R.id.checkbox)
-    }
+    class ViewHolder(val binding: ItemTimeZoneBinding) : RecyclerView.ViewHolder(binding.root)
 }

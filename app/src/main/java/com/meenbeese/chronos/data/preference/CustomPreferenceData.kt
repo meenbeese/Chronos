@@ -4,8 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import com.google.android.material.textview.MaterialTextView
-import com.meenbeese.chronos.R
+import com.meenbeese.chronos.databinding.ItemPreferenceCustomBinding
 
 /**
  * A simple preference item to bind a title
@@ -26,24 +25,21 @@ abstract class CustomPreferenceData(
     abstract fun onClick(holder: ViewHolder)
 
     override fun getViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder {
-        return ViewHolder(inflater.inflate(R.layout.item_preference_custom, parent, false))
+        val binding = ItemPreferenceCustomBinding.inflate(inflater, parent, false)
+        return ViewHolder(binding)
     }
 
     override fun bindViewHolder(holder: ViewHolder) {
-        holder.nameView.setText(name)
-        holder.valueNameView.text = getValueName(holder) ?: run {
-            holder.valueNameView.visibility = View.GONE; null
+        holder.binding.name.setText(name)
+        holder.binding.value.text = getValueName(holder) ?: run {
+            holder.binding.value.visibility = View.GONE; null
         }
 
-        holder.itemView.setOnClickListener { onClick(holder) }
+        holder.binding.root.setOnClickListener { onClick(holder) }
     }
 
     /**
      * Holds child views of the current item.
      */
-    class ViewHolder(v: View) : BasePreferenceData.ViewHolder(v) {
-        val nameView: MaterialTextView = v.findViewById(R.id.name)
-        val valueNameView: MaterialTextView = v.findViewById(R.id.value)
-        val description: MaterialTextView = v.findViewById(R.id.description)
-    }
+    class ViewHolder(val binding: ItemPreferenceCustomBinding) : BasePreferenceData.ViewHolder(binding.root)
 }

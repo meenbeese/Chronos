@@ -9,22 +9,23 @@ import android.view.ViewGroup
 
 import androidx.fragment.app.DialogFragment
 import androidx.media3.common.util.UnstableApi
-import androidx.viewpager2.widget.ViewPager2
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
 import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.databinding.DialogSoundChooserBinding
 import com.meenbeese.chronos.fragments.sound.AlarmSoundChooserFragment
 import com.meenbeese.chronos.fragments.sound.FileSoundChooserFragment
 import com.meenbeese.chronos.fragments.sound.RingtoneSoundChooserFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.meenbeese.chronos.utils.AudioUtils
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class SoundChooserDialog : DialogFragment(), SoundChooserListener {
     private var listener: SoundChooserListener? = null
-    private var view: View? = null
+
+    private var _binding: DialogSoundChooserBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,28 +45,21 @@ class SoundChooserDialog : DialogFragment(), SoundChooserListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        view = inflater.inflate(R.layout.dialog_sound_chooser, container, false)
-
-        val tabLayout = view?.findViewById<TabLayout>(R.id.tabLayout)
-        val viewPager = view?.findViewById<ViewPager2>(R.id.viewPager)
+        _binding = DialogSoundChooserBinding.inflate(inflater, container, false)
 
         val fragments = arrayOf(
-            AlarmSoundChooserFragment.Instantiator(view?.context, this),
-            RingtoneSoundChooserFragment.Instantiator(view?.context, this),
-            FileSoundChooserFragment.Instantiator(view?.context, this)
+            AlarmSoundChooserFragment.Instantiator(context, this),
+            RingtoneSoundChooserFragment.Instantiator(context, this),
+            FileSoundChooserFragment.Instantiator(context, this)
         )
 
-        viewPager?.adapter = SimplePagerAdapter(this, *fragments)
+        binding.viewPager.adapter = SimplePagerAdapter(this, *fragments)
 
-        tabLayout?.let { tl ->
-            viewPager?.let { vp ->
-                TabLayoutMediator(tl, vp) { tab, position ->
-                    tab.text = fragments[position].getTitle(position)
-                }.attach()
-            }
-        }
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = fragments[position].getTitle(position)
+        }.attach()
 
-        return view
+        return binding.root
     }
 
     fun setListener(listener: SoundChooserListener?) {
@@ -81,5 +75,10 @@ class SoundChooserDialog : DialogFragment(), SoundChooserListener {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         AudioUtils.stopCurrentSound()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -2,15 +2,12 @@ package com.meenbeese.chronos.data.preference
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 
 import androidx.annotation.StringRes
 
-import com.google.android.material.materialswitch.MaterialSwitch
-import com.google.android.material.textview.MaterialTextView
-import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.databinding.ItemPreferenceBooleanBinding
 
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -25,21 +22,23 @@ class BooleanPreferenceData(
     @StringRes private val title: Int,
     @StringRes private val description: Int
 ) : BasePreferenceData<BooleanPreferenceData.ViewHolder>() {
+
     override fun getViewHolder(inflater: LayoutInflater, parent: ViewGroup): BasePreferenceData.ViewHolder {
-        return ViewHolder(inflater.inflate(R.layout.item_preference_boolean, parent, false))
+        val binding = ItemPreferenceBooleanBinding.inflate(inflater, parent, false)
+        return ViewHolder(binding)
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("CheckResult")
     override fun bindViewHolder(holder: ViewHolder) {
-        holder.title.setText(title)
-        holder.description.setText(description)
+        holder.binding.title.setText(title)
+        holder.binding.description.setText(description)
 
-        val currentValue = preference.getValue<Boolean>(holder.itemView.context)
+        val currentValue = preference.getValue<Boolean>(holder.binding.root.context)
 
-        holder.toggle.setOnCheckedChangeListener(null)
-        holder.toggle.isChecked = currentValue
-        holder.toggle.setOnCheckedChangeListener { compoundButton, b ->
+        holder.binding.toggle.setOnCheckedChangeListener(null)
+        holder.binding.toggle.isChecked = currentValue
+        holder.binding.toggle.setOnCheckedChangeListener { compoundButton, b ->
             GlobalScope.launch {
                 preference.setValue(compoundButton.context, b)
             }
@@ -49,9 +48,5 @@ class BooleanPreferenceData(
     /**
      * Holds child views of the current item.
      */
-    inner class ViewHolder(v: View) : BasePreferenceData.ViewHolder(v) {
-        val title: MaterialTextView = v.findViewById(R.id.title)
-        val description: MaterialTextView = v.findViewById(R.id.description)
-        val toggle: MaterialSwitch = v.findViewById(R.id.toggle)
-    }
+    inner class ViewHolder(val binding: ItemPreferenceBooleanBinding) : BasePreferenceData.ViewHolder(binding.root)
 }

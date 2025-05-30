@@ -11,9 +11,8 @@ import android.view.ViewGroup
 import androidx.core.net.toUri
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.materialswitch.MaterialSwitch
-import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.R
+import com.meenbeese.chronos.databinding.ItemPreferenceBooleanBinding
 
 /**
  * A preference item allowing the user to grant the
@@ -24,30 +23,34 @@ import com.meenbeese.chronos.R
  */
 class AlertWindowPreferenceData
     : BasePreferenceData<AlertWindowPreferenceData.ViewHolder>() {
+
     override fun getViewHolder(inflater: LayoutInflater, parent: ViewGroup): BasePreferenceData.ViewHolder {
-        return ViewHolder(inflater.inflate(R.layout.item_preference_boolean, parent, false))
+        val binding = ItemPreferenceBooleanBinding.inflate(inflater, parent, false)
+        return ViewHolder(binding)
     }
 
     @SuppressLint("CheckResult")
     override fun bindViewHolder(holder: ViewHolder) {
-        holder.title.setText(R.string.info_background_permissions_title)
-        holder.description.visibility = View.GONE
-        holder.toggle.setOnCheckedChangeListener(null)
-        holder.toggle.isClickable = false
-        holder.toggle.isChecked = Settings.canDrawOverlays(holder.context)
-        holder.itemView.setOnClickListener {
-            if (!Settings.canDrawOverlays(holder.context)) {
+        holder.binding.title.setText(R.string.info_background_permissions_title)
+        holder.binding.description.visibility = View.GONE
+        holder.binding.toggle.setOnCheckedChangeListener(null)
+        holder.binding.toggle.isClickable = false
+        holder.binding.toggle.isChecked = Settings.canDrawOverlays(holder.binding.root.context)
+        holder.binding.root.setOnClickListener {
+            if (!Settings.canDrawOverlays(holder.binding.root.context)) {
                 showAlert(holder)
-            } else showActivity(holder.context)
+            } else {
+                showActivity(holder.binding.root.context)
+            }
         }
     }
 
     private fun showAlert(holder: ViewHolder) {
-        MaterialAlertDialogBuilder(holder.context, if(holder.chronos!!.isDarkTheme()) com.google.android.material.R.style.Theme_MaterialComponents_Dialog_Alert else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog_Alert)
+        MaterialAlertDialogBuilder(holder.binding.root.context, if(holder.chronos!!.isDarkTheme()) com.google.android.material.R.style.Theme_MaterialComponents_Dialog_Alert else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog_Alert)
             .setTitle(holder.context.getString(R.string.info_background_permissions_title))
             .setMessage(holder.context.getString(R.string.info_background_permissions_body))
-            .setPositiveButton(holder.context.getString(android.R.string.ok)){_, _ ->  showActivity(holder.context)}
-            .setNegativeButton(holder.context.getString(android.R.string.cancel), null)
+            .setPositiveButton(holder.binding.root.context.getString(android.R.string.ok)){_, _ ->  showActivity(holder.context)}
+            .setNegativeButton(holder.binding.root.context.getString(android.R.string.cancel), null)
             .show()
     }
 
@@ -60,9 +63,5 @@ class AlertWindowPreferenceData
     /**
      * Holds child views of the current item.
      */
-    inner class ViewHolder(v: View) : BasePreferenceData.ViewHolder(v) {
-        val title: MaterialTextView = v.findViewById(R.id.title)
-        val description: MaterialTextView = v.findViewById(R.id.description)
-        val toggle: MaterialSwitch = v.findViewById(R.id.toggle)
-    }
+    inner class ViewHolder(val binding: ItemPreferenceBooleanBinding) : BasePreferenceData.ViewHolder(binding.root)
 }

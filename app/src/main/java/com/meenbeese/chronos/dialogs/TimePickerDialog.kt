@@ -2,13 +2,10 @@ package com.meenbeese.chronos.dialogs
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.widget.TimePicker
 
 import androidx.activity.ComponentDialog
 
-import com.google.android.material.button.MaterialButton
-import com.meenbeese.chronos.R
+import com.meenbeese.chronos.databinding.DialogTimePickerBinding
 
 class TimePickerDialog(
     context: Context,
@@ -18,29 +15,34 @@ class TimePickerDialog(
     private val onTimeSet: (hour: Int, minute: Int) -> Unit
 ) : ComponentDialog(context) {
 
-    private var timePicker: TimePicker? = null
+    private var _binding: DialogTimePickerBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val view = LayoutInflater.from(context).inflate(R.layout.dialog_time_picker, null)
-        setContentView(view)
+        _binding = DialogTimePickerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        timePicker = view.findViewById(R.id.timePicker)
-        timePicker?.apply {
+        binding.timePicker.apply {
             setIs24HourView(is24HourClock)
             hour = initialHour
             minute = initialMinute
         }
 
-        view.findViewById<MaterialButton>(R.id.cancelButton).setOnClickListener {
+        binding.cancelButton.setOnClickListener {
             dismiss()
         }
 
-        view.findViewById<MaterialButton>(R.id.okButton).setOnClickListener {
-            val selectedHour = timePicker?.hour ?: 0
-            val selectedMinute = timePicker?.minute ?: 0
+        binding.okButton.setOnClickListener {
+            val selectedHour = binding.timePicker.hour
+            val selectedMinute = binding.timePicker.minute
             onTimeSet(selectedHour, selectedMinute)
             dismiss()
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        _binding = null
     }
 }
