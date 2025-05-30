@@ -8,13 +8,13 @@ import android.view.ViewGroup
 
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SoundsAdapter
 import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.data.dataStore
 import com.meenbeese.chronos.databinding.FragmentSoundChooserFileBinding
 import com.meenbeese.chronos.fragments.BasePagerFragment
 import com.meenbeese.chronos.fragments.FileChooserFragment
@@ -25,8 +25,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-
-val Context.dataStore by preferencesDataStore(name = "user_preferences")
 
 class FileSoundChooserFragment : BaseSoundChooserFragment() {
     private var _binding: FragmentSoundChooserFileBinding? = null

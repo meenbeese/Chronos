@@ -1,35 +1,20 @@
 package com.meenbeese.chronos.data
 
 import android.content.Context
-import android.preference.PreferenceManager
 import android.util.Log
 
-import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
-import com.meenbeese.chronos.Chronos
+
 import com.meenbeese.chronos.utils.Option
 import com.meenbeese.chronos.utils.Theme
 
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-
-private val Context.dataStore by preferencesDataStore(
-    name = "settings",
-    produceMigrations = { context ->
-        listOf(
-            SharedPreferencesMigration(
-                context,
-                PreferenceManager.getDefaultSharedPreferencesName(context)
-            )
-        )
-    }
-)
 
 enum class PreferenceData(private val key: Preferences.Key<*>, private val defaultValue: Any?) {
     INFO_BACKGROUND_PERMISSIONS(booleanPreferencesKey(name = "info_background_permissions"), defaultValue = false),
