@@ -11,18 +11,20 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.AlarmsAdapter
 import com.meenbeese.chronos.data.toEntity
+import com.meenbeese.chronos.databinding.FragmentRecyclerBinding
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 
 class AlarmsFragment : BasePagerFragment() {
+    private var _binding: FragmentRecyclerBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var alarmsAdapter: AlarmsAdapter
-    private var empty: View? = null
     lateinit var recyclerView: RecyclerView
     private var scrolledToEndListener: OnScrolledToEndListener? = null
     private lateinit var alarmViewModel: AlarmViewModel
@@ -32,23 +34,21 @@ class AlarmsFragment : BasePagerFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.fragment_recycler, container, false)
+        _binding = FragmentRecyclerBinding.inflate(inflater, container, false)
 
         val app = requireActivity().application as Chronos
         val factory = AlarmViewModelFactory(app.repository)
         alarmViewModel = ViewModelProvider(this, factory)[AlarmViewModel::class.java]
 
-        recyclerView = v.findViewById(R.id.recycler)
-        empty = v.findViewById(R.id.empty)
-        (v.findViewById<View>(R.id.emptyText) as MaterialTextView).setText(R.string.msg_alarms_empty)
+        recyclerView = binding.recycler
+        binding.emptyText.setText(R.string.msg_alarms_empty)
         recyclerView.layoutManager = GridLayoutManager(context, 1)
+
         alarmsAdapter = AlarmsAdapter(
             chronos!!,
             recyclerView,
             parentFragmentManager,
-            onDeleteAlarm = { alarmToDelete ->
-                alarmViewModel.delete(alarmToDelete.toEntity())
-            },
+            onDeleteAlarm = { alarmViewModel.delete(it.toEntity()) },
             alarmViewModel = alarmViewModel
         )
         recyclerView.adapter = alarmsAdapter
@@ -67,7 +67,12 @@ class AlarmsFragment : BasePagerFragment() {
 
         onChanged()
 
-        return v
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun getTitle(context: Context?): String? {
@@ -89,7 +94,7 @@ class AlarmsFragment : BasePagerFragment() {
     }
 
     private fun onChanged() {
-        empty?.visibility = if (alarmsAdapter.itemCount > 0) View.GONE else View.VISIBLE
+        binding.empty.visibility = if (alarmsAdapter.itemCount > 0) View.GONE else View.VISIBLE
     }
 
     class Instantiator(context: Context?) : ContextFragmentInstantiator(context!!) {

@@ -11,11 +11,11 @@ import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SoundsAdapter
 import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.databinding.FragmentSoundChooserFileBinding
 import com.meenbeese.chronos.fragments.BasePagerFragment
 import com.meenbeese.chronos.fragments.FileChooserFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
@@ -29,8 +29,10 @@ import kotlinx.coroutines.launch
 val Context.dataStore by preferencesDataStore(name = "user_preferences")
 
 class FileSoundChooserFragment : BaseSoundChooserFragment() {
-    private lateinit var sounds: MutableList<SoundData>
+    private var _binding: FragmentSoundChooserFileBinding? = null
+    private val binding get() = _binding!!
 
+    private lateinit var sounds: MutableList<SoundData>
     private val PREF_FILES_KEY = stringSetPreferencesKey("previousFiles")
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -39,10 +41,9 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_sound_chooser_file, container, false)
+        _binding = FragmentSoundChooserFileBinding.inflate(inflater, container, false)
 
-        view.findViewById<View>(R.id.addAudioFile).setOnClickListener { launchFileChooser() }
-        val recycler = view.findViewById<RecyclerView>(R.id.recycler)
+        binding.addAudioFile.setOnClickListener { launchFileChooser() }
 
         GlobalScope.launch(Dispatchers.Main) {
             val previousFiles = loadPreviousFiles()
@@ -53,14 +54,13 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
                 sounds.add(SoundData(parts[1], SoundData.TYPE_RINGTONE, parts[2]))
             }
 
-            recycler.layoutManager = LinearLayoutManager(context)
-
+            binding.recycler.layoutManager = LinearLayoutManager(context)
             val adapter = SoundsAdapter(chronos!!, sounds)
             adapter.setListener(this@FileSoundChooserFragment)
-            recycler.adapter = adapter
+            binding.recycler.adapter = adapter
         }
 
-        return view
+        return binding.root
     }
 
     private fun launchFileChooser() {
@@ -68,11 +68,17 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
         fragment.setCallback { name, uri ->
             onSoundChosen(SoundData(name, SoundData.TYPE_RINGTONE, uri))
         }
+
         val activity = context as FragmentActivity
         activity.supportFragmentManager.beginTransaction()
             .replace(android.R.id.content, fragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
     @OptIn(DelicateCoroutinesApi::class)

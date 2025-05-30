@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.core.util.Consumer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.PreferenceAdapter
@@ -25,10 +24,13 @@ import com.meenbeese.chronos.data.preference.RingtonePreferenceData
 import com.meenbeese.chronos.data.preference.ThemePreferenceData
 import com.meenbeese.chronos.data.preference.TimePreferenceData
 import com.meenbeese.chronos.data.preference.TimeZonesPreferenceData
+import com.meenbeese.chronos.databinding.FragmentRecyclerBinding
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 
 class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
-    private lateinit var recyclerView: RecyclerView
+    private var _binding: FragmentRecyclerBinding? = null
+    private val binding get() = _binding!!
+
     private var preferenceAdapter: PreferenceAdapter? = null
 
     override fun onCreateView(
@@ -36,9 +38,9 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.fragment_recycler, container, false)
-        recyclerView = v.findViewById(R.id.recycler)
-        recyclerView.layoutManager = GridLayoutManager(context, 1)
+        _binding = FragmentRecyclerBinding.inflate(inflater, container, false)
+
+        binding.recycler.layoutManager = GridLayoutManager(context, 1)
 
         val dataList = mutableListOf(
             ThemePreferenceData(requireContext(), lifecycleScope),
@@ -88,13 +90,20 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
                 R.string.title_slow_wake_up_time
             )
         )
+
         dataList.add(0, BatteryOptimizationPreferenceData())
         dataList.add(0, AlertWindowPreferenceData())
         dataList.add(AboutPreferenceData(requireContext()))
-        preferenceAdapter = PreferenceAdapter(dataList as MutableList<BasePreferenceData<BasePreferenceData.ViewHolder>>)
-        recyclerView.adapter = preferenceAdapter
 
-        return v
+        preferenceAdapter = PreferenceAdapter(dataList as MutableList<BasePreferenceData<BasePreferenceData.ViewHolder>>)
+        binding.recycler.adapter = preferenceAdapter
+
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
     override fun getTitle(context: Context?): String? {
@@ -108,12 +117,12 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        recyclerView.post { preferenceAdapter?.notifyDataSetChanged() }
+        binding.recycler.post { preferenceAdapter?.notifyDataSetChanged() }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun accept(o: Any?) {
-        recyclerView.post { preferenceAdapter?.notifyDataSetChanged() }
+        binding.recycler.post { preferenceAdapter?.notifyDataSetChanged() }
     }
 
     class Instantiator(context: Context?) : ContextFragmentInstantiator(context!!) {

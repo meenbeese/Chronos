@@ -10,32 +10,33 @@ import android.view.ViewGroup
 
 import androidx.core.content.ContextCompat
 
-import com.google.android.material.textview.MaterialTextView
-import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.databinding.FragmentClockBinding
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 import com.meenbeese.chronos.utils.ImageUtils.isBitmapDark
 import com.meenbeese.chronos.utils.ImageUtils.toBitmap
-import com.meenbeese.chronos.views.DigitalClockView
 
 import java.util.TimeZone
 
 class ClockFragment : BasePagerFragment() {
+    private var _binding: FragmentClockBinding? = null
+    private val binding get() = _binding!!
+
     private var timezone: String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_clock, container, false)
-        val clockView = view.findViewById<DigitalClockView>(R.id.timeView)
-        val timezoneView = view.findViewById<MaterialTextView>(R.id.timezone)
+        _binding = FragmentClockBinding.inflate(inflater, container, false)
+
         if (arguments != null && requireArguments().containsKey(EXTRA_TIME_ZONE)) {
             timezone = arguments?.getString(EXTRA_TIME_ZONE)
             timezone?.let {
-                clockView.setTimezone(it)
+                binding.timeView.setTimezone(it)
                 if (it != TimeZone.getDefault().id) {
-                    timezoneView.text = String.format(
+                    binding.timezone.text = String.format(
                         "%s\n%s",
                         it.replace("_".toRegex(), " "),
                         TimeZone.getTimeZone(it).displayName
@@ -45,9 +46,14 @@ class ClockFragment : BasePagerFragment() {
         }
 
         val textColor = getContrastingTextColorFromBg()
-        timezoneView.setTextColor(textColor)
+        binding.timezone.setTextColor(textColor)
 
-        return view
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun getContrastingTextColorFromBg(): Int {
