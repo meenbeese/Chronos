@@ -58,7 +58,6 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
     private var volumeRange = 0
     private var handler: Handler? = null
     private var runnable: Runnable? = null
-    private var isDark = false
 
     @UnstableApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +73,6 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
         actionBar?.hide()
 
         chronos = applicationContext as Chronos
-        isDark = chronos!!.isDarkTheme()
 
         binding.slideView.setLeftIcon(VectorDrawableCompat.create(resources, R.drawable.ic_snooze, theme)!!)
         binding.slideView.setRightIcon(VectorDrawableCompat.create(resources, R.drawable.ic_close, theme)!!)
