@@ -23,7 +23,7 @@ class ImageFilePreferenceData(
 
     override fun bindViewHolder(holder: ViewHolder) {
         super.bindViewHolder(holder)
-        holder.description.setText(description)
+        holder.binding.description.setText(description)
     }
 
     override fun onClick(holder: ViewHolder) {
