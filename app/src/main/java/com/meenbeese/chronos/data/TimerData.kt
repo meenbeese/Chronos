@@ -30,11 +30,18 @@ open class TimerData(
         endTime = PreferenceData.TIMER_END_TIME.getValue(context)
         isVibrate = PreferenceData.TIMER_VIBRATE.getValue(context)
 
-        val defaultSound: String = PreferenceData.DEFAULT_TIMER_RINGTONE.getValue<String>(context).takeIf {
-            it.isNotEmpty()
-        } ?: PreferenceData.TIMER_SOUND.getValue(context)
+        val defaultSoundPref: String? = PreferenceData.DEFAULT_TIMER_RINGTONE.getValue(context)
+        val fallbackSound: String? = PreferenceData.TIMER_SOUND.getValue(context)
 
-        sound = SoundData.fromString(defaultSound).toNullable()
+        val defaultSound: String? = if (!defaultSoundPref.isNullOrEmpty()) {
+            defaultSoundPref
+        } else if (!fallbackSound.isNullOrEmpty()) {
+            fallbackSound
+        } else {
+            null
+        }
+
+        sound = defaultSound?.let { SoundData.fromString(it).toNullable() }
     }
 
     val isSet: Boolean
@@ -55,7 +62,7 @@ open class TimerData(
             PreferenceData.TIMER_DURATION.setValue(context, duration)
             PreferenceData.TIMER_END_TIME.setValue(context, endTime)
             PreferenceData.TIMER_VIBRATE.setValue(context, isVibrate)
-            PreferenceData.TIMER_SOUND.setValue(context, if (sound != null) sound.toString() else null)
+            PreferenceData.TIMER_SOUND.setValue(context, sound?.toString() ?: "")
         }
         onRemoved(context)
         this.id = id
@@ -72,9 +79,9 @@ open class TimerData(
         cancel(context, context.getSystemService(Context.ALARM_SERVICE) as AlarmManager)
         GlobalScope.launch {
             PreferenceData.TIMER_DURATION.setValue(context, 0)
-            PreferenceData.TIMER_END_TIME.setValue<Any>(context, 0L)
-            PreferenceData.TIMER_VIBRATE.setValue<Any>(context, false)
-            PreferenceData.TIMER_SOUND.setValue<Any>(context, "")
+            PreferenceData.TIMER_END_TIME.setValue(context, 0L)
+            PreferenceData.TIMER_VIBRATE.setValue(context, false)
+            PreferenceData.TIMER_SOUND.setValue(context, "")
         }
     }
 
@@ -120,7 +127,7 @@ open class TimerData(
     @OptIn(DelicateCoroutinesApi::class)
     fun setSound(context: Context, sound: SoundData?) {
         this.sound = sound
-        GlobalScope.launch { PreferenceData.TIMER_SOUND.setValue(context, sound?.toString()) }
+        GlobalScope.launch { PreferenceData.TIMER_SOUND.setValue(context, sound?.toString() ?: "") }
     }
 
     /**

@@ -36,10 +36,12 @@ class TimerDialog(context: Context, private val manager: FragmentManager) :
     private val chronos: Chronos = context.applicationContext as Chronos
 
     init {
-        ringtone = when(val opt = SoundData.fromString(PreferenceData.DEFAULT_TIMER_RINGTONE.getValue(context))) {
-            is Option.Some -> opt.value
-            is Option.None -> null
-        }
+        ringtone = PreferenceData.DEFAULT_TIMER_RINGTONE.getValue<String>(context)?.let {
+            when (val opt = SoundData.fromString(it)) {
+                is Option.Some -> opt.value
+                is Option.None -> null
+            }
+        } ?: null
     }
 
     @SuppressLint("CheckResult")

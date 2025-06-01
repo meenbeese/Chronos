@@ -67,7 +67,10 @@ enum class PreferenceData(private val key: Preferences.Key<*>, private val defau
                 is String -> settings[key as Preferences.Key<String>] = value
                 is Int -> settings[key as Preferences.Key<Int>] = value
                 is Long -> settings[key as Preferences.Key<Long>] = value
-                else -> throw IllegalArgumentException("Unsupported type")
+                else -> {
+                    Log.e("PreferenceData", "Attempted to store unsupported type: ${value?.javaClass?.name}")
+                    throw IllegalArgumentException("Unsupported type: ${value?.javaClass?.name}")
+                }
             }
         }
         Log.d("PreferenceData", "Saved $key = $value")
