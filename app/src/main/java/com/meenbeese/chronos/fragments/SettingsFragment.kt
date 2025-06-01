@@ -54,6 +54,11 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
                 R.string.title_ringing_background_image,
                 R.string.desc_ringing_background_image
             ),
+            BooleanPreferenceData(
+                PreferenceData.SCROLL_TO_NEXT,
+                R.string.title_scroll_next,
+                R.string.desc_scroll_next
+            ),
             TimeZonesPreferenceData(
                 PreferenceData.TIME_ZONE_ENABLED,
                 R.string.title_time_zones

@@ -30,6 +30,7 @@ enum class PreferenceData(private val key: Preferences.Key<*>, private val defau
     SLEEP_REMINDER_TIME(longPreferencesKey(name = "sleep_reminder_time"), defaultValue = 25200000L),
     SLOW_WAKE_UP(booleanPreferencesKey(name = "slow_wake_up"), defaultValue = true),
     SLOW_WAKE_UP_TIME(longPreferencesKey(name = "slow_wake_up_time"), defaultValue = 300000L),
+    SCROLL_TO_NEXT(booleanPreferencesKey(name = "scroll_to_next"), defaultValue = false),
 
     // Timer Settings
     TIMER_DURATION(intPreferencesKey(name = "timer_duration"), defaultValue = 600000),

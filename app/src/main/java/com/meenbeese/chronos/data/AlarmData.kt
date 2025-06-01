@@ -52,6 +52,10 @@ class AlarmData(
         }
     }
 
+    fun calculateNextTriggerTime(): Long {
+        return getNext()?.timeInMillis ?: Long.MAX_VALUE
+    }
+
     fun set(context: Context): Date? {
         val nextTime = getNext() ?: return null
         setAlarm(context, nextTime.timeInMillis)

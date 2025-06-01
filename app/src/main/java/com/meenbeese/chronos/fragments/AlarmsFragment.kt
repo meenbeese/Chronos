@@ -18,9 +18,10 @@ import com.meenbeese.chronos.data.toEntity
 import com.meenbeese.chronos.databinding.FragmentRecyclerBinding
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
+import com.meenbeese.chronos.interfaces.AlarmNavigator
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 
-class AlarmsFragment : BasePagerFragment() {
+class AlarmsFragment : BasePagerFragment(), AlarmNavigator {
     private var _binding: FragmentRecyclerBinding? = null
     private val binding get() = _binding!!
 
@@ -95,6 +96,17 @@ class AlarmsFragment : BasePagerFragment() {
 
     private fun onChanged() {
         binding.empty.visibility = if (alarmsAdapter.itemCount > 0) View.GONE else View.VISIBLE
+    }
+
+    override fun jumpToAlarm(alarmId: Int, openEditor: Boolean) {
+        val position = alarmsAdapter.findPositionById(alarmId)
+        if (position != -1) {
+            recyclerView.scrollToPosition(position)
+
+            if (openEditor) {
+                alarmsAdapter.openEditorAt(position)
+            }
+        }
     }
 
     class Instantiator(context: Context?) : ContextFragmentInstantiator(context!!) {

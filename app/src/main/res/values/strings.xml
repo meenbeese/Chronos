@@ -115,4 +115,6 @@
     <string name="desc_background_image">Choose an image file in one of the following formats: JPEG, PNG, WebP, GIF, BMP, or HEIF.</string>
     <string name="title_military_time">Enable 24-hour clock</string>
     <string name="desc_military_time"></string>
+    <string name="title_scroll_next">Scroll to the next alarm</string>
+    <string name="desc_scroll_next">Navigates to the next alarm based on its scheduled time when the clock is pressed.</string>
 </resources>

@@ -401,6 +401,30 @@ class AlarmsAdapter(
         notifyDataSetChanged()
     }
 
+    fun findPositionById(alarmId: Int): Int {
+        return alarms.indexOfFirst { it.id == alarmId }
+    }
+
+    fun openEditorAt(position: Int) {
+        val adapterPosition = position + timers.size
+
+        if (adapterPosition < itemCount) {
+            if (expandedPosition != -1 && expandedPosition != adapterPosition) {
+                val previousHolder = recycler.findViewHolderForAdapterPosition(expandedPosition)
+                if (previousHolder is AlarmViewHolder) {
+                    saveAlarmNameIfNeeded(previousHolder)
+                }
+            }
+
+            expandedPosition = adapterPosition
+
+            recycler.post {
+                notifyDataSetChanged()
+                recycler.scrollToPosition(adapterPosition)
+            }
+        }
+    }
+
     /**
      * Returns the timer that should be bound to the
      * specified position in the list - null if there

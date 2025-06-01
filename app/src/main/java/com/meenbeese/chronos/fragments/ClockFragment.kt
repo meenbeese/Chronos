@@ -10,8 +10,10 @@ import android.view.ViewGroup
 
 import androidx.core.content.ContextCompat
 
+import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.databinding.FragmentClockBinding
+import com.meenbeese.chronos.interfaces.AlarmNavigator
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 import com.meenbeese.chronos.utils.ImageUtils.isBitmapDark
 import com.meenbeese.chronos.utils.ImageUtils.toBitmap
@@ -47,6 +49,11 @@ class ClockFragment : BasePagerFragment() {
 
         val textColor = getContrastingTextColorFromBg()
         binding.timezone.setTextColor(textColor)
+        binding.timeView.setOnClickListener {
+            if (PreferenceData.SCROLL_TO_NEXT.getValue<Boolean>(requireContext())) {
+                navigateToNearestAlarm()
+            }
+        }
 
         return binding.root
     }
@@ -54,6 +61,30 @@ class ClockFragment : BasePagerFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun navigateToNearestAlarm() {
+        val activity = requireActivity()
+        val chronosApp = activity.application as Chronos
+        val allAlarms = chronosApp.alarms
+
+        val alarmsWithNextTrigger = allAlarms
+            .filter { it.isEnabled }
+            .mapNotNull { alarm -> alarm.getNext()?.timeInMillis?.let { alarm to it } }
+
+        val targetAlarm = alarmsWithNextTrigger
+            .minByOrNull { it.second }?.first
+            ?: allAlarms
+                .mapNotNull { alarm -> alarm.getNext()?.timeInMillis?.let { alarm to it } }
+                .minByOrNull { it.second }
+                ?.first
+            ?: return
+
+        val fragment = parentFragmentManager.fragments
+            .filterIsInstance<AlarmNavigator>()
+            .firstOrNull()
+
+        fragment?.jumpToAlarm(targetAlarm.id, openEditor = true)
     }
 
     private fun getContrastingTextColorFromBg(): Int {
