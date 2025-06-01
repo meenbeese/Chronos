@@ -5,8 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import android.os.Handler
-import android.os.Looper
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
@@ -14,13 +12,21 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import com.meenbeese.chronos.interfaces.Subscribable
 import com.meenbeese.chronos.utils.FormatUtils
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+
 import java.util.Calendar
 import java.util.TimeZone
 
 class DigitalClockView : View, OnGlobalLayoutListener, Subscribable {
     private var paint: Paint? = null
-    private var thread: UpdateThread? = null
     private var timezone: TimeZone? = null
+    private val clockScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     constructor(context: Context?) : super(context) {
         init()
@@ -48,18 +54,17 @@ class DigitalClockView : View, OnGlobalLayoutListener, Subscribable {
 
     fun setTimezone(timezone: String) {
         this.timezone = TimeZone.getTimeZone(timezone)
+        invalidate()
     }
 
     override fun subscribe() {
         viewTreeObserver.addOnGlobalLayoutListener(this)
-        if (thread == null) thread = UpdateThread(this)
-        thread?.start()
+        startClock()
     }
 
     override fun unsubscribe() {
         viewTreeObserver.removeOnGlobalLayoutListener(this)
-        thread?.interrupt()
-        thread = null
+        stopClock()
     }
 
     override fun onAttachedToWindow() {
@@ -83,27 +88,33 @@ class DigitalClockView : View, OnGlobalLayoutListener, Subscribable {
     override fun onDraw(canvas: Canvas) {
         val defaultZone = TimeZone.getDefault()
         TimeZone.setDefault(timezone)
+
+        val text = FormatUtils.format(context, Calendar.getInstance().time)
         canvas.drawText(
-            FormatUtils.format(context, Calendar.getInstance().time),
-            width.toFloat() / 2,
+            text,
+            width / 2f,
             (height - paint!!.ascent()) / 2,
             paint!!
         )
+
         TimeZone.setDefault(defaultZone)
     }
 
-    private class UpdateThread(private val view: DigitalClockView) : Thread() {
-        override fun run() {
-            while (true) {
-                try {
-                    sleep(1000)
-                } catch (e: InterruptedException) {
-                    return
-                }
-                Handler(Looper.getMainLooper()).post {
-                    view.invalidate()
-                }
+    private var updateJob: Job? = null
+
+    private fun startClock() {
+        if (updateJob?.isActive == true) return
+
+        updateJob = clockScope.launch {
+            while (isActive) {
+                invalidate()
+                delay(1000)
             }
         }
+    }
+
+    private fun stopClock() {
+        updateJob?.cancel()
+        updateJob = null
     }
 }
