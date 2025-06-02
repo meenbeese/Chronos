@@ -28,6 +28,7 @@ import com.meenbeese.chronos.dialogs.TimeChooserDialog
 import com.meenbeese.chronos.dialogs.TimeChooserDialog.OnTimeChosenListener
 import com.meenbeese.chronos.interfaces.SlideActionListener
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
+import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.utils.FormatUtils.format
 import com.meenbeese.chronos.utils.FormatUtils.formatMillis
@@ -190,7 +191,7 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
                         setSound(this@AlarmActivity, sound)
                         this[chronos!!] = getSystemService(ALARM_SERVICE) as AlarmManager
                     }
-                    chronos?.onTimerStarted()
+                    TimerService.startService(baseContext)
                     finish()
                 } else {
                     TimeChooserDialog(this@AlarmActivity).apply {
@@ -207,7 +208,7 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
                                     )
                                     this[chronos!!] = getSystemService(ALARM_SERVICE) as AlarmManager
                                 }
-                                chronos?.onTimerStarted()
+                                TimerService.startService(baseContext)
                                 finish()
                             }
                         })

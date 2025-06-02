@@ -5,8 +5,10 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.Binder
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -108,5 +110,17 @@ class TimerService : Service() {
     class LocalBinder : Binder()
     companion object {
         private const val NOTIFICATION_ID = 427
+
+        /**
+         * Starts the timer service after a timer has been set.
+         */
+        fun startService(context: Context) {
+            val intent = Intent(context, TimerService::class.java)
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+                context.startForegroundService(intent)
+            } else {
+                context.startService(intent)
+            }
+        }
     }
 }

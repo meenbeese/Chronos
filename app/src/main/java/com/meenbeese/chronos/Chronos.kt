@@ -120,17 +120,6 @@ class Chronos : Application() {
         }
     }
 
-    /**
-     * Starts the timer service after a timer has been set.
-     */
-    fun onTimerStarted() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            startForegroundService(Intent(this, TimerService::class.java))
-        } else {
-            startService(Intent(this, TimerService::class.java))
-        }
-    }
-
     val isNight: Boolean
         /**
          * Determine if the theme should be a night theme.
