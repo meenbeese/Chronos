@@ -17,5 +17,5 @@ assignees: ''
 ## Info
 
 - Device model: `Pixel 8`
-- Android version: `Android 14`
-- App version: `v1.3.0`
+- Android version: `Android 15`
+- App version: `2025.2.0`
