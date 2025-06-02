@@ -1,7 +1,6 @@
 package com.meenbeese.chronos.adapters
 
 import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
@@ -13,6 +12,7 @@ import android.widget.Toast
 
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
@@ -32,6 +32,7 @@ import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.dialogs.SoundChooserDialog
 import com.meenbeese.chronos.dialogs.TimePickerDialog
 import com.meenbeese.chronos.interfaces.SoundChooserListener
+import com.meenbeese.chronos.utils.AlarmsDiffCallback
 import com.meenbeese.chronos.utils.DimenUtils
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.DaySwitch
@@ -132,7 +133,7 @@ class AlarmsAdapter(
             transition.duration = 150
             TransitionManager.beginDelayedTransition(recycler, transition)
 
-            recycler.post { notifyDataSetChanged() }
+            recycler.post { notifyItemChanged(holder.bindingAdapterPosition) }
         }
 
         holder.days.visibility = if (alarm.isRepeat()) View.VISIBLE else View.GONE
@@ -209,7 +210,6 @@ class AlarmsAdapter(
         }
     }
 
-    @SuppressLint("CheckResult")
     private fun onBindAlarmViewHolderExpansion(holder: AlarmViewHolder, position: Int) {
         val isExpanded = position == expandedPosition
         val visibility = if (isExpanded) View.VISIBLE else View.GONE
@@ -241,13 +241,22 @@ class AlarmsAdapter(
                 }
             }
 
-            expandedPosition = if (isExpanded) -1 else holder.bindingAdapterPosition
+            val wasExpanded = position == expandedPosition
+            expandedPosition = if (wasExpanded) -1 else position
 
             val transition = AutoTransition()
             transition.duration = 250
             TransitionManager.beginDelayedTransition(recycler, transition)
 
-            recycler.post { notifyDataSetChanged() }
+            if (wasExpanded) {
+                notifyItemChanged(position)
+            } else {
+                val previousExpanded = expandedPosition
+                if (previousExpanded >= 0) {
+                    notifyItemChanged(previousExpanded)
+                }
+                notifyItemChanged(position)
+            }
         }
     }
 
@@ -284,15 +293,18 @@ class AlarmsAdapter(
 
         holder.enable.setOnCheckedChangeListener(null)
         holder.enable.isChecked = alarm.isEnabled
-        holder.enable.setOnCheckedChangeListener { _, b ->
-            alarm.isEnabled = b
+        holder.enable.setOnCheckedChangeListener { _, isChecked ->
+            alarm.isEnabled = isChecked
             alarmViewModel.update(alarm.toEntity())
 
             val transition = AutoTransition()
             transition.duration = 200
             TransitionManager.beginDelayedTransition(recycler, transition)
 
-            recycler.post { notifyDataSetChanged() }
+            val currentPosition = holder.bindingAdapterPosition
+            if (currentPosition != RecyclerView.NO_POSITION) {
+                notifyItemChanged(currentPosition)
+            }
         }
 
         holder.time.text = FormatUtils.formatShort(chronos, alarm.time.time)
@@ -392,13 +404,17 @@ class AlarmsAdapter(
     }
 
     fun updateTimers(newTimers: List<TimerData>) {
+        val diffCallback = AlarmsDiffCallback(timers, newTimers, alarms, alarms)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         timers = newTimers.toMutableList()
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     fun updateAlarms(newAlarms: List<AlarmData>) {
+        val diffCallback = AlarmsDiffCallback(timers, timers, alarms, newAlarms)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         alarms = newAlarms.toMutableList()
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     fun findPositionById(alarmId: Int): Int {
@@ -419,7 +435,8 @@ class AlarmsAdapter(
             expandedPosition = adapterPosition
 
             recycler.post {
-                notifyDataSetChanged()
+                if (expandedPosition != -1) notifyItemChanged(expandedPosition)
+                notifyItemChanged(adapterPosition)
                 recycler.scrollToPosition(adapterPosition)
             }
         }
