@@ -21,8 +21,6 @@ enum class PreferenceData(private val key: Preferences.Key<*>, private val defau
     THEME(intPreferencesKey(name = "theme"), defaultValue = Theme.AUTO.value),
     BACKGROUND_IMAGE(stringPreferencesKey(name = "background_image"), defaultValue = "drawable/snowytrees"),
     RINGING_BACKGROUND_IMAGE(booleanPreferencesKey(name = "ringing_background_image"), defaultValue = true),
-    DAY_START(intPreferencesKey(name = "day_start"), defaultValue = 6),
-    DAY_END(intPreferencesKey(name = "day_end"), defaultValue = 18),
     TIMER_LENGTH(intPreferencesKey(name = "timer_length"), defaultValue = 0),
     DEFAULT_ALARM_RINGTONE(stringPreferencesKey(name = "default_alarm_ringtone"), defaultValue = null),
     DEFAULT_TIMER_RINGTONE(stringPreferencesKey(name = "default_timer_ringtone"), defaultValue = null),

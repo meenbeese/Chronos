@@ -127,21 +127,14 @@ class Chronos : Application() {
          * @return          True if the current theme is a night theme.
          */
         get() {
-            val time = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
-            return time < dayStart || time > dayEnd
+            val currentHour = Calendar.getInstance().apply {
+                timeInMillis = System.currentTimeMillis()
+            }.get(Calendar.HOUR_OF_DAY)
+
+            return currentHour < 6 || currentHour >= 18
         }
     var activityTheme: Theme = Theme.AUTO
         private set
-    val dayStart: Int
-        /**
-         * @return the hour of the start of the day (24h), as specified by the user
-         */
-        get() = PreferenceData.DAY_START.getValue(this)
-    val dayEnd: Int
-        /**
-         * @return the hour of the end of the day (24h), as specified by the user
-         */
-        get() = PreferenceData.DAY_END.getValue(this)
 
     fun isDarkTheme(): Boolean {
         return activityTheme == Theme.NIGHT ||
