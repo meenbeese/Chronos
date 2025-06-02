@@ -55,7 +55,8 @@
 
         <activity
             android:name=".activities.AlarmActivity"
-            android:launchMode="singleTask"
+            android:theme="@style/AppTheme"
+            android:launchMode="singleTop"
             android:excludeFromRecents="true" />
 
         <service
