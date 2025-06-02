@@ -89,10 +89,13 @@ class Chronos : Application() {
      *
      * @return          The newly instantiated [TimerData](./data/TimerData).
      */
+    @OptIn(DelicateCoroutinesApi::class)
     fun newTimer(): TimerData {
         val timer = TimerData(timers.size)
         timers.add(timer)
-        onTimerCountChanged()
+        GlobalScope.launch {
+            PreferenceData.TIMER_LENGTH.setValue(this@Chronos, timers.size)
+        }
         return timer
     }
 
@@ -101,6 +104,7 @@ class Chronos : Application() {
      *
      * @param timer     The timer to be removed.
      */
+    @OptIn(DelicateCoroutinesApi::class)
     fun removeTimer(timer: TimerData) {
         timer.onRemoved(this)
         val index = timers.indexOf(timer)
@@ -108,24 +112,9 @@ class Chronos : Application() {
         for (i in index until timers.size) {
             timers[i].onIdChanged(i, this)
         }
-        onTimerCountChanged()
-        onTimersChanged()
-    }
-
-    /**
-     * Update the preferences to show that the timer count has been changed.
-     */
-    @OptIn(DelicateCoroutinesApi::class)
-    private fun onTimerCountChanged() {
         GlobalScope.launch {
             PreferenceData.TIMER_LENGTH.setValue(this@Chronos, timers.size)
         }
-    }
-
-    /**
-     * Notify the application of changes to the current timers.
-     */
-    private fun onTimersChanged() {
         for (listener in listeners!!) {
             listener.onTimersChanged()
         }
