@@ -8,6 +8,7 @@ import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 
 import androidx.core.view.ViewCompat
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -212,66 +214,110 @@ class AlarmsAdapter(
 
     private fun onBindAlarmViewHolderExpansion(holder: AlarmViewHolder, position: Int) {
         val isExpanded = position == expandedPosition
-        val visibility = if (isExpanded) View.VISIBLE else View.GONE
 
-        if (visibility != holder.extra.visibility) {
-            holder.extra.visibility = visibility
+        val collapsedElevation = 0f
+        val expandedElevation = DimenUtils.dpToPx(2f).toFloat()
 
+        if (holder.extra.visibility != if (isExpanded) View.VISIBLE else View.GONE) {
+            val transition = AutoTransition().apply {
+                duration = 200
+                ordering = TransitionSet.ORDERING_TOGETHER
+            }
+
+            TransitionManager.beginDelayedTransition(recycler, transition)
+
+            holder.extra.visibility = if (isExpanded) View.VISIBLE else View.GONE
+
+            // Animate elevation
             ValueAnimator.ofFloat(
-                if (isExpanded) 0f else DimenUtils.dpToPx(2f).toFloat(),
-                if (isExpanded) DimenUtils.dpToPx(2f).toFloat() else 0f
+                if (isExpanded) collapsedElevation else expandedElevation,
+                if (isExpanded) expandedElevation else collapsedElevation
             ).apply {
+                duration = 200
                 addUpdateListener { animation ->
-                    (animation.animatedValue as? Float)?.let { elevation ->
-                        ViewCompat.setElevation(holder.itemView, elevation)
-                    }
+                    ViewCompat.setElevation(holder.itemView, animation.animatedValue as Float)
                 }
                 start()
             }
-        } else {
-            holder.itemView.setBackgroundColor(if (isExpanded) colorForeground else Color.TRANSPARENT)
-            ViewCompat.setElevation(holder.itemView, (if (isExpanded) DimenUtils.dpToPx(2f) else 0).toFloat())
-        }
 
-        holder.itemView.setOnClickListener {
-            if (expandedPosition != -1 && expandedPosition != holder.bindingAdapterPosition) {
-                val previousHolder = recycler.findViewHolderForAdapterPosition(expandedPosition)
-                if (previousHolder is AlarmViewHolder) {
-                    saveAlarmNameIfNeeded(previousHolder)
+            // Animate background color
+            ValueAnimator.ofArgb(
+                if (isExpanded) Color.TRANSPARENT else colorForeground,
+                if (isExpanded) colorForeground else Color.TRANSPARENT
+            ).apply {
+                duration = 200
+                addUpdateListener { animation ->
+                    holder.itemView.setBackgroundColor(animation.animatedValue as Int)
                 }
-            }
-
-            val wasExpanded = position == expandedPosition
-            expandedPosition = if (wasExpanded) -1 else position
-
-            val transition = AutoTransition()
-            transition.duration = 250
-            TransitionManager.beginDelayedTransition(recycler, transition)
-
-            if (wasExpanded) {
-                notifyItemChanged(position)
-            } else {
-                val previousExpanded = expandedPosition
-                if (previousExpanded >= 0) {
-                    notifyItemChanged(previousExpanded)
-                }
-                notifyItemChanged(position)
+                start()
             }
         }
+
+        holder.itemView.setOnClickListener(object : View.OnClickListener {
+            private var lastClickTime: Long = 0
+
+            override fun onClick(v: View?) {
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastClickTime < 200) return
+                lastClickTime = currentTime
+
+                if (expandedPosition != -1 && expandedPosition != holder.bindingAdapterPosition) {
+                    val previousHolder = recycler.findViewHolderForAdapterPosition(expandedPosition)
+                    if (previousHolder is AlarmViewHolder) {
+                        saveAlarmNameIfNeeded(previousHolder)
+                    }
+                }
+
+                val wasExpanded = position == expandedPosition
+                expandedPosition = if (wasExpanded) -1 else position
+
+                val transition = AutoTransition().apply {
+                    duration = 200
+                    ordering = TransitionSet.ORDERING_TOGETHER
+                }
+                TransitionManager.beginDelayedTransition(recycler, transition)
+
+                if (wasExpanded) {
+                    notifyItemChanged(position)
+                } else {
+                    val previousExpanded = expandedPosition
+                    if (previousExpanded >= 0) {
+                        notifyItemChanged(previousExpanded)
+                    }
+                    notifyItemChanged(position)
+                }
+            }
+        })
     }
 
     private fun onBindAlarmViewHolder(holder: AlarmViewHolder, position: Int) {
         val isExpanded = position == expandedPosition
-
         val alarm = getAlarm(position) ?: return
 
         holder.name.isFocusableInTouchMode = isExpanded
         holder.name.isCursorVisible = false
         holder.name.clearFocus()
         holder.nameUnderline.visibility = if (isExpanded) View.VISIBLE else View.GONE
+
         if (holder.name.text.toString() != alarm.name) {
             holder.name.setText(alarm.name)
         }
+
+        holder.expandImage.animate()
+            .rotationX((if (isExpanded) 180 else 0).toFloat())
+            .setDuration(200)
+            .setInterpolator(DecelerateInterpolator())
+            .start()
+
+        holder.indicators.animate()
+            .alpha(if (isExpanded) 0f else 1f)
+            .setDuration(200)
+            .withEndAction {
+                holder.indicators.visibility = if (isExpanded) View.GONE else View.VISIBLE
+            }
+            .start()
+
+        holder.delete.visibility = if (isExpanded) View.VISIBLE else View.GONE
 
         if (isExpanded) {
             holder.name.setOnClickListener(null)
