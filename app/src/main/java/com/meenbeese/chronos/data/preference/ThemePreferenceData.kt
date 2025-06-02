@@ -1,6 +1,7 @@
 package com.meenbeese.chronos.data.preference
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -51,10 +52,11 @@ class ThemePreferenceData(
         holder.binding.themeSpinner.setOnItemClickListener { _, _, position, _ ->
             if (holder.binding.themeSpinner.text.toString() == adapter.getItem(position)) {
                 val selectedTheme = Theme.fromInt(position)
-                holder.chronos?.let { chronos ->
+                val activity = holder.binding.root.context as? Activity
+                if (activity != null) {
                     scope.launch {
                         chronos.applyAndSaveTheme(context, selectedTheme)
-                        chronos.recreate()
+                        activity.recreate()
                     }
                 }
             }

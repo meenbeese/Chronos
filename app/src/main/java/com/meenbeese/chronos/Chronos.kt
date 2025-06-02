@@ -197,15 +197,6 @@ class Chronos : Application() {
     val fragmentManager: FragmentManager?
         get() = if (listener != null) listener!!.fetchFragmentManager() else null
 
-    /**
-     * Recreate the current activity to apply the new theme.
-     */
-    fun recreate() {
-        listener?.let {
-            it.getActivity()?.recreate()
-        }
-    }
-
     interface ChronosListener {
         fun onAlarmsChanged()
         fun onTimersChanged()

@@ -8,7 +8,7 @@
         android:id="@+id/timeView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:text="10:00 PM"/>
+        tools:text="10:00 PM" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/timezone"
@@ -19,6 +19,6 @@
         android:textAlignment="center"
         android:textSize="14sp"
         android:textStyle="bold"
-        tools:text="Time Zone"/>
+        tools:text="Time Zone" />
 
 </FrameLayout>
