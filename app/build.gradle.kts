@@ -70,39 +70,39 @@ ksp {
 
 dependencies {
     // Core
-    implementation("androidx.activity:activity-ktx:1.10.1")
-    implementation("androidx.annotation:annotation:1.9.1")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("androidx.core:core-ktx:1.16.0")
-    implementation("androidx.core:core-splashscreen:1.0.1")
-    implementation("androidx.datastore:datastore-preferences:1.1.7")
-    implementation("androidx.fragment:fragment-ktx:1.8.7")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.0")
-    implementation("androidx.recyclerview:recyclerview:1.4.0")
-    implementation("androidx.transition:transition-ktx:1.6.0")
-    implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.annotation)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.splashscreen)
+    implementation(libs.androidx.datastore)
+    implementation(libs.androidx.fragment)
+    implementation(libs.androidx.lifecycle.livedata)
+    implementation(libs.androidx.lifecycle.runtime)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.transition)
+    implementation(libs.androidx.viewpager2)
 
     // Media
-    implementation("androidx.media3:media3-exoplayer:1.7.1")
-    implementation("androidx.media3:media3-exoplayer-hls:1.7.1")
-    implementation("androidx.media3:media3-ui:1.7.1")
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.exoplayer.hls)
+    implementation(libs.androidx.media3.ui)
 
     // Room DB
-    ksp("androidx.room:room-compiler:2.7.1")
-    implementation("androidx.room:room-ktx:2.7.1")
-    implementation("androidx.room:room-runtime:2.7.1")
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room)
+    implementation(libs.androidx.room.runtime)
 
     // Material
-    implementation("com.google.android.material:material:1.12.0")
+    implementation(libs.androidx.material)
 
     // FAB
-    implementation("com.leinardi.android:speed-dial:3.3.0")
+    implementation(libs.leinardi.speedial)
 
     // Image
-    implementation("io.coil-kt.coil3:coil:3.2.0")
+    implementation(libs.io.coil3)
 
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.core)
 }
