@@ -117,4 +117,6 @@
     <string name="desc_military_time"></string>
     <string name="title_scroll_next">Scroll to the next alarm</string>
     <string name="desc_scroll_next">Navigates to the next alarm based on its scheduled time when the clock is pressed.</string>
+
+    <string name="unable_start_activity">Unable to start activity</string>
 </resources>
