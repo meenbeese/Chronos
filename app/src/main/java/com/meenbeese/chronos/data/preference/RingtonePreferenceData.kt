@@ -1,5 +1,7 @@
 package com.meenbeese.chronos.data.preference
 
+import androidx.fragment.app.FragmentActivity
+
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.data.SoundData
@@ -36,7 +38,10 @@ class RingtonePreferenceData(
     }
 
     override fun onClick(holder: ViewHolder) {
-        holder.chronos?.fragmentManager?.let { manager ->
+        val activity = holder.context as? FragmentActivity
+        val manager = activity?.supportFragmentManager
+
+        manager?.let {
             val dialog = SoundChooserDialog()
             dialog.setListener(object : SoundChooserListener {
                 override fun onSoundChosen(sound: SoundData?) {
@@ -49,7 +54,7 @@ class RingtonePreferenceData(
                     }
                 }
             })
-            dialog.show(manager, null)
+            dialog.show(it, null)
         }
     }
 }

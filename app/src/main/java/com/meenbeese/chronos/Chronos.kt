@@ -183,9 +183,6 @@ class Chronos : Application() {
         this.listener = listener
     }
 
-    val fragmentManager: FragmentManager?
-        get() = if (listener != null) listener!!.fetchFragmentManager() else null
-
     interface ChronosListener {
         fun onAlarmsChanged()
         fun onTimersChanged()
