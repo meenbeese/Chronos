@@ -174,9 +174,4 @@ class Chronos : Application() {
         fun fetchFragmentManager(): FragmentManager?
         fun getActivity(): AppCompatActivity?
     }
-
-    companion object {
-        const val NOTIFICATION_CHANNEL_STOPWATCH = "stopwatch"
-        const val NOTIFICATION_CHANNEL_TIMERS = "timers"
-    }
 }

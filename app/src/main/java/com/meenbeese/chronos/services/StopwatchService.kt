@@ -18,7 +18,6 @@ import android.util.Log
 
 import androidx.core.app.NotificationCompat
 
-import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.activities.MainActivity
 import com.meenbeese.chronos.utils.FormatUtils.formatMillis
@@ -172,7 +171,7 @@ class StopwatchService : Service() {
     private fun getNotification(time: String): Notification {
         notificationManager!!.createNotificationChannel(
             NotificationChannel(
-                Chronos.NOTIFICATION_CHANNEL_STOPWATCH,
+                NOTIFICATION_CHANNEL_STOPWATCH,
                 getString(R.string.title_stopwatch),
                 NotificationManager.IMPORTANCE_DEFAULT
             )
@@ -181,7 +180,7 @@ class StopwatchService : Service() {
         val actionIcon = if (isRunning) R.drawable.ic_pause_notification else R.drawable.ic_play_notification
         val actionText = if (isRunning) "Pause" else "Play"
 
-        return NotificationCompat.Builder(this, Chronos.NOTIFICATION_CHANNEL_STOPWATCH)
+        return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_STOPWATCH)
             .setSmallIcon(R.drawable.ic_stopwatch_notification)
             .setContentTitle(getString(R.string.title_stopwatch))
             .setContentText(time)
@@ -263,6 +262,7 @@ class StopwatchService : Service() {
         private const val REQUEST_CODE_RESET = 101
         private const val REQUEST_CODE_LAP = 102
         private const val NOTIFICATION_ID = 247
+        private const val NOTIFICATION_CHANNEL_STOPWATCH = "stopwatch"
         private const val ACTION_RESET = "meenbeese.chronos.StopwatchFragment.ACTION_RESET"
         private const val ACTION_TOGGLE = "meenbeese.chronos.StopwatchFragment.ACTION_TOGGLE"
         private const val ACTION_LAP = "meenbeese.chronos.StopwatchFragment.ACTION_LAP"

@@ -65,7 +65,7 @@ class TimerService : Service() {
         get() {
             notificationManager?.createNotificationChannel(
                 NotificationChannel(
-                    Chronos.NOTIFICATION_CHANNEL_TIMERS,
+                    NOTIFICATION_CHANNEL_TIMERS,
                     "Timers",
                     NotificationManager.IMPORTANCE_LOW
                 )
@@ -83,7 +83,7 @@ class TimerService : Service() {
             notificationString = string.toString()
             val intent = Intent(this, MainActivity::class.java)
             if (timers?.size == 1) intent.putExtra(TimerReceiver.EXTRA_TIMER_ID, 0)
-            return NotificationCompat.Builder(this, Chronos.NOTIFICATION_CHANNEL_TIMERS)
+            return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_TIMERS)
                 .setSmallIcon(R.drawable.ic_timer_notification)
                 .setContentTitle(getString(R.string.title_set_timer))
                 .setContentText("")
@@ -110,6 +110,7 @@ class TimerService : Service() {
     class LocalBinder : Binder()
     companion object {
         private const val NOTIFICATION_ID = 427
+        private const val NOTIFICATION_CHANNEL_TIMERS = "timers"
 
         /**
          * Starts the timer service after a timer has been set.
