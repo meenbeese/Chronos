@@ -2,13 +2,18 @@ package com.meenbeese.chronos.fragments
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
+import androidx.lifecycle.lifecycleScope
+
+import coil3.imageLoader
+import coil3.request.ImageRequest
+import coil3.request.allowHardware
+import coil3.toBitmap
 
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.data.PreferenceData
@@ -16,7 +21,8 @@ import com.meenbeese.chronos.databinding.FragmentClockBinding
 import com.meenbeese.chronos.interfaces.AlarmNavigator
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 import com.meenbeese.chronos.utils.ImageUtils.isBitmapDark
-import com.meenbeese.chronos.utils.ImageUtils.toBitmap
+
+import kotlinx.coroutines.launch
 
 import java.util.TimeZone
 
@@ -47,8 +53,11 @@ class ClockFragment : BasePagerFragment() {
             }
         }
 
-        val textColor = getContrastingTextColorFromBg()
-        binding.timezone.setTextColor(textColor)
+        lifecycleScope.launch {
+            val textColor = getContrastingTextColorFromBg()
+            binding.timezone.setTextColor(textColor)
+        }
+
         binding.timeView.setOnClickListener {
             if (PreferenceData.SCROLL_TO_NEXT.getValue<Boolean>(requireContext())) {
                 navigateToNearestAlarm()
@@ -87,21 +96,27 @@ class ClockFragment : BasePagerFragment() {
         fragment?.jumpToAlarm(targetAlarm.id, openEditor = true)
     }
 
-    private fun getContrastingTextColorFromBg(): Int {
-        val backgroundName = PreferenceData.BACKGROUND_IMAGE.getValue<String>(requireContext())
-        val resName = backgroundName.substringAfter("/")
-        val resId = resources.getIdentifier(resName, "drawable", requireContext().packageName)
+    private suspend fun getContrastingTextColorFromBg(): Int {
+        val backgroundImage = PreferenceData.BACKGROUND_IMAGE.getValue<String>(requireContext())
 
-        val drawable: Drawable? = ContextCompat.getDrawable(requireContext(), resId)
-        val bitmap = drawable?.toBitmap()
+        return try {
+            val imageRequest = ImageRequest.Builder(requireContext())
+                .data(backgroundImage.toUri())
+                .size(200, 200)
+                .allowHardware(false)
+                .build()
 
-        bitmap?.let {
-            val isDark = isBitmapDark(it)
-            return if (isDark) Color.LTGRAY else Color.DKGRAY
+            val drawable = requireContext().imageLoader.execute(imageRequest).image
+
+            val bitmap = drawable?.toBitmap()
+
+            bitmap?.let {
+                val isDark = isBitmapDark(it)
+                if (isDark) Color.LTGRAY else Color.DKGRAY
+            } ?: Color.DKGRAY
+        } catch (_: Exception) {
+            Color.DKGRAY
         }
-
-        // Fallback color if bitmap couldn't be generated
-        return Color.DKGRAY
     }
 
     override fun getTitle(context: Context?): String? {
