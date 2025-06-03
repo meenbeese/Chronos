@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
+
 import com.meenbeese.chronos.R
 
 fun safeStartActivity(context: Context, intent: Intent): Boolean {
