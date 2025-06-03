@@ -17,6 +17,7 @@ import coil3.transform.CircleCropTransformation
 import com.meenbeese.chronos.BuildConfig
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.databinding.FragmentAboutBinding
+import com.meenbeese.chronos.utils.safeStartActivity
 
 import java.util.Calendar
 
@@ -45,13 +46,13 @@ class AboutFragment : BaseFragment() {
         binding.forkGithub.text = getString(R.string.fork_github)
         binding.forkGithub.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, GITHUB.toUri())
-            startActivity(intent)
+            safeStartActivity(requireContext(), intent)
         }
 
         binding.visitWebsite.text = getString(R.string.visit_website)
         binding.visitWebsite.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, WEBSITE.toUri())
-            startActivity(intent)
+            safeStartActivity(requireContext(), intent)
         }
 
         binding.sendEmail.text = getString(R.string.send_email)
@@ -60,7 +61,7 @@ class AboutFragment : BaseFragment() {
                 data = "mailto:$EMAIL".toUri()
                 putExtra(Intent.EXTRA_SUBJECT, "Feedback for Chronos")
             }
-            startActivity(intent)
+            safeStartActivity(requireContext(), intent)
         }
 
         val copyrightText = getString(R.string.copyright_info, YEAR)
