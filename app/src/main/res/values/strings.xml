@@ -119,4 +119,6 @@
     <string name="desc_scroll_next">Navigates to the next alarm based on its scheduled time when the clock is pressed.</string>
 
     <string name="unable_start_activity">Unable to start activity</string>
+    <string name="title_background_color">Custom Background Color</string>
+    <string name="title_picker_dialog">Choose a Color</string>
 </resources>

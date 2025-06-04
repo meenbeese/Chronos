@@ -1,6 +1,7 @@
 package com.meenbeese.chronos.data
 
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 
 import androidx.datastore.preferences.core.Preferences
@@ -20,6 +21,7 @@ enum class PreferenceData(private val key: Preferences.Key<*>, private val defau
     INFO_BACKGROUND_PERMISSIONS(booleanPreferencesKey(name = "info_background_permissions"), defaultValue = false),
     THEME(intPreferencesKey(name = "theme"), defaultValue = Theme.AUTO.value),
     BACKGROUND_IMAGE(stringPreferencesKey(name = "background_image"), defaultValue = "drawable/snowytrees"),
+    BACKGROUND_COLOR(intPreferencesKey(name = "background_color"), defaultValue = Color.WHITE),
     RINGING_BACKGROUND_IMAGE(booleanPreferencesKey(name = "ringing_background_image"), defaultValue = true),
     TIMER_LENGTH(intPreferencesKey(name = "timer_length"), defaultValue = 0),
     DEFAULT_ALARM_RINGTONE(stringPreferencesKey(name = "default_alarm_ringtone"), defaultValue = null),
