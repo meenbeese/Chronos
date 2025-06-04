@@ -6,10 +6,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
 
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -26,7 +28,20 @@ class FileChooserFragment : Fragment() {
     private var callback: ((String, String) -> Unit)? = null
     private var hasLaunchedPicker = false
 
-    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+    private val pickImageLauncher = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri != null) {
+            handleImageResult(uri)
+        } else {
+            Toast.makeText(requireContext(), "No file selected.", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.popBackStack()
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
         if (isGranted) {
             startIntent()
         } else {
@@ -34,7 +49,9 @@ class FileChooserFragment : Fragment() {
         }
     }
 
-    private val startForResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private val startForResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
         if (result.resultCode == Activity.RESULT_OK && result.data != null) {
             handleActivityResult(result.data!!)
         }
@@ -58,10 +75,16 @@ class FileChooserFragment : Fragment() {
 
         if (!hasLaunchedPicker) {
             hasLaunchedPicker = true
-            if (ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
-                startIntent()
+            if (type == TYPE_IMAGE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                pickImageLauncher.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
             } else {
-                requestPermissionLauncher.launch(permission)
+                if (ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
+                    startIntent()
+                } else {
+                    requestPermissionLauncher.launch(permission)
+                }
             }
         }
     }
