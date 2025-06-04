@@ -7,8 +7,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 
+import androidx.appcompat.app.AppCompatDelegate
+
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
+import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.databinding.ItemPreferenceThemeBinding
 import com.meenbeese.chronos.utils.Theme
 
@@ -55,11 +58,22 @@ class ThemePreferenceData(
                 val activity = holder.binding.root.context as? Activity
                 if (activity != null) {
                     scope.launch {
-                        chronos.applyAndSaveTheme(context, selectedTheme)
+                        applyAndSaveTheme(context, selectedTheme)
                         activity.recreate()
                     }
                 }
             }
+        }
+    }
+
+    suspend fun applyAndSaveTheme(context: Context, theme: Theme) {
+        chronos.activityTheme = theme
+        PreferenceData.THEME.setValue(context, theme.value)
+        when (theme) {
+            Theme.AUTO   -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            Theme.DAY    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            Theme.NIGHT,
+            Theme.AMOLED -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
     }
 

@@ -1,12 +1,10 @@
 package com.meenbeese.chronos
 
 import android.app.Application
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.FragmentManager
 
 import com.meenbeese.chronos.data.AlarmData
@@ -133,24 +131,12 @@ class Chronos : Application() {
 
             return currentHour < 6 || currentHour >= 18
         }
-    var activityTheme: Theme = Theme.AUTO
-        private set
+    internal var activityTheme: Theme = Theme.AUTO
 
     fun isDarkTheme(): Boolean {
         return activityTheme == Theme.NIGHT ||
                activityTheme == Theme.AMOLED ||
                (activityTheme == Theme.AUTO && isNight)
-    }
-
-    suspend fun applyAndSaveTheme(context: Context, theme: Theme) {
-        activityTheme = theme
-        PreferenceData.THEME.setValue(context, theme.value)
-        when (theme) {
-            Theme.AUTO   -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            Theme.DAY    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            Theme.NIGHT,
-            Theme.AMOLED -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        }
     }
 
     fun addListener(listener: ChronosListener) {
