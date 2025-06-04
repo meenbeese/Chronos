@@ -120,15 +120,16 @@ class HomeFragment : BaseFragment() {
 
         binding.root.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                binding.root.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                val safeBinding = _binding ?: return
+                safeBinding.root.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-                val halfHeight = binding.root.measuredHeight / 2
+                val halfHeight = safeBinding.root.measuredHeight / 2
                 behavior.peekHeight = halfHeight
                 behavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 behavior.isDraggable = true
 
-                binding.timeContainer.layoutParams.height = halfHeight
-                binding.timeContainer.requestLayout()
+                safeBinding.timeContainer.layoutParams.height = halfHeight
+                safeBinding.timeContainer.requestLayout()
             }
         })
 
