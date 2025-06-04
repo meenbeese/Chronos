@@ -4,18 +4,19 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 
 import androidx.activity.ComponentDialog
 
 import com.google.android.material.textview.MaterialTextView
-import com.meenbeese.chronos.R
+import com.meenbeese.chronos.databinding.DialogTimeChooserBinding
 
 import java.util.concurrent.TimeUnit
 
 class TimeChooserDialog(context: Context?) : ComponentDialog(context!!), View.OnClickListener {
-    private var time: MaterialTextView? = null
-    private var backspace: ImageView? = null
+
+    private var _binding: DialogTimeChooserBinding? = null
+    private val binding get() = _binding!!
+
     private var input = "000000"
     private var listener: OnTimeChosenListener? = null
 
@@ -38,26 +39,25 @@ class TimeChooserDialog(context: Context?) : ComponentDialog(context!!), View.On
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dialog_time_chooser)
-        time = findViewById(R.id.time)
-        backspace = findViewById(R.id.backspace)
-        time?.text = getTime()
-        backspace?.setOnClickListener(this)
+        _binding = DialogTimeChooserBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        findViewById<View>(R.id.one)?.setOnClickListener(this)
-        findViewById<View>(R.id.two)?.setOnClickListener(this)
-        findViewById<View>(R.id.three)?.setOnClickListener(this)
-        findViewById<View>(R.id.four)?.setOnClickListener(this)
-        findViewById<View>(R.id.five)?.setOnClickListener(this)
-        findViewById<View>(R.id.six)?.setOnClickListener(this)
-        findViewById<View>(R.id.seven)?.setOnClickListener(this)
-        findViewById<View>(R.id.eight)?.setOnClickListener(this)
-        findViewById<View>(R.id.nine)?.setOnClickListener(this)
-        findViewById<View>(R.id.zero)?.setOnClickListener(this)
+        binding.time.text = getTime()
+        binding.backspace.setOnClickListener(this)
 
-        val startButton = findViewById<MaterialTextView>(R.id.start)
-        startButton?.setText(android.R.string.ok)
-        startButton?.setOnClickListener {
+        binding.one.setOnClickListener(this)
+        binding.two.setOnClickListener(this)
+        binding.three.setOnClickListener(this)
+        binding.four.setOnClickListener(this)
+        binding.five.setOnClickListener(this)
+        binding.six.setOnClickListener(this)
+        binding.seven.setOnClickListener(this)
+        binding.eight.setOnClickListener(this)
+        binding.nine.setOnClickListener(this)
+        binding.zero.setOnClickListener(this)
+
+        binding.start.setText(android.R.string.ok)
+        binding.start.setOnClickListener {
             if (input.toInt() > 0) {
                 listener?.onTimeChosen(
                     input.substring(0, 2).toInt(),
@@ -67,17 +67,18 @@ class TimeChooserDialog(context: Context?) : ComponentDialog(context!!), View.On
                 dismiss()
             }
         }
-        findViewById<View>(R.id.cancel)?.setOnClickListener { dismiss() }
+
+        binding.cancel.setOnClickListener { dismiss() }
     }
 
     private fun input(character: String) {
         input = input.substring(character.length) + character
-        time?.text = getTime()
+        binding.time.text = getTime()
     }
 
     private fun backspace() {
         input = "0" + input.substring(0, input.length - 1)
-        time?.text = getTime()
+        binding.time.text = getTime()
     }
 
     private fun getTime(): String {
@@ -85,7 +86,7 @@ class TimeChooserDialog(context: Context?) : ComponentDialog(context!!), View.On
         val minutes = input.substring(2, 4).toInt()
         val seconds = input.substring(4, 6).toInt()
 
-        backspace?.visibility = if (hours == 0 && minutes == 0 && seconds == 0) View.GONE else View.VISIBLE
+        binding.backspace.visibility = if (hours == 0 && minutes == 0 && seconds == 0) View.GONE else View.VISIBLE
 
         return if (hours > 0) {
             "%dh %02dm %02ds".format(hours, minutes, seconds)
@@ -95,7 +96,10 @@ class TimeChooserDialog(context: Context?) : ComponentDialog(context!!), View.On
     }
 
     override fun onClick(view: View) {
-        if (view is MaterialTextView) input(view.text.toString()) else backspace()
+        when (view) {
+            binding.backspace -> backspace()
+            is MaterialTextView -> input(view.text.toString())
+        }
     }
 
     interface OnTimeChosenListener {

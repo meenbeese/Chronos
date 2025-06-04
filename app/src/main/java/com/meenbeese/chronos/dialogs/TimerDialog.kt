@@ -6,7 +6,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
 import android.view.View
-import android.widget.ImageView
 
 import androidx.activity.ComponentDialog
 import androidx.fragment.app.FragmentManager
@@ -17,6 +16,7 @@ import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.databinding.DialogTimerBinding
 import com.meenbeese.chronos.fragments.TimerFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.meenbeese.chronos.services.TimerService
@@ -24,80 +24,73 @@ import com.meenbeese.chronos.utils.Option
 
 import java.util.concurrent.TimeUnit
 
-class TimerDialog(context: Context, private val manager: FragmentManager) :
-    ComponentDialog(context), View.OnClickListener {
-    private var ringtoneImage: ImageView? = null
-    private var ringtoneText: MaterialTextView? = null
-    private var vibrateImage: ImageView? = null
-    private var ringtone: SoundData?
-    private var isVibrate = true
-    private var time: MaterialTextView? = null
-    private var backspace: ImageView? = null
-    private var input = "000000"
+class TimerDialog(
+    context: Context,
+    private val manager: FragmentManager
+) : ComponentDialog(context), View.OnClickListener {
+
+    private var _binding: DialogTimerBinding? = null
+    private val binding get() = _binding!!
     private val chronos: Chronos = context.applicationContext as Chronos
 
-    init {
-        ringtone = PreferenceData.DEFAULT_TIMER_RINGTONE.getValue<String>(context)?.let {
-            when (val opt = SoundData.fromString(it)) {
-                is Option.Some -> opt.value
-                is Option.None -> null
-            }
-        } ?: null
+    private var ringtone: SoundData? = PreferenceData.DEFAULT_TIMER_RINGTONE.getValue<String>(context)?.let {
+        when (val opt = SoundData.fromString(it)) {
+            is Option.Some -> opt.value
+            is Option.None -> null
+        }
     }
+
+    private var isVibrate = true
+    private var input = "000000"
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dialog_timer)
-        ringtoneImage = findViewById(R.id.ringtoneImage)
-        ringtoneText = findViewById(R.id.ringtoneText)
-        vibrateImage = findViewById(R.id.vibrateImage)
-        time = findViewById(R.id.time)
-        backspace = findViewById(R.id.backspace)
-        time?.text = getTime()
-        backspace?.setOnClickListener(this)
+        _binding = DialogTimerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        findViewById<View>(R.id.one)?.setOnClickListener(this)
-        findViewById<View>(R.id.two)?.setOnClickListener(this)
-        findViewById<View>(R.id.three)?.setOnClickListener(this)
-        findViewById<View>(R.id.four)?.setOnClickListener(this)
-        findViewById<View>(R.id.five)?.setOnClickListener(this)
-        findViewById<View>(R.id.six)?.setOnClickListener(this)
-        findViewById<View>(R.id.seven)?.setOnClickListener(this)
-        findViewById<View>(R.id.eight)?.setOnClickListener(this)
-        findViewById<View>(R.id.nine)?.setOnClickListener(this)
-        findViewById<View>(R.id.zero)?.setOnClickListener(this)
+        binding.time.text = getTime()
+        binding.backspace.setOnClickListener(this)
 
-        ringtoneImage?.setImageResource(if (ringtone != null) R.drawable.ic_ringtone else R.drawable.ic_ringtone_disabled)
-        ringtoneImage?.alpha = if (ringtone != null) 1f else 0.333f
-        if (ringtone != null) ringtoneText?.text = ringtone?.name else ringtoneText?.setText(R.string.title_sound_none)
+        binding.one.setOnClickListener(this)
+        binding.two.setOnClickListener(this)
+        binding.three.setOnClickListener(this)
+        binding.four.setOnClickListener(this)
+        binding.five.setOnClickListener(this)
+        binding.six.setOnClickListener(this)
+        binding.seven.setOnClickListener(this)
+        binding.eight.setOnClickListener(this)
+        binding.nine.setOnClickListener(this)
+        binding.zero.setOnClickListener(this)
 
-        findViewById<View>(R.id.ringtone)?.setOnClickListener {
+        updateRingtoneUI()
+
+        binding.ringtone.setOnClickListener {
             val dialog = SoundChooserDialog()
             dialog.setListener(object : SoundChooserListener {
                 override fun onSoundChosen(sound: SoundData?) {
                     ringtone = sound
-                    ringtoneImage?.setImageResource(if (sound != null) R.drawable.ic_ringtone else R.drawable.ic_ringtone_disabled)
-                    ringtoneImage?.alpha = if (sound != null) 1f else 0.333f
-                    if (sound != null) ringtoneText?.text = sound.name else ringtoneText?.setText(R.string.title_sound_none)
+                    updateRingtoneUI()
                 }
             })
             dialog.show(manager, "")
         }
-        findViewById<View>(R.id.vibrate)!!.setOnClickListener { v: View ->
+
+        binding.vibrate.setOnClickListener {
             isVibrate = !isVibrate
             val drawable = AnimatedVectorDrawableCompat.create(
-                v.context,
+                it.context,
                 if (isVibrate) R.drawable.ic_none_to_vibrate else R.drawable.ic_vibrate_to_none
             )
             if (drawable != null) {
-                vibrateImage?.setImageDrawable(drawable)
+                binding.vibrateImage.setImageDrawable(drawable)
                 drawable.start()
-            } else vibrateImage?.setImageResource(if (isVibrate) R.drawable.ic_vibrate else R.drawable.ic_none)
-            vibrateImage?.animate()?.alpha(if (isVibrate) 1f else 0.333f)?.start()
-            if (isVibrate) v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            } else binding.vibrateImage.setImageResource(if (isVibrate) R.drawable.ic_vibrate else R.drawable.ic_none)
+            binding.vibrateImage.animate().alpha(if (isVibrate) 1f else 0.333f).start()
+            if (isVibrate) it.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
         }
-        findViewById<View>(R.id.start)?.setOnClickListener { view: View ->
+
+        binding.start.setOnClickListener { view: View ->
             if (input.toInt() > 0) {
                 val timer = chronos.newTimer()
                 timer.setDuration(millis, chronos)
@@ -122,24 +115,33 @@ class TimerDialog(context: Context, private val manager: FragmentManager) :
                 dismiss()
             }
         }
-        findViewById<View>(R.id.cancel)?.setOnClickListener { dismiss() }
+
+        binding.cancel.setOnClickListener { dismiss() }
+    }
+
+    private fun updateRingtoneUI() {
+        binding.ringtoneImage.setImageResource(if (ringtone != null) R.drawable.ic_ringtone else R.drawable.ic_ringtone_disabled)
+        binding.ringtoneImage.alpha = if (ringtone != null) 1f else 0.333f
+        binding.ringtoneText.text = ringtone?.name ?: context.getString(R.string.title_sound_none)
     }
 
     private fun input(character: String) {
         input = input.substring(character.length) + character
-        time?.text = getTime()
+        binding.time.text = getTime()
     }
 
     private fun backspace() {
         input = "0" + input.substring(0, input.length - 1)
-        time?.text = getTime()
+        binding.time.text = getTime()
     }
 
     private fun getTime(): String {
         val hours = input.substring(0, 2).toInt()
         val minutes = input.substring(2, 4).toInt()
         val seconds = input.substring(4, 6).toInt()
-        backspace?.visibility = if (hours == 0 && minutes == 0 && seconds == 0) View.GONE else View.VISIBLE
+
+        binding.backspace.visibility = if (hours == 0 && minutes == 0 && seconds == 0) View.GONE else View.VISIBLE
+
         return if (hours > 0) {
             "%dh %02dm %02ds".format(hours, minutes, seconds)
         } else {
@@ -160,6 +162,9 @@ class TimerDialog(context: Context, private val manager: FragmentManager) :
         }
 
     override fun onClick(view: View) {
-        if (view is MaterialTextView) input(view.text.toString()) else backspace()
+        when (view) {
+            binding.backspace -> backspace()
+            is MaterialTextView -> input(view.text.toString())
+        }
     }
 }
