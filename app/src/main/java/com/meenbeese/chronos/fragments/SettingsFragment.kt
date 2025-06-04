@@ -3,6 +3,7 @@ package com.meenbeese.chronos.fragments
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.os.PowerManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,21 +35,37 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
 
     private var preferenceAdapter: PreferenceAdapter? = null
 
+    private lateinit var preferenceList: MutableList<BasePreferenceData<*>>
+    private var batteryOptPref: BatteryOptimizationPreferenceData? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentRecyclerBinding.inflate(inflater, container, false)
-
         binding.recycler.layoutManager = GridLayoutManager(context, 1)
 
-        val dataList = mutableListOf(
-            ThemePreferenceData(requireContext(), lifecycleScope),
-            ColorPreferenceData(
-                requireContext(),
-                R.string.title_background_color
-            ),
+        preferenceList = mutableListOf()
+
+        if (!isIgnoringBatteryOptimizations(requireContext())) {
+            batteryOptPref = BatteryOptimizationPreferenceData()
+            preferenceList.add(batteryOptPref!!)
+        }
+
+        preferenceList.add(AlertWindowPreferenceData())
+        preferenceList.addAll(buildStaticPreferences(requireContext()))
+
+        preferenceAdapter = PreferenceAdapter(preferenceList as MutableList<BasePreferenceData<BasePreferenceData.ViewHolder>>)
+        binding.recycler.adapter = preferenceAdapter
+
+        return binding.root
+    }
+
+    private fun buildStaticPreferences(context: Context): List<BasePreferenceData<*>> {
+        return listOf(
+            ThemePreferenceData(context, lifecycleScope),
+            ColorPreferenceData(context, R.string.title_background_color),
             ImageFilePreferenceData(
                 PreferenceData.BACKGROUND_IMAGE,
                 R.string.title_background_image,
@@ -98,17 +115,26 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
             TimePreferenceData(
                 PreferenceData.SLOW_WAKE_UP_TIME,
                 R.string.title_slow_wake_up_time
-            )
+            ),
+            AboutPreferenceData(context)
         )
+    }
 
-        dataList.add(0, BatteryOptimizationPreferenceData())
-        dataList.add(0, AlertWindowPreferenceData())
-        dataList.add(AboutPreferenceData(requireContext()))
+    override fun onResume() {
+        super.onResume()
 
-        preferenceAdapter = PreferenceAdapter(dataList as MutableList<BasePreferenceData<BasePreferenceData.ViewHolder>>)
-        binding.recycler.adapter = preferenceAdapter
+        val context = requireContext()
+        val isIgnoring = isIgnoringBatteryOptimizations(context)
 
-        return binding.root
+        if (isIgnoring && batteryOptPref != null && preferenceList.contains(batteryOptPref as BasePreferenceData<*>)) {
+            preferenceList.remove(batteryOptPref as BasePreferenceData<*>)
+            batteryOptPref = null
+            preferenceAdapter?.notifyDataSetChanged()
+        } else if (!isIgnoring && batteryOptPref == null) {
+            batteryOptPref = BatteryOptimizationPreferenceData()
+            preferenceList.add(0, batteryOptPref!!)
+            preferenceAdapter?.notifyDataSetChanged()
+        }
     }
 
     override fun onDestroyView() {
@@ -133,6 +159,11 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
     @SuppressLint("NotifyDataSetChanged")
     override fun accept(o: Any?) {
         binding.recycler.post { preferenceAdapter?.notifyDataSetChanged() }
+    }
+
+    fun isIgnoringBatteryOptimizations(context: Context): Boolean {
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        return powerManager.isIgnoringBatteryOptimizations(context.packageName)
     }
 
     class Instantiator(context: Context?) : ContextFragmentInstantiator(context!!) {
