@@ -19,7 +19,7 @@ import com.meenbeese.chronos.data.preference.AlertWindowPreferenceData
 import com.meenbeese.chronos.data.preference.BasePreferenceData
 import com.meenbeese.chronos.data.preference.BatteryOptimizationPreferenceData
 import com.meenbeese.chronos.data.preference.BooleanPreferenceData
-import com.meenbeese.chronos.data.preference.ColorPrefererenceData
+import com.meenbeese.chronos.data.preference.ColorPreferenceData
 import com.meenbeese.chronos.data.preference.ImageFilePreferenceData
 import com.meenbeese.chronos.data.preference.RingtonePreferenceData
 import com.meenbeese.chronos.data.preference.ThemePreferenceData
@@ -45,7 +45,7 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
 
         val dataList = mutableListOf(
             ThemePreferenceData(requireContext(), lifecycleScope),
-            ColorPrefererenceData(
+            ColorPreferenceData(
                 requireContext(),
                 R.string.title_background_color
             ),
