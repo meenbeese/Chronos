@@ -2,7 +2,9 @@ package com.meenbeese.chronos.views
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableFloatStateOf
@@ -46,6 +49,7 @@ fun SlideActionView(
     val scope = rememberCoroutineScope()
     val selected = remember { Animatable(0f) }
     val positionX = remember { mutableFloatStateOf(0f) }
+    val interactionSource = remember { MutableInteractionSource() }
 
     @Suppress("UnusedBoxWithConstraintsScope")
     BoxWithConstraints(
@@ -105,6 +109,11 @@ fun SlideActionView(
                 }
                 .clip(CircleShape)
                 .background(handleColor.copy(alpha = 0.6f))
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = ripple(bounded = false, radius = radius),
+                    onClick = {} // ignored
+                )
         )
 
         Row(
