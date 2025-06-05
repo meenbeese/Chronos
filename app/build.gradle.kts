@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.kotlin.plugin.parcelize")
 }
 
@@ -38,6 +39,7 @@ android {
 
     buildFeatures {
         buildConfig = true
+        compose = true
         viewBinding = true
     }
 
@@ -49,6 +51,10 @@ android {
     dependenciesInfo {
         includeInApk = false
         includeInBundle = false
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.6.5"
     }
 
     kotlinOptions {
@@ -70,6 +76,7 @@ ksp {
 
 dependencies {
     // Core
+    implementation("androidx.activity:activity-compose:1.10.1")
     implementation("androidx.activity:activity-ktx:1.10.1")
     implementation("androidx.annotation:annotation:1.9.1")
     implementation("androidx.appcompat:appcompat:1.7.1")
@@ -82,6 +89,11 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.4.0")
     implementation("androidx.transition:transition-ktx:1.6.0")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
+
+    // Compose
+    implementation("androidx.compose.ui:ui:1.8.2")
+    implementation("androidx.compose.material3:material3:1.3.2")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.8.2")
 
     // Media
     implementation("androidx.media3:media3-exoplayer:1.7.1")

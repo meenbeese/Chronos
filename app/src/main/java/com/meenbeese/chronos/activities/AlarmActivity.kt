@@ -13,11 +13,14 @@ import android.view.WindowInsetsController
 import android.view.WindowManager
 
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.media3.common.util.UnstableApi
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
@@ -29,7 +32,6 @@ import com.meenbeese.chronos.databinding.ActivityAlarmBinding
 import com.meenbeese.chronos.dialogs.SnoozeDurationDialog
 import com.meenbeese.chronos.dialogs.TimeChooserDialog
 import com.meenbeese.chronos.dialogs.TimeChooserDialog.OnTimeChosenListener
-import com.meenbeese.chronos.interfaces.SlideActionListener
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.utils.FormatUtils
@@ -38,13 +40,14 @@ import com.meenbeese.chronos.utils.FormatUtils.formatMillis
 import com.meenbeese.chronos.utils.FormatUtils.formatUnit
 import com.meenbeese.chronos.utils.FormatUtils.getShortFormat
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImage
+import com.meenbeese.chronos.views.SlideActionView
 
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
 import kotlin.math.min
 
-class AlarmActivity : ComponentActivity(), SlideActionListener {
+class AlarmActivity : ComponentActivity() {
     private lateinit var binding: ActivityAlarmBinding
     private var chronos: Chronos? = null
     private var vibrator: Vibrator? = null
@@ -84,9 +87,22 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
 
         chronos = applicationContext as Chronos
 
-        binding.slideView.setLeftIcon(VectorDrawableCompat.create(resources, R.drawable.ic_snooze, theme)!!)
-        binding.slideView.setRightIcon(VectorDrawableCompat.create(resources, R.drawable.ic_close, theme)!!)
-        binding.slideView.setListener(this)
+        binding.slideView.setContent {
+            SlideActionView(
+                modifier = Modifier.fillMaxSize(),
+                handleColor = Color.Gray,
+                outlineColor = Color.Gray,
+                iconColor = Color.Black,
+                leftIcon = painterResource(R.drawable.ic_snooze),
+                rightIcon = painterResource(R.drawable.ic_close),
+                onSlideLeft = {
+                    onSlideLeft()
+                },
+                onSlideRight = {
+                    onSlideRight()
+                }
+            )
+        }
 
         isSlowWake = PreferenceData.SLOW_WAKE_UP.getValue(this)
         slowWakeMillis = PreferenceData.SLOW_WAKE_UP_TIME.getValue(this)
@@ -183,7 +199,7 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
         startActivity(Intent(intent))
     }
 
-    override fun onSlideLeft() {
+    fun onSlideLeft() {
         val minutes = intArrayOf(2, 5, 10, 20, 30, 60)
         val names = Array<CharSequence?>(minutes.size + 1) { i ->
             if (i < minutes.size) formatUnit(this@AlarmActivity, minutes[i]) else getString(R.string.title_snooze_custom)
@@ -231,7 +247,7 @@ class AlarmActivity : ComponentActivity(), SlideActionListener {
         binding.overlay.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
     }
 
-    override fun onSlideRight() {
+    fun onSlideRight() {
         binding.overlay.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
         finish()
     }

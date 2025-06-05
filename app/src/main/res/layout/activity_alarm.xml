@@ -54,7 +54,7 @@
 
         </LinearLayout>
 
-        <com.meenbeese.chronos.views.SlideActionView
+        <androidx.compose.ui.platform.ComposeView
             android:id="@+id/slideView"
             android:layout_width="match_parent"
             android:layout_height="96dp" />
