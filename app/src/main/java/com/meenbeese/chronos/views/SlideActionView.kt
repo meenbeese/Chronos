@@ -77,29 +77,36 @@ fun SlideActionView(
                     onDragEnd = {
                         scope.launch {
                             val snapEdgePaddingPx = with(density) { (32.dp + 20.dp).toPx() }
-                            val width = size.width
+                            val width = size.width.toFloat()
+                            val center = width / 2f
+
                             val leftSnapZone = snapEdgePaddingPx
                             val rightSnapZone = width - snapEdgePaddingPx
 
                             when {
                                 positionX.floatValue <= leftSnapZone -> {
-                                    animateToPosition(positionX.floatValue, 0f, 16L, 150) {
+                                    // Trigger action, then return to center
+                                    onSlideLeft()
+                                    animateToPosition(positionX.floatValue, center, 16L, 150) {
                                         positionX.floatValue = it
                                     }
-                                    onSlideLeft()
                                 }
                                 positionX.floatValue >= rightSnapZone -> {
-                                    animateToPosition(positionX.floatValue, width.toFloat(), 16L, 150) {
+                                    // Trigger action, then return to center
+                                    onSlideRight()
+                                    animateToPosition(positionX.floatValue, center, 16L, 150) {
                                         positionX.floatValue = it
                                     }
-                                    onSlideRight()
                                 }
-                                positionX.floatValue <= width * 0.25f -> onSlideLeft()
-                                positionX.floatValue >= width * 0.75f -> onSlideRight()
+                                else -> {
+                                    // Just return to center
+                                    animateToPosition(positionX.floatValue, center, 16L, 150) {
+                                        positionX.floatValue = it
+                                    }
+                                }
                             }
 
                             selected.snapTo(0f)
-
                             inLeftSnapZone.value = false
                             inRightSnapZone.value = false
                         }
