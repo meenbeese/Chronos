@@ -66,7 +66,6 @@ class AlarmActivity : ComponentActivity() {
     private var isSlowWake = false
     private var slowWakeMillis: Long = 0
     private var currentVolume = 0
-    private var minVolume = 0
     private var originalVolume = 0
     private var volumeRange = 0
     private var handler: Handler? = null
@@ -191,16 +190,14 @@ class AlarmActivity : ComponentActivity() {
 
         binding.date.text = format(Date(), FormatUtils.FORMAT_DATE + ", " + getShortFormat(this))
 
-        sound?.let {
-            if (!it.isSetVolumeSupported) {
-                audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
-                originalVolume = audioManager!!.getStreamVolume(AudioManager.STREAM_ALARM)
-                if (isSlowWake) {
-                    minVolume = 0
-                    volumeRange = originalVolume - minVolume
-                    currentVolume = minVolume
-                    audioManager?.setStreamVolume(AudioManager.STREAM_ALARM, minVolume, 0)
-                }
+        if (sound?.isSetVolumeSupported == false) {
+            audioManager = getSystemService(AudioManager::class.java)
+            originalVolume = audioManager?.getStreamVolume(AudioManager.STREAM_ALARM) ?: 0
+
+            if (isSlowWake) {
+                volumeRange = originalVolume
+                currentVolume = 0
+                audioManager?.setStreamVolume(AudioManager.STREAM_ALARM, 0, 0)
             }
         }
 
@@ -224,7 +221,7 @@ class AlarmActivity : ComponentActivity() {
                         if (it.isSetVolumeSupported) {
                             it.setVolume(chronos!!, min(1f, slowWakeProgress))
                         } else if (currentVolume < originalVolume) {
-                            val newVolume = minVolume + min(originalVolume.toFloat(), slowWakeProgress * volumeRange).toInt()
+                            val newVolume = min(originalVolume.toFloat(), slowWakeProgress * volumeRange).toInt()
                             if (newVolume != currentVolume) {
                                 audioManager?.setStreamVolume(AudioManager.STREAM_ALARM, newVolume, 0)
                                 currentVolume = newVolume
