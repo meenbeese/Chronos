@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,18 +45,24 @@ fun SlideActionView(
 ) {
     val scope = rememberCoroutineScope()
     val selected = remember { Animatable(0f) }
-    val positionX = remember { mutableFloatStateOf(Float.NaN) }
+    val positionX = remember { mutableFloatStateOf(0f) }
 
-    Box(
+    @Suppress("UnusedBoxWithConstraintsScope")
+    BoxWithConstraints(
         modifier = modifier
             .background(Color.Transparent)
             .pointerInput(Unit) {
                 detectDragGestures(
-                    onDragStart = {
-                        positionX.floatValue = it.x
+                    onDragStart = { offset ->
+                        positionX.floatValue = offset.x
                         scope.launch {
                             selected.snapTo(1f)
                         }
+                    },
+                    onDrag = { change, _ ->
+                        val newX = change.position.x.coerceIn(0f, size.width.toFloat())
+                        positionX.floatValue = newX
+                        change.consume()
                     },
                     onDragEnd = {
                         scope.launch {
@@ -67,34 +75,37 @@ fun SlideActionView(
                                 positionX.floatValue >= rightTrigger -> onSlideRight()
                             }
                         }
-                    },
-                    onDrag = { change, _ ->
-                        val newX = change.position.x.coerceIn(0f, size.width.toFloat())
-                        positionX.floatValue = newX
-                        change.consume()
                     }
                 )
             }
     ) {
-        val centerX = with(LocalDensity.current) { positionX.floatValue.toDp() }
-        val radius = with(LocalDensity.current) { (12 + (20 * selected.value)).dp }
+        val density = LocalDensity.current
+        val widthPx = with(density) { maxWidth.toPx() }
 
-        if (positionX.floatValue.isFinite()) {
-            Box(
-                modifier = Modifier
-                    .offset(x = centerX - radius)
-                    .size(radius * 2)
-                    .drawBehind {
-                        drawCircle(
-                            color = outlineColor,
-                            radius = size.minDimension / 2,
-                            style = Stroke(width = 2.dp.toPx())
-                        )
-                    }
-                    .clip(CircleShape)
-                    .background(handleColor.copy(alpha = 0.6f))
-            )
+        LaunchedEffect(widthPx) {
+            if (positionX.floatValue == 0f) {
+                positionX.floatValue = widthPx / 2f
+            }
         }
+
+        val centerX = with(density) { positionX.floatValue.toDp() }
+        val radius = with(density) { (12 + (20 * selected.value)).dp }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .offset(x = centerX - radius)
+                .size(radius * 2)
+                .drawBehind {
+                    drawCircle(
+                        color = outlineColor,
+                        radius = size.minDimension / 2,
+                        style = Stroke(width = 2.dp.toPx())
+                    )
+                }
+                .clip(CircleShape)
+                .background(handleColor.copy(alpha = 0.6f))
+        )
 
         Row(
             modifier = Modifier

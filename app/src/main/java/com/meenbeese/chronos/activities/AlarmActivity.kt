@@ -95,12 +95,8 @@ class AlarmActivity : ComponentActivity() {
                 iconColor = Color.Black,
                 leftIcon = painterResource(R.drawable.ic_snooze),
                 rightIcon = painterResource(R.drawable.ic_close),
-                onSlideLeft = {
-                    onSlideLeft()
-                },
-                onSlideRight = {
-                    onSlideRight()
-                }
+                onSlideLeft = { onSlideLeft() },
+                onSlideRight = { onSlideRight() }
             )
         }
 
