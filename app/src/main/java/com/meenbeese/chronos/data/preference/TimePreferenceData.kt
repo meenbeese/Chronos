@@ -1,7 +1,7 @@
 package com.meenbeese.chronos.data.preference
 
 import com.meenbeese.chronos.data.PreferenceData
-import com.meenbeese.chronos.dialogs.TimeChooserDialog
+import com.meenbeese.chronos.dialogs.TimeChooserDialogLegacy
 import com.meenbeese.chronos.utils.FormatUtils
 
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -32,10 +32,10 @@ class TimePreferenceData(
             minutes %= TimeUnit.HOURS.toMinutes(1).toInt()
             seconds %= TimeUnit.MINUTES.toSeconds(1).toInt()
 
-            TimeChooserDialog(holder.context).apply { setDefault(hours, minutes, seconds) }
+            TimeChooserDialogLegacy(holder.context).apply { setDefault(hours, minutes, seconds) }
         }
 
-        dialog.setListener(object : TimeChooserDialog.OnTimeChosenListener {
+        dialog.setListener(object : TimeChooserDialogLegacy.OnTimeChosenListener {
             override fun onTimeChosen(hours: Int, minutes: Int, seconds: Int) {
                 val totalSeconds = seconds + TimeUnit.HOURS.toSeconds(hours.toLong()).toInt() + TimeUnit.MINUTES.toSeconds(minutes.toLong()).toInt()
 

@@ -1,108 +1,159 @@
 package com.meenbeese.chronos.dialogs
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.os.Bundle
-import android.view.View
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 
-import androidx.activity.ComponentDialog
-
-import com.google.android.material.textview.MaterialTextView
-import com.meenbeese.chronos.databinding.DialogTimeChooserBinding
+import com.meenbeese.chronos.R
 
 import java.util.concurrent.TimeUnit
 
-class TimeChooserDialog(context: Context?) : ComponentDialog(context!!), View.OnClickListener {
-
-    private var _binding: DialogTimeChooserBinding? = null
-    private val binding get() = _binding!!
-
-    private var input = "000000"
-    private var listener: OnTimeChosenListener? = null
-
-    fun setDefault(inputHours: Int, inputMinutes: Int, inputSeconds: Int) {
-        var hours = inputHours
-        var minutes = inputMinutes
-        var seconds = inputSeconds
-
-        hours += TimeUnit.MINUTES.toHours(minutes.toLong()).toInt()
-        minutes = (minutes % TimeUnit.HOURS.toMinutes(1) + TimeUnit.SECONDS.toMinutes(seconds.toLong())).toInt()
-        seconds %= TimeUnit.MINUTES.toSeconds(1).toInt()
-
-        input = "%02d%02d%02d".format(hours, minutes, seconds)
+@Composable
+fun TimeChooserDialog(
+    onDismiss: () -> Unit,
+    onTimeChosen: (Int, Int, Int) -> Unit,
+    defaultHours: Int = 0,
+    defaultMinutes: Int = 0,
+    defaultSeconds: Int = 0
+) {
+    val initialInput = remember {
+        val totalHours = defaultHours + TimeUnit.MINUTES.toHours(defaultMinutes.toLong()).toInt()
+        val totalMinutes = (defaultMinutes % 60 + TimeUnit.SECONDS.toMinutes(defaultSeconds.toLong())).toInt()
+        val totalSeconds = defaultSeconds % 60
+        "%02d%02d%02d".format(totalHours, totalMinutes, totalSeconds)
     }
 
-    fun setListener(listener: OnTimeChosenListener?) {
-        this.listener = listener
+    var input by remember { mutableStateOf(initialInput) }
+
+    val hours = input.substring(0, 2).toInt()
+    val minutes = input.substring(2, 4).toInt()
+    val seconds = input.substring(4, 6).toInt()
+
+    val displayTime = if (hours > 0) {
+        "%dh %02dm %02ds".format(hours, minutes, seconds)
+    } else {
+        "%dm %02ds".format(minutes, seconds)
     }
 
-    @SuppressLint("CheckResult")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        _binding = DialogTimeChooserBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        binding.time.text = getTime()
-        binding.backspace.setOnClickListener(this)
-
-        binding.one.setOnClickListener(this)
-        binding.two.setOnClickListener(this)
-        binding.three.setOnClickListener(this)
-        binding.four.setOnClickListener(this)
-        binding.five.setOnClickListener(this)
-        binding.six.setOnClickListener(this)
-        binding.seven.setOnClickListener(this)
-        binding.eight.setOnClickListener(this)
-        binding.nine.setOnClickListener(this)
-        binding.zero.setOnClickListener(this)
-
-        binding.start.setText(android.R.string.ok)
-        binding.start.setOnClickListener {
-            if (input.toInt() > 0) {
-                listener?.onTimeChosen(
-                    input.substring(0, 2).toInt(),
-                    input.substring(2, 4).toInt(),
-                    input.substring(4, 6).toInt()
-                )
-                dismiss()
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = null,
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    if (input.toInt() > 0) {
+                        onTimeChosen(hours, minutes, seconds)
+                        onDismiss()
+                    }
+                }
+            ) {
+                Text(text = stringResource(id = R.string.title_start_timer))
             }
-        }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(id = android.R.string.cancel))
+            }
+        },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .background(Color(0x30000000))
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = displayTime,
+                        style = MaterialTheme.typography.displaySmall,
+                        modifier = Modifier.weight(1f),
+                        textAlign = TextAlign.Center
+                    )
+                    if (hours != 0 || minutes != 0 || seconds != 0) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_backspace),
+                            contentDescription = "Backspace",
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clickable {
+                                    input = "0" + input.dropLast(1)
+                                }
+                        )
+                    }
+                }
 
-        binding.cancel.setOnClickListener { dismiss() }
-    }
+                Spacer(modifier = Modifier.height(16.dp))
 
-    private fun input(character: String) {
-        input = input.substring(character.length) + character
-        binding.time.text = getTime()
-    }
+                val numbers = listOf(
+                    listOf("1", "2", "3"),
+                    listOf("4", "5", "6"),
+                    listOf("7", "8", "9"),
+                    listOf("", "0", "")
+                )
 
-    private fun backspace() {
-        input = "0" + input.substring(0, input.length - 1)
-        binding.time.text = getTime()
-    }
-
-    private fun getTime(): String {
-        val hours = input.substring(0, 2).toInt()
-        val minutes = input.substring(2, 4).toInt()
-        val seconds = input.substring(4, 6).toInt()
-
-        binding.backspace.visibility = if (hours == 0 && minutes == 0 && seconds == 0) View.GONE else View.VISIBLE
-
-        return if (hours > 0) {
-            "%dh %02dm %02ds".format(hours, minutes, seconds)
-        } else {
-            "%dm %02ds".format(minutes, seconds)
-        }
-    }
-
-    override fun onClick(view: View) {
-        when (view) {
-            binding.backspace -> backspace()
-            is MaterialTextView -> input(view.text.toString())
-        }
-    }
-
-    interface OnTimeChosenListener {
-        fun onTimeChosen(hours: Int, minutes: Int, seconds: Int)
-    }
+                numbers.forEach { row ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        row.forEach { digit ->
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .aspectRatio(1f)
+                                    .padding(4.dp)
+                                    .clickable(enabled = digit.isNotEmpty()) {
+                                        input = input.drop(digit.length) + digit
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                if (digit.isNotEmpty()) {
+                                    Text(
+                                        text = digit,
+                                        style = MaterialTheme.typography.headlineLarge
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        modifier = Modifier
+            .widthIn(min = 300.dp, max = 500.dp)
+    )
 }

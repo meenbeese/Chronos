@@ -36,7 +36,6 @@ import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.databinding.ActivityAlarmBinding
 import com.meenbeese.chronos.dialogs.SnoozeDurationDialog
 import com.meenbeese.chronos.dialogs.TimeChooserDialog
-import com.meenbeese.chronos.dialogs.TimeChooserDialog.OnTimeChosenListener
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.utils.FormatUtils
@@ -95,6 +94,7 @@ class AlarmActivity : ComponentActivity() {
 
         binding.slideView.setContent {
             val showSnoozeDialog = remember { mutableStateOf(false) }
+            val showTimeChooserDialog = remember { mutableStateOf(false) }
 
             val context = LocalContext.current
             val minutes = remember { intArrayOf(2, 5, 10, 20, 30, 60) }
@@ -118,27 +118,29 @@ class AlarmActivity : ComponentActivity() {
                             TimerService.startService(context)
                             (context as Activity).finish()
                         } else {
-                            TimeChooserDialog(context).apply {
-                                setListener(object : OnTimeChosenListener {
-                                    override fun onTimeChosen(hours: Int, minutes: Int, seconds: Int) {
-                                        chronos?.newTimer()?.apply {
-                                            setVibrate(context, isVibrate)
-                                            setSound(context, sound)
-                                            setDuration(
-                                                TimeUnit.HOURS.toMillis(hours.toLong()) +
-                                                        TimeUnit.MINUTES.toMillis(minutes.toLong()) +
-                                                        TimeUnit.SECONDS.toMillis(seconds.toLong()),
-                                                chronos!!
-                                            )
-                                            this[chronos!!] = context.getSystemService(ALARM_SERVICE) as AlarmManager
-                                        }
-                                        TimerService.startService(context)
-                                        (context as Activity).finish()
-                                    }
-                                })
-                                show()
-                            }
+                            showTimeChooserDialog.value = true
                         }
+                    }
+                )
+            }
+
+            if (showTimeChooserDialog.value) {
+                TimeChooserDialog(
+                    onDismiss = { showTimeChooserDialog.value = false },
+                    onTimeChosen = { hours, minutes, seconds ->
+                        chronos?.newTimer()?.apply {
+                            setVibrate(context, isVibrate)
+                            setSound(context, sound)
+                            setDuration(
+                                TimeUnit.HOURS.toMillis(hours.toLong()) +
+                                        TimeUnit.MINUTES.toMillis(minutes.toLong()) +
+                                        TimeUnit.SECONDS.toMillis(seconds.toLong()),
+                                chronos!!
+                            )
+                            this[chronos!!] = context.getSystemService(ALARM_SERVICE) as AlarmManager
+                        }
+                        TimerService.startService(context)
+                        (context as Activity).finish()
                     }
                 )
             }
