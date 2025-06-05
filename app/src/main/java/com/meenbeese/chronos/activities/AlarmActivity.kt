@@ -1,5 +1,6 @@
 package com.meenbeese.chronos.activities
 
+import android.app.Activity
 import android.app.AlarmManager
 import android.content.Intent
 import android.media.AudioManager
@@ -14,8 +15,11 @@ import android.view.WindowManager
 
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -88,6 +92,55 @@ class AlarmActivity : ComponentActivity() {
         chronos = applicationContext as Chronos
 
         binding.slideView.setContent {
+            val showSnoozeDialog = remember { mutableStateOf(false) }
+
+            val context = LocalContext.current
+            val minutes = remember { intArrayOf(2, 5, 10, 20, 30, 60) }
+            val names = remember {
+                minutes.map { formatUnit(context, it) } + context.getString(R.string.title_snooze_custom)
+            }
+
+            if (showSnoozeDialog.value) {
+                SnoozeDurationDialog(
+                    names = names,
+                    onDismiss = { showSnoozeDialog.value = false },
+                    onSnoozeSelected = { which ->
+                        stopAnnoyance()
+                        if (which < minutes.size) {
+                            chronos!!.newTimer().apply {
+                                setDuration(TimeUnit.MINUTES.toMillis(minutes[which].toLong()), chronos!!)
+                                setVibrate(context, isVibrate)
+                                setSound(context, sound)
+                                this[chronos!!] = context.getSystemService(ALARM_SERVICE) as AlarmManager
+                            }
+                            TimerService.startService(context)
+                            (context as Activity).finish()
+                        } else {
+                            TimeChooserDialog(context).apply {
+                                setListener(object : OnTimeChosenListener {
+                                    override fun onTimeChosen(hours: Int, minutes: Int, seconds: Int) {
+                                        chronos?.newTimer()?.apply {
+                                            setVibrate(context, isVibrate)
+                                            setSound(context, sound)
+                                            setDuration(
+                                                TimeUnit.HOURS.toMillis(hours.toLong()) +
+                                                        TimeUnit.MINUTES.toMillis(minutes.toLong()) +
+                                                        TimeUnit.SECONDS.toMillis(seconds.toLong()),
+                                                chronos!!
+                                            )
+                                            this[chronos!!] = context.getSystemService(ALARM_SERVICE) as AlarmManager
+                                        }
+                                        TimerService.startService(context)
+                                        (context as Activity).finish()
+                                    }
+                                })
+                                show()
+                            }
+                        }
+                    }
+                )
+            }
+
             SlideActionView(
                 modifier = Modifier.fillMaxSize(),
                 handleColor = Color.Gray,
@@ -95,8 +148,14 @@ class AlarmActivity : ComponentActivity() {
                 iconColor = Color.Black,
                 leftIcon = painterResource(R.drawable.ic_snooze),
                 rightIcon = painterResource(R.drawable.ic_close),
-                onSlideLeft = { onSlideLeft() },
-                onSlideRight = { onSlideRight() }
+                onSlideLeft = {
+                    binding.overlay.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                    showSnoozeDialog.value = true
+                },
+                onSlideRight = {
+                    binding.overlay.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                    finish()
+                }
             )
         }
 
@@ -193,59 +252,6 @@ class AlarmActivity : ComponentActivity() {
         super.onNewIntent(intent)
         finish()
         startActivity(Intent(intent))
-    }
-
-    fun onSlideLeft() {
-        val minutes = intArrayOf(2, 5, 10, 20, 30, 60)
-        val names = Array<CharSequence?>(minutes.size + 1) { i ->
-            if (i < minutes.size) formatUnit(this@AlarmActivity, minutes[i]) else getString(R.string.title_snooze_custom)
-        }
-
-        stopAnnoyance()
-
-        val snoozeDurationDialog = SnoozeDurationDialog(this, names, object : SnoozeDurationDialog.OnSnoozeDurationSelectedListener {
-            override fun onSnoozeDurationSelected(which: Int) {
-                if (which < minutes.size) {
-                    chronos!!.newTimer().apply {
-                        setDuration(TimeUnit.MINUTES.toMillis(minutes[which].toLong()), chronos!!)
-                        setVibrate(this@AlarmActivity, isVibrate)
-                        setSound(this@AlarmActivity, sound)
-                        this[chronos!!] = getSystemService(ALARM_SERVICE) as AlarmManager
-                    }
-                    TimerService.startService(baseContext)
-                    finish()
-                } else {
-                    TimeChooserDialog(this@AlarmActivity).apply {
-                        setListener(object : OnTimeChosenListener {
-                            override fun onTimeChosen(hours: Int, minutes: Int, seconds: Int) {
-                                chronos?.newTimer()?.apply {
-                                    setVibrate(this@AlarmActivity, isVibrate)
-                                    setSound(this@AlarmActivity, sound)
-                                    setDuration(
-                                        TimeUnit.HOURS.toMillis(hours.toLong()) +
-                                                TimeUnit.MINUTES.toMillis(minutes.toLong()) +
-                                                TimeUnit.SECONDS.toMillis(seconds.toLong()),
-                                        chronos!!
-                                    )
-                                    this[chronos!!] = getSystemService(ALARM_SERVICE) as AlarmManager
-                                }
-                                TimerService.startService(baseContext)
-                                finish()
-                            }
-                        })
-                        show()
-                    }
-                }
-            }
-        })
-        snoozeDurationDialog.show()
-
-        binding.overlay.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-    }
-
-    fun onSlideRight() {
-        binding.overlay.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-        finish()
     }
 
     companion object {

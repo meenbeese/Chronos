@@ -1,56 +1,62 @@
 package com.meenbeese.chronos.dialogs
 
-import android.content.Context
-import android.os.Bundle
-import android.view.WindowManager
-import android.widget.ArrayAdapter
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 
-import androidx.activity.ComponentDialog
+import com.meenbeese.chronos.R
 
-import com.meenbeese.chronos.databinding.DialogSnoozeDurationBinding
-
-class SnoozeDurationDialog(
-    context: Context,
-    private val names: Array<CharSequence?>,
-    private val listener: OnSnoozeDurationSelectedListener
-) : ComponentDialog(context) {
-
-    interface OnSnoozeDurationSelectedListener {
-        fun onSnoozeDurationSelected(which: Int)
-    }
-
-    private var _binding: DialogSnoozeDurationBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        _binding = DialogSnoozeDurationBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, names)
-        binding.listView.adapter = adapter
-
-        binding.listView.setOnItemClickListener { _, _, which, _ ->
-            listener.onSnoozeDurationSelected(which)
-            dismiss()
-        }
-
-        binding.cancelButton.setOnClickListener {
-            dismiss()
-        }
-    }
-
-    override fun show() {
-        super.show()
-        val window = window
-        window?.setLayout(
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.WRAP_CONTENT
-        )
-    }
-
-    override fun onStop() {
-        super.onStop()
-        _binding = null
-    }
+@Composable
+fun SnoozeDurationDialog(
+    names: List<String>,
+    onDismiss: () -> Unit,
+    onSnoozeSelected: (Int) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {},
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(id = android.R.string.cancel))
+            }
+        },
+        title = {
+            Text(
+                text = stringResource(id = R.string.title_snooze_duration),
+                style = MaterialTheme.typography.titleLarge
+            )
+        },
+        text = {
+            LazyColumn {
+                itemsIndexed(names) { index, name ->
+                    Text(
+                        text = name,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onSnoozeSelected(index)
+                                onDismiss()
+                            }
+                            .padding(vertical = 12.dp, horizontal = 8.dp),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
+        },
+        modifier = Modifier
+            .widthIn(min = 300.dp, max = 600.dp)
+            .heightIn(min = 200.dp, max = 400.dp)
+    )
 }
