@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlarmManager
 import android.content.Intent
 import android.media.AudioManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -51,6 +52,7 @@ import java.util.concurrent.TimeUnit
 
 import kotlin.math.min
 
+@UnstableApi
 class AlarmActivity : ComponentActivity() {
     private lateinit var binding: ActivityAlarmBinding
     private var chronos: Chronos? = null
@@ -70,7 +72,6 @@ class AlarmActivity : ComponentActivity() {
     private var handler: Handler? = null
     private var runnable: Runnable? = null
 
-    @UnstableApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAlarmBinding.inflate(layoutInflater)
@@ -84,9 +85,11 @@ class AlarmActivity : ComponentActivity() {
             insets
         }
 
-        window.insetsController?.apply {
-            hide(WindowInsetsCompat.Type.systemBars())
-            systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.apply {
+                hide(WindowInsetsCompat.Type.systemBars())
+                systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
         }
 
         chronos = applicationContext as Chronos
@@ -164,12 +167,22 @@ class AlarmActivity : ComponentActivity() {
 
         when {
             intent.hasExtra(EXTRA_ALARM) -> {
-                alarm = intent.getParcelableExtra(EXTRA_ALARM)
+                alarm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(EXTRA_ALARM, AlarmData::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra<AlarmData>(EXTRA_ALARM)
+                }
                 isVibrate = alarm?.isVibrate == true
                 sound = alarm?.sound
             }
             intent.hasExtra(EXTRA_TIMER) -> {
-                val timer = intent.getParcelableExtra<TimerData>(EXTRA_TIMER)
+                val timer = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(EXTRA_TIMER, TimerData::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra<TimerData>(EXTRA_TIMER)
+                }
                 isVibrate = timer?.isVibrate == true
                 sound = timer?.sound
             }
