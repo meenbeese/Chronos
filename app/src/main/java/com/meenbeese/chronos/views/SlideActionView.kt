@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -20,6 +19,7 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -33,6 +33,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -50,6 +51,8 @@ fun SlideActionView(
     val selected = remember { Animatable(0f) }
     val positionX = remember { mutableFloatStateOf(0f) }
     val interactionSource = remember { MutableInteractionSource() }
+    val inLeftSnapZone = remember { mutableStateOf(false) }
+    val inRightSnapZone = remember { mutableStateOf(false) }
 
     @Suppress("UnusedBoxWithConstraintsScope")
     BoxWithConstraints(
@@ -65,19 +68,40 @@ fun SlideActionView(
                     },
                     onDrag = { change, _ ->
                         val newX = change.position.x.coerceIn(0f, size.width.toFloat())
+                        val snapEdgePaddingPx = with(density) { (32.dp + 20.dp).toPx() }
                         positionX.floatValue = newX
+                        inLeftSnapZone.value = newX <= snapEdgePaddingPx
+                        inRightSnapZone.value = newX >= size.width - snapEdgePaddingPx
                         change.consume()
                     },
                     onDragEnd = {
                         scope.launch {
-                            selected.snapTo(0f)
+                            val snapEdgePaddingPx = with(density) { (32.dp + 20.dp).toPx() }
                             val width = size.width
-                            val leftTrigger = width * 0.25f
-                            val rightTrigger = width * 0.75f
+                            val leftSnapZone = snapEdgePaddingPx
+                            val rightSnapZone = width - snapEdgePaddingPx
+
                             when {
-                                positionX.floatValue <= leftTrigger -> onSlideLeft()
-                                positionX.floatValue >= rightTrigger -> onSlideRight()
+                                positionX.floatValue <= leftSnapZone -> {
+                                    animateToPosition(positionX.floatValue, 0f, 16L, 150) {
+                                        positionX.floatValue = it
+                                    }
+                                    onSlideLeft()
+                                }
+                                positionX.floatValue >= rightSnapZone -> {
+                                    animateToPosition(positionX.floatValue, width.toFloat(), 16L, 150) {
+                                        positionX.floatValue = it
+                                    }
+                                    onSlideRight()
+                                }
+                                positionX.floatValue <= width * 0.25f -> onSlideLeft()
+                                positionX.floatValue >= width * 0.75f -> onSlideRight()
                             }
+
+                            selected.snapTo(0f)
+
+                            inLeftSnapZone.value = false
+                            inRightSnapZone.value = false
                         }
                     }
                 )
@@ -123,23 +147,57 @@ fun SlideActionView(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            if (leftIcon != null) {
-                Icon(
-                    painter = leftIcon,
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                    tint = iconColor
-                )
-            } else Spacer(modifier = Modifier.size(24.dp))
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(if (inLeftSnapZone.value) iconColor.copy(alpha = 0.1f) else Color.Transparent),
+                contentAlignment = Alignment.Center
+            ) {
+                if (leftIcon != null) {
+                    Icon(
+                        painter = leftIcon,
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = iconColor
+                    )
+                }
+            }
 
-            if (rightIcon != null) {
-                Icon(
-                    painter = rightIcon,
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                    tint = iconColor
-                )
-            } else Spacer(modifier = Modifier.size(24.dp))
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(if (inRightSnapZone.value) iconColor.copy(alpha = 0.1f) else Color.Transparent),
+                contentAlignment = Alignment.Center
+            ) {
+                if (rightIcon != null) {
+                    Icon(
+                        painter = rightIcon,
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = iconColor
+                    )
+                }
+            }
         }
     }
+}
+
+suspend fun animateToPosition(
+    from: Float,
+    to: Float,
+    frameDelay: Long,
+    duration: Int,
+    onUpdate: (Float) -> Unit
+) {
+    val frameCount = duration / frameDelay.toInt()
+    val delta = to - from
+    for (i in 1..frameCount) {
+        val progress = i / frameCount.toFloat()
+        val value = from + delta * progress
+        onUpdate(value)
+        delay(frameDelay)
+    }
+    onUpdate(to)
 }
