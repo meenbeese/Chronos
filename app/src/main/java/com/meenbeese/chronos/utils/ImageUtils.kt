@@ -6,6 +6,7 @@ import android.net.Uri
 import android.widget.ImageView
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -80,6 +81,23 @@ object ImageUtils {
                 rememberAsyncImagePainter(model = Uri.fromFile(file))
             }
             else -> painterResource(id = R.drawable.snowytrees)
+        }
+    }
+
+    @Composable
+    fun getBackgroundPainter(): Painter? {
+        val context = LocalContext.current
+
+        return if (Preferences.RINGING_BACKGROUND_IMAGE.get(context)) {
+            if (Preferences.COLORFUL_BACKGROUND.get(context)) {
+                val colorInt = Preferences.BACKGROUND_COLOR.get(context)
+                val color = androidx.compose.ui.graphics.Color(colorInt)
+                ColorPainter(color)
+            } else {
+                getBackgroundImageAsync()
+            }
+        } else {
+            null
         }
     }
 
