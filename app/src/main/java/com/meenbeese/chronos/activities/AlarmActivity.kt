@@ -40,6 +40,7 @@ import com.meenbeese.chronos.utils.FormatUtils.format
 import com.meenbeese.chronos.utils.FormatUtils.formatMillis
 import com.meenbeese.chronos.utils.FormatUtils.formatUnit
 import com.meenbeese.chronos.utils.FormatUtils.getShortFormat
+import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImageAsync
 import com.meenbeese.chronos.views.SlideActionView
 
 import java.util.Date
@@ -159,16 +160,18 @@ class AlarmActivity : ComponentActivity() {
         sound?.play(chronos!!)
         refreshSleepTime(chronos!!)
 
-        if (PreferenceData.RINGING_BACKGROUND_IMAGE.getValue(this)) {
-//            val backgroundImage = getBackgroundImage(this)
-        }
 
         setContent {
             val showSnoozeDialog = remember { mutableStateOf(false) }
             val showTimeChooserDialog = remember { mutableStateOf(false) }
+            val backgroundPainter = if (PreferenceData.RINGING_BACKGROUND_IMAGE.getValue(this)) {
+                getBackgroundImageAsync()
+            } else {
+                null
+            }
 
             AlarmScreen(
-                backgroundPainter = painterResource(R.drawable.snowytrees),
+                backgroundPainter = backgroundPainter,
                 dateText = dateText,
                 timeText = timeTextState.value,
                 slideContent = {

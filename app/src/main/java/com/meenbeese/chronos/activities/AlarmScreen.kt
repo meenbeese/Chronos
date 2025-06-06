@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun AlarmScreen(
-    backgroundPainter: Painter,
+    backgroundPainter: Painter?,
     overlayColor: Color = Color.White,
     dateText: String,
     timeText: String,
@@ -38,12 +38,14 @@ fun AlarmScreen(
             .fillMaxSize()
             .keepScreenOn()
     ) {
-        Image(
-            painter = backgroundPainter,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
+        if (backgroundPainter != null) {
+            Image(
+                painter = backgroundPainter,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
 
         Box(
             modifier = Modifier
