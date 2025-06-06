@@ -16,7 +16,7 @@ import coil3.request.allowHardware
 import coil3.toBitmap
 
 import com.meenbeese.chronos.Chronos
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.databinding.FragmentClockBinding
 import com.meenbeese.chronos.interfaces.AlarmNavigator
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
@@ -59,7 +59,7 @@ class ClockFragment : BasePagerFragment() {
         }
 
         binding.timeView.setOnClickListener {
-            if (PreferenceData.SCROLL_TO_NEXT.getValue<Boolean>(requireContext())) {
+            if (Preferences.SCROLL_TO_NEXT.get(requireContext())) {
                 navigateToNearestAlarm()
             }
         }
@@ -97,7 +97,7 @@ class ClockFragment : BasePagerFragment() {
     }
 
     private suspend fun getContrastingTextColorFromBg(): Int {
-        val backgroundImage = PreferenceData.BACKGROUND_IMAGE.getValue<String>(requireContext())
+        val backgroundImage = Preferences.BACKGROUND_IMAGE.get(requireContext())
 
         return try {
             val imageRequest = ImageRequest.Builder(requireContext())

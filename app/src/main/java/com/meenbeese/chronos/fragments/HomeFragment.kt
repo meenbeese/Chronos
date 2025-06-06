@@ -22,7 +22,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.dialogs.TimerDialog
 import com.meenbeese.chronos.utils.DimenUtils.getStatusBarHeight
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImage
@@ -289,7 +289,7 @@ class HomeFragment : BaseFragment() {
             context = requireContext(),
             initialHour = hourNow,
             initialMinute = minuteNow,
-            is24HourClock = PreferenceData.MILITARY_TIME.getValue(requireContext())
+            is24HourClock = Preferences.MILITARY_TIME.get(requireContext())
         ) { hour, minute ->
             val time = Calendar.getInstance().apply {
                 set(Calendar.HOUR_OF_DAY, hour)
@@ -342,8 +342,8 @@ class HomeFragment : BaseFragment() {
         fragments.add(ClockFragment.Instantiator(context, null))
 
         // Check if displaying additional time zones is enabled
-        if (PreferenceData.TIME_ZONE_ENABLED.getValue<Boolean>(requireContext())) {
-            val rawCsv = PreferenceData.TIME_ZONES.getValue<String>(requireContext())
+        if (Preferences.TIME_ZONE_ENABLED.get(requireContext())) {
+            val rawCsv = Preferences.TIME_ZONES.get(requireContext())
             val selectedIds = rawCsv.split(",").map { it.trim() }.filter { it.isNotEmpty() }
 
             for (id in selectedIds) {

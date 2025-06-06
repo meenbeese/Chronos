@@ -22,7 +22,7 @@ import androidx.media3.common.util.UnstableApi
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.Chronos.ActivityListener
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.dialogs.BackgroundPermissionsDialog
 import com.meenbeese.chronos.fragments.BaseFragment
 import com.meenbeese.chronos.fragments.HomeFragment
@@ -78,14 +78,14 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         })
 
         // Background permissions info
-        if (!PreferenceData.INFO_BACKGROUND_PERMISSIONS.getValue<Boolean>(this)) {
+        if (!Preferences.INFO_BACKGROUND_PERMISSIONS.get(this)) {
             val backgroundPermissionsDialog = BackgroundPermissionsDialog(this)
             backgroundPermissionsDialog.show()
         }
     }
 
     private fun applySavedTheme() {
-        val theme = Theme.fromInt(PreferenceData.THEME.getValue(this))
+        val theme = Theme.fromInt(Preferences.THEME.get(this))
         Log.d("MainActivity", "Theme: ${theme.name}")
 
         when (theme) {

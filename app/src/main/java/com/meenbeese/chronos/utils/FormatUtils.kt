@@ -3,7 +3,7 @@ package com.meenbeese.chronos.utils
 import android.content.Context
 
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.Preferences
 
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -19,7 +19,7 @@ object FormatUtils {
 
     private fun use24HourFormat(context: Context?): Boolean {
         if (context == null) return false
-        return PreferenceData.MILITARY_TIME.getValue(context)
+        return Preferences.MILITARY_TIME.get(context)
     }
 
     /**

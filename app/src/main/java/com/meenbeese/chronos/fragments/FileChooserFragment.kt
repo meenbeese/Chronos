@@ -16,14 +16,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.PreferenceEntry
 
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class FileChooserFragment : Fragment() {
-    private var preference: PreferenceData? = null
+    private var preference: PreferenceEntry.StringPref? = null
     private var type: String? = TYPE_IMAGE
     private var callback: ((String, String) -> Unit)? = null
     private var hasLaunchedPicker = false
@@ -62,7 +62,7 @@ class FileChooserFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         arguments?.let { data ->
-            preference = data.getSerializable(EXTRA_PREF, PreferenceData::class.java)
+//            preference = data.getSerializable(EXTRA_PREF) as? PreferenceEntry.StringPref
             type = data.getString(EXTRA_TYPE)
         }
 
@@ -153,7 +153,7 @@ class FileChooserFragment : Fragment() {
 
         val path = uri.toString()
         GlobalScope.launch {
-            preference?.setValue(requireContext(), path)
+            preference?.set(requireContext(), path)
         }
         callback?.invoke("Image File", path)
         parentFragmentManager.popBackStack()
@@ -194,10 +194,10 @@ class FileChooserFragment : Fragment() {
         const val READ_MEDIA_IMAGES = "android.permission.READ_MEDIA_IMAGES"
         const val READ_MEDIA_AUDIO = "android.permission.READ_MEDIA_AUDIO"
 
-        fun newInstance(preference: PreferenceData?, type: String?): FileChooserFragment {
+        fun newInstance(preference: PreferenceEntry.StringPref?, type: String?): FileChooserFragment {
             val fragment = FileChooserFragment()
             val args = Bundle()
-            args.putSerializable(EXTRA_PREF, preference)
+            args.putSerializable(EXTRA_PREF, preference?.defaultValue)
             args.putString(EXTRA_TYPE, type)
             fragment.arguments = args
             return fragment

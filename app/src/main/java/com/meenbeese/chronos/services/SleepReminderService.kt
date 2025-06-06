@@ -19,7 +19,7 @@ import androidx.core.content.ContextCompat
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.utils.FormatUtils.formatUnit
 
 import java.util.Calendar
@@ -121,12 +121,12 @@ class SleepReminderService : Service() {
         fun getSleepyAlarm(chronos: Chronos?): AlarmData? {
             val context = chronos?.applicationContext ?: return null
 
-            if (PreferenceData.SLEEP_REMINDER.getValue(context)) {
+            if (Preferences.SLEEP_REMINDER.get(context)) {
                 val nextAlarm = getNextWakeAlarm(chronos)
                 if (nextAlarm != null) {
                     val nextTrigger = nextAlarm.getNext()!!
                     nextTrigger[Calendar.MINUTE] -= TimeUnit.MILLISECONDS.toMinutes(
-                        PreferenceData.SLEEP_REMINDER_TIME.getValue(context)
+                        Preferences.SLEEP_REMINDER_TIME.get(context)
                     ).toInt()
 
                     if (Calendar.getInstance().after(nextTrigger)) return nextAlarm

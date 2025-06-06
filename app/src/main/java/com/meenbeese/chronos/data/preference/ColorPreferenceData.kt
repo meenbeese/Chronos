@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.databinding.ItemPreferenceColorBinding
 
 import kotlinx.coroutines.runBlocking
@@ -25,10 +25,10 @@ class ColorPreferenceData(
                 .Builder(context)
                 .setTitle(R.string.title_picker_dialog)
                 .setColorShape(ColorShape.SQAURE)
-                .setDefaultColor(PreferenceData.BACKGROUND_COLOR.getValue<Int>(context))
+                .setDefaultColor(Preferences.BACKGROUND_COLOR.get(context))
                 .setColorListener { color, _ ->
                     runBlocking {
-                        PreferenceData.BACKGROUND_COLOR.setValue(context, color)
+                        Preferences.BACKGROUND_COLOR.set(context, color)
 
                         val drawable = GradientDrawable().apply {
                             shape = GradientDrawable.RECTANGLE
@@ -51,7 +51,7 @@ class ColorPreferenceData(
     override fun bindViewHolder(holder: ViewHolder) {
         holder.binding.name.setText(nameRes)
 
-        val color = PreferenceData.BACKGROUND_COLOR.getValue<Int>(context)
+        val color = Preferences.BACKGROUND_COLOR.get(context)
 
         val drawable = GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE

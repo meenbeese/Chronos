@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 
 import com.meenbeese.chronos.data.AlarmData
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.db.AlarmDao
@@ -48,7 +48,7 @@ class Chronos : Application() {
         listeners = ArrayList()
         alarms = ArrayList()
         timers = ArrayList()
-        activityTheme = Theme.fromInt(PreferenceData.THEME.getValue(this))
+        activityTheme = Theme.fromInt(Preferences.THEME.get(this))
 
         val liveAlarms = alarmDao.getAllAlarms()
         liveAlarms.observeForever { alarmEntities ->
@@ -66,7 +66,7 @@ class Chronos : Application() {
             })
         }
 
-        val timerLength = PreferenceData.TIMER_LENGTH.getValue<Int>(this)
+        val timerLength = Preferences.TIMER_LENGTH.get(this)
         for (id in 0 until timerLength) {
             val timer = TimerData(id, this)
             if (timer.isSet) timers.add(timer)
@@ -92,7 +92,7 @@ class Chronos : Application() {
         val timer = TimerData(timers.size)
         timers.add(timer)
         GlobalScope.launch {
-            PreferenceData.TIMER_LENGTH.setValue(this@Chronos, timers.size)
+            Preferences.TIMER_LENGTH.set(this@Chronos, timers.size)
         }
         return timer
     }
@@ -111,7 +111,7 @@ class Chronos : Application() {
             timers[i].onIdChanged(i, this)
         }
         GlobalScope.launch {
-            PreferenceData.TIMER_LENGTH.setValue(this@Chronos, timers.size)
+            Preferences.TIMER_LENGTH.set(this@Chronos, timers.size)
         }
         for (listener in listeners!!) {
             listener.onTimersChanged()

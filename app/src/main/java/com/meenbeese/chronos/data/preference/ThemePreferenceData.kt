@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatDelegate
 
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.databinding.ItemPreferenceThemeBinding
 import com.meenbeese.chronos.utils.Theme
 
@@ -68,7 +68,7 @@ class ThemePreferenceData(
 
     suspend fun applyAndSaveTheme(context: Context, theme: Theme) {
         chronos.activityTheme = theme
-        PreferenceData.THEME.setValue(context, theme.value)
+        Preferences.THEME.set(context, theme.value)
         when (theme) {
             Theme.AUTO   -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
             Theme.DAY    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)

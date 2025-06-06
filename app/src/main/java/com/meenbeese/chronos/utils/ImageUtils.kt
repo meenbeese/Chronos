@@ -19,7 +19,7 @@ import coil3.request.transformations
 import coil3.transform.RoundedCornersTransformation
 
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.Preferences
 
 import java.io.File
 
@@ -27,7 +27,7 @@ object ImageUtils {
     @JvmStatic
     fun getBackgroundImage(imageView: ImageView) {
         val context = imageView.context
-        val backgroundUrl = PreferenceData.BACKGROUND_IMAGE.getValue<String>(context)
+        val backgroundUrl = Preferences.BACKGROUND_IMAGE.get(context)
 
         if (backgroundUrl.isNotEmpty()) {
             when {
@@ -62,7 +62,7 @@ object ImageUtils {
     @Composable
     fun getBackgroundImageAsync(): Painter {
         val context = LocalContext.current
-        val backgroundUrl = PreferenceData.BACKGROUND_IMAGE.getValue<String>(context)
+        val backgroundUrl = Preferences.BACKGROUND_IMAGE.get(context)
 
         return when {
             backgroundUrl.startsWith("drawable/") -> {

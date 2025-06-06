@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.PreferenceAdapter
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.preference.AboutPreferenceData
 import com.meenbeese.chronos.data.preference.AlertWindowPreferenceData
 import com.meenbeese.chronos.data.preference.BasePreferenceData
@@ -67,53 +67,53 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
             ThemePreferenceData(context, lifecycleScope),
             ColorPreferenceData(context, R.string.title_background_color),
             ImageFilePreferenceData(
-                PreferenceData.BACKGROUND_IMAGE,
+                Preferences.BACKGROUND_IMAGE,
                 R.string.title_background_image,
                 R.string.desc_background_image
             ),
             BooleanPreferenceData(
-                PreferenceData.RINGING_BACKGROUND_IMAGE,
+                Preferences.RINGING_BACKGROUND_IMAGE,
                 R.string.title_ringing_background_image,
                 R.string.desc_ringing_background_image
             ),
             BooleanPreferenceData(
-                PreferenceData.SCROLL_TO_NEXT,
+                Preferences.SCROLL_TO_NEXT,
                 R.string.title_scroll_next,
                 R.string.desc_scroll_next
             ),
             TimeZonesPreferenceData(
-                PreferenceData.TIME_ZONE_ENABLED,
+                Preferences.TIME_ZONE_ENABLED,
                 R.string.title_time_zones
             ),
             BooleanPreferenceData(
-                PreferenceData.MILITARY_TIME,
+                Preferences.MILITARY_TIME,
                 R.string.title_military_time,
                 R.string.desc_military_time
             ),
             RingtonePreferenceData(
-                PreferenceData.DEFAULT_ALARM_RINGTONE,
+                Preferences.DEFAULT_ALARM_RINGTONE,
                 R.string.title_default_alarm_ringtone
             ),
             RingtonePreferenceData(
-                PreferenceData.DEFAULT_TIMER_RINGTONE,
+                Preferences.DEFAULT_TIMER_RINGTONE,
                 R.string.title_default_timer_ringtone
             ),
             BooleanPreferenceData(
-                PreferenceData.SLEEP_REMINDER,
+                Preferences.SLEEP_REMINDER,
                 R.string.title_sleep_reminder,
                 R.string.desc_sleep_reminder
             ),
             TimePreferenceData(
-                PreferenceData.SLEEP_REMINDER_TIME,
+                Preferences.SLEEP_REMINDER_TIME,
                 R.string.title_sleep_reminder_time
             ),
             BooleanPreferenceData(
-                PreferenceData.SLOW_WAKE_UP,
+                Preferences.SLOW_WAKE_UP,
                 R.string.title_slow_wake_up,
                 R.string.desc_slow_wake_up
             ),
             TimePreferenceData(
-                PreferenceData.SLOW_WAKE_UP_TIME,
+                Preferences.SLOW_WAKE_UP_TIME,
                 R.string.title_slow_wake_up_time
             ),
             AboutPreferenceData(context)

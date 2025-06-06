@@ -14,7 +14,7 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.google.android.material.textview.MaterialTextView
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.databinding.DialogTimerBinding
 import com.meenbeese.chronos.fragments.TimerFragment
@@ -33,7 +33,7 @@ class TimerDialog(
     private val binding get() = _binding!!
     private val chronos: Chronos = context.applicationContext as Chronos
 
-    private var ringtone: SoundData? = PreferenceData.DEFAULT_TIMER_RINGTONE.getValue<String>(context)?.let {
+    private var ringtone: SoundData? = Preferences.DEFAULT_TIMER_RINGTONE.get(context).let {
         when (val opt = SoundData.fromString(it)) {
             is Option.Some -> opt.value
             is Option.None -> null

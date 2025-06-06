@@ -24,7 +24,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.data.toEntity
@@ -363,7 +363,7 @@ class AlarmsAdapter(
                 context = context,
                 initialHour = hour,
                 initialMinute = minute,
-                is24HourClock = PreferenceData.MILITARY_TIME.getValue(context)
+                is24HourClock = Preferences.MILITARY_TIME.get(context)
             ) { selectedHour, selectedMinute ->
                 alarm.time.set(Calendar.HOUR_OF_DAY, selectedHour)
                 alarm.time.set(Calendar.MINUTE, selectedMinute)

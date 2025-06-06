@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 
 import com.meenbeese.chronos.fragments.FileChooserFragment
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.PreferenceEntry
 
 import kotlinx.coroutines.launch
 
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
  * contains a valid image path / URI).
  */
 class ImageFilePreferenceData(
-    private val preference: PreferenceData,
+    private val preference: PreferenceEntry.StringPref,
     name: Int,
     @StringRes private val description: Int
 ) : CustomPreferenceData(name) {
@@ -31,7 +31,7 @@ class ImageFilePreferenceData(
         fragment.setCallback { _, uri ->
             val activity = holder.context as FragmentActivity
             activity.lifecycleScope.launch {
-                preference.setValue(holder.context, uri)
+                preference.set(holder.context, uri)
             }
         }
         val activity = holder.context as FragmentActivity

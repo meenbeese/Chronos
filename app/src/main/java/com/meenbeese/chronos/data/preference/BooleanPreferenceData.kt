@@ -6,7 +6,7 @@ import android.view.ViewGroup
 
 import androidx.annotation.StringRes
 
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.PreferenceEntry
 import com.meenbeese.chronos.databinding.ItemPreferenceBooleanBinding
 
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
  * using a switch item view.
  */
 class BooleanPreferenceData(
-    private val preference: PreferenceData,
+    private val preference: PreferenceEntry.BooleanPref,
     @StringRes private val title: Int,
     @StringRes private val description: Int
 ) : BasePreferenceData<BooleanPreferenceData.ViewHolder>() {
@@ -34,13 +34,13 @@ class BooleanPreferenceData(
         holder.binding.title.setText(title)
         holder.binding.description.setText(description)
 
-        val currentValue = preference.getValue<Boolean>(holder.binding.root.context)
+        val currentValue = preference.get(holder.binding.root.context)
 
         holder.binding.toggle.setOnCheckedChangeListener(null)
         holder.binding.toggle.isChecked = currentValue
         holder.binding.toggle.setOnCheckedChangeListener { compoundButton, b ->
             GlobalScope.launch {
-                preference.setValue(compoundButton.context, b)
+                preference.set(compoundButton.context, b)
             }
         }
     }

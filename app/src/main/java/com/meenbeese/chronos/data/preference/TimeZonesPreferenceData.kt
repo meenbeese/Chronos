@@ -2,7 +2,8 @@ package com.meenbeese.chronos.data.preference
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.activities.MainActivity
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.Preferences
+import com.meenbeese.chronos.data.PreferenceEntry
 import com.meenbeese.chronos.dialogs.TimeZoneChooserDialog
 
 import kotlinx.coroutines.runBlocking
@@ -15,12 +16,12 @@ import java.util.Locale
  * should have a parameter for the zone id).
  */
 class TimeZonesPreferenceData(
-    private val preference: PreferenceData,
+    private val preference: PreferenceEntry.BooleanPref,
     title: Int
 ) : CustomPreferenceData(title) {
 
     override fun getValueName(holder: ViewHolder): String {
-        val rawCsv = PreferenceData.TIME_ZONES.getValue<String>(holder.context)
+        val rawCsv = Preferences.TIME_ZONES.get(holder.context)
         val selectedZones = rawCsv.split(",").filter { it.isNotBlank() }
         val count = selectedZones.size
 
@@ -32,7 +33,7 @@ class TimeZonesPreferenceData(
     }
 
     override fun onClick(holder: ViewHolder) {
-        val rawCsv = PreferenceData.TIME_ZONES.getValue<String>(holder.context)
+        val rawCsv = Preferences.TIME_ZONES.get(holder.context)
         val selectedZones = rawCsv.split(",")
             .filter { it.isNotBlank() }
             .toMutableSet()
@@ -40,8 +41,8 @@ class TimeZonesPreferenceData(
         TimeZoneChooserDialog(holder.context, selectedZones) { updatedSelection ->
             val csv = updatedSelection.joinToString(",")
             runBlocking {
-                PreferenceData.TIME_ZONES.setValue(holder.context, csv)
-                PreferenceData.TIME_ZONE_ENABLED.setValue(holder.context, updatedSelection.isNotEmpty())
+                Preferences.TIME_ZONES.set(holder.context, csv)
+                Preferences.TIME_ZONE_ENABLED.set(holder.context, updatedSelection.isNotEmpty())
             }
 
             (holder.context as? MainActivity)?.refreshClockFragments()

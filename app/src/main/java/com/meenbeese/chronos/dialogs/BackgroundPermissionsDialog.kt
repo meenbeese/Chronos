@@ -8,7 +8,7 @@ import android.view.WindowManager
 
 import androidx.activity.ComponentDialog
 
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.databinding.DialogBackgroundPermissionsBinding
 
 import kotlinx.coroutines.CoroutineScope
@@ -28,7 +28,7 @@ class BackgroundPermissionsDialog(context: Context) : ComponentDialog(context) {
         binding.cancelButton.setOnClickListener { dismiss() }
         binding.okButton.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
-                PreferenceData.INFO_BACKGROUND_PERMISSIONS.setValue(context, true)
+                Preferences.INFO_BACKGROUND_PERMISSIONS.set(context, true)
 
                 withContext(Dispatchers.Main) {
                     context.startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION))

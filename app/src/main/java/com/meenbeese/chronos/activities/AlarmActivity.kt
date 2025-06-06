@@ -28,7 +28,7 @@ import androidx.media3.common.util.UnstableApi
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
-import com.meenbeese.chronos.data.PreferenceData
+import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.dialogs.SnoozeDurationDialog
@@ -81,8 +81,8 @@ class AlarmActivity : ComponentActivity() {
         }
 
         chronos = applicationContext as Chronos
-        isSlowWake = PreferenceData.SLOW_WAKE_UP.getValue(this)
-        slowWakeMillis = PreferenceData.SLOW_WAKE_UP_TIME.getValue(this)
+        isSlowWake = Preferences.SLOW_WAKE_UP.get(this)
+        slowWakeMillis = Preferences.SLOW_WAKE_UP_TIME.get(this)
 
         when {
             intent.hasExtra(EXTRA_ALARM) -> {
@@ -164,7 +164,7 @@ class AlarmActivity : ComponentActivity() {
         setContent {
             val showSnoozeDialog = remember { mutableStateOf(false) }
             val showTimeChooserDialog = remember { mutableStateOf(false) }
-            val backgroundPainter = if (PreferenceData.RINGING_BACKGROUND_IMAGE.getValue(this)) {
+            val backgroundPainter = if (Preferences.RINGING_BACKGROUND_IMAGE.get(this)) {
                 getBackgroundImageAsync()
             } else {
                 null

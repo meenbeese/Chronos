@@ -26,12 +26,12 @@ open class TimerData(
 ) : Parcelable {
 
     constructor(id: Int, context: Context) : this(id) {
-        duration = PreferenceData.TIMER_DURATION.getValue(context)
-        endTime = PreferenceData.TIMER_END_TIME.getValue(context)
-        isVibrate = PreferenceData.TIMER_VIBRATE.getValue(context)
+        duration = Preferences.TIMER_DURATION.get(context).toLong()
+        endTime = Preferences.TIMER_END_TIME.get(context)
+        isVibrate = Preferences.TIMER_VIBRATE.get(context)
 
-        val defaultSoundPref: String? = PreferenceData.DEFAULT_TIMER_RINGTONE.getValue(context)
-        val fallbackSound: String? = PreferenceData.TIMER_SOUND.getValue(context)
+        val defaultSoundPref: String? = Preferences.DEFAULT_TIMER_RINGTONE.get(context)
+        val fallbackSound: String? = Preferences.TIMER_SOUND.get(context)
 
         val defaultSound: String? = if (!defaultSoundPref.isNullOrEmpty()) {
             defaultSoundPref
@@ -59,10 +59,10 @@ open class TimerData(
     @OptIn(DelicateCoroutinesApi::class)
     fun onIdChanged(id: Int, context: Context) {
         GlobalScope.launch {
-            PreferenceData.TIMER_DURATION.setValue(context, duration)
-            PreferenceData.TIMER_END_TIME.setValue(context, endTime)
-            PreferenceData.TIMER_VIBRATE.setValue(context, isVibrate)
-            PreferenceData.TIMER_SOUND.setValue(context, sound?.toString() ?: "")
+            Preferences.TIMER_DURATION.set(context, duration.toInt())
+            Preferences.TIMER_END_TIME.set(context, endTime)
+            Preferences.TIMER_VIBRATE.set(context, isVibrate)
+            Preferences.TIMER_SOUND.set(context, sound?.toString() ?: "")
         }
         onRemoved(context)
         this.id = id
@@ -78,10 +78,10 @@ open class TimerData(
     fun onRemoved(context: Context) {
         cancel(context, context.getSystemService(Context.ALARM_SERVICE) as AlarmManager)
         GlobalScope.launch {
-            PreferenceData.TIMER_DURATION.setValue(context, 0)
-            PreferenceData.TIMER_END_TIME.setValue(context, 0L)
-            PreferenceData.TIMER_VIBRATE.setValue(context, false)
-            PreferenceData.TIMER_SOUND.setValue(context, "")
+            Preferences.TIMER_DURATION.set(context, 0)
+            Preferences.TIMER_END_TIME.set(context, 0L)
+            Preferences.TIMER_VIBRATE.set(context, false)
+            Preferences.TIMER_SOUND.set(context, "")
         }
     }
 
@@ -94,7 +94,7 @@ open class TimerData(
     @OptIn(DelicateCoroutinesApi::class)
     fun setDuration(duration: Long, context: Context) {
         this.duration = duration
-        GlobalScope.launch { PreferenceData.TIMER_DURATION.setValue(context, duration) }
+        GlobalScope.launch { Preferences.TIMER_DURATION.set(context, duration.toInt()) }
     }
 
     /**
@@ -106,7 +106,7 @@ open class TimerData(
     @OptIn(DelicateCoroutinesApi::class)
     fun setVibrate(context: Context, isVibrate: Boolean) {
         this.isVibrate = isVibrate
-        GlobalScope.launch { PreferenceData.TIMER_VIBRATE.setValue(context, isVibrate) }
+        GlobalScope.launch { Preferences.TIMER_VIBRATE.set(context, isVibrate) }
     }
 
     /**
@@ -127,7 +127,7 @@ open class TimerData(
     @OptIn(DelicateCoroutinesApi::class)
     fun setSound(context: Context, sound: SoundData?) {
         this.sound = sound
-        GlobalScope.launch { PreferenceData.TIMER_SOUND.setValue(context, sound?.toString() ?: "") }
+        GlobalScope.launch { Preferences.TIMER_SOUND.set(context, sound?.toString() ?: "") }
     }
 
     /**
@@ -140,7 +140,7 @@ open class TimerData(
     operator fun set(context: Context, manager: AlarmManager) {
         endTime = System.currentTimeMillis() + duration
         setAlarm(context, manager)
-        GlobalScope.launch { PreferenceData.TIMER_END_TIME.setValue(context, endTime) }
+        GlobalScope.launch { Preferences.TIMER_END_TIME.set(context, endTime) }
     }
 
     /**
@@ -163,7 +163,7 @@ open class TimerData(
     fun cancel(context: Context, manager: AlarmManager) {
         endTime = 0
         manager.cancel(getIntent(context))
-        GlobalScope.launch { PreferenceData.TIMER_END_TIME.setValue(context, endTime) }
+        GlobalScope.launch { Preferences.TIMER_END_TIME.set(context, endTime) }
     }
 
     /**
