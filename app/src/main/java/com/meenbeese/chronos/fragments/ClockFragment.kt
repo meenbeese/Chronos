@@ -55,7 +55,7 @@ class ClockFragment : BasePagerFragment() {
 
         lifecycleScope.launch {
             val textColor = getContrastingTextColorFromBg()
-            binding.timezone.setTextColor(textColor)
+            _binding?.timezone?.setTextColor(textColor)
         }
 
         binding.timeView.setOnClickListener {

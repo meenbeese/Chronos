@@ -72,19 +72,23 @@ class HomeFragment : BaseFragment() {
         behavior.addBottomSheetCallback(object : BottomSheetCallback() {
             private var statusBarHeight = -1
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                binding.speedDial.close()
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    bottomSheet.setPadding(0, 0, 0, 0)
-                } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    if (statusBarHeight < 0) statusBarHeight = requireContext().getStatusBarHeight()
-                    bottomSheet.setPadding(0, statusBarHeight, 0, 0)
+                _binding?.let { binding ->
+                    binding.speedDial.close()
+                    if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                        bottomSheet.setPadding(0, 0, 0, 0)
+                    } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                        if (statusBarHeight < 0) statusBarHeight = requireContext().getStatusBarHeight()
+                        bottomSheet.setPadding(0, statusBarHeight, 0, 0)
+                    }
                 }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.speedDial.close()
-                if (statusBarHeight < 0) statusBarHeight = requireContext().getStatusBarHeight()
-                bottomSheet.setPadding(0, (slideOffset * statusBarHeight).toInt(), 0, 0)
+                _binding?.let { binding ->
+                    binding.speedDial.close()
+                    if (statusBarHeight < 0) statusBarHeight = requireContext().getStatusBarHeight()
+                    bottomSheet.setPadding(0, (slideOffset * statusBarHeight).toInt(), 0, 0)
+                }
             }
         })
 
@@ -145,13 +149,15 @@ class HomeFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        getBackgroundImage(binding.background)
+        _binding?.let { binding ->
+            getBackgroundImage(binding.background)
 
-        if (binding.viewPager.currentItem == 1) {
-            behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            behavior.isDraggable = false
-        } else {
-            behavior.isDraggable = true
+            if (binding.viewPager.currentItem == 1) {
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.isDraggable = false
+            } else {
+                behavior.isDraggable = true
+            }
         }
     }
 
