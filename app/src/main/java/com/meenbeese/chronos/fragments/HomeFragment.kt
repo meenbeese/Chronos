@@ -1,5 +1,6 @@
 package com.meenbeese.chronos.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.provider.AlarmClock
 import android.util.Log
@@ -15,16 +16,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import com.google.android.material.tabs.TabLayoutMediator
+import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
 import com.meenbeese.chronos.data.PreferenceData
 import com.meenbeese.chronos.dialogs.TimerDialog
 import com.meenbeese.chronos.utils.DimenUtils.getStatusBarHeight
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImage
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
-import com.google.android.material.tabs.TabLayoutMediator
-import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.meenbeese.chronos.BuildConfig
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.data.AlarmData
@@ -38,6 +39,10 @@ import com.meenbeese.chronos.utils.FormatUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
+import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.cos
 
 import java.util.Calendar
 import java.util.Date
@@ -61,7 +66,7 @@ class HomeFragment : BaseFragment() {
         val factory = AlarmViewModelFactory(app.repository)
         alarmViewModel = ViewModelProvider(this, factory)[AlarmViewModel::class.java]
         alarmViewModel.alarms.observe(viewLifecycleOwner) { alarms ->
-            Log.d("HomeFragment", "Alarms updated: ${alarms.size}")
+            Log.d("HomeFragment", "Alarms updated, size: ${alarms.size}")
             if (alarms.isEmpty() && behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
@@ -71,14 +76,20 @@ class HomeFragment : BaseFragment() {
         behavior.isHideable = false
         behavior.addBottomSheetCallback(object : BottomSheetCallback() {
             private var statusBarHeight = -1
+            @SuppressLint("SwitchIntDef")
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 _binding?.let { binding ->
                     binding.speedDial.close()
-                    if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                        bottomSheet.setPadding(0, 0, 0, 0)
-                    } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                        if (statusBarHeight < 0) statusBarHeight = requireContext().getStatusBarHeight()
-                        bottomSheet.setPadding(0, statusBarHeight, 0, 0)
+                    when (newState) {
+                        BottomSheetBehavior.STATE_COLLAPSED -> {
+                            bottomSheet.setPadding(0, 0, 0, 0)
+                            bottomSheet.elevation = 8f
+                        }
+                        BottomSheetBehavior.STATE_EXPANDED -> {
+                            if (statusBarHeight < 0) statusBarHeight = requireContext().getStatusBarHeight()
+                            bottomSheet.setPadding(0, statusBarHeight, 0, 0)
+                            bottomSheet.elevation = 16f
+                        }
                     }
                 }
             }
@@ -87,7 +98,13 @@ class HomeFragment : BaseFragment() {
                 _binding?.let { binding ->
                     binding.speedDial.close()
                     if (statusBarHeight < 0) statusBarHeight = requireContext().getStatusBarHeight()
-                    bottomSheet.setPadding(0, (slideOffset * statusBarHeight).toInt(), 0, 0)
+
+                    val easedOffset = slideOffset.coerceIn(0f, 1f).let {
+                        (1 - cos(it * PI)) / 2.0
+                    }
+                    bottomSheet.setPadding(0, (easedOffset * statusBarHeight).toInt(), 0, 0)
+
+                    binding.speedDial.alpha = 1f - slideOffset
                 }
             }
         })
@@ -228,17 +245,16 @@ class HomeFragment : BaseFragment() {
 
             override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
                 val currentTime = System.currentTimeMillis()
-                val canScrollDown = rv.canScrollVertically(1)
-                val canScrollUp = rv.canScrollVertically(-1)
+                val threshold = 10
 
-                if (!canScrollDown && dy > 0 && behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+                if (abs(dy) < threshold) return
+
+                if (dy > 0 && behavior.state != BottomSheetBehavior.STATE_EXPANDED && rv.canScrollVertically(1).not()) {
                     if (currentTime - lastStateChangeTime > debounceInterval) {
                         behavior.state = BottomSheetBehavior.STATE_EXPANDED
                         lastStateChangeTime = currentTime
                     }
-                }
-
-                if (!canScrollUp && dy < 0 && behavior.state != BottomSheetBehavior.STATE_COLLAPSED) {
+                } else if (dy < 0 && behavior.state != BottomSheetBehavior.STATE_COLLAPSED && rv.canScrollVertically(-1).not()) {
                     if (currentTime - lastStateChangeTime > debounceInterval) {
                         behavior.state = BottomSheetBehavior.STATE_COLLAPSED
                         lastStateChangeTime = currentTime
