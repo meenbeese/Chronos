@@ -37,7 +37,7 @@
     <string name="word_join">et</string>
     <string name="title_snooze_custom">Personnalisé…</string>
     <string name="msg_snoozed_until">Répété jusqu\'à %s</string>
-    <string name="title_time_zones">Fuseaux horaires</string>
+    <string name="title_time_zones">Fuseaux horaires globaux</string>
     <string name="title_behavior">Comportement</string>
     <string name="title_default_alarm_ringtone">Sonnerie d\'alarme par défaut</string>
     <string name="title_default_timer_ringtone">Sonnerie de minuterie par défaut</string>

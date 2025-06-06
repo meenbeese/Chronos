@@ -42,7 +42,7 @@
     <string name="word_join">and</string>
     <string name="title_snooze_custom">Custom…</string>
     <string name="msg_snoozed_until">Snoozed until %s</string>
-    <string name="title_time_zones">Time Zones</string>
+    <string name="title_time_zones">Global Time Zones</string>
     <string name="title_behavior">Behavior</string>
     <string name="title_default_alarm_ringtone">Default Alarm Ringtone</string>
     <string name="title_default_timer_ringtone">Default Timer Ringtone</string>
