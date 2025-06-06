@@ -6,6 +6,7 @@ import com.meenbeese.chronos.utils.Theme
 
 object Preferences {
     // Background
+    val COLORFUL_BACKGROUND = PreferenceEntry.BooleanPref(name = "colorful_background", default = false)
     val BACKGROUND_IMAGE = PreferenceEntry.StringPref(name = "background_image", default = "drawable/snowytrees")
     val BACKGROUND_COLOR = PreferenceEntry.IntPref(name = "background_color", default = Color.WHITE)
     val RINGING_BACKGROUND_IMAGE = PreferenceEntry.BooleanPref(name = "ringing_background_image", default = true)

@@ -15,9 +15,14 @@ class PreferenceAdapter(
     private val viewTypeMap = mutableMapOf<Class<out BasePreferenceData<*>>, Int>()
     private val viewTypeReverseMap = mutableMapOf<Int, Class<out BasePreferenceData<*>>>()
 
+    private var nextViewType = 0
+
     init {
-        var nextViewType = 0
-        for (item in items) {
+        registerItemTypes(items)
+    }
+
+    private fun registerItemTypes(newItems: List<BasePreferenceData<*>>) {
+        for (item in newItems) {
             val clazz = item::class.java
             if (!viewTypeMap.containsKey(clazz)) {
                 viewTypeMap[clazz] = nextViewType
@@ -27,10 +32,7 @@ class PreferenceAdapter(
         }
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val clazz = viewTypeReverseMap[viewType]!!
         val item = items.first { it::class.java == clazz }
         return item.getViewHolder(LayoutInflater.from(parent.context), parent)
@@ -40,11 +42,15 @@ class PreferenceAdapter(
         items[position].bindViewHolder(holder)
     }
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
+    override fun getItemCount(): Int = items.size
 
     override fun getItemViewType(position: Int): Int {
-        return viewTypeMap[items[position]::class.java]!!
+        val clazz = items[position]::class.java
+        if (!viewTypeMap.containsKey(clazz)) {
+            viewTypeMap[clazz] = nextViewType
+            viewTypeReverseMap[nextViewType] = clazz
+            nextViewType++
+        }
+        return viewTypeMap[clazz]!!
     }
 }
