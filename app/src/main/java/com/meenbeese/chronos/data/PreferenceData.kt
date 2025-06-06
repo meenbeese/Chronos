@@ -18,19 +18,22 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 enum class PreferenceData(private val key: Preferences.Key<*>, private val defaultValue: Any?) {
-    INFO_BACKGROUND_PERMISSIONS(booleanPreferencesKey(name = "info_background_permissions"), defaultValue = false),
-    THEME(intPreferencesKey(name = "theme"), defaultValue = Theme.AUTO.value),
+    // Background
     BACKGROUND_IMAGE(stringPreferencesKey(name = "background_image"), defaultValue = "drawable/snowytrees"),
     BACKGROUND_COLOR(intPreferencesKey(name = "background_color"), defaultValue = Color.WHITE),
     RINGING_BACKGROUND_IMAGE(booleanPreferencesKey(name = "ringing_background_image"), defaultValue = true),
-    TIMER_LENGTH(intPreferencesKey(name = "timer_length"), defaultValue = 0),
-    DEFAULT_ALARM_RINGTONE(stringPreferencesKey(name = "default_alarm_ringtone"), defaultValue = null),
-    DEFAULT_TIMER_RINGTONE(stringPreferencesKey(name = "default_timer_ringtone"), defaultValue = null),
+
+    // Sleep
     SLEEP_REMINDER(booleanPreferencesKey(name = "sleep_reminder"), defaultValue = true),
     SLEEP_REMINDER_TIME(longPreferencesKey(name = "sleep_reminder_time"), defaultValue = 25200000L),
+
+    // Ringtone
+    DEFAULT_ALARM_RINGTONE(stringPreferencesKey(name = "default_alarm_ringtone"), defaultValue = null),
+    DEFAULT_TIMER_RINGTONE(stringPreferencesKey(name = "default_timer_ringtone"), defaultValue = null),
+
+    // Wake Up
     SLOW_WAKE_UP(booleanPreferencesKey(name = "slow_wake_up"), defaultValue = true),
     SLOW_WAKE_UP_TIME(longPreferencesKey(name = "slow_wake_up_time"), defaultValue = 300000L),
-    SCROLL_TO_NEXT(booleanPreferencesKey(name = "scroll_to_next"), defaultValue = false),
 
     // Timer Settings
     TIMER_DURATION(intPreferencesKey(name = "timer_duration"), defaultValue = 600000),
@@ -43,7 +46,13 @@ enum class PreferenceData(private val key: Preferences.Key<*>, private val defau
 
     // Time Zone
     TIME_ZONES(stringPreferencesKey(name = "time_zones"), defaultValue = ""),
-    TIME_ZONE_ENABLED(booleanPreferencesKey(name = "time_zone_enabled"), defaultValue = false);
+    TIME_ZONE_ENABLED(booleanPreferencesKey(name = "time_zone_enabled"), defaultValue = false),
+
+    // Other
+    INFO_BACKGROUND_PERMISSIONS(booleanPreferencesKey(name = "info_background_permissions"), defaultValue = false),
+    THEME(intPreferencesKey(name = "theme"), defaultValue = Theme.AUTO.value),
+    TIMER_LENGTH(intPreferencesKey(name = "timer_length"), defaultValue = 0),
+    SCROLL_TO_NEXT(booleanPreferencesKey(name = "scroll_to_next"), defaultValue = false);
 
     @Suppress("UNCHECKED_CAST")
     fun <T> getValue(context: Context): T {
