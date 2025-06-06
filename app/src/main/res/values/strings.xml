@@ -113,11 +113,10 @@
     <string name="title_snooze_duration">Choose Snooze Duration</string>
     <string name="description_default">Example default description</string>
     <string name="desc_background_image">Choose an image file in one of the following formats: JPEG, PNG, WebP, GIF, BMP, or HEIF.</string>
-    <string name="title_military_time">Enable 24-hour clock</string>
+    <string name="title_military_time">Enable 24-hour Clock</string>
     <string name="desc_military_time"></string>
-    <string name="title_scroll_next">Scroll to the next alarm</string>
+    <string name="title_scroll_next">Scroll to the Next Alarm</string>
     <string name="desc_scroll_next">Navigates to the next alarm based on its scheduled time when the clock is pressed.</string>
-
     <string name="unable_start_activity">Unable to start activity</string>
     <string name="title_background_color">Custom Background Color</string>
     <string name="title_picker_dialog">Choose a Color</string>
