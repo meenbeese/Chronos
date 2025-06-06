@@ -15,11 +15,11 @@ import com.meenbeese.chronos.databinding.ItemPreferenceColorBinding
 import kotlinx.coroutines.runBlocking
 
 class ColorPreferenceData(
-    val context: Context,
-    val nameRes: Int,
+    private val context: Context,
+    private val nameRes: Int,
 ) : BasePreferenceData<ColorPreferenceData.ViewHolder>() {
 
-    fun onClick() {
+    fun onClick(holder: ViewHolder) {
         if (context is Activity) {
             MaterialColorPickerDialog
                 .Builder(context)
@@ -29,6 +29,14 @@ class ColorPreferenceData(
                 .setColorListener { color, _ ->
                     runBlocking {
                         PreferenceData.BACKGROUND_COLOR.setValue(context, color)
+
+                        val drawable = GradientDrawable().apply {
+                            shape = GradientDrawable.RECTANGLE
+                            cornerRadius = 12f
+                            setColor(color)
+                            setStroke(1, 0xFF888888.toInt())
+                        }
+                        holder.binding.colorPreview.background = drawable
                     }
                 }
                 .show()
@@ -53,7 +61,7 @@ class ColorPreferenceData(
         }
 
         holder.binding.colorPreview.background = drawable
-        holder.itemView.setOnClickListener { onClick() }
+        holder.itemView.setOnClickListener { onClick(holder) }
     }
 
     /**
