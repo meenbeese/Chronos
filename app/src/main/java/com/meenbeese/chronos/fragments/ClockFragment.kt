@@ -3,13 +3,10 @@ package com.meenbeese.chronos.fragments
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 
-import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.net.toUri
-import androidx.lifecycle.lifecycleScope
 
 import coil3.imageLoader
 import coil3.request.ImageRequest
@@ -18,68 +15,42 @@ import coil3.toBitmap
 
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.databinding.FragmentClockBinding
 import com.meenbeese.chronos.interfaces.AlarmNavigator
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 import com.meenbeese.chronos.utils.ImageUtils.isBitmapDark
-import com.meenbeese.chronos.views.DigitalClock
-
-import kotlinx.coroutines.launch
+import com.meenbeese.chronos.views.ClockScreen
 
 import java.util.TimeZone
 
 class ClockFragment : BasePagerFragment() {
-    private var _binding: FragmentClockBinding? = null
-    private val binding get() = _binding!!
 
     private var timezone: String? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentClockBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         timezone = arguments?.getString(EXTRA_TIME_ZONE) ?: TimeZone.getDefault().id
-
-        binding.timeView.apply {
-            setViewCompositionStrategy(
-                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
-            )
-            setContent {
-                DigitalClock(timezoneId = timezone!!)
-            }
-        }
-
-        if (timezone != TimeZone.getDefault().id) {
-            binding.timezone.text = String.format(
-                "%s\n%s",
-                timezone!!.replace("_".toRegex(), " "),
-                TimeZone.getTimeZone(timezone).displayName
-            )
-        }
-
-        lifecycleScope.launch {
-            val textColor = getContrastingTextColorFromBg()
-            _binding?.timezone?.setTextColor(textColor)
-        }
-
-        binding.timeView.setOnClickListener {
-            if (Preferences.SCROLL_TO_NEXT.get(requireContext())) {
-                navigateToNearestAlarm()
-            }
-        }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onCreateView(
+        inflater: android.view.LayoutInflater,
+        container: android.view.ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                ClockScreen(
+                    timezoneId = timezone ?: TimeZone.getDefault().id,
+                    onClockTap = {
+                        if (Preferences.SCROLL_TO_NEXT.get(requireContext())) {
+                            navigateToNearestAlarm()
+                        }
+                    },
+                    getTextColor = {
+                        getContrastingTextColorFromBg()
+                    }
+                )
+            }
+        }
     }
 
     private fun navigateToNearestAlarm() {
