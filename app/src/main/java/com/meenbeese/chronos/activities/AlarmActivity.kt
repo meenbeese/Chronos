@@ -167,7 +167,7 @@ class AlarmActivity : ComponentActivity() {
             val showTimeChooserDialog = remember { mutableStateOf(false) }
 
             AlarmScreen(
-                backgroundPainter = getBackgroundPainter(),
+                backgroundPainter = getBackgroundPainter(isAlarm = true),
                 dateText = dateText,
                 timeText = timeTextState.value,
                 slideContent = {

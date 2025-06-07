@@ -26,7 +26,7 @@ import java.io.File
 
 object ImageUtils {
     @JvmStatic
-    fun getBackgroundImage(imageView: ImageView) {
+    private fun getBackgroundImage(imageView: ImageView) {
         val context = imageView.context
         val backgroundUrl = Preferences.BACKGROUND_IMAGE.get(context)
 
@@ -61,7 +61,7 @@ object ImageUtils {
     }
 
     @Composable
-    fun getBackgroundImageAsync(): Painter {
+    private fun getBackgroundImageAsync(): Painter {
         val context = LocalContext.current
         val backgroundUrl = Preferences.BACKGROUND_IMAGE.get(context)
 
@@ -85,10 +85,10 @@ object ImageUtils {
     }
 
     @Composable
-    fun getBackgroundPainter(): Painter? {
+    fun getBackgroundPainter(isAlarm: Boolean): Painter? {
         val context = LocalContext.current
 
-        return if (Preferences.RINGING_BACKGROUND_IMAGE.get(context)) {
+        return if (!isAlarm || Preferences.RINGING_BACKGROUND_IMAGE.get(context)) {
             if (Preferences.COLORFUL_BACKGROUND.get(context)) {
                 val colorInt = Preferences.BACKGROUND_COLOR.get(context)
                 val color = androidx.compose.ui.graphics.Color(colorInt)

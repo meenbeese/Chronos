@@ -25,7 +25,6 @@ import com.meenbeese.chronos.adapters.SimplePagerAdapter
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.dialogs.TimerDialog
 import com.meenbeese.chronos.utils.DimenUtils.getStatusBarHeight
-import com.meenbeese.chronos.utils.ImageUtils.getBackgroundImage
 import com.meenbeese.chronos.BuildConfig
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.data.AlarmData
@@ -167,8 +166,6 @@ class HomeFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         _binding?.let { binding ->
-            getBackgroundImage(binding.background)
-
             if (binding.viewPager.currentItem == 1) {
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 behavior.isDraggable = false
@@ -357,8 +354,6 @@ class HomeFragment : BaseFragment() {
         binding.timePager.adapter = timeAdapter
         binding.pageIndicator.setViewPager(binding.timePager)
         binding.pageIndicator.visibility = if (fragments.size > 1) View.VISIBLE else View.GONE
-
-        getBackgroundImage(binding.background)
     }
 
     companion object {
