@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 
@@ -21,6 +22,7 @@ import com.meenbeese.chronos.databinding.FragmentClockBinding
 import com.meenbeese.chronos.interfaces.AlarmNavigator
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 import com.meenbeese.chronos.utils.ImageUtils.isBitmapDark
+import com.meenbeese.chronos.views.DigitalClock
 
 import kotlinx.coroutines.launch
 
@@ -38,19 +40,29 @@ class ClockFragment : BasePagerFragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentClockBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        if (arguments != null && requireArguments().containsKey(EXTRA_TIME_ZONE)) {
-            timezone = arguments?.getString(EXTRA_TIME_ZONE)
-            timezone?.let {
-                binding.timeView.setTimezone(it)
-                if (it != TimeZone.getDefault().id) {
-                    binding.timezone.text = String.format(
-                        "%s\n%s",
-                        it.replace("_".toRegex(), " "),
-                        TimeZone.getTimeZone(it).displayName
-                    )
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        timezone = arguments?.getString(EXTRA_TIME_ZONE) ?: TimeZone.getDefault().id
+
+        binding.timeView.apply {
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+            )
+            setContent {
+                DigitalClock(timezoneId = timezone!!)
             }
+        }
+
+        if (timezone != TimeZone.getDefault().id) {
+            binding.timezone.text = String.format(
+                "%s\n%s",
+                timezone!!.replace("_".toRegex(), " "),
+                TimeZone.getTimeZone(timezone).displayName
+            )
         }
 
         lifecycleScope.launch {
@@ -63,8 +75,6 @@ class ClockFragment : BasePagerFragment() {
                 navigateToNearestAlarm()
             }
         }
-
-        return binding.root
     }
 
     override fun onDestroyView() {
