@@ -1,4 +1,4 @@
-package com.meenbeese.chronos.activities
+package com.meenbeese.chronos.screens
 
 import android.app.Activity
 import android.view.WindowManager

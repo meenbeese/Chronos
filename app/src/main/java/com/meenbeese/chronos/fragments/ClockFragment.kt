@@ -18,7 +18,7 @@ import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.interfaces.AlarmNavigator
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 import com.meenbeese.chronos.utils.ImageUtils.isBitmapDark
-import com.meenbeese.chronos.views.ClockScreen
+import com.meenbeese.chronos.screens.ClockScreen
 
 import java.util.TimeZone
 
