@@ -22,6 +22,10 @@ class AlarmRepository(private val alarmDao: AlarmDao) {
         alarmDao.getAlarmById(id)
     }
 
+    suspend fun getAllDirect(): List<AlarmEntity> = withContext(Dispatchers.IO) {
+        alarmDao.getAllAlarmsDirect()
+    }
+
     fun getAll(): LiveData<List<AlarmEntity>> {
         return alarmDao.getAllAlarms()
     }

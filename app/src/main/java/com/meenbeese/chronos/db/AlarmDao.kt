@@ -24,5 +24,8 @@ interface AlarmDao {
     suspend fun getAlarmById(id: Int): AlarmEntity?
 
     @Query("SELECT * FROM alarms ORDER BY timeInMillis ASC")
+    suspend fun getAllAlarmsDirect(): List<AlarmEntity>
+
+    @Query("SELECT * FROM alarms ORDER BY timeInMillis ASC")
     fun getAllAlarms(): LiveData<List<AlarmEntity>>
 }

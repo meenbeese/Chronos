@@ -73,6 +73,16 @@
             android:exported="false"
             android:foregroundServiceType="shortService" />
 
+        <service
+            android:name=".services.AlarmTileService"
+            android:exported="true"
+            android:label="Next Alarm"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
         <receiver android:name=".receivers.AlarmReceiver" />
         <receiver android:name=".receivers.TimerReceiver" />
         <receiver android:name=".receivers.RestoreOnBootReceiver"

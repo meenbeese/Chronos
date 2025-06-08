@@ -1,14 +1,17 @@
 package com.meenbeese.chronos.receivers
 
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.service.quicksettings.TileService
 import android.util.Log
 
 import com.meenbeese.chronos.activities.AlarmActivity
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.db.AlarmDatabase
+import com.meenbeese.chronos.services.AlarmTileService
 import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.CoroutineScope
@@ -48,6 +51,11 @@ class AlarmReceiver : BroadcastReceiver() {
                     alarm.isEnabled = false
                     alarm.saveToDatabase(context)
                 }
+
+                TileService.requestListeningState(
+                    context,
+                    ComponentName(context, AlarmTileService::class.java)
+                )
 
                 withContext(Dispatchers.Main) {
                     val ringer = Intent(context, AlarmActivity::class.java).apply {
