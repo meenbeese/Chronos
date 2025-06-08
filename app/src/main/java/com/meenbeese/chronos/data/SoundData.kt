@@ -9,6 +9,7 @@ import android.os.Parcelable
 import androidx.core.net.toUri
 import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.common.AudioAttributes as M3AudioAttributes
 
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.utils.AudioUtils
@@ -17,12 +18,19 @@ import com.meenbeese.chronos.utils.Option
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+
 @Parcelize
+@UnstableApi
 class SoundData(
     val name: String,
     val type: String,
     val url: String
-) : Parcelable {
+) : Parcelable, KoinComponent {
+
+    @IgnoredOnParcel
+    private val audioUtils: AudioUtils by inject()
 
     @IgnoredOnParcel
     private var ringtone: Option<Ringtone> = Option.None
@@ -50,11 +58,11 @@ class SoundData(
                     }
                 )
             }
-            ringtone.map { AudioUtils.playRingtone(it) }
+            ringtone.map { audioUtils.playRingtone(it) }
         } else {
-            AudioUtils.playStream(
+            audioUtils.playStream(
                 url, type,
-                androidx.media3.common.AudioAttributes.Builder()
+                M3AudioAttributes.Builder()
                     .setUsage(C.USAGE_ALARM)
                     .build()
             )
@@ -70,7 +78,7 @@ class SoundData(
      */
     @UnstableApi
     fun stop(chronos: Chronos) {
-        ringtone.map { it.stop() }.takeIf { ringtone.isDefined() } ?: AudioUtils.stopStream()
+        ringtone.map { it.stop() }.takeIf { ringtone.isDefined() } ?: audioUtils.stopStream()
     }
 
     /**
@@ -90,11 +98,11 @@ class SoundData(
                     }
                 )
             }
-            ringtone.map { AudioUtils.playRingtone(it) }
+            ringtone.map { audioUtils.playRingtone(it) }
         } else {
-            AudioUtils.playStream(
+            audioUtils.playStream(
                 url, type,
-                androidx.media3.common.AudioAttributes.Builder()
+                M3AudioAttributes.Builder()
                     .setUsage(C.USAGE_ALARM)
                     .build()
             )
@@ -109,7 +117,7 @@ class SoundData(
      */
     @UnstableApi
     fun isPlaying(chronos: Chronos): Boolean {
-        return ringtone.map { it.isPlaying }.getOrElse(AudioUtils.isPlayingStream(url))
+        return ringtone.map { it.isPlaying }.getOrElse(audioUtils.isPlayingStream(url))
     }
 
     /**
@@ -126,7 +134,7 @@ class SoundData(
             } else {
                 throw IllegalArgumentException("Attempted to set the ringtone volume on a device older than Android P.")
             }
-        }.takeIf { ringtone.isDefined() } ?: AudioUtils.setStreamVolume(volume)
+        }.takeIf { ringtone.isDefined() } ?: audioUtils.setStreamVolume(volume)
     }
 
     val isSetVolumeSupported: Boolean

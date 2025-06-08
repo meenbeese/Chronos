@@ -21,7 +21,11 @@ import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.meenbeese.chronos.utils.AudioUtils
 import com.google.android.material.tabs.TabLayoutMediator
 
+import org.koin.android.ext.android.inject
+
+@UnstableApi
 class SoundChooserDialog : DialogFragment(), SoundChooserListener {
+    private val audioUtils: AudioUtils by inject()
     private var listener: SoundChooserListener? = null
 
     private var _binding: DialogSoundChooserBinding? = null
@@ -74,7 +78,7 @@ class SoundChooserDialog : DialogFragment(), SoundChooserListener {
     @UnstableApi
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        AudioUtils.stopCurrentSound()
+        audioUtils.stopCurrentSound()
     }
 
     override fun onDestroyView() {

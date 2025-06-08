@@ -1,6 +1,5 @@
 package com.meenbeese.chronos.utils
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.media.Ringtone
 import android.widget.Toast
@@ -17,23 +16,19 @@ import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.MediaSource
 
 @UnstableApi
-@SuppressLint("StaticFieldLeak")
-object AudioUtils : Player.Listener {
-    private var context: Context? = null
+class AudioUtils(private val context: Context) : Player.Listener {
     private var player: ExoPlayer? = null
     private var currentStream: String? = null
     private var currentRingtone: Ringtone? = null
     private var hlsMediaSourceFactory: HlsMediaSource.Factory? = null
     private val isRingtonePlaying: Boolean
-        get() = currentRingtone != null && currentRingtone!!.isPlaying
+        get() = currentRingtone?.isPlaying == true
 
     init {
-        context = CoreHelper.contextGetter?.invoke()
-
-        player = ExoPlayer.Builder(context!!).build()
+        player = ExoPlayer.Builder(context).build()
         player?.addListener(this)
 
-        val dataSourceFactory = DefaultDataSource.Factory(context!!)
+        val dataSourceFactory = DefaultDataSource.Factory(context)
         hlsMediaSourceFactory = HlsMediaSource.Factory(dataSourceFactory)
     }
 
@@ -49,7 +44,7 @@ object AudioUtils : Player.Listener {
         val exception: Throwable? = error.cause
         exception?.printStackTrace()
         Toast.makeText(
-            context!!,
+            context,
             exception?.javaClass?.name + ": " + exception?.message,
             Toast.LENGTH_SHORT
         ).show()
@@ -84,7 +79,7 @@ object AudioUtils : Player.Listener {
 
     fun playStream(url: String, type: String, attributes: AudioAttributes?) {
         player?.stop()
-        player = ExoPlayer.Builder(context!!)
+        player = ExoPlayer.Builder(context)
             .setAudioAttributes(attributes!!, true)
             .build()
         playStream(url, type)

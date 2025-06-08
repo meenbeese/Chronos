@@ -32,8 +32,13 @@ import com.meenbeese.chronos.receivers.TimerReceiver
 import com.meenbeese.chronos.utils.AudioUtils
 import com.meenbeese.chronos.utils.Theme
 
+import org.koin.android.ext.android.inject
+
+@UnstableApi
 class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedListener,
     ActivityListener {
+    private val audioUtils: AudioUtils by inject()
+
     private var chronos: Chronos? = null
     private var fragmentRef: BaseFragment? = null
 
@@ -225,7 +230,7 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
     @UnstableApi
     public override fun onPause() {
         super.onPause()
-        AudioUtils.stopCurrentSound()
+        audioUtils.stopCurrentSound()
     }
 
     override fun onRequestPermissionsResult(

@@ -14,15 +14,18 @@ import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.db.AlarmDao
 import com.meenbeese.chronos.db.AlarmDatabase
 import com.meenbeese.chronos.db.AlarmRepository
+import com.meenbeese.chronos.di.appModule
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
-import com.meenbeese.chronos.utils.CoreHelper
 import com.meenbeese.chronos.utils.Theme
 import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 import java.util.Calendar
 
@@ -39,7 +42,11 @@ class Chronos : Application() {
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate() {
         super.onCreate()
-        CoreHelper.contextGetter = { this }
+
+        startKoin {
+            androidContext(this@Chronos)
+            modules(appModule)
+        }
 
         database = AlarmDatabase.getDatabase(this)
         alarmDao = database.alarmDao()
