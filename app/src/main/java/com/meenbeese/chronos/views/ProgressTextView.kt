@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.View
 import android.view.animation.LinearInterpolator
 
@@ -59,7 +60,11 @@ class ProgressTextView : View {
         color = textColorPrimary
         isAntiAlias = true
         textAlign = Paint.Align.CENTER
-        textSize = DimenUtils.spToPx(34f).toFloat()
+        textSize = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP,
+            34f,
+            context.resources.displayMetrics
+        )
         isFakeBoldText = true
     }
 

@@ -52,7 +52,6 @@ class AlarmTileService : TileService() {
         }
     }
 
-
     private fun updateTile() {
         val tile = qsTile ?: return
         val app = applicationContext as Chronos
