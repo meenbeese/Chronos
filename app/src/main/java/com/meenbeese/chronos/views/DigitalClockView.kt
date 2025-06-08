@@ -24,7 +24,7 @@ import java.util.Calendar
 import java.util.TimeZone
 
 @Composable
-fun DigitalClock(
+fun DigitalClockView(
     modifier: Modifier = Modifier,
     timezoneId: String = TimeZone.getDefault().id
 ) {

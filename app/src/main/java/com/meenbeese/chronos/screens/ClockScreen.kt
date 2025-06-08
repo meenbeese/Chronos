@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundPainter
-import com.meenbeese.chronos.views.DigitalClock
+import com.meenbeese.chronos.views.DigitalClockView
 
 import java.util.TimeZone
 
@@ -66,7 +66,7 @@ fun ClockScreen(
             )
         }
 
-        DigitalClock(
+        DigitalClockView(
             modifier = Modifier.fillMaxSize(),
             timezoneId = timezoneId
         )
