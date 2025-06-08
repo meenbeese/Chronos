@@ -11,6 +11,8 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.Toast
 
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +26,6 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.dialogs.TimerDialog
-import com.meenbeese.chronos.utils.DimenUtils.getStatusBarHeight
 import com.meenbeese.chronos.BuildConfig
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.data.AlarmData
@@ -60,6 +61,11 @@ class HomeFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomSheet) { v, insets ->
+            val statusBarInset = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            v.setTag(R.id.one, statusBarInset)
+            insets
+        }
 
         val app = requireActivity().application as Chronos
         val factory = AlarmViewModelFactory(app.repository)
@@ -74,9 +80,10 @@ class HomeFragment : BaseFragment() {
         behavior = BottomSheetBehavior.from(binding.bottomSheet)
         behavior.isHideable = false
         behavior.addBottomSheetCallback(object : BottomSheetCallback() {
-            private var statusBarHeight = -1
             @SuppressLint("SwitchIntDef")
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+                val statusBarHeight = bottomSheet.getTag(R.id.one) as? Int ?: 0
+
                 _binding?.let { binding ->
                     binding.speedDial.close()
                     when (newState) {
@@ -85,7 +92,6 @@ class HomeFragment : BaseFragment() {
                             bottomSheet.elevation = 8f
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
-                            if (statusBarHeight < 0) statusBarHeight = requireContext().getStatusBarHeight()
                             bottomSheet.setPadding(0, statusBarHeight, 0, 0)
                             bottomSheet.elevation = 16f
                         }
@@ -95,14 +101,14 @@ class HomeFragment : BaseFragment() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 _binding?.let { binding ->
-                    binding.speedDial.close()
-                    if (statusBarHeight < 0) statusBarHeight = requireContext().getStatusBarHeight()
+                    val statusBarHeight = bottomSheet.getTag(R.id.one) as? Int ?: 0
 
                     val easedOffset = slideOffset.coerceIn(0f, 1f).let {
                         (1 - cos(it * PI)) / 2.0
                     }
-                    bottomSheet.setPadding(0, (easedOffset * statusBarHeight).toInt(), 0, 0)
 
+                    bottomSheet.setPadding(0, (easedOffset * statusBarHeight).toInt(), 0, 0)
+                    binding.speedDial.close()
                     binding.speedDial.alpha = 1f - slideOffset
                 }
             }

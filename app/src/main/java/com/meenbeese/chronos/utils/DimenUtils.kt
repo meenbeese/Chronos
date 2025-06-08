@@ -1,31 +1,8 @@
 package com.meenbeese.chronos.utils
 
-import android.content.Context
 import android.content.res.Resources
 
 object DimenUtils {
-    /**
-     * Returns the height of the device's status bar in px.
-     *
-     * @param context       An active context instance.
-     * @return              The height of the status bar, in pixels.
-     */
-    fun Context.getStatusBarHeight(): Int {
-        val resId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        return if (resId > 0) resources.getDimensionPixelSize(resId) else 0
-    }
-
-    /**
-     * Returns the height of the device's navigation bar in px.
-     *
-     * @param context       An active context instance.
-     * @return              The height of the navigation bar, in pixels.
-     */
-    fun Context.getNavigationBarHeight(): Int {
-        val resId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        return if (resId > 0) resources.getDimensionPixelSize(resId) else 0
-    }
-
     /**
      * Converts dp units to pixels.
      *
