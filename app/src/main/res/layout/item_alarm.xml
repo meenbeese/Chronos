@@ -80,37 +80,44 @@
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp">
 
-                <com.meenbeese.chronos.views.DaySwitch
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/day_0"
                     android:layout_width="0dp"
                     android:layout_height="42dp"
                     android:layout_weight="1" />
 
-                <com.meenbeese.chronos.views.DaySwitch
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/day_1"
                     android:layout_width="0dp"
                     android:layout_height="42dp"
                     android:layout_weight="1" />
 
-                <com.meenbeese.chronos.views.DaySwitch
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/day_2"
                     android:layout_width="0dp"
                     android:layout_height="42dp"
                     android:layout_weight="1" />
 
-                <com.meenbeese.chronos.views.DaySwitch
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/day_3"
                     android:layout_width="0dp"
                     android:layout_height="42dp"
                     android:layout_weight="1" />
 
-                <com.meenbeese.chronos.views.DaySwitch
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/day_4"
                     android:layout_width="0dp"
                     android:layout_height="42dp"
                     android:layout_weight="1" />
 
-                <com.meenbeese.chronos.views.DaySwitch
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/day_5"
                     android:layout_width="0dp"
                     android:layout_height="42dp"
                     android:layout_weight="1" />
 
-                <com.meenbeese.chronos.views.DaySwitch
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/day_6"
                     android:layout_width="0dp"
                     android:layout_height="42dp"
                     android:layout_weight="1" />

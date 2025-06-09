@@ -37,7 +37,7 @@ import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.meenbeese.chronos.utils.AlarmsDiffCallback
 import com.meenbeese.chronos.utils.DimenUtils
 import com.meenbeese.chronos.utils.FormatUtils
-import com.meenbeese.chronos.views.DaySwitch
+import com.meenbeese.chronos.views.DayCircleView
 
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -140,36 +140,36 @@ class AlarmsAdapter(
 
         holder.days.visibility = if (alarm.isRepeat()) View.VISIBLE else View.GONE
 
-        val listener : DaySwitch.OnCheckedChangeListener = object : DaySwitch.OnCheckedChangeListener {
-            override fun onCheckedChanged(daySwitch: DaySwitch, isChecked: Boolean) {
-                alarm.days[holder.days.indexOfChild(daySwitch)] = isChecked
-                alarm.days = alarm.days
-                alarmViewModel.update(alarm.toEntity())
-
-                if (!alarm.isRepeat()) {
-                    notifyItemChanged(holder.bindingAdapterPosition)
-                } else {
-                    // If the view isn't going to change size in the recycler,
-                    // then I can just do this (prevents the background flickering as
-                    // the recyclerview attempts to smooth the transition)
-                    onBindAlarmViewHolder(holder, holder.bindingAdapterPosition)
-                }
-            }
-        }
+        val dayLabels = listOf(
+            R.string.day_sunday_abbr,
+            R.string.day_monday_abbr,
+            R.string.day_tuesday_abbr,
+            R.string.day_wednesday_abbr,
+            R.string.day_thursday_abbr,
+            R.string.day_friday_abbr,
+            R.string.day_saturday_abbr
+        )
 
         for (i in 0..6) {
-            val daySwitch = holder.days.getChildAt(i) as DaySwitch
-            daySwitch.isChecked = alarm.days[i]
-            daySwitch.onCheckedChangeListener = listener
+            val isChecked = alarm.days[i]
+            val label = holder.days.context.getString(dayLabels[i])
 
-            when (i) {
-                0 -> daySwitch.setText(daySwitch.context.getString(R.string.day_sunday_abbr))
-                1 -> daySwitch.setText(daySwitch.context.getString(R.string.day_monday_abbr))
-                2 -> daySwitch.setText(daySwitch.context.getString(R.string.day_tuesday_abbr))
-                3 -> daySwitch.setText(daySwitch.context.getString(R.string.day_wednesday_abbr))
-                4 -> daySwitch.setText(daySwitch.context.getString(R.string.day_thursday_abbr))
-                5 -> daySwitch.setText(daySwitch.context.getString(R.string.day_friday_abbr))
-                6 -> daySwitch.setText(daySwitch.context.getString(R.string.day_saturday_abbr))
+            holder.dayComposeViews[i].setContent {
+                DayCircleView(
+                    text = label,
+                    isChecked = isChecked,
+                    onCheckedChange = { checked ->
+                        alarm.days[i] = checked
+                        alarm.days = alarm.days
+                        alarmViewModel.update(alarm.toEntity())
+
+                        if (!alarm.isRepeat()) {
+                            notifyItemChanged(holder.bindingAdapterPosition)
+                        } else {
+                            onBindAlarmViewHolder(holder, holder.bindingAdapterPosition)
+                        }
+                    }
+                )
             }
         }
     }
@@ -555,5 +555,15 @@ class AlarmsAdapter(
         val vibrateIndicator = binding.vibrateIndicator
 
         val alarms: List<AlarmData> = chronos.alarms
+
+        val dayComposeViews = listOf(
+            binding.day1,
+            binding.day2,
+            binding.day3,
+            binding.day0,
+            binding.day4,
+            binding.day5,
+            binding.day6
+        )
     }
 }
