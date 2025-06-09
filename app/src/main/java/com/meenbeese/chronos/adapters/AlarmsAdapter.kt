@@ -38,6 +38,7 @@ import com.meenbeese.chronos.utils.AlarmsDiffCallback
 import com.meenbeese.chronos.utils.DimenUtils
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.DayCircleView
+import com.meenbeese.chronos.views.ProgressLineView
 
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -103,7 +104,11 @@ class AlarmsAdapter(
                     getTimer(holder.bindingAdapterPosition)?.let { timer ->
                         val text = FormatUtils.formatMillis(timer.remainingMillis)
                         holder.time.text = text.substring(0, text.length - 3)
-                        holder.progress.update(1 - timer.remainingMillis.toFloat() / timer.duration)
+
+                        val currentProgress = 1f - timer.remainingMillis.toFloat() / timer.duration.toFloat()
+                        holder.progress.setContent {
+                            ProgressLineView(progress = currentProgress)
+                        }
                     }
 
                     holder.handler.postDelayed(this, 1000)

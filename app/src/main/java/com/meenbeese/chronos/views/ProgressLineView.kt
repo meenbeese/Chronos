@@ -1,48 +1,52 @@
 package com.meenbeese.chronos.views
 
-import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.util.AttributeSet
-import android.view.View
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
 /**
  * Display a progress line, with a given foreground/background
  * color set.
  */
-class ProgressLineView : View {
+@Composable
+fun ProgressLineView(
+    progress: Float,
+    modifier: Modifier = Modifier,
+    height: Dp = 4.dp,
+    backgroundColor: Color = Color.LightGray,
+    lineColor: Color = Color.DarkGray
+) {
+    val animatedProgress by animateFloatAsState(
+        targetValue = progress.coerceIn(0f, 1f),
+        label = "progressLineAnim"
+    )
 
-    private var backgroundPaint: Paint = Paint().apply {
-        style = Paint.Style.FILL
-        color = Color.LTGRAY
-    }
+    Canvas(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(height)
+    ) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
 
-    private var linePaint: Paint = Paint().apply {
-        style = Paint.Style.FILL
-        color = Color.DKGRAY
-    }
+        drawRect(
+            color = backgroundColor,
+            size = size,
+            style = Fill
+        )
 
-    private var progress: Float = 0f
-    private var drawnProgress: Float = 0f
-
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-    fun update(progress: Float) {
-        this.progress = progress
-        postInvalidate()
-    }
-
-    override fun onDraw(canvas: Canvas) {
-        if (drawnProgress != progress)
-            drawnProgress = (drawnProgress * 4 + progress) / 5
-
-        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), backgroundPaint)
-        canvas.drawRect(0f, 0f, width * drawnProgress, height.toFloat(), linePaint)
-
-        if ((drawnProgress - progress) * width != 0f)
-            postInvalidate()
+        drawRect(
+            color = lineColor,
+            size = size.copy(width = canvasWidth * animatedProgress),
+            style = Fill
+        )
     }
 }
