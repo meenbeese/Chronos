@@ -79,7 +79,6 @@ class StopwatchService : Service() {
             }
         }
 
-        startForeground(NOTIFICATION_ID, getNotification("0s"))
         handler?.postDelayed(runnable!!, 1000)
 
         val filter = IntentFilter().apply {
@@ -89,6 +88,11 @@ class StopwatchService : Service() {
         }
 
         registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED)
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        startForeground(NOTIFICATION_ID, getNotification("0s"))
+        return START_STICKY
     }
 
     override fun onTimeout(startId: Int, fgsType: Int) {
