@@ -42,7 +42,7 @@ class SoundsAdapter(
             }
             setPlaying(holder, isPlaying = false, isAnimated = false)
             holder.binding.icon.setImageResource(R.drawable.ic_ringtone_disabled)
-            val color = ContextCompat.getColor(holder.binding.root.context, R.color.textColorPrimary)
+            val color = ContextCompat.getColor(holder.binding.root.context, R.color.md_theme_background)
             holder.binding.icon.setColorFilter(color)
         } else {
             val sound = sounds[position - 1]
@@ -72,7 +72,7 @@ class SoundsAdapter(
 
     @SuppressLint("CheckResult")
     private fun setPlaying(holder: ViewHolder, isPlaying: Boolean, isAnimated: Boolean) {
-        val color = ContextCompat.getColor(holder.binding.root.context, R.color.textColorPrimary)
+        val color = ContextCompat.getColor(holder.binding.root.context, R.color.md_theme_scrim)
 
         if (isAnimated) {
             val drawable = AnimatedVectorDrawableCompat.create(

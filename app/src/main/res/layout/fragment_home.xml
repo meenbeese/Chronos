@@ -26,8 +26,7 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/timePager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/fragment_clock" />
+            android:layout_height="match_parent" />
 
         <com.meenbeese.chronos.views.PageIndicatorView
             android:id="@+id/pageIndicator"
@@ -42,7 +41,7 @@
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@color/md_theme_onPrimary"
         android:orientation="vertical"
         app:layout_behavior="com.meenbeese.chronos.utils.ScrollableBottomSheetBehavior">
 
@@ -50,16 +49,17 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabBackground="@color/colorPrimary"
-            app:tabTextColor="@color/colorIndeterminateText"
-            app:tabSelectedTextColor="@color/textColorSecondary"
-            app:tabIndicatorColor="@color/colorAccent" />
+            app:tabBackground="@color/md_theme_background"
+            app:tabTextColor="@color/md_theme_secondary"
+            app:tabSelectedTextColor="@color/md_theme_primary"
+            app:tabIndicatorColor="@color/md_theme_primary" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:background="@color/md_theme_background"
             tools:listitem="@layout/fragment_recycler" />
 
     </LinearLayout>
@@ -72,10 +72,9 @@
         android:baselineAligned="true"
         android:clickable="true"
         android:focusable="true"
-        android:backgroundTint="@color/colorAccent"
         app:sdMainFabClosedSrc="@drawable/ic_add"
-        app:sdMainFabOpenedIconColor="@color/colorPrimary"
-        app:sdMainFabClosedIconColor="@color/colorPrimary"
+        app:sdMainFabOpenedIconColor="@color/md_theme_onPrimary"
+        app:sdMainFabClosedIconColor="@color/md_theme_onPrimary"
         app:sdUseReverseAnimationOnClose="true" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

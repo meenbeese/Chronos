@@ -94,22 +94,10 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         Log.d("MainActivity", "Theme: ${theme.name}")
 
         when (theme) {
-            Theme.DAY -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                setTheme(R.style.AppTheme)
-            }
-            Theme.NIGHT -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                setTheme(R.style.AppTheme_Night)
-            }
-            Theme.AMOLED -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                setTheme(R.style.AppTheme_Amoled)
-            }
-            else -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                setTheme(R.style.AppTheme)
-            }
+            Theme.DAY -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            Theme.NIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            Theme.AMOLED -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
     }
 
@@ -176,7 +164,6 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
             }
 
             else -> {
-//                if (Intent.ACTION_MAIN == intent.action || intent.action == null) return SplashFragment()
                 val args = Bundle()
                 args.putString(HomeFragment.INTENT_ACTION, intent.action)
                 val newFragment: BaseFragment = HomeFragment()

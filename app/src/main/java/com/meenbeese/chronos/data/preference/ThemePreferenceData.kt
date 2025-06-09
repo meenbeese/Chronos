@@ -48,7 +48,7 @@ class ThemePreferenceData(
 
         val theme: Theme = holder.chronos?.activityTheme ?: Theme.AUTO
         holder.binding.themeSpinner.setText(adapter.getItem(theme.value), false)
-        holder.binding.themeSpinner.setDropDownBackgroundResource(R.color.colorForeground)
+        holder.binding.themeSpinner.setDropDownBackgroundResource(R.color.md_theme_background)
         holder.binding.themeDropdown.post {
             holder.binding.themeDropdown.requestLayout()
         }

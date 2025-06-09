@@ -9,7 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:colorPrimary"
         android:orientation="vertical">
 
         <FrameLayout
@@ -28,7 +27,7 @@
                 android:layout_gravity="start"
                 android:paddingStart="4dp"
                 android:paddingEnd="4dp"
-                android:textColor="?android:textColorSecondary"
+                android:textColor="@color/md_theme_secondary"
                 android:textSize="42sp"
                 tools:text="0:00"
                 tools:textColor="" />
@@ -68,8 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
-                android:text="@string/title_repeat"
-                app:buttonTint="@color/checkbox_tint" />
+                android:text="@string/title_repeat" />
 
             <LinearLayout
                 android:id="@+id/days"
@@ -151,7 +149,7 @@
                         android:layout_marginBottom="4dp"
                         android:scaleType="centerInside"
                         app:srcCompat="@drawable/ic_ringtone_disabled"
-                        app:tint="@color/textColorPrimary"
+                        app:tint="@color/md_theme_inverseSurface"
                         tools:alpha="0.333" />
 
                     <com.google.android.material.textview.MaterialTextView
@@ -186,7 +184,7 @@
                         android:layout_marginBottom="4dp"
                         android:scaleType="centerInside"
                         app:srcCompat="@drawable/ic_vibrate_to_none"
-                        app:tint="@color/textColorPrimary" />
+                        app:tint="@color/md_theme_inverseSurface" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
@@ -224,7 +222,7 @@
                 android:scaleType="centerInside"
                 android:tintMode="src_in"
                 app:srcCompat="@drawable/ic_expand"
-                app:tint="@color/textColorPrimary" />
+                app:tint="@color/md_theme_inverseSurface" />
 
             <LinearLayout
                 android:id="@+id/nameContainer"
@@ -260,9 +258,7 @@
                     android:id="@+id/underline"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginBottom="4dp"
-                    android:background="@color/textColorSecondary"
-                    app:tint="@color/textColorPrimary" />
+                    android:layout_marginBottom="4dp" />
 
             </LinearLayout>
 
@@ -276,7 +272,7 @@
                 android:contentDescription="@string/title_delete"
                 android:scaleType="centerInside"
                 app:srcCompat="@drawable/ic_delete"
-                app:tint="@color/textColorPrimary" />
+                app:tint="@color/md_theme_inverseSurface" />
 
             <LinearLayout
                 android:id="@+id/indicators"
@@ -296,7 +292,7 @@
                     android:layout_gravity="center"
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/ic_repeat"
-                    app:tint="@color/textColorPrimary"
+                    app:tint="@color/md_theme_inverseSurface"
                     tools:alpha="0.333" />
 
                 <ImageView
@@ -306,7 +302,7 @@
                     android:layout_gravity="center"
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/ic_sound"
-                    app:tint="@color/textColorPrimary"
+                    app:tint="@color/md_theme_inverseSurface"
                     tools:alpha="0.333" />
 
                 <ImageView
@@ -316,7 +312,7 @@
                     android:layout_gravity="center"
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/ic_vibrate"
-                    app:tint="@color/textColorPrimary" />
+                    app:tint="@color/md_theme_inverseSurface" />
 
             </LinearLayout>
 

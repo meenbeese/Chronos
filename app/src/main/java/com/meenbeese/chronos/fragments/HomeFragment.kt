@@ -182,13 +182,22 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setSpeedDialView() {
+        val context = requireContext()
+
+        val primary = ContextCompat.getColor(context, R.color.md_theme_primary)
+        val onPrimary = ContextCompat.getColor(context, R.color.md_theme_onPrimary)
+        val surface = ContextCompat.getColor(context, R.color.md_theme_surface)
+        val onSurface = ContextCompat.getColor(context, R.color.md_theme_onSurface)
+
+        binding.speedDial.mainFabOpenedBackgroundColor = primary
+        binding.speedDial.mainFabClosedBackgroundColor = primary
         binding.speedDial.addActionItem(
             SpeedDialActionItem
                 .Builder(R.id.alarm_fab, R.drawable.ic_alarm_add)
-                .setFabBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
-                .setFabImageTintColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
-                .setLabelColor(ContextCompat.getColor(requireContext(), R.color.textColorSecondary))
-                .setLabelBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+                .setFabBackgroundColor(primary)
+                .setFabImageTintColor(onPrimary)
+                .setLabelColor(onSurface)
+                .setLabelBackgroundColor(surface)
                 .setLabel(R.string.title_set_alarm)
                 .setLabelClickable(true)
                 .create()
@@ -196,10 +205,10 @@ class HomeFragment : BaseFragment() {
         binding.speedDial.addActionItem(
             SpeedDialActionItem
                 .Builder(R.id.timer_fab, R.drawable.ic_timer)
-                .setFabBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
-                .setFabImageTintColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
-                .setLabelColor(ContextCompat.getColor(requireContext(), R.color.textColorSecondary))
-                .setLabelBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+                .setFabBackgroundColor(primary)
+                .setFabImageTintColor(onPrimary)
+                .setLabelColor(onSurface)
+                .setLabelBackgroundColor(surface)
                 .setLabel(R.string.title_set_timer)
                 .setLabelClickable(true)
                 .create()
@@ -207,10 +216,10 @@ class HomeFragment : BaseFragment() {
         binding.speedDial.addActionItem(
             SpeedDialActionItem
                 .Builder(R.id.stopwatch_fab, R.drawable.ic_stopwatch)
-                .setFabBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
-                .setFabImageTintColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
-                .setLabelColor(ContextCompat.getColor(requireContext(), R.color.textColorSecondary))
-                .setLabelBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+                .setFabBackgroundColor(primary)
+                .setFabImageTintColor(onPrimary)
+                .setLabelColor(onSurface)
+                .setLabelBackgroundColor(surface)
                 .setLabel(R.string.title_set_stopwatch)
                 .setLabelClickable(true)
                 .create()

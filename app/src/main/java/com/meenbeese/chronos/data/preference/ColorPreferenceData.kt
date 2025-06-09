@@ -34,7 +34,7 @@ class ColorPreferenceData(
                             shape = GradientDrawable.RECTANGLE
                             cornerRadius = 12f
                             setColor(color)
-                            setStroke(1, 0xFF888888.toInt())
+                            setStroke(4, 0xFF888888.toInt())
                         }
                         holder.binding.colorPreview.background = drawable
                     }

@@ -46,8 +46,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:scaleType="centerInside"
                 android:visibility="visible"
-                app:srcCompat="@drawable/ic_backspace"
-                app:tint="@color/textColorPrimary" />
+                app:srcCompat="@drawable/ic_backspace" />
 
         </LinearLayout>
 
@@ -206,8 +205,7 @@
             android:layout_marginEnd="4dp"
             android:alpha="0.333"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/ic_ringtone_disabled"
-            app:tint="@color/textColorPrimary" />
+            app:srcCompat="@drawable/ic_ringtone_disabled" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/ringtoneText"
@@ -227,7 +225,7 @@
             android:layout_marginEnd="4dp"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/ic_expand"
-            app:tint="@color/textColorPrimary" />
+            app:tint="@color/md_theme_onPrimary" />
 
     </LinearLayout>
 
@@ -248,8 +246,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/ic_vibrate"
-            app:tint="@color/textColorPrimary" />
+            app:srcCompat="@drawable/ic_vibrate" />
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="0dp"
