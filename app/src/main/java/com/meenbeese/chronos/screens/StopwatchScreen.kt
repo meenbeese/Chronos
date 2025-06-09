@@ -25,7 +25,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -97,7 +96,8 @@ fun StopwatchScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(IntrinsicSize.Min),
+                .height(IntrinsicSize.Min)
+                .padding(bottom = 32.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (isResetVisible) {
@@ -106,7 +106,6 @@ fun StopwatchScreen(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
-                        .alpha(1f)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_reset),
@@ -118,51 +117,59 @@ fun StopwatchScreen(
                 Spacer(modifier = Modifier.weight(1f))
             }
 
-            FloatingActionButton(
-                onClick = onToggleClick,
-                modifier = Modifier.padding(32.dp),
-                containerColor = MaterialTheme.colorScheme.secondary
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_play),
-                    contentDescription = "Toggle",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-
-            if (isLapVisible) {
-                TextButton(
-                    onClick = onLapClick,
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.title_lap).uppercase(),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                        textAlign = TextAlign.Center
-                    )
-                }
-            } else {
-                Spacer(modifier = Modifier.weight(1f))
-            }
-
-            if (isShareVisible) {
-                IconButton(
-                    onClick = onShareClick,
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
+                FloatingActionButton(
+                    onClick = onToggleClick,
+                    containerColor = MaterialTheme.colorScheme.secondary
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_share),
-                        contentDescription = "Share",
-                        tint = MaterialTheme.colorScheme.onPrimary
+                        painter = painterResource(id = R.drawable.ic_play),
+                        contentDescription = "Toggle",
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
-            } else {
-                Spacer(modifier = Modifier.weight(1f))
+            }
+
+            when {
+                isLapVisible -> {
+                    TextButton(
+                        onClick = onLapClick,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.title_lap).uppercase(),
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+
+                isShareVisible -> {
+                    IconButton(
+                        onClick = onShareClick,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_share),
+                            contentDescription = "Share",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
+
+                else -> {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
         }
     }
