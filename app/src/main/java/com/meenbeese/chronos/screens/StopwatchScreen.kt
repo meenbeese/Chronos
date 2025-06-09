@@ -49,7 +49,7 @@ fun StopwatchScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary)
+            .background(MaterialTheme.colorScheme.onPrimary)
     ) {
         Row(
             modifier = Modifier
@@ -65,7 +65,7 @@ fun StopwatchScreen(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_back),
                     contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.onPrimary
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -110,7 +110,7 @@ fun StopwatchScreen(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_reset),
                         contentDescription = "Reset",
-                        tint = MaterialTheme.colorScheme.onPrimary
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             } else {
@@ -125,12 +125,12 @@ fun StopwatchScreen(
             ) {
                 FloatingActionButton(
                     onClick = onToggleClick,
-                    containerColor = MaterialTheme.colorScheme.secondary
+                    containerColor = MaterialTheme.colorScheme.primary
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_play),
                         contentDescription = "Toggle",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -145,7 +145,7 @@ fun StopwatchScreen(
                     ) {
                         Text(
                             text = stringResource(id = R.string.title_lap).uppercase(),
-                            color = MaterialTheme.colorScheme.onPrimary,
+                            color = MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                             textAlign = TextAlign.Center
                         )
@@ -162,7 +162,7 @@ fun StopwatchScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_share),
                             contentDescription = "Share",
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
