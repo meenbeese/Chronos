@@ -11,6 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
@@ -20,12 +26,18 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.databinding.FragmentStopwatchBinding
 import com.meenbeese.chronos.services.StopwatchService
 import com.meenbeese.chronos.utils.FormatUtils.formatMillis
+import com.meenbeese.chronos.views.ProgressTextView
 
 class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConnection {
     private var _binding: FragmentStopwatchBinding? = null
     private val binding get() = _binding!!
 
     private var service: StopwatchService? = null
+
+    private var timeText by mutableStateOf("0s 00")
+    private var currentProgress by mutableStateOf(0f)
+    private var maxProgress by mutableStateOf(0f)
+    private var referenceProgress by mutableStateOf<Float?>(null)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,6 +79,18 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
                 }
             }
             back.setOnClickListener { parentFragmentManager.popBackStack() }
+            time.setContent {
+                ProgressTextView(
+                    text = timeText,
+                    progress = currentProgress,
+                    maxProgress = maxProgress,
+                    referenceProgress = referenceProgress,
+                    animate = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                )
+            }
         }
 
         val intent = Intent(context, StopwatchService::class.java)
@@ -131,8 +155,11 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
 
     override fun onReset() {
         binding.laps.removeAllViews()
-        binding.time.setMaxProgress(0)
-        binding.time.setReferenceProgress(0)
+        maxProgress = 0f
+        referenceProgress = 0f
+        timeText = "0s 00"
+        currentProgress = 0f
+
         binding.reset.isClickable = false
         binding.reset.alpha = 0f
         binding.lap.visibility = View.INVISIBLE
@@ -141,16 +168,17 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
 
     override fun onTick(currentTime: Long, text: String) {
         service?.let {
-            binding.time.setText(text)
-            binding.time.setProgress(currentTime - if (it.lastLapTime == 0L) currentTime else it.lastLapTime)
+            timeText = text
+            val lapBase = if (it.lastLapTime == 0L) currentTime else it.lastLapTime
+            currentProgress = (currentTime - lapBase).toFloat()
         }
     }
 
     override fun onLap(lapNum: Int, lapTime: Long, lastLapTime: Long, lapDiff: Long) {
         if (lastLapTime == 0L)
-            binding.time.setMaxProgress(lapDiff)
+            maxProgress = lapDiff.toFloat()
         else
-            binding.time.setReferenceProgress(lapDiff)
+            referenceProgress = lapDiff.toFloat()
 
         val layout = LinearLayout(context)
         val number = MaterialTextView(requireContext())

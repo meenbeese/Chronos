@@ -7,9 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.databinding.FragmentTimerBinding
+import com.meenbeese.chronos.views.ProgressTextView
 
 class TimerFragment : BaseFragment() {
     private var _binding: FragmentTimerBinding? = null
@@ -20,15 +28,29 @@ class TimerFragment : BaseFragment() {
     private var isRunning = true
     private var timer: TimerData? = null
 
+    private var timeText by mutableStateOf("")
+    private var progress by mutableStateOf(0f)
+    private var maxProgress by mutableStateOf(0f)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentTimerBinding.inflate(inflater, container, false)
+        _binding!!.time.setContent {
+            ProgressTextView(
+                text = timeText,
+                progress = progress,
+                maxProgress = maxProgress,
+                referenceProgress = null,
+                animate = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+            )
+        }
         timer = arguments?.getParcelable(EXTRA_TIMER)
-
-        timer?.duration?.let { binding.time.setMaxProgress(it) }
 
         handler = Handler(Looper.getMainLooper())
         runnable = object : Runnable {
@@ -37,10 +59,11 @@ class TimerFragment : BaseFragment() {
                     timer?.let { timer ->
                         if (timer.isSet) {
                             val remainingMillis = timer.remainingMillis
-                            binding.time.apply {
-                                setText(FormatUtils.formatMillis(remainingMillis))
-                                setProgress(timer.duration - remainingMillis)
-                            }
+
+                            timeText = FormatUtils.formatMillis(remainingMillis)
+                            progress = (timer.duration - remainingMillis).toFloat()
+                            maxProgress = timer.duration.toFloat()
+
                             handler.postDelayed(this, 10)
                         } else {
                             try {

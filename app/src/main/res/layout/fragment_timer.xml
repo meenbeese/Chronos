@@ -29,7 +29,7 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.meenbeese.chronos.views.ProgressTextView
+        <androidx.compose.ui.platform.ComposeView
             android:id="@+id/time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

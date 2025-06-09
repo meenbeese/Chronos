@@ -1,183 +1,104 @@
 package com.meenbeese.chronos.views
 
-import android.animation.ValueAnimator
-import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.RectF
-import android.util.AttributeSet
-import android.util.TypedValue
-import android.view.View
-import android.view.animation.LinearInterpolator
-
-import androidx.core.content.ContextCompat
-
-import com.meenbeese.chronos.R
-import com.meenbeese.chronos.utils.DimenUtils
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 
 import kotlin.math.cos
-import kotlin.math.min
 import kotlin.math.sin
 
 /**
  * Display a progress circle with text in
  * the center.
  */
-class ProgressTextView : View {
+@Composable
+fun ProgressTextView(
+    text: String,
+    progress: Float,
+    maxProgress: Float,
+    modifier: Modifier = Modifier,
+    referenceProgress: Float? = null,
+    animate: Boolean = false
+) {
+    val animatedProgress by animateFloatAsState(
+        targetValue = progress,
+        label = "progressAnim"
+    )
 
-    private var progress: Long = 0
-    private var maxProgress: Long = 0
-    private var referenceProgress: Long = 0
-    private var text: String? = null
-    private var padding: Int = DimenUtils.dpToPx(4f)
+    val strokeWidth = 6.dp
+    val color = MaterialTheme.colorScheme.primary
+    val backgroundColor = MaterialTheme.colorScheme.surfaceVariant
+    val dotColor = MaterialTheme.colorScheme.primary
 
-    private val lineColor = ContextCompat.getColor(context, R.color.colorAccent)
-    private val circleColor = ContextCompat.getColor(context, R.color.colorAccent)
-    private val backgroundColor = ContextCompat.getColor(context, R.color.colorIndeterminateText)
-    private val textColorPrimary = ContextCompat.getColor(context, R.color.textColorPrimary)
+    val progressFraction = (if (animate) animatedProgress else progress) / maxProgress.coerceAtLeast(1f)
 
-    private var linePaint = Paint().apply {
-        isAntiAlias = true
-        style = Paint.Style.STROKE
-        strokeWidth = padding.toFloat()
-        color = lineColor
-    }
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val strokePx = strokeWidth.toPx()
+            val radius = size.minDimension / 2 - strokePx
+            val center = Offset(size.width / 2, size.height / 2)
+            val arcRect = Rect(
+                left = strokePx,
+                top = strokePx,
+                right = size.width - strokePx,
+                bottom = size.height - strokePx
+            )
 
-    private var circlePaint = Paint().apply {
-        isAntiAlias = true
-        color = circleColor
-    }
+            drawArc(
+                color = backgroundColor,
+                startAngle = 0f,
+                sweepAngle = 360f,
+                useCenter = false,
+                style = Stroke(strokePx),
+                topLeft = arcRect.topLeft,
+                size = arcRect.size
+            )
 
-    private var backgroundPaint = Paint().apply {
-        isAntiAlias = true
-        style = Paint.Style.STROKE
-        strokeWidth = padding.toFloat()
-        color = backgroundColor
-    }
+            drawArc(
+                color = color,
+                startAngle = -90f,
+                sweepAngle = progressFraction * 360f,
+                useCenter = false,
+                style = Stroke(strokePx, cap = StrokeCap.Round),
+                topLeft = arcRect.topLeft,
+                size = arcRect.size
+            )
 
-    private var textPaint = Paint().apply {
-        color = textColorPrimary
-        isAntiAlias = true
-        textAlign = Paint.Align.CENTER
-        textSize = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_SP,
-            34f,
-            context.resources.displayMetrics
-        )
-        isFakeBoldText = true
-    }
-
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-    /**
-     * Set the text (time) to display in the center
-     * of the view.
-     */
-    fun setText(text: String) {
-        this.text = text
-        invalidate()
-    }
-
-    /**
-     * Set the current progress value.
-     */
-    @JvmOverloads
-    fun setProgress(progress: Long, animate: Boolean = false) {
-        if (animate) {
-            ValueAnimator.ofFloat(this.progress.toFloat(), progress.toFloat()).apply {
-                interpolator = LinearInterpolator()
-                addUpdateListener { valueAnimator ->
-                    (valueAnimator.animatedValue as? Float)?.toLong()?.let { value ->
-                        setProgress(value, false)
-                    }
+            referenceProgress?.let {
+                if (maxProgress > 0f) {
+                    val angleRad = Math.toRadians((it / maxProgress * 360 - 90).toDouble())
+                    val dotX = center.x + cos(angleRad).toFloat() * radius
+                    val dotY = center.y + sin(angleRad).toFloat() * radius
+                    drawCircle(
+                        color = dotColor,
+                        radius = strokePx,
+                        center = Offset(dotX, dotY)
+                    )
                 }
-                start()
             }
-        } else {
-            this.progress = progress
-            postInvalidate()
         }
-    }
 
-    /**
-     * Set the largest progress that has been acquired so far.
-     */
-    @JvmOverloads
-    fun setMaxProgress(maxProgress: Long, animate: Boolean = false) {
-        if (animate) {
-            ValueAnimator.ofFloat(this.maxProgress.toFloat(), maxProgress.toFloat()).apply {
-                interpolator = LinearInterpolator()
-                addUpdateListener { valueAnimator ->
-                    (valueAnimator.animatedValue as? Float)?.toLong()?.let { value ->
-                        setMaxProgress(value, false)
-                    }
-                }
-                start()
-            }
-        } else {
-            this.maxProgress = maxProgress
-            postInvalidate()
-        }
-    }
-
-    /**
-     * Set the progress value of the reference dot (?) on
-     * the circle. Mostly used in the stopwatch, to indicate
-     * the previous/best lap time.
-     */
-    fun setReferenceProgress(referenceProgress: Long) {
-        this.referenceProgress = referenceProgress
-        postInvalidate()
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
-        val width = MeasureSpec.getSize(widthMeasureSpec)
-        val height = MeasureSpec.getSize(heightMeasureSpec)
-
-        val desiredWidth = (width * 1.0).toInt()
-        val desiredHeight = (height * 0.9).toInt()
-        setMeasuredDimension(desiredWidth, desiredHeight)
-    }
-
-    override fun onDraw(canvas: Canvas) {
-        val size = min(width, height)
-        val sidePadding = padding * 3
-        val radius = (size / 2 - sidePadding).toFloat()
-        val rectF = RectF(
-            (width / 2 - radius),
-            (height / 2 - radius),
-            (width / 2 + radius),
-            (height / 2 + radius)
+        Text(
+            text = text,
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.headlineMedium,
+            textAlign = TextAlign.Center
         )
-
-        if (maxProgress > 0) {
-            val sweepAngle = 360f * progress / maxProgress
-
-            // Draw remaining arc (gray)
-            canvas.drawArc(rectF, -90f + sweepAngle, 360f - sweepAngle, false, backgroundPaint)
-
-            // Draw progress arc (blue)
-            canvas.drawArc(rectF, -90f, sweepAngle, false, linePaint)
-
-            val progressX = width / 2 + cos((sweepAngle - 90) * Math.PI / 180).toFloat() * radius
-            val progressY = height / 2 + sin((sweepAngle - 90) * Math.PI / 180).toFloat() * radius
-
-            canvas.drawCircle(progressX, progressY, (2 * padding).toFloat(), circlePaint)
-        }
-
-        text?.let { str ->
-            val textBounds = Rect()
-            textPaint.getTextBounds(str, 0, str.length, textBounds)
-
-            val xPos = (width / 2).toFloat()
-            val yPos = (height / 2).toFloat()
-
-            canvas.drawText(str, xPos, yPos, textPaint)
-        }
     }
 }

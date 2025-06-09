@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.meenbeese.chronos.views.ProgressTextView
+            <androidx.compose.ui.platform.ComposeView
                 android:id="@+id/time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
