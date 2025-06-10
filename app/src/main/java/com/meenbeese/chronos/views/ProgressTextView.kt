@@ -38,10 +38,10 @@ fun ProgressTextView(
         label = "progressAnim"
     )
 
-    val strokeWidth = 6.dp
+    val strokeWidth = 10.dp
     val color = MaterialTheme.colorScheme.primary
     val backgroundColor = MaterialTheme.colorScheme.surfaceVariant
-    val dotColor = MaterialTheme.colorScheme.primary
+    val dotColor = MaterialTheme.colorScheme.inversePrimary
 
     val progressFraction = (if (animate) animatedProgress else progress) / maxProgress.coerceAtLeast(1f)
 
@@ -87,7 +87,7 @@ fun ProgressTextView(
                     val dotY = center.y + sin(angleRad).toFloat() * radius
                     drawCircle(
                         color = dotColor,
-                        radius = strokePx,
+                        radius = strokePx / 2f,
                         center = Offset(dotX, dotY)
                     )
                 }

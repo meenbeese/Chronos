@@ -54,7 +54,6 @@ fun StopwatchScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 22.dp)
                 .statusBarsPadding(),
             verticalAlignment = Alignment.CenterVertically
         ) {

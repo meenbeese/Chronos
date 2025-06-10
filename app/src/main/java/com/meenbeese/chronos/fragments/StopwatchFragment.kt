@@ -109,17 +109,17 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
                             Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
                                 Text(
                                     text = getString(R.string.title_lap_number, lap.number),
-                                    color = MaterialTheme.colorScheme.onPrimary
+                                    color = MaterialTheme.colorScheme.secondary
                                 )
                                 Spacer(Modifier.weight(1f))
                                 Text(
                                     text = getString(R.string.title_lap_time, formatMillis(lap.lapTime)),
-                                    color = MaterialTheme.colorScheme.onPrimary
+                                    color = MaterialTheme.colorScheme.secondary
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
                                     text = getString(R.string.title_total_time, formatMillis(lap.totalTime)),
-                                    color = MaterialTheme.colorScheme.onPrimary
+                                    color = MaterialTheme.colorScheme.secondary
                                 )
                             }
                         }
