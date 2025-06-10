@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
@@ -29,7 +30,6 @@ import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.data.toEntity
 import com.meenbeese.chronos.databinding.ItemAlarmBinding
-import com.meenbeese.chronos.databinding.ItemTimerBinding
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.dialogs.SoundChooserDialog
 import com.meenbeese.chronos.dialogs.TimePickerDialog
@@ -39,6 +39,7 @@ import com.meenbeese.chronos.utils.DimenUtils
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.DayCircleView
 import com.meenbeese.chronos.views.ProgressLineView
+import com.meenbeese.chronos.views.TimerItemView
 
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -70,8 +71,13 @@ class AlarmsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == 0) {
-            val binding = ItemTimerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            TimerViewHolder(binding)
+            val composeView = ComposeView(parent.context).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+            }
+            TimerViewHolder(composeView)
         } else {
             val binding = ItemAlarmBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             AlarmViewHolder(binding, chronos)
@@ -100,27 +106,28 @@ class AlarmsAdapter(
     private fun onBindTimerViewHolder(holder: TimerViewHolder) {
         holder.runnable = object : Runnable {
             override fun run() {
-                try {
-                    getTimer(holder.bindingAdapterPosition)?.let { timer ->
-                        val text = FormatUtils.formatMillis(timer.remainingMillis)
-                        holder.time.text = text.substring(0, text.length - 3)
+                val position = holder.bindingAdapterPosition
+                if (position == RecyclerView.NO_POSITION) return
 
-                        val currentProgress = 1f - timer.remainingMillis.toFloat() / timer.duration.toFloat()
-                        holder.progress.setContent {
-                            ProgressLineView(progress = currentProgress)
+                val timer = getTimer(position) ?: return
+
+                val remainingMillis = timer.remainingMillis
+                val formattedTime = FormatUtils.formatMillis(remainingMillis)
+                val displayText = formattedTime.dropLast(3)
+
+                val progress = 1f - remainingMillis.toFloat() / timer.duration.toFloat()
+
+                holder.composeView.setContent {
+                    TimerItemView(
+                        timeText = displayText,
+                        onStopClick = { chronos.removeTimer(timer) },
+                        progressContent = {
+                            ProgressLineView(progress = progress)
                         }
-                    }
-
-                    holder.handler.postDelayed(this, 1000)
-                } catch (e: Exception) {
-                    e.printStackTrace()
+                    )
                 }
-            }
-        }
 
-        holder.stop.setOnClickListener {
-            getTimer(holder.bindingAdapterPosition)?.let { timer ->
-                chronos.removeTimer(timer)
+                holder.handler.postDelayed(this, 1000)
             }
         }
     }
@@ -520,7 +527,7 @@ class AlarmsAdapter(
     /**
      * ViewHolder for timer items.
      */
-    class TimerViewHolder(val binding: ItemTimerBinding) : RecyclerView.ViewHolder(binding.root) {
+    class TimerViewHolder(val composeView: ComposeView) : RecyclerView.ViewHolder(composeView) {
         val handler = Handler(Looper.getMainLooper())
         var runnable: Runnable? = null
             set(runnable) {
@@ -529,10 +536,6 @@ class AlarmsAdapter(
                 field = runnable
                 handler.post(field!!)
             }
-
-        val time = binding.time
-        val stop = binding.stop
-        val progress = binding.progress
     }
 
     /**

@@ -9,7 +9,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Fill
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /**
@@ -20,7 +19,6 @@ import androidx.compose.ui.unit.dp
 fun ProgressLineView(
     progress: Float,
     modifier: Modifier = Modifier,
-    height: Dp = 4.dp,
     backgroundColor: Color = Color.LightGray,
     lineColor: Color = Color.DarkGray
 ) {
@@ -32,7 +30,7 @@ fun ProgressLineView(
     Canvas(
         modifier = modifier
             .fillMaxWidth()
-            .height(height)
+            .height(40.dp)
     ) {
         val canvasWidth = size.width
         val canvasHeight = size.height
