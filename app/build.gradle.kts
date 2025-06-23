@@ -104,9 +104,9 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.7.1")
 
     // Room DB
-    ksp("androidx.room:room-compiler:2.7.1")
-    implementation("androidx.room:room-ktx:2.7.1")
-    implementation("androidx.room:room-runtime:2.7.1")
+    ksp("androidx.room:room-compiler:2.7.2")
+    implementation("androidx.room:room-ktx:2.7.2")
+    implementation("androidx.room:room-runtime:2.7.2")
 
     // Material
     implementation("com.google.android.material:material:1.12.0")
