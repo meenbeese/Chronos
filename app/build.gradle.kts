@@ -91,8 +91,8 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:1.1.0")
 
     // Compose
-    implementation("androidx.compose.ui:ui:1.8.2")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.8.2")
+    implementation("androidx.compose.ui:ui:1.8.3")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.8.3")
     implementation("androidx.compose.animation:animation:1.8.2")
     implementation("androidx.compose.foundation:foundation:1.8.2")
     implementation("androidx.compose.runtime:runtime:1.8.2")
