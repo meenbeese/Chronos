@@ -57,16 +57,18 @@ android {
         kotlinCompilerExtensionVersion = "1.6.5"
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     lint {
         abortOnError = false
     }
 
     androidResources {
         generateLocaleConfig = true
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
 
@@ -91,11 +93,11 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:1.1.0")
 
     // Compose
-    implementation("androidx.compose.ui:ui:1.8.2")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.8.2")
-    implementation("androidx.compose.animation:animation:1.8.2")
-    implementation("androidx.compose.foundation:foundation:1.8.2")
-    implementation("androidx.compose.runtime:runtime:1.8.2")
+    implementation("androidx.compose.ui:ui:1.8.3")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.8.3")
+    implementation("androidx.compose.animation:animation:1.8.3")
+    implementation("androidx.compose.foundation:foundation:1.8.3")
+    implementation("androidx.compose.runtime:runtime:1.8.3")
     implementation("androidx.compose.material3:material3:1.3.2")
 
     // Media
