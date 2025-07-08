@@ -8,10 +8,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AutoMode
+import androidx.compose.material.icons.outlined.Battery0Bar
+import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -95,7 +102,28 @@ fun ThemePreference(
             ) {
                 themes.forEachIndexed { index, themeName ->
                     DropdownMenuItem(
-                        text = { Text(themeName) },
+                        text = {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = themeName,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Icon(
+                                    imageVector = when (index) {
+                                        0 -> Icons.Outlined.AutoMode    // AUTO
+                                        1 -> Icons.Outlined.WbSunny     // DAY
+                                        2 -> Icons.Outlined.DarkMode    // NIGHT
+                                        3 -> Icons.Outlined.Battery0Bar // AMOLED
+                                        else -> Icons.Outlined.Settings
+                                    },
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(start = 8.dp)
+                                )
+                            }
+                        },
                         onClick = {
                             expanded = false
                             selectedText = themeName
