@@ -75,7 +75,9 @@ fun BooleanPreference(
                 coroutineScope.launch {
                     preference.set(context, it)
                 }
-            }
+            },
+            modifier = Modifier
+                .padding(start = 12.dp)
         )
     }
 }

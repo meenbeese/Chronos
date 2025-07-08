@@ -4,7 +4,7 @@ import android.content.Context
 import android.provider.Settings
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -40,7 +40,7 @@ fun AlertWindowPreference(
     var showDialog by remember { mutableStateOf(false) }
     val isGranted = remember { Settings.canDrawOverlays(context) }
 
-    Column(
+    Row(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
@@ -54,7 +54,8 @@ fun AlertWindowPreference(
     ) {
         Text(
             text = stringResource(id = R.string.info_background_permissions_title),
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -62,7 +63,8 @@ fun AlertWindowPreference(
         Switch(
             checked = isGranted,
             onCheckedChange = null,
-            enabled = false
+            modifier = Modifier
+                .padding(start = 12.dp)
         )
     }
 

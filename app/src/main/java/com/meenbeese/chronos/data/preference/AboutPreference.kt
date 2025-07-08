@@ -2,9 +2,11 @@ package com.meenbeese.chronos.data.preference
 
 import android.content.Context
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 
 import com.meenbeese.chronos.R
@@ -35,6 +37,6 @@ fun AboutPreference(
                     .commit()
             }
         },
-        modifier = modifier
+        modifier = modifier.padding(bottom = 12.dp)
     )
 }

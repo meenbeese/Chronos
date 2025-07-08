@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -97,7 +98,7 @@ fun TimeChooserDialog(
                 ) {
                     Text(
                         text = displayTime,
-                        style = MaterialTheme.typography.displaySmall,
+                        style = MaterialTheme.typography.headlineMedium,
                         modifier = Modifier.weight(1f),
                         textAlign = TextAlign.Center
                     )
@@ -109,7 +110,8 @@ fun TimeChooserDialog(
                                 .size(36.dp)
                                 .clickable {
                                     input = "0" + input.dropLast(1)
-                                }
+                                },
+                            colorFilter = ColorFilter.tint(Color.Gray)
                         )
                     }
                 }

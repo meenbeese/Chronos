@@ -61,9 +61,9 @@ fun AboutScreen(
             ),
             contentDescription = stringResource(R.string.app_name),
             modifier = Modifier
-                .size(200.dp)
+                .size(160.dp)
                 .align(Alignment.CenterHorizontally)
-                .padding(top = 48.dp)
+                .padding(top = 64.dp)
         )
 
         Text(
@@ -110,7 +110,7 @@ fun AboutScreen(
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(top = 24.dp)
+                .padding(top = 44.dp)
         )
 
         Column(
@@ -146,7 +146,8 @@ fun AboutScreen(
         EngagementItem(
             iconRes = R.drawable.ic_copyright,
             label = stringResource(R.string.copyright_info, year),
-            color = Color.Unspecified
+            color = Color.Unspecified,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Toast.makeText(context, context.getString(R.string.copyright_info, year), Toast.LENGTH_SHORT).show()
         }
@@ -158,11 +159,12 @@ fun EngagementItem(
     @DrawableRes iconRes: Int,
     label: String,
     color: Color,
-    onClick: () -> Unit
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .clickable(onClick = onClick)
             .padding(top = 8.dp)
     ) {
