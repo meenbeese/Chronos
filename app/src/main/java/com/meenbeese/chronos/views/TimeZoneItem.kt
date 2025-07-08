@@ -26,8 +26,7 @@ fun TimeZoneItem(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onCheckedChange(!isChecked) }
-            .padding(horizontal = 28.dp, vertical = 8.dp)
-            .background(MaterialTheme.colorScheme.surface),
+            .padding(horizontal = 24.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
