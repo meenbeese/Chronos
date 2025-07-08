@@ -6,13 +6,16 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.AlarmClock
+import android.provider.Settings
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -31,6 +34,11 @@ import com.meenbeese.chronos.fragments.TimerFragment
 import com.meenbeese.chronos.receivers.TimerReceiver
 import com.meenbeese.chronos.utils.AudioUtils
 import com.meenbeese.chronos.utils.Theme
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import org.koin.android.ext.android.inject
 
@@ -84,8 +92,25 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
 
         // Background permissions info
         if (!Preferences.INFO_BACKGROUND_PERMISSIONS.get(this)) {
-            val backgroundPermissionsDialog = BackgroundPermissionsDialog(this)
-            backgroundPermissionsDialog.show()
+            val composeView = findViewById<ComposeView>(R.id.backgroundPermissionsComposeView)
+            composeView.setContent {
+                BackgroundPermissionsDialog(
+                    onDismiss = {
+                        composeView.visibility = View.GONE
+                    },
+                    onConfirm = {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            Preferences.INFO_BACKGROUND_PERMISSIONS.set(this@MainActivity, true)
+                            withContext(Dispatchers.Main) {
+                                composeView.visibility = View.GONE
+                                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                                startActivity(intent)
+                            }
+                        }
+                    }
+                )
+            }
+            composeView.visibility = View.VISIBLE
         }
     }
 

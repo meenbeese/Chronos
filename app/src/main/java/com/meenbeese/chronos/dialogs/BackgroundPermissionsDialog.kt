@@ -1,53 +1,59 @@
 package com.meenbeese.chronos.dialogs
 
-import android.content.Context
-import android.content.Intent
-import android.os.Bundle
-import android.provider.Settings
-import android.view.WindowManager
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 
-import androidx.activity.ComponentDialog
+import com.meenbeese.chronos.R
 
-import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.databinding.DialogBackgroundPermissionsBinding
-
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-
-class BackgroundPermissionsDialog(context: Context) : ComponentDialog(context) {
-    private var _binding: DialogBackgroundPermissionsBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        _binding = DialogBackgroundPermissionsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        binding.cancelButton.setOnClickListener { dismiss() }
-        binding.okButton.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                Preferences.INFO_BACKGROUND_PERMISSIONS.set(context, true)
-
-                withContext(Dispatchers.Main) {
-                    context.startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION))
-                    dismiss()
-                }
+@Composable
+fun BackgroundPermissionsDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = stringResource(R.string.info_background_permissions_title),
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(R.string.info_background_permissions_body),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(
+                    text = stringResource(android.R.string.ok),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
-        }
-    }
-
-    override fun show() {
-        super.show()
-        window?.setLayout(
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.WRAP_CONTENT
-        )
-    }
-
-    override fun onStop() {
-        super.onStop()
-        _binding = null
-    }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(
+                    text = stringResource(android.R.string.cancel),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+        },
+        modifier = Modifier
+            .widthIn(min = 300.dp, max = 600.dp)
+            .heightIn(min = 200.dp, max = 400.dp)
+            .padding(16.dp)
+    )
 }

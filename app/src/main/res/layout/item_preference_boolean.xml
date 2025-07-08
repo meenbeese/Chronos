@@ -42,4 +42,10 @@
         app:trackTint="@color/switch_thumb_tint"
         app:thumbTint="@color/switch_track_tint" />
 
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/composeDialogHost"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
 </LinearLayout>

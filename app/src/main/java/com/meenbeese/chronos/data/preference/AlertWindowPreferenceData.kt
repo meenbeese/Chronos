@@ -8,11 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.databinding.ItemPreferenceBooleanBinding
+import com.meenbeese.chronos.dialogs.BackgroundPermissionsDialog
 
 /**
  * A preference item allowing the user to grant the
@@ -46,12 +50,23 @@ class AlertWindowPreferenceData
     }
 
     private fun showAlert(holder: ViewHolder) {
-        MaterialAlertDialogBuilder(holder.binding.root.context, if(holder.chronos!!.isDarkTheme()) com.google.android.material.R.style.Theme_MaterialComponents_Dialog_Alert else com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog_Alert)
-            .setTitle(holder.context.getString(R.string.info_background_permissions_title))
-            .setMessage(holder.context.getString(R.string.info_background_permissions_body))
-            .setPositiveButton(holder.binding.root.context.getString(android.R.string.ok)){_, _ ->  showActivity(holder.context)}
-            .setNegativeButton(holder.binding.root.context.getString(android.R.string.cancel), null)
-            .show()
+        val composeView = holder.binding.composeDialogHost
+        composeView.setContent {
+            var showDialog by remember { mutableStateOf(true) }
+
+            if (showDialog) {
+                BackgroundPermissionsDialog(
+                    onDismiss = {
+                        showDialog = false
+                    },
+                    onConfirm = {
+                        showDialog = false
+                        showActivity(holder.binding.root.context)
+                    }
+                )
+            }
+        }
+        composeView.visibility = View.VISIBLE
     }
 
     private fun showActivity(context: Context) {
