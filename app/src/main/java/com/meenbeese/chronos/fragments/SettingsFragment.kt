@@ -194,7 +194,7 @@ class SettingsFragment : BasePagerFragment(), Consumer<Any?> {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    override fun accept(o: Any?) {
+    override fun accept(value: Any?) {
         binding.recycler.post { preferenceAdapter?.notifyDataSetChanged() }
     }
 
