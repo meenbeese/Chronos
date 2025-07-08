@@ -18,7 +18,7 @@
             android:layout_gravity="end"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/cardview_dark_background"
             android:textSize="12sp"
             android:visibility="gone" />
 
