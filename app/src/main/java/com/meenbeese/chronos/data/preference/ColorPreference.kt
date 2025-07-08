@@ -105,6 +105,28 @@ fun ColorPreference(
                             currentColor = envelope.color.toArgb()
                         }
                     )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(Color(currentColor))
+                                .border(1.dp, Color.Gray, RoundedCornerShape(6.dp))
+                        )
+
+                        Text(
+                            text = String.format("#%06X", 0xFFFFFF and currentColor),
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier
+                                .padding(start = 12.dp)
+                        )
+                    }
                 }
             }
         )
