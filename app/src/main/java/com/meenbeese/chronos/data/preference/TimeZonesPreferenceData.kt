@@ -38,19 +38,20 @@ class TimeZonesPreferenceData(
             .filter { it.isNotBlank() }
             .toMutableSet()
 
-        TimeZoneChooserDialog(holder.context, selectedZones) { updatedSelection ->
-            val csv = updatedSelection.joinToString(",")
-            runBlocking {
-                Preferences.TIME_ZONES.set(holder.context, csv)
-                Preferences.TIME_ZONE_ENABLED.set(holder.context, updatedSelection.isNotEmpty())
+        TimeZoneChooserDialog(
+            initialSelected = selectedZones,
+            onDismiss = { bindViewHolder(holder) },
+            onSelectionDone = { updatedSelection ->
+                val csv = updatedSelection.joinToString(",")
+                runBlocking {
+                    Preferences.TIME_ZONES.set(holder.context, csv)
+                    Preferences.TIME_ZONE_ENABLED.set(holder.context, updatedSelection.isNotEmpty())
+                }
+
+                (holder.context as? MainActivity)?.refreshClockFragments()
+
+                bindViewHolder(holder)
             }
-
-            (holder.context as? MainActivity)?.refreshClockFragments()
-
-            bindViewHolder(holder)
-        }.apply {
-            setOnDismissListener { bindViewHolder(holder) }
-            show()
-        }
+        )
     }
 }
