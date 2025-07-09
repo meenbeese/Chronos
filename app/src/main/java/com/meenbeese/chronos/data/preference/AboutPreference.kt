@@ -37,6 +37,6 @@ fun AboutPreference(
                     .commit()
             }
         },
-        modifier = modifier.padding(bottom = 12.dp)
+        modifier = modifier.padding(bottom = 16.dp)
     )
 }

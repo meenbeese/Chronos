@@ -116,8 +116,7 @@ fun SettingsScreen(
                     {
                         BooleanPreference(
                             preference = Preferences.MILITARY_TIME,
-                            title = R.string.title_military_time,
-                            description = R.string.desc_military_time
+                            title = R.string.title_military_time
                         )
                     },
                     {
@@ -154,12 +153,14 @@ fun SettingsScreen(
                     },
                     {
                         TimePreference(
-                            Preferences.SLOW_WAKE_UP_TIME,
-                            R.string.title_slow_wake_up_time
+                            preference = Preferences.SLOW_WAKE_UP_TIME,
+                            titleRes = R.string.title_slow_wake_up_time
                         )
                     },
                     {
-                        AboutPreference(context = context)
+                        AboutPreference(
+                            context = context
+                        )
                     }
                 )
             )
