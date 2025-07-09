@@ -3,21 +3,15 @@ package com.meenbeese.chronos.utils
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
-import android.widget.ImageView
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.core.net.toUri
 import androidx.core.graphics.get
 
 import coil3.compose.rememberAsyncImagePainter
-import coil3.load
-import coil3.request.crossfade
-import coil3.request.transformations
-import coil3.transform.RoundedCornersTransformation
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
@@ -25,41 +19,6 @@ import com.meenbeese.chronos.data.Preferences
 import java.io.File
 
 object ImageUtils {
-    @JvmStatic
-    private fun getBackgroundImage(imageView: ImageView) {
-        val context = imageView.context
-        val backgroundUrl = Preferences.BACKGROUND_IMAGE.get(context)
-
-        if (backgroundUrl.isNotEmpty()) {
-            when {
-                backgroundUrl.startsWith("drawable/") -> {
-                    val resName = backgroundUrl.removePrefix("drawable/")
-                    val resId = context.resources.getIdentifier(resName, "drawable", context.packageName)
-                    if (resId != 0) {
-                        loadImageWithCoil(imageView, resId)
-                        return
-                    }
-                }
-                backgroundUrl.startsWith("http") -> {
-                    loadImageWithCoil(imageView, backgroundUrl.toUri())
-                    return
-                }
-                backgroundUrl.startsWith("content://") -> {
-                    val uri = backgroundUrl.toUri()
-                    loadImageWithCoil(imageView, uri)
-                    return
-                }
-                else -> {
-                    val file = File(backgroundUrl)
-                    loadImageWithCoil(imageView, Uri.fromFile(file))
-                    return
-                }
-            }
-        }
-
-        imageView.setImageResource(R.drawable.snowytrees)
-    }
-
     @Composable
     private fun getBackgroundImageAsync(): Painter {
         val context = LocalContext.current
@@ -98,20 +57,6 @@ object ImageUtils {
             }
         } else {
             null
-        }
-    }
-
-    private fun loadImageWithCoil(imageView: ImageView, uri: Uri) {
-        imageView.load(uri) {
-            crossfade(true)
-            transformations(RoundedCornersTransformation())
-        }
-    }
-
-    private fun loadImageWithCoil(imageView: ImageView, drawableRes: Int) {
-        imageView.load(drawableRes) {
-            crossfade(true)
-            transformations(RoundedCornersTransformation())
         }
     }
 
