@@ -1,7 +1,6 @@
 package com.meenbeese.chronos.fragments.sound
 
 import android.content.Context
-import android.media.RingtoneManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SoundsAdapter
-import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.databinding.FragmentSoundChooserListBinding
+import com.meenbeese.chronos.ext.loadRingtones
 import com.meenbeese.chronos.fragments.BasePagerFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 
@@ -27,28 +26,8 @@ class RingtoneSoundChooserFragment : BaseSoundChooserFragment() {
     ): View? {
         _binding = FragmentSoundChooserListBinding.inflate(inflater, container, false)
 
-        val sounds: MutableList<SoundData> = ArrayList()
-        val manager = RingtoneManager(context)
-        manager.setType(RingtoneManager.TYPE_RINGTONE)
-        val cursor = manager.cursor
-        val count = cursor.count
-
-        if (count > 0 && cursor.moveToFirst()) {
-            do {
-                sounds.add(
-                    SoundData(
-                        cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX),
-                        SoundData.TYPE_RINGTONE,
-                        cursor.getString(RingtoneManager.URI_COLUMN_INDEX) + "/" + cursor.getString(
-                            RingtoneManager.ID_COLUMN_INDEX
-                        )
-                    )
-                )
-            } while (cursor.moveToNext())
-        }
-
         binding.recycler.layoutManager = LinearLayoutManager(context)
-        val adapter = SoundsAdapter(chronos!!, sounds)
+        val adapter = SoundsAdapter(chronos!!, loadRingtones(requireContext()))
         adapter.setListener(this)
         binding.recycler.adapter = adapter
 

@@ -19,7 +19,7 @@ import androidx.media3.common.util.UnstableApi
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.data.isIgnoringBatteryOptimizations
+import com.meenbeese.chronos.ext.isIgnoringBatteryOptimizations
 import com.meenbeese.chronos.data.preference.AboutPreference
 import com.meenbeese.chronos.data.preference.AlertWindowPreference
 import com.meenbeese.chronos.data.preference.BatteryPreference

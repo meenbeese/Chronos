@@ -1,4 +1,4 @@
-package com.meenbeese.chronos.data
+package com.meenbeese.chronos.ext
 
 import android.content.Context
 import android.preference.PreferenceManager

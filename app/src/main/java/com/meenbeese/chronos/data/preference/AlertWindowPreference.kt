@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.data.openOverlaySettings
+import com.meenbeese.chronos.ext.openOverlaySettings
 import com.meenbeese.chronos.dialogs.BackgroundPermissionsDialog
 
 /**

@@ -9,6 +9,8 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 
+import com.meenbeese.chronos.ext.dataStore
+
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
