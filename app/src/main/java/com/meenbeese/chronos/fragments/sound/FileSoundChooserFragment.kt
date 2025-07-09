@@ -6,34 +6,35 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.fragment.app.FragmentActivity
 import androidx.media3.common.util.UnstableApi
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.adapters.SoundsAdapter
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.ext.dataStore
 import com.meenbeese.chronos.fragments.BasePagerFragment
 import com.meenbeese.chronos.fragments.FileChooserFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
+import com.meenbeese.chronos.views.SoundItemView
 
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -73,17 +74,17 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        AndroidView(
-                            factory = { context ->
-                                RecyclerView(context).apply {
-                                    layoutManager = LinearLayoutManager(context)
-                                    val adapter = SoundsAdapter(chronos!!, sounds)
-                                    adapter.setListener(this@FileSoundChooserFragment)
-                                    this.adapter = adapter
-                                }
-                            },
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        LazyColumn(modifier = Modifier.fillMaxSize()) {
+                            items(sounds) { sound ->
+                                SoundItemView(
+                                    icon = painterResource(id = R.drawable.ic_play),
+                                    title = sound.name,
+                                    modifier = Modifier
+                                        .clickable { onSoundChosen(sound) }
+                                        .padding(vertical = 4.dp)
+                                )
+                            }
+                        }
                     }
                 }
             }
