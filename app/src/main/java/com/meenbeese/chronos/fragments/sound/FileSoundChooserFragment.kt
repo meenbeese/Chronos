@@ -6,30 +6,42 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.fragment.app.FragmentActivity
+import androidx.media3.common.util.UnstableApi
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SoundsAdapter
 import com.meenbeese.chronos.data.SoundData
-import com.meenbeese.chronos.databinding.FragmentSoundChooserFileBinding
 import com.meenbeese.chronos.ext.dataStore
 import com.meenbeese.chronos.fragments.BasePagerFragment
 import com.meenbeese.chronos.fragments.FileChooserFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+@UnstableApi
 class FileSoundChooserFragment : BaseSoundChooserFragment() {
-    private var _binding: FragmentSoundChooserFileBinding? = null
-    private val binding get() = _binding!!
-
     private lateinit var sounds: MutableList<SoundData>
     private val PREF_FILES_KEY = stringSetPreferencesKey("previousFiles")
 
@@ -38,27 +50,44 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentSoundChooserFileBinding.inflate(inflater, container, false)
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                MaterialTheme {
+                    LaunchedEffect(Unit) {
+                        val previousFiles = loadPreviousFiles()
+                        val items = previousFiles.mapNotNull { str ->
+                            val parts = str.split(SEPARATOR)
+                            if (parts.size == 3) SoundData(parts[1], SoundData.TYPE_RINGTONE, parts[2]) else null
+                        }
+                        sounds = items.toMutableList()
+                    }
 
-        binding.addAudioFile.setOnClickListener { launchFileChooser() }
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Button(
+                            onClick = { launchFileChooser() },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Add Audio File")
+                        }
 
-        GlobalScope.launch(Dispatchers.Main) {
-            val previousFiles = loadPreviousFiles()
+                        Spacer(modifier = Modifier.height(16.dp))
 
-            sounds = ArrayList()
-            for (string in previousFiles) {
-                val parts = string.split(SEPARATOR.toRegex()).toTypedArray()
-                sounds.add(SoundData(parts[1], SoundData.TYPE_RINGTONE, parts[2]))
+                        AndroidView(
+                            factory = { context ->
+                                RecyclerView(context).apply {
+                                    layoutManager = LinearLayoutManager(context)
+                                    val adapter = SoundsAdapter(chronos!!, sounds)
+                                    adapter.setListener(this@FileSoundChooserFragment)
+                                    this.adapter = adapter
+                                }
+                            },
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                }
             }
-
-            binding.recycler.layoutManager = LinearLayoutManager(context)
-            val adapter = SoundsAdapter(chronos!!, sounds)
-            adapter.setListener(this@FileSoundChooserFragment)
-            binding.recycler.adapter = adapter
         }
-
-        return binding.root
     }
 
     private fun launchFileChooser() {
@@ -72,11 +101,6 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
             .replace(android.R.id.content, fragment)
             .addToBackStack(null)
             .commit()
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
     }
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -98,7 +122,7 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
         return previousFiles.toList().sortedWith { o1, o2 ->
             try {
                 Integer.parseInt(o1.split(SEPARATOR.toRegex())[0]) - Integer.parseInt(o2.split(SEPARATOR.toRegex())[0])
-            } catch (e: NumberFormatException) {
+            } catch (_: NumberFormatException) {
                 0
             }
         }

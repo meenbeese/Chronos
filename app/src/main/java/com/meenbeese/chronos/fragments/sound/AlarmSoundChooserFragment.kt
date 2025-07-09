@@ -1,65 +1,66 @@
 package com.meenbeese.chronos.fragments.sound
 
 import android.content.Context
-import android.media.RingtoneManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.unit.dp
+import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.adapters.SoundsAdapter
-import com.meenbeese.chronos.data.SoundData
-import com.meenbeese.chronos.databinding.FragmentSoundChooserListBinding
+import com.meenbeese.chronos.ext.loadRingtones
 import com.meenbeese.chronos.fragments.BasePagerFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 
+@UnstableApi
 class AlarmSoundChooserFragment : BaseSoundChooserFragment() {
-    private var _binding: FragmentSoundChooserListBinding? = null
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentSoundChooserListBinding.inflate(inflater, container, false)
-
-        binding.recycler.layoutManager = LinearLayoutManager(context)
-
-        val sounds = mutableListOf<SoundData>()
-        val manager = RingtoneManager(context).apply {
-            setType(RingtoneManager.TYPE_ALARM)
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                val sounds = loadRingtones(requireContext())
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = 12.dp)
+                ) {
+                    items(sounds) { sound ->
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onSoundChosen(sound) }
+                                .padding(horizontal = 16.dp, vertical = 12.dp)
+                        ) {
+                            Text(
+                                text = sound.name,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = sound.url,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+                }
+            }
         }
-
-        val cursor = manager.cursor
-        val count = cursor.count
-        if (count > 0 && cursor.moveToFirst()) {
-            do {
-                sounds.add(
-                    SoundData(
-                        cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX),
-                        SoundData.TYPE_RINGTONE,
-                        cursor.getString(RingtoneManager.URI_COLUMN_INDEX) + "/" + cursor.getString(
-                            RingtoneManager.ID_COLUMN_INDEX
-                        )
-                    )
-                )
-            } while (cursor.moveToNext())
-        }
-
-        val adapter = SoundsAdapter(chronos!!, sounds)
-        adapter.setListener(this)
-        binding.recycler.adapter = adapter
-
-        return binding.root
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
     }
 
     override fun getTitle(context: Context?): String? {

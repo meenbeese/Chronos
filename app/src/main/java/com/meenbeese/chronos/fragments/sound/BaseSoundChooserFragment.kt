@@ -2,11 +2,14 @@ package com.meenbeese.chronos.fragments.sound
 
 import android.content.Context
 
+import androidx.media3.common.util.UnstableApi
+
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.fragments.BasePagerFragment
 import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 
+@UnstableApi
 abstract class BaseSoundChooserFragment : BasePagerFragment(), SoundChooserListener {
     private var listener: SoundChooserListener? = null
     fun setListener(listener: SoundChooserListener?) {

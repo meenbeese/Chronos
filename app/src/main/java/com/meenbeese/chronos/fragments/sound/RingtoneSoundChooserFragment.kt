@@ -6,37 +6,61 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.unit.dp
+import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.adapters.SoundsAdapter
-import com.meenbeese.chronos.databinding.FragmentSoundChooserListBinding
 import com.meenbeese.chronos.ext.loadRingtones
 import com.meenbeese.chronos.fragments.BasePagerFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
 
+@UnstableApi
 class RingtoneSoundChooserFragment : BaseSoundChooserFragment() {
-    private var _binding: FragmentSoundChooserListBinding? = null
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentSoundChooserListBinding.inflate(inflater, container, false)
-
-        binding.recycler.layoutManager = LinearLayoutManager(context)
-        val adapter = SoundsAdapter(chronos!!, loadRingtones(requireContext()))
-        adapter.setListener(this)
-        binding.recycler.adapter = adapter
-
-        return binding.root
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                val ringtones = loadRingtones(requireContext())
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = 12.dp)
+                ) {
+                    items(ringtones) { sound ->
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onSoundChosen(sound) }
+                                .padding(horizontal = 16.dp, vertical = 12.dp)
+                        ) {
+                            Text(
+                                text = sound.name,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = sound.url,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun getTitle(context: Context?): String? {
