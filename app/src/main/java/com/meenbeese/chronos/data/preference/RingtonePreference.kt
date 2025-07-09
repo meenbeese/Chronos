@@ -10,10 +10,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.fragment.app.FragmentActivity
+import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceEntry
 import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.dialogs.SoundChooserDialog
+import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.meenbeese.chronos.views.PreferenceItem
 
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +32,7 @@ import kotlinx.coroutines.withContext
  * object).
  */
 @Composable
+@UnstableApi
 fun RingtonePreference(
     preference: PreferenceEntry.StringPref,
     @StringRes titleRes: Int,
@@ -57,18 +62,46 @@ fun RingtonePreference(
     )
 
     if (showDialog) {
-//        SoundChooserDialogCompose(
-//            onDismissRequest = { showDialog = false },
-//            onSoundChosen = { sound ->
-//                // Save selection asynchronously
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    preference.set(context, sound?.toString() ?: "")
-//                    withContext(Dispatchers.Main) {
-//                        soundName = sound?.name ?: context.getString(R.string.title_sound_none)
-//                        showDialog = false
-//                    }
-//                }
-//            }
-//        )
+        SoundChooserDialogFragmentHost(
+            onDismissRequest = { showDialog = false },
+            onSoundChosen = { sound ->
+                // Save selection asynchronously
+                CoroutineScope(Dispatchers.IO).launch {
+                    preference.set(context, sound.toString())
+                    withContext(Dispatchers.Main) {
+                        soundName = sound.name
+                        showDialog = false
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+@UnstableApi
+fun SoundChooserDialogFragmentHost(
+    onDismissRequest: () -> Unit,
+    onSoundChosen: (SoundData) -> Unit
+) {
+    val context = LocalContext.current
+    val activity = context as? FragmentActivity
+    var dialogShown by remember { mutableStateOf(false) }
+
+    if (!dialogShown) {
+        LaunchedEffect(Unit) {
+            activity?.supportFragmentManager?.let { fm ->
+                val dialog = SoundChooserDialog()
+                dialog.setListener(object : SoundChooserListener {
+                    override fun onSoundChosen(sound: SoundData?) {
+                        sound?.let { onSoundChosen(it) }
+                        onDismissRequest()
+                        dialog.dismiss()
+                    }
+                })
+
+                dialog.show(fm, "soundChooserDialog")
+            }
+        }
     }
 }

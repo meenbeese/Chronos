@@ -1,5 +1,6 @@
 package com.meenbeese.chronos.views
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -11,17 +12,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
+import com.meenbeese.chronos.R
+
 @Composable
 fun SoundItemView(
-    icon: Painter,
     title: String,
+    isPlaying: Boolean,
+    onIconClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val playIcon = painterResource(id = R.drawable.ic_play)
+    val pauseIcon = painterResource(id = R.drawable.ic_pause)
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -30,11 +37,12 @@ fun SoundItemView(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter = icon,
-            contentDescription = null,
+            painter = if (isPlaying) pauseIcon else playIcon,
+            contentDescription = if (isPlaying) "Pause" else "Play",
             modifier = Modifier
                 .size(42.dp)
                 .padding(end = 8.dp)
+                .clickable { onIconClick() }
         )
         Text(
             text = title.uppercase(),

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,9 +18,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
@@ -34,6 +36,7 @@ import com.meenbeese.chronos.ext.dataStore
 import com.meenbeese.chronos.fragments.BasePagerFragment
 import com.meenbeese.chronos.fragments.FileChooserFragment
 import com.meenbeese.chronos.interfaces.SoundChooserListener
+import com.meenbeese.chronos.utils.AudioUtils
 import com.meenbeese.chronos.views.SoundItemView
 
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -43,8 +46,9 @@ import kotlinx.coroutines.launch
 
 @UnstableApi
 class FileSoundChooserFragment : BaseSoundChooserFragment() {
-    private lateinit var sounds: MutableList<SoundData>
+    private var sounds by mutableStateOf<List<SoundData>>(emptyList())
     private val PREF_FILES_KEY = stringSetPreferencesKey("previousFiles")
+    private lateinit var audioUtils: AudioUtils
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreateView(
@@ -52,6 +56,8 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        audioUtils = AudioUtils(requireContext())
+
         return ComposeView(requireContext()).apply {
             setContent {
                 MaterialTheme {
@@ -61,8 +67,10 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
                             val parts = str.split(SEPARATOR)
                             if (parts.size == 3) SoundData(parts[1], SoundData.TYPE_RINGTONE, parts[2]) else null
                         }
-                        sounds = items.toMutableList()
+                        sounds = items
                     }
+
+                    var currentlyPlayingUrl by remember { mutableStateOf<String?>(null) }
 
                     Column(modifier = Modifier.padding(16.dp)) {
                         Button(
@@ -76,12 +84,22 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
 
                         LazyColumn(modifier = Modifier.fillMaxSize()) {
                             items(sounds) { sound ->
+                                val isPlaying = currentlyPlayingUrl == sound.url
+
                                 SoundItemView(
-                                    icon = painterResource(id = R.drawable.ic_play),
                                     title = sound.name,
-                                    modifier = Modifier
-                                        .clickable { onSoundChosen(sound) }
-                                        .padding(vertical = 4.dp)
+                                    isPlaying = isPlaying,
+                                    modifier = Modifier.padding(vertical = 4.dp),
+                                    onIconClick = {
+                                        if (isPlaying) {
+                                            audioUtils.stopCurrentSound()
+                                            currentlyPlayingUrl = null
+                                        } else {
+                                            audioUtils.stopCurrentSound()
+                                            audioUtils.playStream(sound.url, sound.type, null)
+                                            currentlyPlayingUrl = sound.url
+                                        }
+                                    }
                                 )
                             }
                         }
@@ -108,9 +126,7 @@ class FileSoundChooserFragment : BaseSoundChooserFragment() {
     override fun onSoundChosen(sound: SoundData?) {
         super.onSoundChosen(sound)
         sound?.let {
-            sounds.remove(it)
-            sounds.add(0, it)
-
+            sounds = (sounds - it).toMutableList().apply { add(0, it) }
             GlobalScope.launch {
                 savePreviousFiles()
             }

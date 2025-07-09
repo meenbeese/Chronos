@@ -78,10 +78,13 @@ class AudioUtils(private val context: Context) : Player.Listener {
     }
 
     fun playStream(url: String, type: String, attributes: AudioAttributes?) {
+        val finalAttributes = attributes ?: AudioAttributes.Builder().build()
+
         player?.stop()
         player = ExoPlayer.Builder(context)
-            .setAudioAttributes(attributes!!, true)
+            .setAudioAttributes(finalAttributes, true)
             .build()
+
         playStream(url, type)
     }
 
