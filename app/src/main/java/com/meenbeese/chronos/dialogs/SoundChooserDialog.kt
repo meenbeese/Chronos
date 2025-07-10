@@ -15,7 +15,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.ext.loadRingtones
 import com.meenbeese.chronos.views.sound.AlarmSoundChooserView
 import com.meenbeese.chronos.views.sound.FileSoundChooserView
 import com.meenbeese.chronos.views.sound.RingtoneSoundChooserView
@@ -45,11 +45,9 @@ fun SoundChooserDialog(
 ) {
     val context = LocalContext.current
     val audioUtils = AudioUtils(context)
+    val soundList = remember { loadRingtones(context) }
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false,
-        confirmValueChange = { newValue ->
-            newValue != SheetValue.Hidden
-        }
     )
     var selectedTab by remember { mutableIntStateOf(0) }
 
@@ -101,8 +99,14 @@ fun SoundChooserDialog(
             }
 
             when (selectedTab) {
-                0 -> AlarmSoundChooserView(onSoundChosen)
-                1 -> RingtoneSoundChooserView(onSoundChosen)
+                0 -> AlarmSoundChooserView(
+                    sounds = soundList,
+                    onSoundChosen = onSoundChosen
+                )
+                1 -> RingtoneSoundChooserView(
+                    sounds = soundList,
+                    onSoundChosen = onSoundChosen
+                )
                 2 -> FileSoundChooserView(
                     onSoundChosen = onSoundChosen,
                     onRequestFileChooser = onRequestFileChooser

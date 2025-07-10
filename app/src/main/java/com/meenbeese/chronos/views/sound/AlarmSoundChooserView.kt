@@ -17,18 +17,17 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.data.SoundData
-import com.meenbeese.chronos.ext.loadRingtones
 import com.meenbeese.chronos.utils.AudioUtils
 import com.meenbeese.chronos.views.SoundItemView
 
 @UnstableApi
 @Composable
 fun AlarmSoundChooserView(
+    sounds: List<SoundData>,
     onSoundChosen: (SoundData) -> Unit
 ) {
     val context = LocalContext.current
     val audioUtils = AudioUtils(context)
-    val sounds = remember { loadRingtones(context) }
     var currentlyPlayingUrl by remember { mutableStateOf<String?>(null) }
 
     LazyColumn(

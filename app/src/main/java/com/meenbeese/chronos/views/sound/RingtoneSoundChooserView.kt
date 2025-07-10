@@ -16,18 +16,17 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.data.SoundData
-import com.meenbeese.chronos.ext.loadRingtones
 import com.meenbeese.chronos.utils.AudioUtils
 import com.meenbeese.chronos.views.SoundItemView
 
 @UnstableApi
 @Composable
 fun RingtoneSoundChooserView(
+    sounds: List<SoundData>,
     onSoundChosen: (SoundData) -> Unit
 ) {
     val context = LocalContext.current
     val audioUtils = AudioUtils(context)
-    val ringtones = remember { loadRingtones(context) }
     var currentPlayingUrl by remember { mutableStateOf<String?>(null) }
 
     LazyColumn(
@@ -35,7 +34,7 @@ fun RingtoneSoundChooserView(
             .fillMaxSize()
             .padding(vertical = 12.dp)
     ) {
-        items(ringtones) { sound ->
+        items(sounds) { sound ->
             val isPlaying = currentPlayingUrl == sound.url
 
             SoundItemView(
