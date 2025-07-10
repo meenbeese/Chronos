@@ -14,22 +14,32 @@ import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
 
 @UnstableApi
 class AudioUtils(private val context: Context) : Player.Listener {
     private var player: ExoPlayer? = null
     private var currentStream: String? = null
     private var currentRingtone: Ringtone? = null
-    private var hlsMediaSourceFactory: HlsMediaSource.Factory? = null
+
     private val isRingtonePlaying: Boolean
         get() = currentRingtone?.isPlaying == true
 
     init {
-        player = ExoPlayer.Builder(context).build()
-        player?.addListener(this)
+        initializePlayer()
+    }
 
-        val dataSourceFactory = DefaultDataSource.Factory(context)
-        hlsMediaSourceFactory = HlsMediaSource.Factory(dataSourceFactory)
+    private fun initializePlayer(attributes: AudioAttributes? = null) {
+        player?.release()
+        player = ExoPlayer.Builder(context)
+            .apply {
+                attributes?.let {
+                    setAudioAttributes(it, true)
+                }
+            }
+            .build().also {
+                it.addListener(this)
+            }
     }
 
     override fun onPlaybackStateChanged(playbackState: Int) {
@@ -41,11 +51,10 @@ class AudioUtils(private val context: Context) : Player.Listener {
 
     override fun onPlayerError(error: PlaybackException) {
         currentStream = null
-        val exception: Throwable? = error.cause
-        exception?.printStackTrace()
+        error.cause?.printStackTrace()
         Toast.makeText(
             context,
-            exception?.javaClass?.name + ": " + exception?.message,
+            "${error.cause?.javaClass?.simpleName}: ${error.cause?.message}",
             Toast.LENGTH_SHORT
         ).show()
     }
@@ -55,37 +64,10 @@ class AudioUtils(private val context: Context) : Player.Listener {
     }
 
     fun stopCurrentSound() {
-        if (isRingtonePlaying) currentRingtone?.stop()
+        if (isRingtonePlaying) {
+            currentRingtone?.stop()
+        }
         stopStream()
-    }
-
-    private fun playStream(url: String, type: String) {
-        playStream(url, type, hlsMediaSourceFactory)
-    }
-
-    private fun playStream(url: String, type: String, factory: MediaSource.Factory?) {
-        stopCurrentSound()
-
-        // Create a MediaItem from the URL
-        val mediaItem: MediaItem = MediaItem.fromUri(url.toUri())
-
-        // Error handling, including when this is a progressive stream
-        // rather than a HLS stream, is in onPlayerError
-        player?.setMediaSource(factory!!.createMediaSource(mediaItem))
-        player?.prepare()
-        player?.playWhenReady = true
-        currentStream = url
-    }
-
-    fun playStream(url: String, type: String, attributes: AudioAttributes?) {
-        val finalAttributes = attributes ?: AudioAttributes.Builder().build()
-
-        player?.stop()
-        player = ExoPlayer.Builder(context)
-            .setAudioAttributes(finalAttributes, true)
-            .build()
-
-        playStream(url, type)
     }
 
     fun stopStream() {
@@ -98,10 +80,39 @@ class AudioUtils(private val context: Context) : Player.Listener {
     }
 
     fun playRingtone(ringtone: Ringtone) {
+        stopCurrentSound()
         if (!ringtone.isPlaying) {
-            stopCurrentSound()
             ringtone.play()
         }
         currentRingtone = ringtone
+    }
+
+    fun playStream(url: String, type: String = "auto", attributes: AudioAttributes? = null) {
+        stopCurrentSound()
+        if (attributes != null) {
+            initializePlayer(attributes)
+        }
+
+        val uri = url.toUri()
+        val mediaItem = MediaItem.fromUri(uri)
+
+        val dataSourceFactory = DefaultDataSource.Factory(context)
+
+        val mediaSource: MediaSource = when {
+            type.equals("hls", ignoreCase = true) || url.endsWith(".m3u8", ignoreCase = true) -> {
+                HlsMediaSource.Factory(dataSourceFactory).createMediaSource(mediaItem)
+            }
+            else -> {
+                ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(mediaItem)
+            }
+        }
+
+        player?.apply {
+            setMediaSource(mediaSource)
+            prepare()
+            playWhenReady = true
+        }
+
+        currentStream = url
     }
 }
