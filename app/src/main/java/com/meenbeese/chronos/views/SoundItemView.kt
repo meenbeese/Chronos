@@ -1,5 +1,6 @@
 package com.meenbeese.chronos.views
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,14 +37,20 @@ fun SoundItemView(
             .padding(start = 8.dp, end = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            painter = if (isPlaying) pauseIcon else playIcon,
-            contentDescription = if (isPlaying) "Pause" else "Play",
-            modifier = Modifier
-                .size(42.dp)
-                .padding(end = 8.dp)
-                .clickable { onIconClick() }
-        )
+        Crossfade(
+            targetState = isPlaying,
+            label = "PlayPauseCrossfade"
+        ) { playing ->
+            Icon(
+                painter = if (playing) pauseIcon else playIcon,
+                contentDescription = if (playing) "Pause" else "Play",
+                modifier = Modifier
+                    .size(42.dp)
+                    .padding(end = 8.dp)
+                    .clickable { onIconClick() }
+            )
+        }
+
         Text(
             text = title.uppercase(),
             style = MaterialTheme.typography.bodyLarge.copy(
