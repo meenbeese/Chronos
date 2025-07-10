@@ -77,4 +77,10 @@
         app:sdMainFabClosedIconColor="@color/md_theme_onPrimary"
         app:sdUseReverseAnimationOnClose="true" />
 
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/composeDialogHost"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

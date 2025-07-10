@@ -10,6 +10,11 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.Toast
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -297,43 +302,55 @@ class HomeFragment : BaseFragment() {
         val hourNow = calendar.get(Calendar.HOUR_OF_DAY)
         val minuteNow = calendar.get(Calendar.MINUTE)
 
-        TimeChooserDialog(
-            context = requireContext(),
-            initialHour = hourNow,
-            initialMinute = minuteNow,
-            is24HourClock = Preferences.MILITARY_TIME.get(requireContext())
-        ) { hour, minute ->
-            val time = Calendar.getInstance().apply {
-                set(Calendar.HOUR_OF_DAY, hour)
-                set(Calendar.MINUTE, minute)
-                set(Calendar.SECOND, 0)
+        val composeView = binding.root.findViewById<ComposeView>(R.id.composeDialogHost)
 
-                if (BuildConfig.DEBUG) {
-                    add(Calendar.MINUTE, 1)
-                }
-            }.timeInMillis
+        composeView.disposeComposition()
+        composeView.setContent {
+            var showDialog by remember { mutableStateOf(true) }
 
-            val alarm = AlarmData(
-                id = 0,
-                name = null,
-                time = Calendar.getInstance().apply { timeInMillis = time },
-                isEnabled = true,
-                days = MutableList(7) { false }, // All days off initially
-                isVibrate = true,
-                sound = null
-            )
+            if (showDialog) {
+                TimeChooserDialog(
+                    initialHour = hourNow,
+                    initialMinute = minuteNow,
+                    is24HourClock = Preferences.MILITARY_TIME.get(requireContext()),
+                    onDismissRequest = { showDialog = false },
+                    onTimeSet = { hour, minute ->
+                        showDialog = false
 
-            CoroutineScope(Dispatchers.IO).launch {
-                val entity = alarm.toEntity()
-                val id = alarmViewModel.insertAndReturnId(entity)
+                        val time = Calendar.getInstance().apply {
+                            set(Calendar.HOUR_OF_DAY, hour)
+                            set(Calendar.MINUTE, minute)
+                            set(Calendar.SECOND, 0)
 
-                alarm.id = id.toInt()
-                alarm.set(requireContext())
+                            if (BuildConfig.DEBUG) {
+                                add(Calendar.MINUTE, 1)
+                            }
+                        }.timeInMillis
+
+                        val alarm = AlarmData(
+                            id = 0,
+                            name = null,
+                            time = Calendar.getInstance().apply { timeInMillis = time },
+                            isEnabled = true,
+                            days = MutableList(7) { false }, // All days off initially
+                            isVibrate = true,
+                            sound = null
+                        )
+
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val entity = alarm.toEntity()
+                            val id = alarmViewModel.insertAndReturnId(entity)
+
+                            alarm.id = id.toInt()
+                            alarm.set(requireContext())
+                        }
+
+                        val formattedTime = FormatUtils.formatShort(context, Date(time))
+                        Toast.makeText(requireContext(), "Alarm set for $formattedTime", Toast.LENGTH_SHORT).show()
+                    }
+                )
             }
-
-            val formattedTime = FormatUtils.formatShort(context, Date(time))
-            Toast.makeText(requireContext(), "Alarm set for $formattedTime", Toast.LENGTH_SHORT).show()
-        }.show()
+        }
     }
 
     /**

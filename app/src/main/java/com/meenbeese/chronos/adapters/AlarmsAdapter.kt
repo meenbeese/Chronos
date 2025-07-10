@@ -11,6 +11,10 @@ import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -378,22 +382,30 @@ class AlarmsAdapter(
             val hour = alarm.time.get(Calendar.HOUR_OF_DAY)
             val minute = alarm.time.get(Calendar.MINUTE)
 
-            val timePickerDialog = TimeChooserDialog(
-                context = context,
-                initialHour = hour,
-                initialMinute = minute,
-                is24HourClock = Preferences.MILITARY_TIME.get(context)
-            ) { selectedHour, selectedMinute ->
-                alarm.time.set(Calendar.HOUR_OF_DAY, selectedHour)
-                alarm.time.set(Calendar.MINUTE, selectedMinute)
-                alarm.time = Calendar.getInstance().apply { timeInMillis = alarm.time.timeInMillis }
-                alarm.isEnabled = true
+            holder.composeTime.disposeComposition()
+            holder.composeTime.setContent {
+                var showDialog by remember { mutableStateOf(true) }
 
-                alarmViewModel.update(alarm.toEntity())
-                notifyItemChanged(holder.bindingAdapterPosition)
+                if (showDialog) {
+                    TimeChooserDialog(
+                        initialHour = hour,
+                        initialMinute = minute,
+                        is24HourClock = Preferences.MILITARY_TIME.get(context),
+                        onDismissRequest = { showDialog = false },
+                        onTimeSet = { hour, minute ->
+                            showDialog = false
+
+                            alarm.time.set(Calendar.HOUR_OF_DAY, hour)
+                            alarm.time.set(Calendar.MINUTE, minute)
+                            alarm.time = Calendar.getInstance().apply { timeInMillis = alarm.time.timeInMillis }
+                            alarm.isEnabled = true
+
+                            alarmViewModel.update(alarm.toEntity())
+                            notifyItemChanged(holder.bindingAdapterPosition)
+                        }
+                    )
+                }
             }
-
-            timePickerDialog.show()
         }
 
         holder.nextTime.visibility = if (alarm.isEnabled) View.VISIBLE else View.GONE
@@ -569,6 +581,7 @@ class AlarmsAdapter(
         val soundIndicator = binding.soundIndicator
         val vibrateIndicator = binding.vibrateIndicator
         val composeDialog = binding.composeSoundDialog
+        val composeTime = binding.composeDialogHost
         val alarms: List<AlarmData> = chronos.alarms
 
         val dayComposeViews = listOf(
