@@ -13,7 +13,6 @@ import android.widget.Toast
 
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.ViewCompat
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
@@ -26,14 +25,12 @@ import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.data.toEntity
 import com.meenbeese.chronos.databinding.ItemAlarmBinding
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.dialogs.SoundChooserDialog
 import com.meenbeese.chronos.dialogs.TimePickerDialog
-import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.meenbeese.chronos.utils.AlarmsDiffCallback
 import com.meenbeese.chronos.utils.DimenUtils
 import com.meenbeese.chronos.utils.FormatUtils
@@ -51,7 +48,6 @@ import java.util.concurrent.TimeUnit
 class AlarmsAdapter(
     private val chronos: Chronos,
     private val recycler: RecyclerView,
-    private val fragmentManager: FragmentManager,
     private val onDeleteAlarm: (AlarmData) -> Unit,
     private val alarmViewModel: AlarmViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -191,15 +187,26 @@ class AlarmsAdapter(
         holder.ringtoneImage.alpha = if (alarm.sound != null) 1f else 0.333f
         holder.ringtoneText.text = if (alarm.sound != null) alarm.sound?.name else chronos.getString(R.string.title_sound_none)
         holder.ringtone.setOnClickListener {
-            val dialog = SoundChooserDialog()
-            dialog.setListener(object : SoundChooserListener {
-                override fun onSoundChosen(sound: SoundData?) {
-                    alarm.sound = sound
-                    alarmViewModel.update(alarm.toEntity())
-                    onBindAlarmViewHolderToggles(holder, alarm)
-                }
-            })
-            dialog.show(fragmentManager, null)
+            holder.composeDialog.visibility = View.VISIBLE
+
+            holder.composeDialog.setContent {
+                SoundChooserDialog(
+                    onDismissRequest = {
+                        holder.composeDialog.visibility = View.GONE
+                    },
+                    onSoundChosen = { sound ->
+                        alarm.sound = sound
+                        alarmViewModel.update(alarm.toEntity())
+                        onBindAlarmViewHolderToggles(holder, alarm)
+                        holder.composeDialog.visibility = View.GONE
+                    },
+                    onRequestFileChooser = { chooser ->
+                        chooser("audio/*", "Choose File")
+                    }
+                )
+            }
+
+            holder.composeDialog.visibility = View.VISIBLE
         }
 
         val vibrateDrawable = AnimatedVectorDrawableCompat.create(chronos, if (alarm.isVibrate) R.drawable.ic_vibrate_to_none else R.drawable.ic_none_to_vibrate)
@@ -561,7 +568,7 @@ class AlarmsAdapter(
         val repeatIndicator = binding.repeatIndicator
         val soundIndicator = binding.soundIndicator
         val vibrateIndicator = binding.vibrateIndicator
-
+        val composeDialog = binding.composeSoundDialog
         val alarms: List<AlarmData> = chronos.alarms
 
         val dayComposeViews = listOf(

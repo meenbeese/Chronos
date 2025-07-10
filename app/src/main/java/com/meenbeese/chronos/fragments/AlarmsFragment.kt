@@ -46,9 +46,8 @@ class AlarmsFragment : BasePagerFragment(), AlarmNavigator {
         recyclerView.layoutManager = GridLayoutManager(context, 1)
 
         alarmsAdapter = AlarmsAdapter(
-            chronos!!,
-            recyclerView,
-            parentFragmentManager,
+            chronos = chronos!!,
+            recycler = recyclerView,
             onDeleteAlarm = { alarmViewModel.delete(it.toEntity()) },
             alarmViewModel = alarmViewModel
         )

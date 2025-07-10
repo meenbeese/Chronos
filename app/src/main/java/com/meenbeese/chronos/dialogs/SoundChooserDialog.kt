@@ -1,88 +1,113 @@
 package com.meenbeese.chronos.dialogs
 
-import android.annotation.SuppressLint
-import android.content.DialogInterface
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-
-import androidx.fragment.app.DialogFragment
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.displayCutoutPadding
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Alarm
+import androidx.compose.material.icons.filled.LibraryMusic
+import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.InputChip
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 
-import com.meenbeese.chronos.R
-import com.meenbeese.chronos.adapters.SimplePagerAdapter
 import com.meenbeese.chronos.data.SoundData
-import com.meenbeese.chronos.databinding.DialogSoundChooserBinding
-import com.meenbeese.chronos.fragments.sound.AlarmSoundChooserFragment
-import com.meenbeese.chronos.fragments.sound.FileSoundChooserFragment
-import com.meenbeese.chronos.fragments.sound.RingtoneSoundChooserFragment
-import com.meenbeese.chronos.interfaces.SoundChooserListener
+import com.meenbeese.chronos.views.sound.AlarmSoundChooserView
+import com.meenbeese.chronos.views.sound.FileSoundChooserView
+import com.meenbeese.chronos.views.sound.RingtoneSoundChooserView
 import com.meenbeese.chronos.utils.AudioUtils
-import com.google.android.material.tabs.TabLayoutMediator
 
-import org.koin.android.ext.android.inject
-
+@OptIn(ExperimentalMaterial3Api::class)
 @UnstableApi
-class SoundChooserDialog : DialogFragment(), SoundChooserListener {
-    private val audioUtils: AudioUtils by inject()
-    private var listener: SoundChooserListener? = null
+@Composable
+fun SoundChooserDialog(
+    onDismissRequest: () -> Unit,
+    onSoundChosen: (SoundData) -> Unit,
+    onRequestFileChooser: ((String, String) -> Unit) -> Unit
+) {
+    val context = LocalContext.current
+    val audioUtils = AudioUtils(context)
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = false,
+        confirmValueChange = { newValue ->
+            newValue != SheetValue.Hidden
+        }
+    )
+    var selectedTab by remember { mutableIntStateOf(0) }
 
-    private var _binding: DialogSoundChooserBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, R.style.AppTheme)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        dialog?.window?.attributes?.let { params ->
-            params.windowAnimations = R.style.SlideDialogAnimation
+    DisposableEffect(Unit) {
+        onDispose {
+            audioUtils.stopCurrentSound()
         }
     }
 
-    @SuppressLint("CheckResult")
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = DialogSoundChooserBinding.inflate(inflater, container, false)
+    ModalBottomSheet(
+        onDismissRequest = {
+            audioUtils.stopCurrentSound()
+            onDismissRequest()
+        },
+        sheetState = sheetState,
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .displayCutoutPadding()
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp)
+            ) {
+                InputChip(
+                    selected = selectedTab == 0,
+                    onClick = { selectedTab = 0 },
+                    label = { Text("Alarm") },
+                    leadingIcon = { Icon(Icons.Default.Alarm, contentDescription = null) }
+                )
+                InputChip(
+                    selected = selectedTab == 1,
+                    onClick = { selectedTab = 1 },
+                    label = { Text("Ringtone") },
+                    leadingIcon = { Icon(Icons.Default.MusicNote, contentDescription = null) }
+                )
+                InputChip(
+                    selected = selectedTab == 2,
+                    onClick = { selectedTab = 2 },
+                    label = { Text("File") },
+                    leadingIcon = { Icon(Icons.Default.LibraryMusic, contentDescription = null) }
+                )
+            }
 
-        val fragments = arrayOf(
-            AlarmSoundChooserFragment.Instantiator(context, this),
-            RingtoneSoundChooserFragment.Instantiator(context, this),
-            FileSoundChooserFragment.Instantiator(context, this)
-        )
-
-        binding.viewPager.adapter = SimplePagerAdapter(this, *fragments)
-
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = fragments[position].getTitle(position)
-        }.attach()
-
-        return binding.root
-    }
-
-    fun setListener(listener: SoundChooserListener?) {
-        this.listener = listener
-    }
-
-    override fun onSoundChosen(sound: SoundData?) {
-        listener?.onSoundChosen(sound)
-        dismiss()
-    }
-
-    @UnstableApi
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        audioUtils.stopCurrentSound()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+            when (selectedTab) {
+                0 -> AlarmSoundChooserView(onSoundChosen)
+                1 -> RingtoneSoundChooserView(onSoundChosen)
+                2 -> FileSoundChooserView(
+                    onSoundChosen = onSoundChosen,
+                    onRequestFileChooser = onRequestFileChooser
+                )
+            }
+        }
     }
 }

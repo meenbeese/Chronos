@@ -8,7 +8,10 @@ import android.view.HapticFeedbackConstants
 import android.view.View
 
 import androidx.activity.ComponentDialog
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.FragmentManager
+import androidx.media3.common.util.UnstableApi
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.google.android.material.textview.MaterialTextView
@@ -18,12 +21,12 @@ import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.databinding.DialogTimerBinding
 import com.meenbeese.chronos.fragments.TimerFragment
-import com.meenbeese.chronos.interfaces.SoundChooserListener
 import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.utils.Option
 
 import java.util.concurrent.TimeUnit
 
+@UnstableApi
 class TimerDialog(
     context: Context,
     private val manager: FragmentManager
@@ -43,11 +46,33 @@ class TimerDialog(
     private var isVibrate = true
     private var input = "000000"
 
+    private val dialogVisible = mutableStateOf(false)
+
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = DialogTimerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val composeView = binding.root.findViewById<ComposeView>(R.id.composeSoundDialog)
+
+        composeView.setContent {
+            if (dialogVisible.value) {
+                SoundChooserDialog(
+                    onDismissRequest = {
+                        dialogVisible.value = false
+                    },
+                    onSoundChosen = {
+                        ringtone = it
+                        dialogVisible.value = false
+                        updateRingtoneUI()
+                    },
+                    onRequestFileChooser = { chooser ->
+                        chooser("audio/*", "Choose File")
+                    }
+                )
+            }
+        }
 
         binding.time.text = getTime()
         binding.backspace.setOnClickListener(this)
@@ -66,14 +91,7 @@ class TimerDialog(
         updateRingtoneUI()
 
         binding.ringtone.setOnClickListener {
-            val dialog = SoundChooserDialog()
-            dialog.setListener(object : SoundChooserListener {
-                override fun onSoundChosen(sound: SoundData?) {
-                    ringtone = sound
-                    updateRingtoneUI()
-                }
-            })
-            dialog.show(manager, "")
+            dialogVisible.value = true
         }
 
         binding.vibrate.setOnClickListener {

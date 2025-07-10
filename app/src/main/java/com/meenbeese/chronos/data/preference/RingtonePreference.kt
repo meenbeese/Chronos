@@ -17,7 +17,7 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceEntry
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.dialogs.SoundChooserDialog
-import com.meenbeese.chronos.interfaces.SoundChooserListener
+import com.meenbeese.chronos.fragments.FileChooserFragment
 import com.meenbeese.chronos.views.PreferenceItem
 
 import kotlinx.coroutines.CoroutineScope
@@ -62,7 +62,7 @@ fun RingtonePreference(
     )
 
     if (showDialog) {
-        SoundChooserDialogFragmentHost(
+        SoundChooserDialog(
             onDismissRequest = { showDialog = false },
             onSoundChosen = { sound ->
                 // Save selection asynchronously
@@ -73,35 +73,21 @@ fun RingtonePreference(
                         showDialog = false
                     }
                 }
+            },
+            onRequestFileChooser = { callback ->
+                val activity = context as? FragmentActivity
+                activity?.supportFragmentManager?.let { fm ->
+                    val fragment = FileChooserFragment
+                        .newInstance(null, "audio/*")
+                    fragment.setCallback { name, uri ->
+                        callback(name, uri)
+                    }
+                    fm.beginTransaction()
+                        .replace(android.R.id.content, fragment)
+                        .addToBackStack(null)
+                        .commit()
+                }
             }
         )
-    }
-}
-
-@Composable
-@UnstableApi
-fun SoundChooserDialogFragmentHost(
-    onDismissRequest: () -> Unit,
-    onSoundChosen: (SoundData) -> Unit
-) {
-    val context = LocalContext.current
-    val activity = context as? FragmentActivity
-    var dialogShown by remember { mutableStateOf(false) }
-
-    if (!dialogShown) {
-        LaunchedEffect(Unit) {
-            activity?.supportFragmentManager?.let { fm ->
-                val dialog = SoundChooserDialog()
-                dialog.setListener(object : SoundChooserListener {
-                    override fun onSoundChosen(sound: SoundData?) {
-                        sound?.let { onSoundChosen(it) }
-                        onDismissRequest()
-                        dialog.dismiss()
-                    }
-                })
-
-                dialog.show(fm, "soundChooserDialog")
-            }
-        }
     }
 }
