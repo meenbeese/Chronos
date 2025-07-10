@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -30,7 +32,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
@@ -46,9 +51,22 @@ fun ColorPreference(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val hexRegex = Regex("^[0-9A-Fa-f]{6}$")
     val coroutineScope = rememberCoroutineScope()
-    var showDialog by remember { mutableStateOf(false) }
-    var currentColor by remember { mutableIntStateOf(preference.get(context)) }
+    val controller = rememberColorPickerController()
+
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+    var currentColor by remember {
+        mutableIntStateOf(preference.get(context))
+    }
+    var hexInput by remember {
+        mutableStateOf(String.format("%06X", 0xFFFFFF and currentColor))
+    }
+    var isHexValid by remember(hexInput) {
+        mutableStateOf(hexInput.matches(hexRegex))
+    }
 
     Row(
         modifier = modifier
@@ -73,8 +91,6 @@ fun ColorPreference(
     }
 
     if (showDialog) {
-        val controller = rememberColorPickerController()
-
         AlertDialog(
             onDismissRequest = { showDialog = false },
             confirmButton = {
@@ -103,6 +119,7 @@ fun ColorPreference(
                         initialColor = Color(currentColor),
                         onColorChanged = { envelope ->
                             currentColor = envelope.color.toArgb()
+                            hexInput = String.format("%06X", 0xFFFFFF and currentColor)
                         }
                     )
 
@@ -120,11 +137,26 @@ fun ColorPreference(
                                 .border(1.dp, Color.Gray, RoundedCornerShape(6.dp))
                         )
 
-                        Text(
-                            text = String.format("#%06X", 0xFFFFFF and currentColor),
-                            style = MaterialTheme.typography.bodyLarge,
+                        OutlinedTextField(
+                            value = hexInput,
+                            onValueChange = {
+                                hexInput = it.uppercase()
+                                if (hexInput.matches(hexRegex)) {
+                                    val parsedColor = Color("#$hexInput".toColorInt())
+                                    currentColor = parsedColor.toArgb()
+                                    controller.selectByColor(parsedColor, true)
+                                }
+                            },
+                            label = { Text("Hex Color") },
+                            isError = !isHexValid,
+                            leadingIcon = { Text("#") },
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                keyboardType = KeyboardType.Ascii,
+                                imeAction = ImeAction.Done
+                            ),
                             modifier = Modifier
                                 .padding(start = 12.dp)
+                                .weight(1f)
                         )
                     }
                 }
