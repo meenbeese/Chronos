@@ -12,7 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 
 import com.meenbeese.chronos.data.PreferenceEntry
-import com.meenbeese.chronos.dialogs.TimeChooserDialog
+import com.meenbeese.chronos.dialogs.DurationChooserDialog
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.PreferenceItem
 
@@ -49,7 +49,7 @@ fun TimePreference(
         val defaultMinutes = (totalSeconds % 3600) / 60
         val defaultSeconds = totalSeconds % 60
 
-        TimeChooserDialog(
+        DurationChooserDialog(
             onDismiss = { showDialog = false },
             onTimeChosen = { hours, minutes, seconds ->
                 val total = TimeUnit.HOURS.toSeconds(hours.toLong()) +

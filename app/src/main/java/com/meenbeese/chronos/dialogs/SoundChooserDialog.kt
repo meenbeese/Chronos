@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 
@@ -37,11 +38,12 @@ import com.meenbeese.chronos.utils.AudioUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @UnstableApi
+@Preview
 @Composable
 fun SoundChooserDialog(
-    onDismissRequest: () -> Unit,
-    onSoundChosen: (SoundData) -> Unit,
-    onRequestFileChooser: ((String, String) -> Unit) -> Unit
+    onDismissRequest: () -> Unit = {},
+    onSoundChosen: (SoundData) -> Unit = {},
+    onRequestFileChooser: ((String, String) -> Unit) -> Unit = {}
 ) {
     val context = LocalContext.current
     val audioUtils = AudioUtils(context)

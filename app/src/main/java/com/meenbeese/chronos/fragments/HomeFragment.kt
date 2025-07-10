@@ -33,7 +33,7 @@ import com.meenbeese.chronos.data.toEntity
 import com.meenbeese.chronos.databinding.FragmentHomeBinding
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
-import com.meenbeese.chronos.dialogs.TimePickerDialog
+import com.meenbeese.chronos.dialogs.TimeChooserDialog
 import com.meenbeese.chronos.utils.FormatUtils
 
 import kotlinx.coroutines.CoroutineScope
@@ -297,7 +297,7 @@ class HomeFragment : BaseFragment() {
         val hourNow = calendar.get(Calendar.HOUR_OF_DAY)
         val minuteNow = calendar.get(Calendar.MINUTE)
 
-        TimePickerDialog(
+        TimeChooserDialog(
             context = requireContext(),
             initialHour = hourNow,
             initialMinute = minuteNow,

@@ -6,16 +6,18 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.tooling.preview.Preview
 
 import com.meenbeese.chronos.adapters.TimeZonesList
 
 import java.util.TimeZone
 
+@Preview
 @Composable
 fun TimeZoneChooserDialog(
-    initialSelected: Set<String>,
-    onDismiss: () -> Unit,
-    onSelectionDone: (Set<String>) -> Unit
+    initialSelected: Set<String> = emptySet(),
+    onDismiss: () -> Unit = {},
+    onSelectionDone: (Set<String>) -> Unit = {}
 ) {
     val selected = remember {
         mutableStateSetOf<String>().apply { addAll(initialSelected) }

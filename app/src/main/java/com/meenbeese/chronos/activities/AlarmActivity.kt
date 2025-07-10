@@ -32,7 +32,7 @@ import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.dialogs.SnoozeDurationDialog
-import com.meenbeese.chronos.dialogs.TimeChooserDialog
+import com.meenbeese.chronos.dialogs.DurationChooserDialog
 import com.meenbeese.chronos.screens.AlarmScreen
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
@@ -215,7 +215,7 @@ class AlarmActivity : ComponentActivity() {
                     }
 
                     if (showTimeChooserDialog.value) {
-                        TimeChooserDialog(
+                        DurationChooserDialog(
                             onDismiss = { showTimeChooserDialog.value = false },
                             onTimeChosen = { hours, minutes, seconds ->
                                 chronos?.newTimer()?.apply {

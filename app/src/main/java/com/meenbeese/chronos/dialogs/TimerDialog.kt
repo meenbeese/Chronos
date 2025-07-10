@@ -31,7 +31,6 @@ class TimerDialog(
     context: Context,
     private val manager: FragmentManager
 ) : ComponentDialog(context), View.OnClickListener {
-
     private var _binding: DialogTimerBinding? = null
     private val binding get() = _binding!!
     private val chronos: Chronos = context.applicationContext as Chronos

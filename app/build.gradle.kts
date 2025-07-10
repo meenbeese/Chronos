@@ -101,6 +101,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.3.2")
     implementation("androidx.compose.material:material-icons-core:1.7.8")
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.8.3")
 
     // Media
     implementation("androidx.media3:media3-exoplayer:1.7.1")

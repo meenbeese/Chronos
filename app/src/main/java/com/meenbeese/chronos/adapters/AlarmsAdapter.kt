@@ -30,7 +30,7 @@ import com.meenbeese.chronos.data.toEntity
 import com.meenbeese.chronos.databinding.ItemAlarmBinding
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.dialogs.SoundChooserDialog
-import com.meenbeese.chronos.dialogs.TimePickerDialog
+import com.meenbeese.chronos.dialogs.TimeChooserDialog
 import com.meenbeese.chronos.utils.AlarmsDiffCallback
 import com.meenbeese.chronos.utils.DimenUtils
 import com.meenbeese.chronos.utils.FormatUtils
@@ -378,7 +378,7 @@ class AlarmsAdapter(
             val hour = alarm.time.get(Calendar.HOUR_OF_DAY)
             val minute = alarm.time.get(Calendar.MINUTE)
 
-            val timePickerDialog = TimePickerDialog(
+            val timePickerDialog = TimeChooserDialog(
                 context = context,
                 initialHour = hour,
                 initialMinute = minute,
