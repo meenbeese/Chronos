@@ -3,6 +3,7 @@ package com.meenbeese.chronos.data.preference
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,7 +31,7 @@ fun TimePreference(
 ) {
     val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
-    var timeMillis by remember { mutableStateOf(preference.get(context)) }
+    var timeMillis by remember { mutableLongStateOf(preference.get(context)) }
     val formatted = remember(timeMillis) {
         FormatUtils.formatMillis(timeMillis).dropLast(3) // remove milliseconds
     }

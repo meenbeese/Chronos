@@ -1,5 +1,6 @@
 package com.meenbeese.chronos.utils
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
@@ -10,8 +11,13 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.core.graphics.get
+import androidx.core.net.toUri
 
 import coil3.compose.rememberAsyncImagePainter
+import coil3.imageLoader
+import coil3.request.ImageRequest
+import coil3.request.allowHardware
+import coil3.toBitmap
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
@@ -86,5 +92,28 @@ object ImageUtils {
             0.114 * Color.blue(color)
         ) / 255
         return darkness >= 0.5
+    }
+
+    suspend fun getContrastingTextColorFromBg(context: Context): Int {
+        val backgroundImage = Preferences.BACKGROUND_IMAGE.get(context)
+
+        return try {
+            val imageRequest = ImageRequest.Builder(context)
+                .data(backgroundImage.toUri())
+                .size(200, 200)
+                .allowHardware(false)
+                .build()
+
+            val drawable = context.imageLoader.execute(imageRequest).image
+
+            val bitmap = drawable?.toBitmap()
+
+            bitmap?.let {
+                val isDark = isBitmapDark(it)
+                if (isDark) Color.LTGRAY else Color.DKGRAY
+            } ?: Color.DKGRAY
+        } catch (_: Exception) {
+            Color.DKGRAY
+        }
     }
 }

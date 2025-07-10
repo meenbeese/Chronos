@@ -30,7 +30,6 @@ import com.meenbeese.chronos.dialogs.BackgroundPermissionsDialog
  * overlay permissions / alert window to ignore background
  * restrictions when starting an activity.
  *
- * @see https://developer.android.com/guide/components/activities/background-starts
  */
 @Composable
 fun AlertWindowPreference(

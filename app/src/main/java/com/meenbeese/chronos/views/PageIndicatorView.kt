@@ -101,11 +101,6 @@ class PageIndicatorView : View {
             unselectedPaint.flags = Paint.ANTI_ALIAS_FLAG
         }
 
-        fun updateTextColors(indicator: PageIndicatorView) {
-            selectedPaint.color = indicator.textColorPrimary
-            unselectedPaint.color = indicator.textColorSecondary
-        }
-
         fun onDrawIndicator(canvas: Canvas) {
             val height = indicator.height
             for (i in 0 until indicator.totalPages) {
