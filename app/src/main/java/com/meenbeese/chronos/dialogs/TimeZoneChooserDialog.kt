@@ -26,6 +26,7 @@ fun TimeZoneChooserDialog(
     val timeZones = remember {
         TimeZone.getAvailableIDs()
             .distinctBy { TimeZone.getTimeZone(it).displayName }
+            .filterNot { TimeZone.getTimeZone(it).displayName.startsWith("GMT") }
             .sortedBy { TimeZone.getTimeZone(it).rawOffset }
     }
 
