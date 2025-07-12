@@ -61,6 +61,9 @@ fun ColorPreference(
     var currentColor by remember {
         mutableIntStateOf(preference.get(context))
     }
+    var tempColor by remember {
+        mutableIntStateOf(currentColor)
+    }
     var hexInput by remember {
         mutableStateOf(String.format("%06X", 0xFFFFFF and currentColor))
     }
@@ -96,6 +99,7 @@ fun ColorPreference(
             confirmButton = {
                 TextButton(onClick = {
                     showDialog = false
+                    currentColor = tempColor
                     coroutineScope.launch {
                         preference.set(context, currentColor)
                     }
@@ -118,8 +122,8 @@ fun ColorPreference(
                         controller = controller,
                         initialColor = Color(currentColor),
                         onColorChanged = { envelope ->
-                            currentColor = envelope.color.toArgb()
-                            hexInput = String.format("%06X", 0xFFFFFF and currentColor)
+                            tempColor = envelope.color.toArgb()
+                            hexInput = String.format("%06X", 0xFFFFFF and tempColor)
                         }
                     )
 
@@ -133,7 +137,7 @@ fun ColorPreference(
                             modifier = Modifier
                                 .size(40.dp)
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(Color(currentColor))
+                                .background(Color(tempColor))
                                 .border(1.dp, Color.Gray, RoundedCornerShape(6.dp))
                         )
 
@@ -143,7 +147,7 @@ fun ColorPreference(
                                 hexInput = it.uppercase()
                                 if (hexInput.matches(hexRegex)) {
                                     val parsedColor = Color("#$hexInput".toColorInt())
-                                    currentColor = parsedColor.toArgb()
+                                    tempColor = parsedColor.toArgb()
                                     controller.selectByColor(parsedColor, true)
                                 }
                             },
