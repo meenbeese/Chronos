@@ -11,7 +11,7 @@
     <string name="title_repeat">Repeat</string>
     <string name="title_set_alarm">Alarm</string>
     <string name="title_set_timer">Timer</string>
-    <string name="title_set_stopwatch">Stopwatch</string>
+    <string name="title_set_stopwatch">Watch</string>
     <string name="title_lap">Lap</string>
     <string name="title_stopwatch">Stopwatch</string>
     <string name="title_stopwatch_share">%s Stopwatch: %s</string>
@@ -113,6 +113,7 @@
     <string name="title_snooze_duration">Choose Snooze Duration</string>
     <string name="description_default">Example default description</string>
     <string name="desc_background_image">Choose an image file in one of the following formats: JPEG, PNG, WebP, GIF, BMP, or HEIF.</string>
+    <string name="desc_audio_file">Choose an audio file in one of the following formats: MPEG, MP4, OGG, AAC, OPUS, or FLAC.</string>
     <string name="title_military_time">Enable 24-hour Clock</string>
     <string name="title_scroll_next">Scroll to the Next Alarm</string>
     <string name="desc_scroll_next">Navigates to the next alarm based on its scheduled time when the clock is pressed.</string>

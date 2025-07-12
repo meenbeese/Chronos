@@ -10,14 +10,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.fragment.app.FragmentActivity
 import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceEntry
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.dialogs.SoundChooserDialog
-import com.meenbeese.chronos.fragments.FileChooserFragment
+import com.meenbeese.chronos.screens.FileChooserScreen
+import com.meenbeese.chronos.screens.FileChooserType
 import com.meenbeese.chronos.views.PreferenceItem
 
 import kotlinx.coroutines.CoroutineScope
@@ -41,6 +41,8 @@ fun RingtonePreference(
     val context = LocalContext.current
     var soundName by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
+    var showFileChooser by remember { mutableStateOf(false) }
+    var fileChooserCallback by remember { mutableStateOf<(String, String) -> Unit>({ _, _ -> }) }
 
     // Load sound name on composition and when preference changes
     LaunchedEffect(preference) {
@@ -75,18 +77,23 @@ fun RingtonePreference(
                 }
             },
             onRequestFileChooser = { callback ->
-                val activity = context as? FragmentActivity
-                activity?.supportFragmentManager?.let { fm ->
-                    val fragment = FileChooserFragment
-                        .newInstance(null, "audio/*")
-                    fragment.setCallback { name, uri ->
-                        callback(name, uri)
-                    }
-                    fm.beginTransaction()
-                        .replace(android.R.id.content, fragment)
-                        .addToBackStack(null)
-                        .commit()
-                }
+                fileChooserCallback = callback
+                showFileChooser = true
+            }
+        )
+    }
+
+    if (showFileChooser) {
+        FileChooserScreen(
+            type = FileChooserType.AUDIO,
+            preference = preference,
+            onFileChosen = { name, uri ->
+                fileChooserCallback(name, uri)
+                showFileChooser = false
+                showDialog = false
+            },
+            onDismiss = {
+                showFileChooser = false
             }
         )
     }

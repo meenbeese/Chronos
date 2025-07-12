@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,27 +21,29 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.media3.common.util.UnstableApi
 
+import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.ext.dataStore
+import com.meenbeese.chronos.screens.FileChooserScreen
+import com.meenbeese.chronos.screens.FileChooserType
 import com.meenbeese.chronos.utils.AudioUtils
 import com.meenbeese.chronos.views.SoundItemView
 
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-private const val TYPE_AUDIO = "audio/*"
 private const val SEPARATOR = ":ChronosFileSound:"
 
 @UnstableApi
 @Composable
 fun FileSoundChooserView(
-    onSoundChosen: (SoundData) -> Unit,
-    onRequestFileChooser: (onFileChosen: (String, String) -> Unit) -> Unit
+    onSoundChosen: (SoundData) -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -49,6 +52,7 @@ fun FileSoundChooserView(
 
     var sounds by remember { mutableStateOf<List<SoundData>>(emptyList()) }
     var currentlyPlayingUrl by remember { mutableStateOf<String?>(null) }
+    var showFileChooser by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         val preferences = context.dataStore.data.first()
@@ -68,26 +72,18 @@ fun FileSoundChooserView(
     ) {
         Button(
             onClick = {
-                onRequestFileChooser { name, uri ->
-                    val sound = SoundData(name, SoundData.TYPE_RINGTONE, uri)
-                    onSoundChosen(sound)
-
-                    // Insert new file at top
-                    sounds = (sounds - sound).toMutableList().apply { add(0, sound) }
-
-                    // Persist to DataStore
-                    scope.launch {
-                        val entries = sounds.mapIndexed { index, s ->
-                            "$index$SEPARATOR${s.name}$SEPARATOR${s.url}"
-                        }.toSet()
-                        context.dataStore.edit { it[prefKey] = entries }
-                    }
-                }
+                showFileChooser = true
             },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Add Audio File")
         }
+
+        Text(
+            text = stringResource(id = R.string.desc_audio_file),
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.padding(top = 4.dp)
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -116,5 +112,32 @@ fun FileSoundChooserView(
                 )
             }
         }
+    }
+
+    if (showFileChooser) {
+        FileChooserScreen(
+            type = FileChooserType.AUDIO,
+            preference = null,
+            onFileChosen = { name, uri ->
+                val sound = SoundData(name, SoundData.TYPE_RINGTONE, uri)
+                onSoundChosen(sound)
+
+                // Insert new file at top
+                sounds = (sounds - sound).toMutableList().apply { add(0, sound) }
+
+                // Persist to DataStore
+                scope.launch {
+                    val entries = sounds.mapIndexed { index, s ->
+                        "$index$SEPARATOR${s.name}$SEPARATOR${s.url}"
+                    }.toSet()
+                    context.dataStore.edit { it[prefKey] = entries }
+                }
+
+                showFileChooser = false
+            },
+            onDismiss = {
+                showFileChooser = false
+            }
+        )
     }
 }

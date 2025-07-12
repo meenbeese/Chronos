@@ -110,8 +110,7 @@ fun SoundChooserDialog(
                     onSoundChosen = onSoundChosen
                 )
                 2 -> FileSoundChooserView(
-                    onSoundChosen = onSoundChosen,
-                    onRequestFileChooser = onRequestFileChooser
+                    onSoundChosen = onSoundChosen
                 )
             }
         }
