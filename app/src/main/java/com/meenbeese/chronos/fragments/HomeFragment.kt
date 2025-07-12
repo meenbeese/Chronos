@@ -1,6 +1,8 @@
 package com.meenbeese.chronos.fragments
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.content.Context
 import android.os.Bundle
 import android.provider.AlarmClock
 import android.util.Log
@@ -30,7 +32,7 @@ import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
 import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.dialogs.TimerDialog
+import com.meenbeese.chronos.dialogs.TimerFactoryDialog
 import com.meenbeese.chronos.BuildConfig
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.data.AlarmData
@@ -39,6 +41,7 @@ import com.meenbeese.chronos.databinding.FragmentHomeBinding
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
 import com.meenbeese.chronos.dialogs.TimeChooserDialog
+import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.utils.FormatUtils
 
 import kotlinx.coroutines.CoroutineScope
@@ -68,7 +71,7 @@ class HomeFragment : BaseFragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         ViewCompat.setOnApplyWindowInsetsListener(binding.bottomSheet) { v, insets ->
             val statusBarInset = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
-            v.setTag(R.id.one, statusBarInset)
+            v.setTag(R.id.viewPager, statusBarInset)
             insets
         }
 
@@ -87,7 +90,7 @@ class HomeFragment : BaseFragment() {
         behavior.addBottomSheetCallback(object : BottomSheetCallback() {
             @SuppressLint("SwitchIntDef")
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                val statusBarHeight = bottomSheet.getTag(R.id.one) as? Int ?: 0
+                val statusBarHeight = bottomSheet.getTag(R.id.viewPager) as? Int ?: 0
 
                 _binding?.let { binding ->
                     binding.speedDial.close()
@@ -106,7 +109,7 @@ class HomeFragment : BaseFragment() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 _binding?.let { binding ->
-                    val statusBarHeight = bottomSheet.getTag(R.id.one) as? Int ?: 0
+                    val statusBarHeight = bottomSheet.getTag(R.id.viewPager) as? Int ?: 0
 
                     val easedOffset = slideOffset.coerceIn(0f, 1f).let {
                         (1 - cos(it * PI)) / 2.0
@@ -358,7 +361,61 @@ class HomeFragment : BaseFragment() {
      * a timer.
      */
     private fun invokeTimerScheduler() {
-        TimerDialog(requireContext(), parentFragmentManager).show()
+        val context = requireContext()
+        val manager = parentFragmentManager
+        val chronos = context.applicationContext as Chronos
+        val composeView = binding.root.findViewById<ComposeView>(R.id.composeDialogHost2)
+
+        composeView.disposeComposition()
+        composeView.setContent {
+            var showDialog by remember { mutableStateOf(true) }
+
+            if (showDialog) {
+                TimerFactoryDialog(
+                    onDismiss = { showDialog = false },
+                    onTimeChosen = { hours, minutes, seconds, ringtone, isVibrate ->
+                        showDialog = false
+
+                        val totalMillis = ((hours * 3600) + (minutes * 60) + seconds) * 1000L
+
+                        if (totalMillis <= 0) {
+                            Toast.makeText(requireContext(), "Invalid timer duration", Toast.LENGTH_SHORT).show()
+                            return@TimerFactoryDialog
+                        }
+
+                        val timer = chronos.newTimer()
+                        timer.setDuration(totalMillis, chronos)
+                        timer.setVibrate(context, isVibrate)
+                        timer.setSound(context, ringtone)
+                        timer[chronos] = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+                        TimerService.startService(context)
+
+                        val args = Bundle().apply {
+                            putParcelable(TimerFragment.EXTRA_TIMER, timer)
+                        }
+
+                        val fragment = TimerFragment().apply {
+                            arguments = args
+                        }
+
+                        manager.beginTransaction()
+                            .setCustomAnimations(
+                                R.anim.slide_in_up_sheet,
+                                R.anim.slide_out_up_sheet,
+                                R.anim.slide_in_down_sheet,
+                                R.anim.slide_out_down_sheet
+                            )
+                            .replace(R.id.fragment, fragment)
+                            .addToBackStack(null)
+                            .commit()
+                    },
+                    defaultHours = 0,
+                    defaultMinutes = 1,
+                    defaultSeconds = 0
+                )
+            }
+        }
     }
 
     /**
