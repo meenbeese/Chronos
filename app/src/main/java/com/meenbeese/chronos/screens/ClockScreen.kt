@@ -16,14 +16,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-import com.meenbeese.chronos.utils.ImageUtils.getBackgroundPainter
+import com.meenbeese.chronos.utils.ImageUtils.rememberBackgroundPainterState
 import com.meenbeese.chronos.views.DigitalClockView
 
 import java.util.TimeZone
@@ -50,16 +49,16 @@ fun ClockScreen(
         textColor = getTextColor()
     }
 
-    val backgroundPainter: Painter? = getBackgroundPainter(isAlarm = false)
+    val backgroundPainter = rememberBackgroundPainterState(isAlarm = false)
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .clickable { onClockTap() }
     ) {
-        if (backgroundPainter != null) {
+        backgroundPainter?.let {
             Image(
-                painter = backgroundPainter,
+                painter = it,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop

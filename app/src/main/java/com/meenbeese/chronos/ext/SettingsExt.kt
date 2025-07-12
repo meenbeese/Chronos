@@ -12,6 +12,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 
 import com.meenbeese.chronos.R
+import com.meenbeese.chronos.data.PreferenceEntry
+
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 fun openOverlaySettings(context: Context) {
     val intent = Intent(
@@ -55,4 +59,8 @@ fun checkIntentAndStart(context: Context, intent: Intent): Boolean {
 fun isIgnoringBatteryOptimizations(context: Context): Boolean {
     val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
     return powerManager.isIgnoringBatteryOptimizations(context.packageName)
+}
+
+fun <T> PreferenceEntry<T>.getFlow(context: Context): Flow<T> {
+    return context.dataStore.data.map { it[key] ?: defaultValue }
 }

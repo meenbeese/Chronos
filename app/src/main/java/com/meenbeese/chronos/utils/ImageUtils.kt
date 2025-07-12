@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.net.Uri
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
@@ -21,6 +23,7 @@ import coil3.toBitmap
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
+import com.meenbeese.chronos.ext.getFlow
 
 import java.io.File
 
@@ -50,6 +53,26 @@ object ImageUtils {
     }
 
     @Composable
+    fun getBackgroundImageAsync(url: String, context: Context): Painter {
+        return when {
+            url.startsWith("drawable/") -> {
+                val resName = url.removePrefix("drawable/")
+                val resId = context.resources.getIdentifier(resName, "drawable", context.packageName)
+                if (resId != 0) painterResource(id = resId)
+                else painterResource(id = R.drawable.snowytrees)
+            }
+            url.startsWith("http") || url.startsWith("content://") -> {
+                rememberAsyncImagePainter(model = url)
+            }
+            url.isNotEmpty() -> {
+                val file = File(url)
+                rememberAsyncImagePainter(model = Uri.fromFile(file))
+            }
+            else -> painterResource(id = R.drawable.snowytrees)
+        }
+    }
+
+    @Composable
     fun getBackgroundPainter(isAlarm: Boolean): Painter? {
         val context = LocalContext.current
 
@@ -64,6 +87,24 @@ object ImageUtils {
         } else {
             null
         }
+    }
+
+    @Composable
+    fun rememberBackgroundPainterState(isAlarm: Boolean): Painter? {
+        val context = LocalContext.current
+
+        val colorfulBg by Preferences.COLORFUL_BACKGROUND.getFlow(context).collectAsState(initial = false)
+        val bgColor by Preferences.BACKGROUND_COLOR.getFlow(context).collectAsState(initial = 0)
+        val bgImage by Preferences.BACKGROUND_IMAGE.getFlow(context).collectAsState(initial = "")
+
+        if (!isAlarm || Preferences.RINGING_BACKGROUND_IMAGE.get(context)) {
+            return if (colorfulBg) {
+                ColorPainter(androidx.compose.ui.graphics.Color(bgColor))
+            } else {
+                getBackgroundImageAsync(bgImage, context)
+            }
+        }
+        return null
     }
 
     fun isBitmapDark(bitmap: Bitmap, sampleSize: Int = 10): Boolean {
