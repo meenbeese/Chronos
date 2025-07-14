@@ -45,14 +45,10 @@
         android:orientation="vertical"
         app:layout_behavior="com.meenbeese.chronos.utils.ScrollableBottomSheetBehavior">
 
-        <com.meenbeese.chronos.views.CustomTabLayout
-            android:id="@+id/tabLayout"
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/tabLayoutCompose"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabBackground="@color/md_theme_background"
-            app:tabTextColor="@color/md_theme_secondary"
-            app:tabSelectedTextColor="@color/md_theme_primary"
-            app:tabIndicatorColor="@color/md_theme_primary" />
+            android:layout_height="wrap_content" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"

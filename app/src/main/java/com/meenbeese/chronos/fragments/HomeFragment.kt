@@ -13,6 +13,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.Toast
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -27,7 +28,6 @@ import androidx.viewpager2.widget.ViewPager2
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
-import com.google.android.material.tabs.TabLayoutMediator
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
@@ -43,6 +43,7 @@ import com.meenbeese.chronos.db.AlarmViewModelFactory
 import com.meenbeese.chronos.dialogs.TimeChooserDialog
 import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.utils.FormatUtils
+import com.meenbeese.chronos.views.CustomTabView
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -83,6 +84,39 @@ class HomeFragment : BaseFragment() {
             if (alarms.isEmpty() && behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
+        }
+
+        val tabView = binding.root.findViewById<ComposeView>(R.id.tabLayoutCompose)
+
+        val tabs = listOf("Alarms", "Settings")
+        val selectedTabIndex = mutableIntStateOf(0)
+
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                selectedTabIndex.intValue = position
+            }
+        })
+
+        tabView.setContent {
+            CustomTabView(
+                tabs = tabs,
+                selectedTabIndex = selectedTabIndex.intValue,
+                onTabSelected = { index ->
+                    selectedTabIndex.intValue = index
+                    binding.viewPager.currentItem = index
+
+                    if (index == 0) {
+                        binding.speedDial.show()
+                        behavior.isDraggable = true
+                        behavior.peekHeight = binding.bottomSheet.measuredHeight / 2
+                        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                    } else {
+                        binding.speedDial.hide()
+                        behavior.isDraggable = false
+                        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    }
+                }
+            )
         }
 
         behavior = BottomSheetBehavior.from(binding.bottomSheet)
@@ -143,11 +177,6 @@ class HomeFragment : BaseFragment() {
                 attachScrollListenerToAlarms()
             }
         }
-
-        binding.tabLayout.setup(binding.speedDial, behavior, binding.root)
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = pagerAdapter.getTitle(position)
-        }.attach()
 
         setSpeedDialView()
         setClockFragments()
