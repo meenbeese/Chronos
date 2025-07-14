@@ -1,5 +1,6 @@
 package com.meenbeese.chronos.views
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +27,8 @@ import java.util.TimeZone
 @Composable
 fun DigitalClockView(
     modifier: Modifier = Modifier,
-    timezoneId: String = TimeZone.getDefault().id
+    timezoneId: String = TimeZone.getDefault().id,
+    onClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     val timezone = remember(timezoneId) { TimeZone.getTimeZone(timezoneId) }
@@ -52,7 +54,8 @@ fun DigitalClockView(
             text = currentTime,
             fontSize = 64.sp,
             fontFamily = FontFamily.Default,
-            color = MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier
         )
     }
 }

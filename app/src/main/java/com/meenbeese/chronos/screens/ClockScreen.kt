@@ -1,7 +1,6 @@
 package com.meenbeese.chronos.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -52,9 +51,7 @@ fun ClockScreen(
     val backgroundPainter = rememberBackgroundPainterState(isAlarm = false)
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable { onClockTap() }
+        modifier = Modifier.fillMaxSize()
     ) {
         backgroundPainter?.let {
             Image(
@@ -67,7 +64,8 @@ fun ClockScreen(
 
         DigitalClockView(
             modifier = Modifier.fillMaxSize(),
-            timezoneId = timezoneId
+            timezoneId = timezoneId,
+            onClick = onClockTap
         )
 
         if (timezoneLabel.isNotBlank()) {
