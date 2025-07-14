@@ -1,146 +1,61 @@
 package com.meenbeese.chronos.views
 
-import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.util.AttributeSet
-import android.view.View
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
-import androidx.viewpager2.widget.ViewPager2
+@Composable
+fun PageIndicatorView(
+    currentPage: Int,
+    pageOffset: Float,
+    pageCount: Int,
+    modifier: Modifier = Modifier,
+    dotRadius: Dp = 4.dp,
+    spacing: Dp = 8.dp,
+    primaryColor: Color = Color.DarkGray,
+    secondaryColor: Color = Color.LightGray
+) {
+    val dotRadiusPx = with(LocalDensity.current) { dotRadius.toPx() }
+    val spacingPx = with(LocalDensity.current) { spacing.toPx() }
 
-import com.meenbeese.chronos.utils.DimenUtils
+    val indicatorHeight = dotRadius * 2
+    val indicatorWidth = (dotRadius * 2 + spacing) * pageCount - spacing
 
-class PageIndicatorView : View {
-    var actualPosition = 0
-        private set
-    var positionOffset = 0f
-        private set
-    var totalPages = 0
-        private set
-    private var engine: IndicatorEngine? = null
-    private var textColorPrimary = 0
-    private var textColorSecondary = 0
-
-    constructor(context: Context?) : super(context) {
-        init()
-    }
-
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
-        init()
-    }
-
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
-        context,
-        attrs,
-        defStyleAttr
+    Canvas(
+        modifier = modifier
+            .width(indicatorWidth)
+            .height(indicatorHeight)
+            .clipToBounds()
     ) {
-        init()
-    }
+        val centerY = size.height / 2f
 
-    private fun init() {
-        textColorPrimary = Color.DKGRAY
-        textColorSecondary = Color.LTGRAY
-
-        engine = IndicatorEngine()
-        engine?.onInitEngine(this)
-        totalPages = 2
-    }
-
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-        engine?.onDrawIndicator(canvas)
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        engine?.let { setMeasuredDimension(it.measuredWidth, it.measuredHeight) }
-    }
-
-    /**
-     * You must call this AFTER setting the Adapter for the ViewPager, or it won't display the right amount of points.
-     */
-    fun setViewPager(viewPager: ViewPager2) {
-        totalPages = viewPager.adapter?.itemCount ?: 0
-        invalidate()
-
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-                actualPosition = position
-                this@PageIndicatorView.positionOffset = positionOffset
-                invalidate()
-            }
-
-            override fun onPageSelected(position: Int) {
-                actualPosition = position
-                invalidate()
-            }
-        })
-    }
-
-    private class IndicatorEngine {
-        private lateinit var indicator: PageIndicatorView
-        private lateinit var selectedPaint: Paint
-        private lateinit var unselectedPaint: Paint
-        val measuredHeight: Int
-            get() = DimenUtils.dpToPx(8f)
-        val measuredWidth: Int
-            get() = DimenUtils.dpToPx((8 * (indicator.totalPages * 2 - 1)).toFloat())
-
-        fun onInitEngine(indicator: PageIndicatorView) {
-            this.indicator = indicator
-            selectedPaint = Paint()
-            unselectedPaint = Paint()
-            selectedPaint.color = indicator.textColorPrimary
-            unselectedPaint.color = indicator.textColorSecondary
-            selectedPaint.flags = Paint.ANTI_ALIAS_FLAG
-            unselectedPaint.flags = Paint.ANTI_ALIAS_FLAG
-        }
-
-        fun onDrawIndicator(canvas: Canvas) {
-            val height = indicator.height
-            for (i in 0 until indicator.totalPages) {
-                val x = DimenUtils.dpToPx(4f) + DimenUtils.dpToPx((16 * i).toFloat())
-                canvas.drawCircle(
-                    x.toFloat(),
-                    height / 2f,
-                    DimenUtils.dpToPx(4f).toFloat(),
-                    unselectedPaint
-                )
-            }
-            var firstX: Int = DimenUtils.dpToPx((4 + indicator.actualPosition * 16).toFloat())
-            if (indicator.positionOffset > .5f) {
-                firstX += DimenUtils.dpToPx(16 * (indicator.positionOffset - .5f) * 2)
-            }
-            var secondX: Int = DimenUtils.dpToPx((4 + indicator.actualPosition * 16).toFloat())
-            secondX += if (indicator.positionOffset < .5f) {
-                DimenUtils.dpToPx(16 * indicator.positionOffset * 2)
-            } else {
-                DimenUtils.dpToPx(16f)
-            }
-            canvas.drawCircle(
-                firstX.toFloat(),
-                DimenUtils.dpToPx(4f).toFloat(),
-                DimenUtils.dpToPx(4f).toFloat(),
-                selectedPaint
-            )
-            canvas.drawCircle(
-                secondX.toFloat(),
-                DimenUtils.dpToPx(4f).toFloat(),
-                DimenUtils.dpToPx(4f).toFloat(),
-                selectedPaint
-            )
-            canvas.drawRect(
-                firstX.toFloat(),
-                0f,
-                secondX.toFloat(),
-                DimenUtils.dpToPx(8f).toFloat(),
-                selectedPaint
+        // Draw inactive dots
+        for (i in 0 until pageCount) {
+            val x = i * (dotRadiusPx * 2 + spacingPx) + dotRadiusPx
+            drawCircle(
+                color = secondaryColor,
+                radius = dotRadiusPx,
+                center = Offset(x, centerY)
             )
         }
+
+        val currentX = currentPage * (dotRadiusPx * 2 + spacingPx) + dotRadiusPx
+        val nextX = (currentPage + 1).coerceAtMost(pageCount - 1) * (dotRadiusPx * 2 + spacingPx) + dotRadiusPx
+        val animatedX = currentX + (nextX - currentX) * pageOffset
+
+        // Draw active indicator
+        drawCircle(
+            color = primaryColor,
+            radius = dotRadiusPx,
+            center = Offset(animatedX, centerY)
+        )
     }
 }

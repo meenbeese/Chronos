@@ -13,6 +13,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.Toast
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +45,7 @@ import com.meenbeese.chronos.dialogs.TimeChooserDialog
 import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.CustomTabView
+import com.meenbeese.chronos.views.PageIndicatorView
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -469,9 +471,37 @@ class HomeFragment : BaseFragment() {
         }
 
         val timeAdapter = SimplePagerAdapter(this, *fragments.toTypedArray())
-        binding.timePager.adapter = timeAdapter
-        binding.pageIndicator.setViewPager(binding.timePager)
-        binding.pageIndicator.visibility = if (fragments.size > 1) View.VISIBLE else View.GONE
+        val viewPager = binding.timePager
+        val composeView = binding.pageIndicator
+
+        val totalPages = fragments.size
+        val currentPage = mutableIntStateOf(0)
+        val pageOffset = mutableFloatStateOf(0f)
+
+        viewPager.adapter = timeAdapter
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrolled(
+                position: Int,
+                offset: Float,
+                offsetPixels: Int
+            ) {
+                currentPage.intValue = position
+                pageOffset.floatValue = offset
+                composeView.setContent {
+                    PageIndicatorView(
+                        currentPage = currentPage.intValue,
+                        pageOffset = pageOffset.floatValue,
+                        pageCount = totalPages
+                    )
+                }
+            }
+
+            override fun onPageSelected(position: Int) {
+                currentPage.intValue = position
+            }
+        })
+        composeView.visibility = if (totalPages > 1) View.VISIBLE else View.GONE
     }
 
     companion object {
