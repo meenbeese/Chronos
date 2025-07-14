@@ -66,7 +66,7 @@ class Chronos : Application() {
                     name = entity.name,
                     time = Calendar.getInstance().apply { timeInMillis = entity.timeInMillis },
                     isEnabled = entity.isEnabled,
-                    days = entity.days,
+                    days = entity.days.toMutableList(),
                     isVibrate = entity.isVibrate,
                     sound = entity.sound?.let { SoundData.fromString(it).toNullable() }
                 )

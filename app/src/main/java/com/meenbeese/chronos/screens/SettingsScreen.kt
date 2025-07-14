@@ -26,6 +26,7 @@ import com.meenbeese.chronos.data.preference.BatteryPreference
 import com.meenbeese.chronos.data.preference.BooleanPreference
 import com.meenbeese.chronos.data.preference.ColorPreference
 import com.meenbeese.chronos.data.preference.ImageFilePreference
+import com.meenbeese.chronos.data.preference.ImportExportPreference
 import com.meenbeese.chronos.data.preference.RingtonePreference
 import com.meenbeese.chronos.data.preference.SegmentedPreference
 import com.meenbeese.chronos.data.preference.ThemePreference
@@ -54,6 +55,7 @@ fun SettingsScreen(
                 add { BatteryPreference(context) }
             }
 
+            add { ImportExportPreference() }
             add { AlertWindowPreference(context) }
             add {
                 ThemePreference(

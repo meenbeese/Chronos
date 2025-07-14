@@ -4,6 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.kotlin.plugin.parcelize")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -131,4 +132,7 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+
+    // JSON
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
 }

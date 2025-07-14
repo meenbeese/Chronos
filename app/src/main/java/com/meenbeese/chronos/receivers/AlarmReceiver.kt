@@ -40,9 +40,9 @@ class AlarmReceiver : BroadcastReceiver() {
                     name = it.name,
                     time = Calendar.getInstance().apply { timeInMillis = it.timeInMillis },
                     isEnabled = it.isEnabled,
-                    days = it.days,
+                    days = it.days.toMutableList(),
                     isVibrate = it.isVibrate,
-                    sound = it.sound?.let { SoundData.fromString(it).toNullable() }
+                    sound = it.sound?.let { sound -> SoundData.fromString(sound).toNullable() }
                 )
 
                 if (alarm.getNext() != null) {

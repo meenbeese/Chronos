@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 
 import com.meenbeese.chronos.data.PreferenceEntry
+import com.meenbeese.chronos.db.AlarmSerdes
 
 import kotlinx.coroutines.launch
 
@@ -64,25 +65,84 @@ fun FileChooserScreen(
         } ?: onDismiss()
     }
 
-    val openDocumentLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+    val jsonExporter = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("application/json")
+    ) { uri ->
+        if (uri != null) {
+            coroutineScope.launch {
+                try {
+                    context.contentResolver.openOutputStream(uri)?.use { outputStream ->
+                        val serdes = AlarmSerdes()
+                        val (appDataJson, count) = serdes.exportAlarmDataAsJson(context)
+                        outputStream.write(appDataJson.toByteArray(Charsets.UTF_8))
+                        Toast.makeText(context, "Exported $count alarms", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(context, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+                onDismiss()
+            }
+        } else {
+            onDismiss()
+        }
+    }
+
+    val openDocumentLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri ->
         uri?.let {
             context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             val name = getDisplayName(context, uri) ?: "Selected File"
             val path = uri.toString()
-            coroutineScope.launch { preference?.set(context, path) }
-            onFileChosen(name, path)
+
+            coroutineScope.launch {
+                if (type == FileChooserType.IMPORT_JSON) {
+                    try {
+                        val inputStream = context.contentResolver.openInputStream(uri)
+                        val json = inputStream?.bufferedReader()?.use { it.readText() }
+                        if (json != null) {
+                            val serdes = AlarmSerdes()
+                            val count = serdes.importAlarmDataFromJson(context, json)
+                            Toast.makeText(context, "Imported $count alarms", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, "Failed to read file", Toast.LENGTH_SHORT).show()
+                        }
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "Import failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    // Regular file preference
+                    preference?.set(context, path)
+                    onFileChosen(name, path)
+                }
+            }
         } ?: onDismiss()
     }
 
     LaunchedEffect(Unit) {
         if (!hasLaunched.value) {
             hasLaunched.value = true
-            if (type == FileChooserType.IMAGE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-            } else if (permission != null && ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                permissionLauncher.launch(permission)
-            } else {
-                startFileChooser(type, openDocumentLauncher)
+
+            when (type) {
+                FileChooserType.EXPORT_JSON -> {
+                    jsonExporter.launch("app_data_export.json")
+                }
+                FileChooserType.IMPORT_JSON -> {
+                    Toast.makeText(context, "Warning: Existing alarms will be deleted!", Toast.LENGTH_LONG).show()
+                    startFileChooser(type, openDocumentLauncher)
+                }
+                FileChooserType.IMAGE -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                        imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    } else if (permission != null && ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                        permissionLauncher.launch(permission)
+                    } else {
+                        startFileChooser(type, openDocumentLauncher)
+                    }
+                }
+                else -> {
+                    startFileChooser(type, openDocumentLauncher)
+                }
             }
         }
     }
@@ -109,6 +169,7 @@ private fun startFileChooser(
             "audio/opus",
             "audio/flac"
         )
+        FileChooserType.IMPORT_JSON -> arrayOf("application/json")
         else -> arrayOf("*/*")
     }
 
@@ -131,6 +192,8 @@ private fun getDisplayName(
 object FileChooserType {
     const val IMAGE = "image/*"
     const val AUDIO = "audio/*"
+    const val EXPORT_JSON = "export_json"
+    const val IMPORT_JSON = "import_json"
     const val READ_MEDIA_IMAGES = "android.permission.READ_MEDIA_IMAGES"
     const val READ_MEDIA_AUDIO = "android.permission.READ_MEDIA_AUDIO"
 }
