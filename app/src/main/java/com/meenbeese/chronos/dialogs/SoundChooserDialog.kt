@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.ext.loadAlarmSounds
 import com.meenbeese.chronos.ext.loadRingtones
 import com.meenbeese.chronos.views.sound.AlarmSoundChooserView
 import com.meenbeese.chronos.views.sound.FileSoundChooserView
@@ -47,7 +48,8 @@ fun SoundChooserDialog(
 ) {
     val context = LocalContext.current
     val audioUtils = AudioUtils(context)
-    val soundList = remember { loadRingtones(context) }
+    val alarmSounds = remember { loadAlarmSounds(context) }
+    val ringtoneSounds = remember { loadRingtones(context) }
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false,
     )
@@ -102,11 +104,11 @@ fun SoundChooserDialog(
 
             when (selectedTab) {
                 0 -> AlarmSoundChooserView(
-                    sounds = soundList,
+                    sounds = alarmSounds,
                     onSoundChosen = onSoundChosen
                 )
                 1 -> RingtoneSoundChooserView(
-                    sounds = soundList,
+                    sounds = ringtoneSounds,
                     onSoundChosen = onSoundChosen
                 )
                 2 -> FileSoundChooserView(
