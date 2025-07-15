@@ -23,6 +23,7 @@ fun ClockPageView(
     pageIndicatorVisible: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val backgroundDimConstant = 0.2f
     val pagerState = rememberPagerState { fragments.size }
 
     Box(
@@ -40,7 +41,7 @@ fun ClockPageView(
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .background(Color.Black.copy(alpha = 0.5f))
+                .background(Color.Black.copy(alpha = backgroundDimConstant))
         )
 
         HorizontalPager(

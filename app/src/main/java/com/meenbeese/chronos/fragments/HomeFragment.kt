@@ -487,9 +487,11 @@ class HomeFragment : BaseFragment() {
 
         binding.clockPageView.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         binding.clockPageView.setContent {
+            val background = rememberBackgroundPainterState(isAlarm = false)
+
             ClockPageView(
                 fragments = fragments,
-                backgroundPainter = rememberBackgroundPainterState(false)!!,
+                backgroundPainter = background!!,
                 pageIndicatorVisible = fragments.size > 1
             )
         }
