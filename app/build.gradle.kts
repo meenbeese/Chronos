@@ -117,11 +117,8 @@ dependencies {
     // Material
     implementation("com.google.android.material:material:1.12.0")
 
-    // Color Picker
+    // Picker
     implementation("com.github.skydoves:colorpicker-compose:1.1.2")
-
-    // FAB Menu
-    implementation("com.leinardi.android:speed-dial:3.3.0")
 
     // Image
     implementation("io.coil-kt.coil3:coil-compose:3.2.0")

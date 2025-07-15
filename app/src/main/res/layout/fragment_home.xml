@@ -33,18 +33,12 @@
 
     </LinearLayout>
 
-    <com.leinardi.android.speeddial.SpeedDialView
+    <androidx.compose.ui.platform.ComposeView
         android:id="@+id/speedDial"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:baselineAligned="true"
-        android:clickable="true"
-        android:focusable="true"
-        app:sdMainFabClosedSrc="@drawable/ic_add"
-        app:sdMainFabOpenedIconColor="@color/md_theme_onPrimary"
-        app:sdMainFabClosedIconColor="@color/md_theme_onPrimary"
-        app:sdUseReverseAnimationOnClose="true" />
+        android:layout_margin="10dp" />
 
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/composeDialogHost"

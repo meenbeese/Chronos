@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.Toast
 
 import androidx.compose.runtime.Composable
@@ -20,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
@@ -30,7 +28,6 @@ import androidx.viewpager2.widget.ViewPager2
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
-import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.adapters.SimplePagerAdapter
 import com.meenbeese.chronos.data.Preferences
@@ -49,8 +46,10 @@ import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.utils.ImageUtils.getContrastingTextColorFromBg
 import com.meenbeese.chronos.utils.ImageUtils.rememberBackgroundPainterState
+import com.meenbeese.chronos.views.AnimatedFabMenu
 import com.meenbeese.chronos.views.ClockPageView
 import com.meenbeese.chronos.views.CustomTabView
+import com.meenbeese.chronos.views.FabItem
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -98,12 +97,6 @@ class HomeFragment : BaseFragment() {
         val tabs = listOf("Alarms", "Settings")
         val selectedTabIndex = mutableIntStateOf(0)
 
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                selectedTabIndex.intValue = position
-            }
-        })
-
         tabView.setContent {
             CustomTabView(
                 tabs = tabs,
@@ -113,12 +106,10 @@ class HomeFragment : BaseFragment() {
                     binding.viewPager.currentItem = index
 
                     if (index == 0) {
-                        binding.speedDial.show()
                         behavior.isDraggable = true
                         behavior.peekHeight = binding.bottomSheet.measuredHeight / 2
                         behavior.state = BottomSheetBehavior.STATE_COLLAPSED
                     } else {
-                        binding.speedDial.hide()
                         behavior.isDraggable = false
                         behavior.state = BottomSheetBehavior.STATE_EXPANDED
                     }
@@ -134,7 +125,6 @@ class HomeFragment : BaseFragment() {
                 val statusBarHeight = bottomSheet.getTag(R.id.viewPager) as? Int ?: 0
 
                 _binding?.let { binding ->
-                    binding.speedDial.close()
                     when (newState) {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
                             bottomSheet.setPadding(0, 0, 0, 0)
@@ -157,8 +147,6 @@ class HomeFragment : BaseFragment() {
                     }
 
                     bottomSheet.setPadding(0, (easedOffset * statusBarHeight).toInt(), 0, 0)
-                    binding.speedDial.close()
-                    binding.speedDial.alpha = 1f - slideOffset
                 }
             }
         })
@@ -172,9 +160,23 @@ class HomeFragment : BaseFragment() {
         binding.viewPager.adapter = pagerAdapter
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                val title = pagerAdapter.getTitle(position)
-                if (title == getString(R.string.title_settings)) {
+                selectedTabIndex.intValue = position
+
+                if (position == 0) {
+                    binding.speedDial.apply {
+                        visibility = View.VISIBLE
+                        disposeComposition()
+                        post { setupSpeedDial() }
+                    }
+                    behavior.isDraggable = true
+                    behavior.peekHeight = binding.bottomSheet.measuredHeight / 2
+                    behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                } else {
+                    binding.speedDial.apply {
+                        disposeComposition()
+                        visibility = View.INVISIBLE
+                    }
+                    behavior.isDraggable = false
                     behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 }
             }
@@ -185,24 +187,51 @@ class HomeFragment : BaseFragment() {
             }
         }
 
-        setSpeedDialView()
+        setupSpeedDial()
         setClockFragments()
-
-        binding.root.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                val safeBinding = _binding ?: return
-                safeBinding.root.viewTreeObserver.removeOnGlobalLayoutListener(this)
-
-                val halfHeight = safeBinding.root.measuredHeight / 2
-                behavior.peekHeight = halfHeight
-                behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                behavior.isDraggable = true
-            }
-        })
 
         handleIntentActions()
 
         return binding.root
+    }
+
+    private fun setupSpeedDial() {
+        binding.speedDial.setViewCompositionStrategy(
+            ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner)
+        )
+        binding.speedDial.setContent {
+            val timerItem = FabItem(icon = R.drawable.ic_timer, text = R.string.title_set_timer)
+            val watchItem = FabItem(icon = R.drawable.ic_stopwatch, text = R.string.title_set_stopwatch)
+            val alarmItem = FabItem(icon = R.drawable.ic_alarm_add, text = R.string.title_set_alarm)
+
+            AnimatedFabMenu(
+                icon = R.drawable.ic_add,
+                text = R.string.title_create,
+                items = listOf(
+                    timerItem,
+                    watchItem,
+                    alarmItem
+                ),
+                onItemClick = { fabItem ->
+                    when (fabItem) {
+                        timerItem -> invokeTimerScheduler()
+                        watchItem -> {
+                            parentFragmentManager.beginTransaction()
+                                .setCustomAnimations(
+                                    R.anim.slide_in_up_sheet,
+                                    R.anim.slide_out_up_sheet,
+                                    R.anim.slide_in_down_sheet,
+                                    R.anim.slide_out_down_sheet
+                                )
+                                .replace(R.id.fragment, StopwatchFragment())
+                                .addToBackStack(null)
+                                .commit()
+                        }
+                        alarmItem -> invokeAlarmScheduler()
+                    }
+                }
+            )
+        }
     }
 
     override fun onDestroyView() {
@@ -219,72 +248,6 @@ class HomeFragment : BaseFragment() {
             } else {
                 behavior.isDraggable = true
             }
-        }
-    }
-
-    private fun setSpeedDialView() {
-        val context = requireContext()
-
-        val primary = ContextCompat.getColor(context, R.color.md_theme_primary)
-        val onPrimary = ContextCompat.getColor(context, R.color.md_theme_onPrimary)
-        val surface = ContextCompat.getColor(context, R.color.md_theme_surface)
-        val onSurface = ContextCompat.getColor(context, R.color.md_theme_onSurface)
-
-        binding.speedDial.mainFabOpenedBackgroundColor = primary
-        binding.speedDial.mainFabClosedBackgroundColor = primary
-        binding.speedDial.addActionItem(
-            SpeedDialActionItem
-                .Builder(R.id.alarm_fab, R.drawable.ic_alarm_add)
-                .setFabBackgroundColor(primary)
-                .setFabImageTintColor(onPrimary)
-                .setLabelColor(onSurface)
-                .setLabelBackgroundColor(surface)
-                .setLabel(R.string.title_set_alarm)
-                .setLabelClickable(true)
-                .create()
-        )
-        binding.speedDial.addActionItem(
-            SpeedDialActionItem
-                .Builder(R.id.timer_fab, R.drawable.ic_timer)
-                .setFabBackgroundColor(primary)
-                .setFabImageTintColor(onPrimary)
-                .setLabelColor(onSurface)
-                .setLabelBackgroundColor(surface)
-                .setLabel(R.string.title_set_timer)
-                .setLabelClickable(true)
-                .create()
-        )
-        binding.speedDial.addActionItem(
-            SpeedDialActionItem
-                .Builder(R.id.stopwatch_fab, R.drawable.ic_stopwatch)
-                .setFabBackgroundColor(primary)
-                .setFabImageTintColor(onPrimary)
-                .setLabelColor(onSurface)
-                .setLabelBackgroundColor(surface)
-                .setLabel(R.string.title_set_stopwatch)
-                .setLabelClickable(true)
-                .create()
-        )
-        binding.speedDial.setOnActionSelectedListener { actionItem ->
-            binding.speedDial.close()
-            when (actionItem.id) {
-                R.id.alarm_fab -> invokeAlarmScheduler()
-                R.id.timer_fab -> invokeTimerScheduler()
-                R.id.stopwatch_fab -> {
-                    parentFragmentManager.beginTransaction()
-                        .setCustomAnimations(
-                            R.anim.slide_in_up_sheet,
-                            R.anim.slide_out_up_sheet,
-                            R.anim.slide_in_down_sheet,
-                            R.anim.slide_out_down_sheet
-                        )
-                        .replace(R.id.fragment, StopwatchFragment())
-                        .addToBackStack(null)
-                        .commit()
-                }
-                else -> binding.speedDial.hide()
-            }
-            false
         }
     }
 
