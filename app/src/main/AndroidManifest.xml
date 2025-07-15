@@ -59,7 +59,9 @@
             android:name=".activities.AlarmActivity"
             android:theme="@style/AppTheme"
             android:launchMode="singleTop"
-            android:excludeFromRecents="true" />
+            android:excludeFromRecents="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true" />
 
         <service
             android:name=".services.SleepReminderService"

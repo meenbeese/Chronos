@@ -161,7 +161,6 @@ class AlarmActivity : ComponentActivity() {
         sound?.play(chronos!!)
         refreshSleepTime(chronos!!)
 
-
         setContent {
             val showSnoozeDialog = remember { mutableStateOf(false) }
             val showTimeChooserDialog = remember { mutableStateOf(false) }
