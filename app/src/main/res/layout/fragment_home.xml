@@ -5,37 +5,10 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
-        android:id="@+id/timeContainer"
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/clockPageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/background"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            tools:src="@tools:sample/backgrounds/scenic"/>
-
-        <View
-            android:id="@+id/overlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.5" />
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/timePager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <androidx.compose.ui.platform.ComposeView
-            android:id="@+id/pageIndicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_margin="16dp" />
-
-    </FrameLayout>
+        android:layout_height="455dp" />
 
     <LinearLayout
         android:id="@+id/bottomSheet"

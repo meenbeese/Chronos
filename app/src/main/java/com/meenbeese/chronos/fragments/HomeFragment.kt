@@ -12,13 +12,14 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.Toast
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -42,10 +43,14 @@ import com.meenbeese.chronos.databinding.FragmentHomeBinding
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
 import com.meenbeese.chronos.dialogs.TimeChooserDialog
+import com.meenbeese.chronos.interfaces.AlarmNavigator
+import com.meenbeese.chronos.screens.ClockScreen
 import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.utils.FormatUtils
+import com.meenbeese.chronos.utils.ImageUtils.getContrastingTextColorFromBg
+import com.meenbeese.chronos.utils.ImageUtils.rememberBackgroundPainterState
+import com.meenbeese.chronos.views.ClockPageView
 import com.meenbeese.chronos.views.CustomTabView
-import com.meenbeese.chronos.views.PageIndicatorView
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -192,9 +197,6 @@ class HomeFragment : BaseFragment() {
                 behavior.peekHeight = halfHeight
                 behavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 behavior.isDraggable = true
-
-                safeBinding.timeContainer.layoutParams.height = halfHeight
-                safeBinding.timeContainer.requestLayout()
             }
         })
 
@@ -453,55 +455,68 @@ class HomeFragment : BaseFragment() {
      * Update the time zones displayed in the clock fragments pager.
      */
     internal fun setClockFragments() {
-        val fragments = mutableListOf<ClockFragment.Instantiator>()
+        val fragments = mutableListOf<@Composable () -> Unit>()
+        val timeZones = mutableListOf(TimeZone.getDefault().id)
 
-        // Always add the default/local time zone clock
-        fragments.add(ClockFragment.Instantiator(context, null))
-
-        // Check if displaying additional time zones is enabled
         if (Preferences.TIME_ZONE_ENABLED.get(requireContext())) {
             val rawCsv = Preferences.TIME_ZONES.get(requireContext())
             val selectedIds = rawCsv.split(",").map { it.trim() }.filter { it.isNotEmpty() }
 
             for (id in selectedIds) {
                 if (TimeZone.getAvailableIDs().contains(id)) {
-                    fragments.add(ClockFragment.Instantiator(context, id))
+                    timeZones.add(id)
                 }
             }
         }
 
-        val timeAdapter = SimplePagerAdapter(this, *fragments.toTypedArray())
-        val viewPager = binding.timePager
-        val composeView = binding.pageIndicator
-
-        val totalPages = fragments.size
-        val currentPage = mutableIntStateOf(0)
-        val pageOffset = mutableFloatStateOf(0f)
-
-        viewPager.adapter = timeAdapter
-
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageScrolled(
-                position: Int,
-                offset: Float,
-                offsetPixels: Int
-            ) {
-                currentPage.intValue = position
-                pageOffset.floatValue = offset
-                composeView.setContent {
-                    PageIndicatorView(
-                        currentPage = currentPage.intValue,
-                        pageOffset = pageOffset.floatValue,
-                        pageCount = totalPages
-                    )
-                }
+        for (timeZoneId in timeZones) {
+            fragments.add {
+                ClockScreen(
+                    timezoneId = timeZoneId,
+                    onClockTap = {
+                        if (Preferences.SCROLL_TO_NEXT.get(requireContext())) {
+                            navigateToNearestAlarm()
+                        }
+                    },
+                    getTextColor = {
+                        getContrastingTextColorFromBg(requireContext())
+                    }
+                )
             }
+        }
 
-            override fun onPageSelected(position: Int) {
-                currentPage.intValue = position
-            }
-        })
-        composeView.visibility = if (totalPages > 1) View.VISIBLE else View.GONE
+        binding.clockPageView.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        binding.clockPageView.setContent {
+            ClockPageView(
+                fragments = fragments,
+                backgroundPainter = rememberBackgroundPainterState(false)!!,
+                pageIndicatorVisible = fragments.size > 1
+            )
+        }
+    }
+
+    private fun navigateToNearestAlarm() {
+        val activity = requireActivity()
+        val chronosApp = activity.application as Chronos
+        val allAlarms = chronosApp.alarms
+
+        val alarmsWithNextTrigger = allAlarms
+            .filter { it.isEnabled }
+            .mapNotNull { alarm -> alarm.getNext()?.timeInMillis?.let { alarm to it } }
+
+        val targetAlarm = alarmsWithNextTrigger
+            .minByOrNull { it.second }?.first
+            ?: allAlarms
+                .mapNotNull { alarm -> alarm.getNext()?.timeInMillis?.let { alarm to it } }
+                .minByOrNull { it.second }
+                ?.first
+            ?: return
+
+        val fragment = parentFragmentManager.fragments
+            .filterIsInstance<AlarmNavigator>()
+            .firstOrNull()
+
+        fragment?.jumpToAlarm(targetAlarm.id, openEditor = true)
     }
 
     companion object {
