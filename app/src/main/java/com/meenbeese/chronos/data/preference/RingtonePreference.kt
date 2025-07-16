@@ -76,10 +76,6 @@ fun RingtonePreference(
                     }
                 }
             },
-            onRequestFileChooser = { callback ->
-                fileChooserCallback = callback
-                showFileChooser = true
-            }
         )
     }
 

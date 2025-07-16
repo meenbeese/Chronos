@@ -44,7 +44,6 @@ import com.meenbeese.chronos.utils.AudioUtils
 fun SoundChooserDialog(
     onDismissRequest: () -> Unit = {},
     onSoundChosen: (SoundData) -> Unit = {},
-    onRequestFileChooser: ((String, String) -> Unit) -> Unit = {}
 ) {
     val context = LocalContext.current
     val audioUtils = AudioUtils(context)

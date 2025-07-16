@@ -36,7 +36,6 @@ import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.dialogs.SoundChooserDialog
 import com.meenbeese.chronos.dialogs.TimeChooserDialog
 import com.meenbeese.chronos.utils.AlarmsDiffCallback
-import com.meenbeese.chronos.utils.DimenUtils
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.views.DayCircleView
 import com.meenbeese.chronos.views.ProgressLineView
@@ -52,8 +51,8 @@ import java.util.concurrent.TimeUnit
 class AlarmsAdapter(
     private val chronos: Chronos,
     private val recycler: RecyclerView,
-    private val onDeleteAlarm: (AlarmData) -> Unit,
-    private val alarmViewModel: AlarmViewModel
+    private val alarmViewModel: AlarmViewModel,
+    private val onDeleteAlarm: (AlarmData) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var timers: MutableList<TimerData> = chronos.timers.toMutableList()
@@ -204,9 +203,6 @@ class AlarmsAdapter(
                         onBindAlarmViewHolderToggles(holder, alarm)
                         holder.composeDialog.visibility = View.GONE
                     },
-                    onRequestFileChooser = { chooser ->
-                        chooser("audio/*", "Choose File")
-                    }
                 )
             }
 
@@ -239,7 +235,7 @@ class AlarmsAdapter(
         val isExpanded = position == expandedPosition
 
         val collapsedElevation = 0f
-        val expandedElevation = DimenUtils.dpToPx(2f).toFloat()
+        val expandedElevation = 2f
 
         if (holder.extra.visibility != if (isExpanded) View.VISIBLE else View.GONE) {
             val transition = AutoTransition().apply {

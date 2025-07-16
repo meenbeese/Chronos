@@ -2,12 +2,9 @@ package com.meenbeese.chronos.dialogs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 import com.meenbeese.chronos.R
+import com.meenbeese.chronos.views.TimeNumpadItem
 
 import java.util.concurrent.TimeUnit
 
@@ -119,41 +117,11 @@ fun DurationChooserDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                val numbers = listOf(
-                    listOf("1", "2", "3"),
-                    listOf("4", "5", "6"),
-                    listOf("7", "8", "9"),
-                    listOf("", "0", "")
-                )
-
-                numbers.forEach { row ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        row.forEach { digit ->
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .aspectRatio(1f)
-                                    .padding(4.dp)
-                                    .clickable(enabled = digit.isNotEmpty()) {
-                                        input = input.drop(digit.length) + digit
-                                    },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                if (digit.isNotEmpty()) {
-                                    Text(
-                                        text = digit,
-                                        style = MaterialTheme.typography.headlineLarge
-                                    )
-                                }
-                            }
-                        }
+                TimeNumpadItem(
+                    onDigitPressed = { digit ->
+                        input = input.drop(digit.length) + digit
                     }
-                }
+                )
             }
         },
         modifier = Modifier
