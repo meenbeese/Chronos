@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 
 import kotlinx.coroutines.launch
@@ -27,9 +28,12 @@ fun HomeBottomSheet(
     tabs: List<String>,
     initialTabIndex: Int,
     onTabChanged: (Int) -> Unit,
-    modifier: Modifier = Modifier,
+    heightFraction: Float = 0.5f,
     pagerContent: @Composable (pageIndex: Int) -> @Composable (() -> Unit),
 ) {
+    val screenHeightDp = LocalConfiguration.current.screenHeightDp.dp
+    val peekHeight = screenHeightDp * heightFraction
+
     val sheetState = rememberStandardBottomSheetState(
         initialValue = SheetValue.PartiallyExpanded
     )
@@ -51,7 +55,7 @@ fun HomeBottomSheet(
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
-        sheetPeekHeight = 500.dp,
+        sheetPeekHeight = peekHeight,
         sheetContent = {
             Column(
                 modifier = Modifier
@@ -80,7 +84,6 @@ fun HomeBottomSheet(
                     content()
                 }
             }
-        },
-        modifier = modifier
+        }
     ) { /* No content behind the sheet */ }
 }

@@ -3,7 +3,6 @@ package com.meenbeese.chronos.views
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -27,9 +26,7 @@ fun ClockPageView(
     val pagerState = rememberPagerState { fragments.size }
 
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.5f)
+        modifier = modifier.fillMaxWidth()
     ) {
         Image(
             painter = backgroundPainter,

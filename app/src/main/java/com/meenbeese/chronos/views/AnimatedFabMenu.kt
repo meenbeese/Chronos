@@ -51,6 +51,7 @@ fun AnimatedFabMenu(
     @StringRes text: Int,
     items: List<FabItem>,
     onItemClick: (FabItem) -> Unit,
+    modifier: Modifier = Modifier,
     fabColor: Color = MaterialTheme.colorScheme.tertiary,
     menuColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     expandedWidth: Dp = 140.dp,
@@ -95,7 +96,7 @@ fun AnimatedFabMenu(
     )
 
     ElevatedCard(
-        modifier = Modifier.padding(4.dp),
+        modifier = modifier.padding(4.dp),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.elevatedCardElevation(4.dp),
         colors = CardDefaults.elevatedCardColors().copy(
