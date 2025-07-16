@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +41,7 @@ import com.meenbeese.chronos.databinding.FragmentHomeBinding
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
 import com.meenbeese.chronos.dialogs.TimeChooserDialog
+import com.meenbeese.chronos.ext.getFlow
 import com.meenbeese.chronos.interfaces.AlarmNavigator
 import com.meenbeese.chronos.screens.ClockScreen
 import com.meenbeese.chronos.services.TimerService
@@ -417,44 +419,44 @@ class HomeFragment : BaseFragment() {
      * Update the time zones displayed in the clock fragments pager.
      */
     internal fun setClockFragments() {
-        val fragments = mutableListOf<@Composable () -> Unit>()
-        val timeZones = mutableListOf(TimeZone.getDefault().id)
-
-        if (Preferences.TIME_ZONE_ENABLED.get(requireContext())) {
-            val rawCsv = Preferences.TIME_ZONES.get(requireContext())
-            val selectedIds = rawCsv.split(",").map { it.trim() }.filter { it.isNotEmpty() }
-
-            for (id in selectedIds) {
-                if (TimeZone.getAvailableIDs().contains(id)) {
-                    timeZones.add(id)
-                }
-            }
-        }
-
-        for (timeZoneId in timeZones) {
-            fragments.add {
-                ClockScreen(
-                    timezoneId = timeZoneId,
-                    onClockTap = {
-                        if (Preferences.SCROLL_TO_NEXT.get(requireContext())) {
-                            navigateToNearestAlarm()
-                        }
-                    },
-                    getTextColor = {
-                        getContrastingTextColorFromBg(requireContext())
-                    }
-                )
-            }
-        }
-
         binding.clockPageView.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         binding.clockPageView.setContent {
+            val timeZoneEnabled by Preferences.TIME_ZONE_ENABLED.getFlow(requireContext()).collectAsState(initial = false)
+            val selectedZonesCsv by Preferences.TIME_ZONES.getFlow(requireContext()).collectAsState(initial = "")
+
+            val selectedZones = buildList {
+                add(TimeZone.getDefault().id)
+                if (timeZoneEnabled) {
+                    selectedZonesCsv
+                        .split(",")
+                        .map { it.trim() }
+                        .filter { it.isNotEmpty() && TimeZone.getAvailableIDs().contains(it) }
+                        .forEach { add(it) }
+                }
+            }
+
             val background = rememberBackgroundPainterState(isAlarm = false)
 
+            val clockScreens = selectedZones.map {
+                @Composable {
+                    ClockScreen(
+                        timezoneId = it,
+                        onClockTap = {
+                            if (Preferences.SCROLL_TO_NEXT.get(requireContext())) {
+                                navigateToNearestAlarm()
+                            }
+                        },
+                        getTextColor = {
+                            getContrastingTextColorFromBg(requireContext())
+                        }
+                    )
+                }
+            }
+
             ClockPageView(
-                fragments = fragments,
+                fragments = clockScreens,
                 backgroundPainter = background!!,
-                pageIndicatorVisible = fragments.size > 1
+                pageIndicatorVisible = clockScreens.size > 1
             )
         }
     }
