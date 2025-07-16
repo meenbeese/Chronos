@@ -8,12 +8,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
 
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.displayCutoutPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,15 +23,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.media3.common.util.UnstableApi
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.adapters.SimplePagerAdapter
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.dialogs.TimerFactoryDialog
 import com.meenbeese.chronos.BuildConfig
@@ -46,14 +44,15 @@ import com.meenbeese.chronos.dialogs.TimeChooserDialog
 import com.meenbeese.chronos.ext.getFlow
 import com.meenbeese.chronos.interfaces.AlarmNavigator
 import com.meenbeese.chronos.screens.ClockScreen
+import com.meenbeese.chronos.screens.SettingsScreen
 import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.utils.ImageUtils.getContrastingTextColorFromBg
 import com.meenbeese.chronos.utils.ImageUtils.rememberBackgroundPainterState
 import com.meenbeese.chronos.views.AnimatedFabMenu
 import com.meenbeese.chronos.views.ClockPageView
-import com.meenbeese.chronos.views.CustomTabView
 import com.meenbeese.chronos.views.FabItem
+import com.meenbeese.chronos.views.HomeBottomSheet
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -65,11 +64,11 @@ import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
 
+@UnstableApi
 class HomeFragment : BaseFragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val isBottomSheetExpanded = mutableStateOf(false)
-    private lateinit var behavior: BottomSheetBehavior<*>
     private lateinit var alarmViewModel: AlarmViewModel
 
     override fun onCreateView(
@@ -84,91 +83,60 @@ class HomeFragment : BaseFragment() {
         alarmViewModel = ViewModelProvider(this, factory)[AlarmViewModel::class.java]
         alarmViewModel.alarms.observe(viewLifecycleOwner) { alarms ->
             Log.d("HomeFragment", "Alarms updated, size: ${alarms.size}")
-            if (alarms.isEmpty() && behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            if (alarms.isEmpty() && !isBottomSheetExpanded.value) {
+                isBottomSheetExpanded.value = true
             }
         }
 
-        val tabView = binding.root.findViewById<ComposeView>(R.id.tabLayoutCompose)
-        val tabs = listOf(getString(R.string.title_alarms), getString(R.string.title_settings))
+        val bottomSheet = binding.root.findViewById<ComposeView>(R.id.bottomSheetCompose)
+        val homeTabs = listOf(getString(R.string.title_alarms), getString(R.string.title_settings))
         val selectedTabIndex = mutableIntStateOf(0)
 
-        tabView.setContent {
-            val expanded by isBottomSheetExpanded
+        bottomSheet.setContent {
+            HomeBottomSheet(
+                tabs = homeTabs,
+                initialTabIndex = selectedTabIndex.intValue,
+                onTabChanged = { selectedTabIndex.intValue = it },
+                modifier = Modifier.displayCutoutPadding()
+            ) { page ->
+                {
+                    if (page == 0) {
+                        AndroidView(
+                            modifier = Modifier.fillMaxSize(),
+                            factory = { context ->
+                                FrameLayout(context).apply {
+                                    id = View.generateViewId()
 
-            val modifier = if (expanded) {
-                Modifier.padding(WindowInsets.statusBars.asPaddingValues())
-            } else {
-                Modifier
-            }
+                                    post {
+                                        val fragment = AlarmsFragment()
+                                        (context as FragmentActivity)
+                                            .supportFragmentManager
+                                            .beginTransaction()
+                                            .replace(this.id, fragment)
+                                            .commitNowAllowingStateLoss()
 
-            CustomTabView(
-                tabs = tabs,
-                selectedTabIndex = selectedTabIndex.intValue,
-                onTabSelected = { index ->
-                    selectedTabIndex.intValue = index
-                    binding.viewPager.currentItem = index
-
-                    if (index == 0) {
-                        behavior.isDraggable = true
-                        behavior.peekHeight = binding.bottomSheet.measuredHeight / 2
-                        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                                        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                                            attachScrollListenerToAlarms()
+                                        }
+                                    }
+                                }
+                            }
+                        )
                     } else {
-                        behavior.isDraggable = false
-                        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                        SettingsScreen(
+                            context = requireContext(),
+                            chronos = requireContext().applicationContext as Chronos
+                        )
                     }
-                },
-                modifier = modifier
-            )
-        }
-
-        behavior = BottomSheetBehavior.from(binding.bottomSheet)
-        behavior.isHideable = false
-        behavior.addBottomSheetCallback(object : BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                isBottomSheetExpanded.value = newState == BottomSheetBehavior.STATE_EXPANDED
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-        })
-
-        val pagerAdapter = SimplePagerAdapter(
-            this,
-            AlarmsFragment.Instantiator(context),
-            SettingsFragment.Instantiator(context)
-        )
-
-        binding.viewPager.adapter = pagerAdapter
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                selectedTabIndex.intValue = position
-
-                if (position == 0) {
-                    binding.fabMenuCompose.apply {
-                        visibility = View.VISIBLE
-                        disposeComposition()
-                        post { setupSpeedDial() }
-                    }
-                    behavior.isDraggable = true
-                    behavior.peekHeight = binding.bottomSheet.measuredHeight / 2
-                    behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                } else {
-                    binding.fabMenuCompose.apply {
-                        disposeComposition()
-                        visibility = View.INVISIBLE
-                    }
-                    behavior.isDraggable = false
-                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 }
             }
-        })
-        binding.viewPager.post {
-            if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-                attachScrollListenerToAlarms()
+
+            if (selectedTabIndex.intValue == 0) {
+                setupSpeedDial()
+            } else {
+                binding.fabMenuCompose.setContent {  }
             }
         }
-
-        setupSpeedDial()
 
         setClockFragments()
 
@@ -214,17 +182,6 @@ class HomeFragment : BaseFragment() {
         _binding = null
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        if (binding.viewPager.currentItem == 1) {
-            behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            behavior.isDraggable = false
-        } else {
-            behavior.isDraggable = true
-        }
-    }
-
     private fun attachScrollListenerToAlarms() {
         val alarmsFragment = childFragmentManager.fragments
             .filterIsInstance<AlarmsFragment>()
@@ -241,14 +198,14 @@ class HomeFragment : BaseFragment() {
 
                 if (abs(dy) < threshold) return
 
-                if (dy > 0 && behavior.state != BottomSheetBehavior.STATE_EXPANDED && rv.canScrollVertically(1).not()) {
+                if (dy > 0 && !isBottomSheetExpanded.value && rv.canScrollVertically(1).not()) {
                     if (currentTime - lastStateChangeTime > debounceInterval) {
-                        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                        isBottomSheetExpanded.value = true
                         lastStateChangeTime = currentTime
                     }
-                } else if (dy < 0 && behavior.state != BottomSheetBehavior.STATE_COLLAPSED && rv.canScrollVertically(-1).not()) {
+                } else if (dy < 0 && isBottomSheetExpanded.value && rv.canScrollVertically(-1).not()) {
                     if (currentTime - lastStateChangeTime > debounceInterval) {
-                        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                        isBottomSheetExpanded.value = false
                         lastStateChangeTime = currentTime
                     }
                 }

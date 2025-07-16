@@ -19,7 +19,6 @@ import com.meenbeese.chronos.databinding.FragmentRecyclerBinding
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
 import com.meenbeese.chronos.interfaces.AlarmNavigator
-import com.meenbeese.chronos.interfaces.ContextFragmentInstantiator
 
 class AlarmsFragment : BasePagerFragment(), AlarmNavigator {
     private var _binding: FragmentRecyclerBinding? = null
@@ -105,16 +104,6 @@ class AlarmsFragment : BasePagerFragment(), AlarmNavigator {
             if (openEditor) {
                 alarmsAdapter.openEditorAt(position)
             }
-        }
-    }
-
-    class Instantiator(context: Context?) : ContextFragmentInstantiator(context!!) {
-        override fun getTitle(context: Context?, position: Int): String? {
-            return context?.getString(R.string.title_alarms)
-        }
-
-        override fun newInstance(position: Int): BasePagerFragment {
-            return AlarmsFragment()
         }
     }
 

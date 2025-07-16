@@ -60,7 +60,7 @@ fun ClockScreen(
                 text = timezoneLabel,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(36.dp),
+                    .padding(72.dp),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color(textColor),

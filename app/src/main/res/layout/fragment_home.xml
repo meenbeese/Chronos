@@ -1,37 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/clockPageView"
         android:layout_width="match_parent"
-        android:layout_height="455dp" />
+        android:layout_height="450dp" />
 
-    <LinearLayout
-        android:id="@+id/bottomSheet"
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/bottomSheetCompose"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/md_theme_onPrimary"
-        android:orientation="vertical"
-        app:layout_behavior="com.meenbeese.chronos.utils.ScrollableBottomSheetBehavior">
-
-        <androidx.compose.ui.platform.ComposeView
-            android:id="@+id/tabLayoutCompose"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/md_theme_background"
-            tools:listitem="@layout/fragment_recycler" />
-
-    </LinearLayout>
+        android:layout_height="match_parent" />
 
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/fabMenuCompose"

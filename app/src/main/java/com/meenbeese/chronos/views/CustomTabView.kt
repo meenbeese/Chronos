@@ -5,7 +5,6 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 
 @Composable
 fun CustomTabView(
@@ -16,8 +15,7 @@ fun CustomTabView(
 ) {
     TabRow(
         selectedTabIndex = selectedTabIndex,
-        containerColor = Color.White,
-        modifier = modifier
+        modifier = modifier,
     ) {
         tabs.forEachIndexed { index, title ->
             Tab(
