@@ -21,7 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentActivity
@@ -88,11 +87,10 @@ class HomeFragment : BaseFragment() {
             }
         }
 
-        val bottomSheet = binding.root.findViewById<ComposeView>(R.id.bottomSheetCompose)
         val homeTabs = listOf(getString(R.string.title_alarms), getString(R.string.title_settings))
         val selectedTabIndex = mutableIntStateOf(0)
 
-        bottomSheet.setContent {
+        binding.bottomSheetCompose.setContent {
             HomeBottomSheet(
                 tabs = homeTabs,
                 initialTabIndex = selectedTabIndex.intValue,
@@ -132,7 +130,35 @@ class HomeFragment : BaseFragment() {
             }
 
             if (selectedTabIndex.intValue == 0) {
-                setupSpeedDial()
+                binding.fabMenuCompose.setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner)
+                )
+                binding.fabMenuCompose.setContent {
+                    val timerItem = FabItem(icon = R.drawable.ic_timer, text = R.string.title_set_timer)
+                    val watchItem = FabItem(icon = R.drawable.ic_stopwatch, text = R.string.title_set_stopwatch)
+                    val alarmItem = FabItem(icon = R.drawable.ic_alarm_add, text = R.string.title_set_alarm)
+
+                    AnimatedFabMenu(
+                        icon = R.drawable.ic_add,
+                        text = R.string.title_create,
+                        items = listOf(
+                            timerItem,
+                            watchItem,
+                            alarmItem
+                        ),
+                        onItemClick = { fabItem ->
+                            when (fabItem) {
+                                timerItem -> invokeTimerScheduler()
+                                watchItem -> invokeWatchScheduler()
+                                alarmItem -> invokeAlarmScheduler()
+                            }
+                        }
+                    )
+                }
+                binding.fabMenuCompose.post {
+                    binding.fabMenuCompose.bringToFront()
+                    binding.fabMenuCompose.elevation = 20f
+                }
             } else {
                 binding.fabMenuCompose.setContent {  }
             }
@@ -143,38 +169,6 @@ class HomeFragment : BaseFragment() {
         handleIntentActions()
 
         return binding.root
-    }
-
-    private fun setupSpeedDial() {
-        binding.fabMenuCompose.setViewCompositionStrategy(
-            ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner)
-        )
-        binding.fabMenuCompose.setContent {
-            val timerItem = FabItem(icon = R.drawable.ic_timer, text = R.string.title_set_timer)
-            val watchItem = FabItem(icon = R.drawable.ic_stopwatch, text = R.string.title_set_stopwatch)
-            val alarmItem = FabItem(icon = R.drawable.ic_alarm_add, text = R.string.title_set_alarm)
-
-            AnimatedFabMenu(
-                icon = R.drawable.ic_add,
-                text = R.string.title_create,
-                items = listOf(
-                    timerItem,
-                    watchItem,
-                    alarmItem
-                ),
-                onItemClick = { fabItem ->
-                    when (fabItem) {
-                        timerItem -> invokeTimerScheduler()
-                        watchItem -> invokeWatchScheduler()
-                        alarmItem -> invokeAlarmScheduler()
-                    }
-                }
-            )
-        }
-        binding.fabMenuCompose.post {
-            binding.fabMenuCompose.bringToFront()
-            binding.fabMenuCompose.elevation = 20f
-        }
     }
 
     override fun onDestroyView() {
@@ -234,10 +228,8 @@ class HomeFragment : BaseFragment() {
         val hourNow = calendar.get(Calendar.HOUR_OF_DAY)
         val minuteNow = calendar.get(Calendar.MINUTE)
 
-        val composeView = binding.root.findViewById<ComposeView>(R.id.composeDialogHost)
-
-        composeView.disposeComposition()
-        composeView.setContent {
+        binding.alarmDialogCompose.disposeComposition()
+        binding.alarmDialogCompose.setContent {
             var showDialog by remember { mutableStateOf(true) }
 
             if (showDialog) {
@@ -306,10 +298,9 @@ class HomeFragment : BaseFragment() {
         val context = requireContext()
         val manager = parentFragmentManager
         val chronos = context.applicationContext as Chronos
-        val composeView = binding.root.findViewById<ComposeView>(R.id.composeDialogHost2)
 
-        composeView.disposeComposition()
-        composeView.setContent {
+        binding.timerDialogCompose.disposeComposition()
+        binding.timerDialogCompose.setContent {
             var showDialog by remember { mutableStateOf(true) }
 
             if (showDialog) {

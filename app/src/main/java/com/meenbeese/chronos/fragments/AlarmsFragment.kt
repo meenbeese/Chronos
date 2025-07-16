@@ -1,6 +1,5 @@
 package com.meenbeese.chronos.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +19,7 @@ import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
 import com.meenbeese.chronos.interfaces.AlarmNavigator
 
-class AlarmsFragment : BasePagerFragment(), AlarmNavigator {
+class AlarmsFragment : BaseFragment(), AlarmNavigator {
     private var _binding: FragmentRecyclerBinding? = null
     private val binding get() = _binding!!
 
@@ -74,9 +73,6 @@ class AlarmsFragment : BasePagerFragment(), AlarmNavigator {
         _binding = null
     }
 
-    override fun getTitle(context: Context?): String? {
-        return context?.getString(R.string.title_alarms)
-    }
 
     override fun onAlarmsChanged() {
         recyclerView.post {

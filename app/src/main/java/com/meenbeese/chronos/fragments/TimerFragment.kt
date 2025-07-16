@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
@@ -23,8 +24,8 @@ class TimerFragment : BaseFragment() {
     private var timer: TimerData? = null
 
     private var timeText by mutableStateOf("")
-    private var progress by mutableStateOf(0f)
-    private var maxProgress by mutableStateOf(0f)
+    private var progress by mutableFloatStateOf(0f)
+    private var maxProgress by mutableFloatStateOf(0f)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +45,7 @@ class TimerFragment : BaseFragment() {
                         } else {
                             try {
                                 parentFragmentManager.popBackStack()
-                            } catch (e: IllegalStateException) {
+                            } catch (_: IllegalStateException) {
                                 handler.postDelayed(this, 100)
                             }
                         }
