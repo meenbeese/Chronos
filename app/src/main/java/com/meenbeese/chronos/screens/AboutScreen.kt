@@ -3,9 +3,15 @@ package com.meenbeese.chronos.screens
 import android.widget.Toast
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,15 +23,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
@@ -33,6 +46,9 @@ import coil3.request.transformations
 import coil3.transform.CircleCropTransformation
 
 import com.meenbeese.chronos.R
+
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun AboutScreen(
@@ -42,6 +58,8 @@ fun AboutScreen(
     year: Int
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val showHearts = remember { mutableStateOf(false) }
     val textStyle16 = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp)
     val textStyle14 = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp)
 
@@ -91,13 +109,33 @@ fun AboutScreen(
                 .padding(top = 16.dp)
         )
 
-        Text(
-            text = stringResource(R.string.made_with_love),
-            style = textStyle16,
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(vertical = 44.dp)
-        )
+        ) {
+            Text(
+                text = "Made with ",
+                style = textStyle16,
+            )
+            Text(
+                text = "❤️",
+                style = textStyle16,
+                modifier = Modifier.clickable {
+                    showHearts.value = true
+                    scope.launch {
+                        delay(3000)
+                        showHearts.value = false
+                    }
+                }
+            )
+            Text(
+                text = " in Canada.",
+                style = textStyle16,
+            )
+        }
 
         Text(
             text = version,
@@ -152,6 +190,17 @@ fun AboutScreen(
             Toast.makeText(context, context.getString(R.string.copyright_info, year), Toast.LENGTH_SHORT).show()
         }
     }
+
+    AnimatedVisibility(
+        visible = showHearts.value,
+        enter = fadeIn() + slideInVertically(initialOffsetY = { -100 }),
+        exit = fadeOut(),
+        modifier = Modifier
+            .fillMaxSize()
+            .zIndex(1f)
+    ) {
+        FallingHeartsOverlay()
+    }
 }
 
 @Composable
@@ -180,5 +229,44 @@ fun EngagementItem(
             color = color,
             modifier = Modifier.padding(start = 8.dp)
         )
+    }
+}
+
+@Composable
+fun FallingHeartsOverlay() {
+    val heartCount = 100
+    val scope = rememberCoroutineScope()
+    val hearts = remember {
+        List(heartCount) {
+            mutableFloatStateOf(0f)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            hearts.forEachIndexed { index, state ->
+                scope.launch {
+                    delay((0..1000L).random())
+                    state.floatValue = 0f
+                    while (state.floatValue < 1f) {
+                        delay(16)
+                        state.floatValue += 0.01f
+                    }
+                }
+            }
+            delay(3000)
+        }
+    }
+
+    Canvas(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        hearts.forEachIndexed { index, anim ->
+            val x = (size.width / heartCount) * index + 10
+            val y = size.height * anim.floatValue
+            drawContext.canvas.nativeCanvas.drawText("❤️", x, y, android.graphics.Paint().apply {
+                textSize = 48f
+            })
+        }
     }
 }

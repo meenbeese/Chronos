@@ -1,6 +1,5 @@
 package com.meenbeese.chronos.fragments
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.content.Context
 import android.os.Bundle
@@ -11,6 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -18,10 +21,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -57,9 +59,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-import kotlin.math.PI
 import kotlin.math.abs
-import kotlin.math.cos
 
 import java.util.Calendar
 import java.util.Date
@@ -68,7 +68,7 @@ import java.util.TimeZone
 class HomeFragment : BaseFragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private var statusBarHeight: Int = 0
+    private val isBottomSheetExpanded = mutableStateOf(false)
     private lateinit var behavior: BottomSheetBehavior<*>
     private lateinit var alarmViewModel: AlarmViewModel
 
@@ -78,10 +78,6 @@ class HomeFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomSheet) { v, insets ->
-            statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
-            insets
-        }
 
         val app = requireActivity().application as Chronos
         val factory = AlarmViewModelFactory(app.repository)
@@ -94,11 +90,18 @@ class HomeFragment : BaseFragment() {
         }
 
         val tabView = binding.root.findViewById<ComposeView>(R.id.tabLayoutCompose)
-
         val tabs = listOf(getString(R.string.title_alarms), getString(R.string.title_settings))
         val selectedTabIndex = mutableIntStateOf(0)
 
         tabView.setContent {
+            val expanded by isBottomSheetExpanded
+
+            val modifier = if (expanded) {
+                Modifier.padding(WindowInsets.statusBars.asPaddingValues())
+            } else {
+                Modifier
+            }
+
             CustomTabView(
                 tabs = tabs,
                 selectedTabIndex = selectedTabIndex.intValue,
@@ -114,38 +117,19 @@ class HomeFragment : BaseFragment() {
                         behavior.isDraggable = false
                         behavior.state = BottomSheetBehavior.STATE_EXPANDED
                     }
-                }
+                },
+                modifier = modifier
             )
         }
 
         behavior = BottomSheetBehavior.from(binding.bottomSheet)
         behavior.isHideable = false
         behavior.addBottomSheetCallback(object : BottomSheetCallback() {
-            @SuppressLint("SwitchIntDef")
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                _binding?.let { binding ->
-                    when (newState) {
-                        BottomSheetBehavior.STATE_COLLAPSED -> {
-                            bottomSheet.setPadding(0, 0, 0, 0)
-                            bottomSheet.elevation = 8f
-                        }
-                        BottomSheetBehavior.STATE_EXPANDED -> {
-                            bottomSheet.setPadding(0, statusBarHeight, 0, 0)
-                            bottomSheet.elevation = 16f
-                        }
-                    }
-                }
+                isBottomSheetExpanded.value = newState == BottomSheetBehavior.STATE_EXPANDED
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                _binding?.let { binding ->
-                    val easedOffset = slideOffset.coerceIn(0f, 1f).let {
-                        (1 - cos(it * PI)) / 2.0
-                    }
-
-                    bottomSheet.setPadding(0, (easedOffset * statusBarHeight).toInt(), 0, 0)
-                }
-            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
 
         val pagerAdapter = SimplePagerAdapter(
@@ -185,6 +169,7 @@ class HomeFragment : BaseFragment() {
         }
 
         setupSpeedDial()
+
         setClockFragments()
 
         handleIntentActions()
@@ -218,6 +203,10 @@ class HomeFragment : BaseFragment() {
                 }
             )
         }
+        binding.fabMenuCompose.post {
+            binding.fabMenuCompose.bringToFront()
+            binding.fabMenuCompose.elevation = 20f
+        }
     }
 
     override fun onDestroyView() {
@@ -227,13 +216,12 @@ class HomeFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        _binding?.let { binding ->
-            if (binding.viewPager.currentItem == 1) {
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                behavior.isDraggable = false
-            } else {
-                behavior.isDraggable = true
-            }
+
+        if (binding.viewPager.currentItem == 1) {
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            behavior.isDraggable = false
+        } else {
+            behavior.isDraggable = true
         }
     }
 
