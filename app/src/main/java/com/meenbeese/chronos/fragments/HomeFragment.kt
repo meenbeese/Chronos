@@ -66,7 +66,7 @@ import java.util.TimeZone
 class HomeFragment : BaseFragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
+    private var statusBarHeight: Int = 0
     private lateinit var behavior: BottomSheetBehavior<*>
     private lateinit var alarmViewModel: AlarmViewModel
 
@@ -77,8 +77,7 @@ class HomeFragment : BaseFragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         ViewCompat.setOnApplyWindowInsetsListener(binding.bottomSheet) { v, insets ->
-            val statusBarInset = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
-            v.setTag(R.id.viewPager, statusBarInset)
+            statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
             insets
         }
 
@@ -94,7 +93,7 @@ class HomeFragment : BaseFragment() {
 
         val tabView = binding.root.findViewById<ComposeView>(R.id.tabLayoutCompose)
 
-        val tabs = listOf("Alarms", "Settings")
+        val tabs = listOf(getString(R.string.title_alarms), getString(R.string.title_settings))
         val selectedTabIndex = mutableIntStateOf(0)
 
         tabView.setContent {
@@ -122,8 +121,6 @@ class HomeFragment : BaseFragment() {
         behavior.addBottomSheetCallback(object : BottomSheetCallback() {
             @SuppressLint("SwitchIntDef")
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                val statusBarHeight = bottomSheet.getTag(R.id.viewPager) as? Int ?: 0
-
                 _binding?.let { binding ->
                     when (newState) {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
@@ -140,8 +137,6 @@ class HomeFragment : BaseFragment() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 _binding?.let { binding ->
-                    val statusBarHeight = bottomSheet.getTag(R.id.viewPager) as? Int ?: 0
-
                     val easedOffset = slideOffset.coerceIn(0f, 1f).let {
                         (1 - cos(it * PI)) / 2.0
                     }
@@ -163,7 +158,7 @@ class HomeFragment : BaseFragment() {
                 selectedTabIndex.intValue = position
 
                 if (position == 0) {
-                    binding.speedDial.apply {
+                    binding.fabMenuCompose.apply {
                         visibility = View.VISIBLE
                         disposeComposition()
                         post { setupSpeedDial() }
@@ -172,7 +167,7 @@ class HomeFragment : BaseFragment() {
                     behavior.peekHeight = binding.bottomSheet.measuredHeight / 2
                     behavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 } else {
-                    binding.speedDial.apply {
+                    binding.fabMenuCompose.apply {
                         disposeComposition()
                         visibility = View.INVISIBLE
                     }
@@ -196,10 +191,10 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setupSpeedDial() {
-        binding.speedDial.setViewCompositionStrategy(
+        binding.fabMenuCompose.setViewCompositionStrategy(
             ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner)
         )
-        binding.speedDial.setContent {
+        binding.fabMenuCompose.setContent {
             val timerItem = FabItem(icon = R.drawable.ic_timer, text = R.string.title_set_timer)
             val watchItem = FabItem(icon = R.drawable.ic_stopwatch, text = R.string.title_set_stopwatch)
             val alarmItem = FabItem(icon = R.drawable.ic_alarm_add, text = R.string.title_set_alarm)
@@ -215,18 +210,7 @@ class HomeFragment : BaseFragment() {
                 onItemClick = { fabItem ->
                     when (fabItem) {
                         timerItem -> invokeTimerScheduler()
-                        watchItem -> {
-                            parentFragmentManager.beginTransaction()
-                                .setCustomAnimations(
-                                    R.anim.slide_in_up_sheet,
-                                    R.anim.slide_out_up_sheet,
-                                    R.anim.slide_in_down_sheet,
-                                    R.anim.slide_out_down_sheet
-                                )
-                                .replace(R.id.fragment, StopwatchFragment())
-                                .addToBackStack(null)
-                                .commit()
-                        }
+                        watchItem -> invokeWatchScheduler()
                         alarmItem -> invokeAlarmScheduler()
                     }
                 }
@@ -252,7 +236,9 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun attachScrollListenerToAlarms() {
-        val alarmsFragment = childFragmentManager.findFragmentByTag("f0") as? AlarmsFragment
+        val alarmsFragment = childFragmentManager.fragments
+            .filterIsInstance<AlarmsFragment>()
+            .firstOrNull()
         val recyclerView = alarmsFragment?.recyclerView ?: return
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -350,6 +336,19 @@ class HomeFragment : BaseFragment() {
                 )
             }
         }
+    }
+
+    private fun invokeWatchScheduler() {
+        parentFragmentManager.beginTransaction()
+            .setCustomAnimations(
+                R.anim.slide_in_up_sheet,
+                R.anim.slide_out_up_sheet,
+                R.anim.slide_in_down_sheet,
+                R.anim.slide_out_down_sheet
+            )
+            .replace(R.id.fragment, StopwatchFragment())
+            .addToBackStack(null)
+            .commit()
     }
 
     /**

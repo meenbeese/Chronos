@@ -67,7 +67,6 @@ fun TimeZonesPreference(
                     Preferences.TIME_ZONE_ENABLED.set(context, updatedSelection.isNotEmpty())
                 }
                 selectedZonesCsv.value = csv
-                (context as? MainActivity)?.refreshClockFragments()
                 onTimeZonesChanged()
                 showDialog = false
             }
