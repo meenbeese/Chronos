@@ -13,6 +13,7 @@ import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -88,25 +89,29 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
 
         // Background permissions info
         if (!Preferences.INFO_BACKGROUND_PERMISSIONS.get(this)) {
-            val composeView = findViewById<ComposeView>(R.id.backgroundPermissionsComposeView)
+            val composeView = findViewById<ComposeView>(R.id.backgroundWarnDialog)
+            val showDialog = mutableStateOf(true)
             composeView.setContent {
-                BackgroundWarnDialog(
-                    onDismiss = {
-                        composeView.visibility = View.GONE
-                    },
-                    onConfirm = {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            Preferences.INFO_BACKGROUND_PERMISSIONS.set(this@MainActivity, true)
-                            withContext(Dispatchers.Main) {
-                                composeView.visibility = View.GONE
-                                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-                                startActivity(intent)
+                if (showDialog.value) {
+                    BackgroundWarnDialog(
+                        onDismiss = {
+                            showDialog.value = false
+                            composeView.visibility = View.GONE
+                        },
+                        onConfirm = {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                Preferences.INFO_BACKGROUND_PERMISSIONS.set(this@MainActivity, true)
+                                withContext(Dispatchers.Main) {
+                                    showDialog.value = false
+                                    composeView.visibility = View.GONE
+                                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                                    startActivity(intent)
+                                }
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
-            composeView.visibility = View.VISIBLE
         }
     }
 

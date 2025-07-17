@@ -1,8 +1,11 @@
 package com.meenbeese.chronos.ui.dialogs
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,11 +34,16 @@ fun BackgroundWarnDialog(
             )
         },
         text = {
-            Text(
-                text = stringResource(R.string.info_background_permissions_body),
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
+            Box(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(bottom = 8.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.info_background_permissions_body),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
@@ -55,7 +63,7 @@ fun BackgroundWarnDialog(
         },
         modifier = Modifier
             .widthIn(min = 300.dp, max = 600.dp)
-            .heightIn(min = 200.dp, max = 400.dp)
+            .heightIn(min = 250.dp, max = 500.dp)
             .padding(16.dp)
     )
 }
