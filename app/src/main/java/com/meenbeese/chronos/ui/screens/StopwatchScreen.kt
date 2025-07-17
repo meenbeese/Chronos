@@ -1,5 +1,9 @@
 package com.meenbeese.chronos.ui.screens
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +39,7 @@ import com.meenbeese.chronos.R
 
 @Composable
 fun StopwatchScreen(
+    isRunning: Boolean,
     onBackClick: () -> Unit,
     onResetClick: () -> Unit,
     onToggleClick: () -> Unit,
@@ -126,11 +131,19 @@ fun StopwatchScreen(
                     onClick = onToggleClick,
                     containerColor = MaterialTheme.colorScheme.primary
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_play),
-                        contentDescription = "Toggle",
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
+                    AnimatedContent(
+                        targetState = isRunning,
+                        transitionSpec = {
+                            fadeIn() togetherWith fadeOut()
+                        },
+                        label = "PlayPauseTransition"
+                    ) { running ->
+                        Icon(
+                            painter = painterResource(id = if (running) R.drawable.ic_pause else R.drawable.ic_play),
+                            contentDescription = if (running) "Pause" else "Play",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
                 }
             }
 

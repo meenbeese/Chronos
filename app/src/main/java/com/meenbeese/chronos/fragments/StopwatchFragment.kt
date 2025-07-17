@@ -61,6 +61,7 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
         return ComposeView(context).apply {
             setContent {
                 StopwatchScreen(
+                    isRunning = isRunning,
                     onBackClick = { parentFragmentManager.popBackStack() },
                     onResetClick = { service?.reset() },
                     onToggleClick = { service?.toggle() },
