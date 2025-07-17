@@ -22,7 +22,7 @@ fun AlarmsScreen(
     onScrolledToEnd: () -> Unit,
     isBottomSheetExpanded: MutableState<Boolean> = remember { mutableStateOf(false) }
 ) {
-    if (alarms.isEmpty()) {
+    if (adapter.itemCount == 0) {
         EmptyAlarmsView()
     } else {
         AndroidView(
