@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.theme.ThemeMode
+import com.meenbeese.chronos.ui.theme.ThemeMode
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

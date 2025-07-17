@@ -2,8 +2,8 @@ package com.meenbeese.chronos.data
 
 import android.graphics.Color
 
-import com.meenbeese.chronos.theme.ThemeFactory
-import com.meenbeese.chronos.theme.ThemeMode
+import com.meenbeese.chronos.ui.theme.ThemeFactory
+import com.meenbeese.chronos.ui.theme.ThemeMode
 
 object Preferences {
     // Background

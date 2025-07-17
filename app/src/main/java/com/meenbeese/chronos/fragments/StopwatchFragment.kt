@@ -27,10 +27,10 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.screens.StopwatchScreen
+import com.meenbeese.chronos.ui.screens.StopwatchScreen
 import com.meenbeese.chronos.services.StopwatchService
+import com.meenbeese.chronos.ui.views.ProgressTextView
 import com.meenbeese.chronos.utils.FormatUtils.formatMillis
-import com.meenbeese.chronos.views.ProgressTextView
 
 class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConnection {
     private var service: StopwatchService? = null

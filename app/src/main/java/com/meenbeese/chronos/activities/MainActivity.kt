@@ -24,7 +24,7 @@ import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.Chronos.ActivityListener
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.dialogs.BackgroundWarnDialog
+import com.meenbeese.chronos.ui.dialogs.BackgroundWarnDialog
 import com.meenbeese.chronos.fragments.BaseFragment
 import com.meenbeese.chronos.fragments.HomeFragment
 import com.meenbeese.chronos.fragments.StopwatchFragment

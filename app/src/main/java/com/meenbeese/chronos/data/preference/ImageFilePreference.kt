@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 
 import com.meenbeese.chronos.data.PreferenceEntry
-import com.meenbeese.chronos.screens.FileChooserScreen
-import com.meenbeese.chronos.screens.FileChooserType
-import com.meenbeese.chronos.views.PreferenceItem
+import com.meenbeese.chronos.ui.screens.FileChooserScreen
+import com.meenbeese.chronos.ui.screens.FileChooserType
+import com.meenbeese.chronos.ui.views.PreferenceItem
 
 /**
  * A preference item that allows the user to select

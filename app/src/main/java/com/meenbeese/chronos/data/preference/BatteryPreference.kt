@@ -8,7 +8,7 @@ import androidx.compose.ui.res.stringResource
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.ext.handleBatteryOptimizationClick
-import com.meenbeese.chronos.views.PreferenceItem
+import com.meenbeese.chronos.ui.views.PreferenceItem
 
 /**
  * A preference item allowing the user to select to

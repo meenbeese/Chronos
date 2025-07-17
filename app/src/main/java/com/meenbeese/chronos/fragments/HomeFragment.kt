@@ -34,7 +34,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.dialogs.TimerFactoryDialog
+import com.meenbeese.chronos.ui.dialogs.TimerFactoryDialog
 import com.meenbeese.chronos.BuildConfig
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.adapters.AlarmsAdapter
@@ -43,20 +43,20 @@ import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.toEntity
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
-import com.meenbeese.chronos.dialogs.TimeChooserDialog
+import com.meenbeese.chronos.ui.dialogs.TimeChooserDialog
 import com.meenbeese.chronos.ext.getFlow
 import com.meenbeese.chronos.interfaces.AlarmNavigator
-import com.meenbeese.chronos.screens.AlarmsScreen
-import com.meenbeese.chronos.screens.ClockScreen
-import com.meenbeese.chronos.screens.SettingsScreen
+import com.meenbeese.chronos.ui.screens.AlarmsScreen
+import com.meenbeese.chronos.ui.screens.ClockScreen
+import com.meenbeese.chronos.ui.screens.SettingsScreen
 import com.meenbeese.chronos.services.TimerService
+import com.meenbeese.chronos.ui.views.AnimatedFabMenu
+import com.meenbeese.chronos.ui.views.ClockPageView
+import com.meenbeese.chronos.ui.views.FabItem
+import com.meenbeese.chronos.ui.views.HomeBottomSheet
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.utils.ImageUtils.getContrastingTextColorFromBg
 import com.meenbeese.chronos.utils.ImageUtils.rememberBackgroundPainterState
-import com.meenbeese.chronos.views.AnimatedFabMenu
-import com.meenbeese.chronos.views.ClockPageView
-import com.meenbeese.chronos.views.FabItem
-import com.meenbeese.chronos.views.HomeBottomSheet
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

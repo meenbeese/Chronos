@@ -11,10 +11,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.activities.MainActivity
 import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.dialogs.TimeZoneChooserDialog
-import com.meenbeese.chronos.views.PreferenceItem
+import com.meenbeese.chronos.ui.dialogs.TimeZoneChooserDialog
+import com.meenbeese.chronos.ui.views.PreferenceItem
 
 import kotlinx.coroutines.runBlocking
 

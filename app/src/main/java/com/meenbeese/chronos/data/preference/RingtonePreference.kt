@@ -15,10 +15,10 @@ import androidx.media3.common.util.UnstableApi
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceEntry
 import com.meenbeese.chronos.data.SoundData
-import com.meenbeese.chronos.dialogs.SoundChooserDialog
-import com.meenbeese.chronos.screens.FileChooserScreen
-import com.meenbeese.chronos.screens.FileChooserType
-import com.meenbeese.chronos.views.PreferenceItem
+import com.meenbeese.chronos.ui.dialogs.SoundChooserDialog
+import com.meenbeese.chronos.ui.screens.FileChooserScreen
+import com.meenbeese.chronos.ui.screens.FileChooserType
+import com.meenbeese.chronos.ui.views.PreferenceItem
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

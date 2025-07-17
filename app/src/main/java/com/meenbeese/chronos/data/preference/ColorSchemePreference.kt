@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.theme.ThemeFactory.catpucchinLatte
+import com.meenbeese.chronos.ui.theme.ThemeFactory.catpucchinLatte
 
 import kotlinx.coroutines.runBlocking
 

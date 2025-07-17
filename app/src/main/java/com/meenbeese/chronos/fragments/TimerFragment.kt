@@ -15,7 +15,7 @@ import androidx.compose.ui.platform.ComposeView
 
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.utils.FormatUtils
-import com.meenbeese.chronos.screens.TimerScreen
+import com.meenbeese.chronos.ui.screens.TimerScreen
 
 class TimerFragment : BaseFragment() {
     private lateinit var handler: Handler

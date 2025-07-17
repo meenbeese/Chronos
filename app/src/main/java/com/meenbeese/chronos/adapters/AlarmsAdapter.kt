@@ -33,13 +33,13 @@ import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.data.toEntity
 import com.meenbeese.chronos.databinding.ItemAlarmBinding
 import com.meenbeese.chronos.db.AlarmViewModel
-import com.meenbeese.chronos.dialogs.SoundChooserDialog
-import com.meenbeese.chronos.dialogs.TimeChooserDialog
+import com.meenbeese.chronos.ui.dialogs.SoundChooserDialog
+import com.meenbeese.chronos.ui.dialogs.TimeChooserDialog
+import com.meenbeese.chronos.ui.views.DayCircleView
+import com.meenbeese.chronos.ui.views.ProgressLineView
+import com.meenbeese.chronos.ui.views.TimerItemView
 import com.meenbeese.chronos.utils.AlarmsDiffCallback
 import com.meenbeese.chronos.utils.FormatUtils
-import com.meenbeese.chronos.views.DayCircleView
-import com.meenbeese.chronos.views.ProgressLineView
-import com.meenbeese.chronos.views.TimerItemView
 
 import java.util.Calendar
 import java.util.concurrent.TimeUnit

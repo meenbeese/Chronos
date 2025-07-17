@@ -17,7 +17,7 @@ import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.di.appModule
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
-import com.meenbeese.chronos.theme.ThemeMode
+import com.meenbeese.chronos.ui.theme.ThemeMode
 import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.DelicateCoroutinesApi

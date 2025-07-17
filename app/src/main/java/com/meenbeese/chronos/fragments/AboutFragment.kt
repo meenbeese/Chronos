@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.net.toUri
 
 import com.meenbeese.chronos.BuildConfig
-import com.meenbeese.chronos.screens.AboutScreen
+import com.meenbeese.chronos.ui.screens.AboutScreen
 import com.meenbeese.chronos.utils.safeStartActivity
 
 import java.util.Calendar

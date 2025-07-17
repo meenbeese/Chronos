@@ -31,9 +31,10 @@ import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
-import com.meenbeese.chronos.dialogs.SnoozeDurationDialog
-import com.meenbeese.chronos.dialogs.DurationChooserDialog
-import com.meenbeese.chronos.screens.AlarmScreen
+import com.meenbeese.chronos.ui.dialogs.SnoozeDurationDialog
+import com.meenbeese.chronos.ui.dialogs.DurationChooserDialog
+import com.meenbeese.chronos.ui.screens.AlarmScreen
+import com.meenbeese.chronos.ui.views.SlideActionView
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.utils.FormatUtils
@@ -42,7 +43,6 @@ import com.meenbeese.chronos.utils.FormatUtils.formatMillis
 import com.meenbeese.chronos.utils.FormatUtils.formatUnit
 import com.meenbeese.chronos.utils.FormatUtils.getShortFormat
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundPainter
-import com.meenbeese.chronos.views.SlideActionView
 
 import java.util.Date
 import java.util.concurrent.TimeUnit

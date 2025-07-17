@@ -12,9 +12,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 
 import com.meenbeese.chronos.data.PreferenceEntry
-import com.meenbeese.chronos.dialogs.DurationChooserDialog
+import com.meenbeese.chronos.ui.dialogs.DurationChooserDialog
+import com.meenbeese.chronos.ui.views.PreferenceItem
 import com.meenbeese.chronos.utils.FormatUtils
-import com.meenbeese.chronos.views.PreferenceItem
 
 import kotlinx.coroutines.runBlocking
 

@@ -17,8 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-import com.meenbeese.chronos.screens.FileChooserScreen
-import com.meenbeese.chronos.screens.FileChooserType
+import com.meenbeese.chronos.ui.screens.FileChooserScreen
+import com.meenbeese.chronos.ui.screens.FileChooserType
 
 @Composable
 fun ImportExportPreference() {
