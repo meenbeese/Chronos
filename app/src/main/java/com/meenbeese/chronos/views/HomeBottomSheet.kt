@@ -37,7 +37,7 @@ fun HomeBottomSheet(
     initialTabIndex: Int,
     onTabChanged: (Int) -> Unit,
     heightFraction: Float = 0.5f,
-    pagerContent: @Composable (pageIndex: Int) -> @Composable (() -> Unit),
+    pagerContent: @Composable (Int) -> Unit,
 ) {
     val screenHeightDp = LocalConfiguration.current.screenHeightDp.dp
     val peekHeight = screenHeightDp * heightFraction
@@ -105,8 +105,7 @@ fun HomeBottomSheet(
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background)
                 ) { page ->
-                    val content = pagerContent(page)
-                    content()
+                    pagerContent(page)
                 }
             }
         }

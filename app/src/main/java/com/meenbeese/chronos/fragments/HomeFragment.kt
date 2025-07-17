@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.Toast
 
 import androidx.compose.foundation.layout.Box
@@ -19,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,9 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.util.UnstableApi
 import androidx.recyclerview.widget.RecyclerView
@@ -40,6 +37,7 @@ import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.dialogs.TimerFactoryDialog
 import com.meenbeese.chronos.BuildConfig
 import com.meenbeese.chronos.Chronos
+import com.meenbeese.chronos.adapters.AlarmsAdapter
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.toEntity
@@ -48,6 +46,7 @@ import com.meenbeese.chronos.db.AlarmViewModelFactory
 import com.meenbeese.chronos.dialogs.TimeChooserDialog
 import com.meenbeese.chronos.ext.getFlow
 import com.meenbeese.chronos.interfaces.AlarmNavigator
+import com.meenbeese.chronos.screens.AlarmsScreen
 import com.meenbeese.chronos.screens.ClockScreen
 import com.meenbeese.chronos.screens.SettingsScreen
 import com.meenbeese.chronos.services.TimerService
@@ -62,8 +61,6 @@ import com.meenbeese.chronos.views.HomeBottomSheet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
-import kotlin.math.abs
 
 import java.util.Calendar
 import java.util.Date
@@ -107,6 +104,8 @@ class HomeFragment : BaseFragment() {
                 val timeZoneEnabled by Preferences.TIME_ZONE_ENABLED.getFlow(requireContext()).collectAsState(initial = false)
                 val selectedZonesCsv by Preferences.TIME_ZONES.getFlow(requireContext()).collectAsState(initial = "")
 
+                val alarms by alarmViewModel.alarms.observeAsState(emptyList())
+
                 val selectedZones = buildList {
                     add(TimeZone.getDefault().id)
                     if (timeZoneEnabled) {
@@ -145,6 +144,19 @@ class HomeFragment : BaseFragment() {
                     }
                 }
 
+                /*
+                 * Observe alarms using LiveData and update the list and
+                 * UI when an alarm is updated or deleted.
+                 */
+                LaunchedEffect(alarms) {
+                    Log.d("HomeFragment", "Alarms updated, size: ${alarms.size}")
+                    if (alarms.isEmpty() && !isBottomSheetExpanded.value) {
+                        isBottomSheetExpanded.value = true
+                    }
+                }
+
+                val dummyRecyclerView = remember { RecyclerView(context) }
+
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -162,35 +174,24 @@ class HomeFragment : BaseFragment() {
                         onTabChanged = { selectedTabIndex.intValue = it },
                         heightFraction = 0.5f + 0.035f // Cover rounded edges
                     ) { page ->
-                        {
-                            if (page == 0) {
-                                AndroidView(
-                                    modifier = Modifier.fillMaxSize(),
-                                    factory = { context ->
-                                        FrameLayout(context).apply {
-                                            id = View.generateViewId()
-
-                                            post {
-                                                val fragment = AlarmsFragment()
-                                                (context as FragmentActivity)
-                                                    .supportFragmentManager
-                                                    .beginTransaction()
-                                                    .replace(this.id, fragment)
-                                                    .commitNowAllowingStateLoss()
-
-                                                if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-                                                    attachScrollListenerToAlarms()
-                                                }
-                                            }
-                                        }
+                        if (page == 0) {
+                            AlarmsScreen(
+                                alarms = alarms,
+                                adapter = AlarmsAdapter(
+                                    chronos = chronos!!,
+                                    recycler = dummyRecyclerView,
+                                    alarmViewModel = alarmViewModel,
+                                    onDeleteAlarm = { alarmData ->
+                                        alarmViewModel.delete(alarmData.toEntity())
                                     }
-                                )
-                            } else {
-                                SettingsScreen(
-                                    context = requireContext(),
-                                    chronos = requireContext().applicationContext as Chronos
-                                )
-                            }
+                                ),
+                                onScrolledToEnd = {  },
+                            )
+                        } else {
+                            SettingsScreen(
+                                context = requireContext(),
+                                chronos = requireContext().applicationContext as Chronos
+                            )
                         }
                     }
 
@@ -242,37 +243,6 @@ class HomeFragment : BaseFragment() {
                 }
             }
         }
-    }
-
-    private fun attachScrollListenerToAlarms() {
-        val alarmsFragment = childFragmentManager.fragments
-            .filterIsInstance<AlarmsFragment>()
-            .firstOrNull()
-        val recyclerView = alarmsFragment?.recyclerView ?: return
-
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            private var lastStateChangeTime = 0L
-            private val debounceInterval = 300L
-
-            override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
-                val currentTime = System.currentTimeMillis()
-                val threshold = 10
-
-                if (abs(dy) < threshold) return
-
-                if (dy > 0 && !isBottomSheetExpanded.value && rv.canScrollVertically(1).not()) {
-                    if (currentTime - lastStateChangeTime > debounceInterval) {
-                        isBottomSheetExpanded.value = true
-                        lastStateChangeTime = currentTime
-                    }
-                } else if (dy < 0 && isBottomSheetExpanded.value && rv.canScrollVertically(-1).not()) {
-                    if (currentTime - lastStateChangeTime > debounceInterval) {
-                        isBottomSheetExpanded.value = false
-                        lastStateChangeTime = currentTime
-                    }
-                }
-            }
-        })
     }
 
     @Composable
