@@ -17,7 +17,7 @@ import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.di.appModule
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
-import com.meenbeese.chronos.utils.Theme
+import com.meenbeese.chronos.theme.ThemeMode
 import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -55,7 +55,6 @@ class Chronos : Application() {
         listeners = ArrayList()
         alarms = ArrayList()
         timers = ArrayList()
-        activityTheme = Theme.fromInt(Preferences.THEME.get(this))
 
         val liveAlarms = alarmDao.getAllAlarms()
         liveAlarms.observeForever { alarmEntities ->
@@ -125,26 +124,8 @@ class Chronos : Application() {
         }
     }
 
-    val isNight: Boolean
-        /**
-         * Determine if the theme should be a night theme.
-         *
-         * @return          True if the current theme is a night theme.
-         */
-        get() {
-            val currentHour = Calendar.getInstance().apply {
-                timeInMillis = System.currentTimeMillis()
-            }.get(Calendar.HOUR_OF_DAY)
-
-            return currentHour < 6 || currentHour >= 18
-        }
-    internal var activityTheme: Theme = Theme.AUTO
-
-    fun isDarkTheme(): Boolean {
-        return activityTheme == Theme.NIGHT ||
-               activityTheme == Theme.AMOLED ||
-               (activityTheme == Theme.AUTO && isNight)
-    }
+    internal var activityTheme: ThemeMode = ThemeMode.AUTO
+        get() = ThemeMode.fromInt(Preferences.THEME.get(this))
 
     fun addListener(listener: ChronosListener) {
         listeners?.add(listener)

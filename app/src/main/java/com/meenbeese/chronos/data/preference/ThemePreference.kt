@@ -1,9 +1,5 @@
 package com.meenbeese.chronos.data.preference
 
-import android.app.Activity
-import android.content.Context
-
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,7 +11,6 @@ import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
@@ -37,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.utils.Theme
+import com.meenbeese.chronos.theme.ThemeMode
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -46,7 +41,6 @@ import kotlinx.coroutines.launch
  * Allow the user to choose the theme of the
  * application.
  */
-@ExperimentalMaterial3Api
 @Composable
 fun ThemePreference(
     chronos: Chronos,
@@ -59,7 +53,7 @@ fun ThemePreference(
     var expanded by remember { mutableStateOf(false) }
 
     var selectedTheme by remember {
-        mutableStateOf(Theme.fromInt(currentThemeValue))
+        mutableStateOf(ThemeMode.fromInt(currentThemeValue))
     }
 
     var selectedText by remember {
@@ -127,26 +121,15 @@ fun ThemePreference(
                         onClick = {
                             expanded = false
                             selectedText = themeName
-                            selectedTheme = Theme.fromInt(index)
+                            selectedTheme = ThemeMode.fromInt(index)
                             coroutineScope.launch {
-                                applyAndSaveTheme(context, chronos, selectedTheme)
-                                (context as? Activity)?.recreate()
+                                chronos.activityTheme = selectedTheme
+                                Preferences.THEME.set(context, selectedTheme.value)
                             }
                         }
                     )
                 }
             }
         }
-    }
-}
-
-suspend fun applyAndSaveTheme(context: Context, chronos: Chronos, theme: Theme) {
-    chronos.activityTheme = theme
-    Preferences.THEME.set(context, theme.value)
-    when (theme) {
-        Theme.AUTO   -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-        Theme.DAY    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        Theme.NIGHT,
-        Theme.AMOLED -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
     }
 }

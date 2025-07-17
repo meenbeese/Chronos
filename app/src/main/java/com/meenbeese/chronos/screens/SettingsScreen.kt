@@ -25,6 +25,7 @@ import com.meenbeese.chronos.data.preference.AlertWindowPreference
 import com.meenbeese.chronos.data.preference.BatteryPreference
 import com.meenbeese.chronos.data.preference.BooleanPreference
 import com.meenbeese.chronos.data.preference.ColorPreference
+import com.meenbeese.chronos.data.preference.ColorSchemePreference
 import com.meenbeese.chronos.data.preference.ImageFilePreference
 import com.meenbeese.chronos.data.preference.ImportExportPreference
 import com.meenbeese.chronos.data.preference.RingtonePreference
@@ -61,6 +62,15 @@ fun SettingsScreen(
                 ThemePreference(
                     chronos = chronos,
                     coroutineScope = lifecycleScope
+                )
+            }
+
+            add {
+                ColorSchemePreference(
+                    nameRes = R.string.color_scheme,
+                    onSelectionChanged = {
+
+                    }
                 )
             }
 

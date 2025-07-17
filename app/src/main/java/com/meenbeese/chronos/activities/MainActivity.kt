@@ -7,14 +7,12 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.AlarmClock
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -33,7 +31,6 @@ import com.meenbeese.chronos.fragments.StopwatchFragment
 import com.meenbeese.chronos.fragments.TimerFragment
 import com.meenbeese.chronos.receivers.TimerReceiver
 import com.meenbeese.chronos.utils.AudioUtils
-import com.meenbeese.chronos.utils.Theme
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,7 +51,6 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         super.onCreate(savedInstanceState)
         installSplashScreen()
         enableEdgeToEdge()
-        applySavedTheme()
         setContentView(R.layout.activity_main)
         requestNotificationPermissionIfNeeded()
         window.setFlags(
@@ -111,18 +107,6 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
                 )
             }
             composeView.visibility = View.VISIBLE
-        }
-    }
-
-    private fun applySavedTheme() {
-        val theme = Theme.fromInt(Preferences.THEME.get(this))
-        Log.d("MainActivity", "Theme: ${theme.name}")
-
-        when (theme) {
-            Theme.DAY -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            Theme.NIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            Theme.AMOLED -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
     }
 

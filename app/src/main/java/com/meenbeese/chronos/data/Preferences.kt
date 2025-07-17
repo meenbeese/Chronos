@@ -2,7 +2,8 @@ package com.meenbeese.chronos.data
 
 import android.graphics.Color
 
-import com.meenbeese.chronos.utils.Theme
+import com.meenbeese.chronos.theme.ThemeFactory
+import com.meenbeese.chronos.theme.ThemeMode
 
 object Preferences {
     // Background
@@ -36,9 +37,13 @@ object Preferences {
     val TIME_ZONES = PreferenceEntry.StringPref(name = "time_zones", default = "")
     val TIME_ZONE_ENABLED = PreferenceEntry.BooleanPref(name = "time_zone_enabled", default = false)
 
+    // Theme
+    val THEME = PreferenceEntry.IntPref(name = "theme", default = ThemeMode.AUTO.value)
+    val DYNAMIC_COLOR = PreferenceEntry.BooleanPref(name = "dynamic_color", default = true)
+    val COLOR_SEED = PreferenceEntry.IntPref(name = "color_seed", default = ThemeFactory.catpucchinLatte.first())
+
     // Other
     val INFO_BACKGROUND_PERMISSIONS = PreferenceEntry.BooleanPref(name = "info_background_permissions", default = false)
-    val THEME = PreferenceEntry.IntPref(name = "theme", default = Theme.AUTO.value)
     val TIMER_LENGTH = PreferenceEntry.IntPref(name = "timer_length", default = 0)
     val SCROLL_TO_NEXT = PreferenceEntry.BooleanPref(name = "scroll_to_next", default = false)
 }

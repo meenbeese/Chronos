@@ -124,6 +124,9 @@
     <string name="title_background_mode">Background Mode</string>
     <string name="button_color">Color</string>
     <string name="button_image">Image</string>
+    <string name="button_system">System</string>
+    <string name="button_custom">Catppuccin</string>
     <string name="word_none">No alarms</string>
     <string name="next_alarm">Next Alarm</string>
+    <string name="color_scheme">Color Scheme</string>
 </resources>
