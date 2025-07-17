@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -26,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
@@ -157,89 +159,139 @@ class HomeFragment : BaseFragment() {
 
                 val dummyRecyclerView = remember { RecyclerView(context) }
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    ClockPageView(
-                        fragments = clockScreens,
-                        backgroundPainter = clockBackground!!,
-                        pageIndicatorVisible = clockScreens.size > 1,
-                        modifier = Modifier.fillMaxHeight(0.5f)
-                    )
+                val isTablet = LocalConfiguration.current.smallestScreenWidthDp >= 600
 
-                    HomeBottomSheet(
-                        tabs = homeTabs,
-                        initialTabIndex = selectedTabIndex.intValue,
-                        onTabChanged = { selectedTabIndex.intValue = it },
-                        heightFraction = 0.5f + 0.035f // Cover rounded edges
-                    ) { page ->
-                        if (page == 0) {
-                            AlarmsScreen(
-                                alarms = alarms,
-                                adapter = AlarmsAdapter(
-                                    chronos = chronos!!,
-                                    recycler = dummyRecyclerView,
-                                    alarmViewModel = alarmViewModel,
-                                    onDeleteAlarm = { alarmData ->
-                                        alarmViewModel.delete(alarmData.toEntity())
-                                    }
-                                ),
-                                onScrolledToEnd = {  },
-                            )
-                        } else {
-                            SettingsScreen(
-                                context = requireContext(),
-                                chronos = requireContext().applicationContext as Chronos
-                            )
-                        }
-                    }
+                if (isTablet) {
+                    Row(modifier = Modifier.fillMaxSize()) {
+                        ClockPageView(
+                            fragments = clockScreens,
+                            backgroundPainter = clockBackground!!,
+                            pageIndicatorVisible = clockScreens.size > 1,
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                        )
 
-                    if (selectedTabIndex.intValue == 0) {
                         Box(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(12.dp)
+                                .weight(1f)
+                                .fillMaxHeight()
+                                .padding(8.dp)
                         ) {
-                            AnimatedFabMenu(
-                                icon = R.drawable.ic_add,
-                                text = R.string.title_create,
-                                items = listOf(
-                                    timerItem,
-                                    watchItem,
-                                    alarmItem
-                                ),
-                                onItemClick = { fabItem ->
-                                    when (fabItem) {
-                                        timerItem -> showTimerDialog = true
-                                        watchItem -> scheduleWatch()
-                                        alarmItem -> showAlarmDialog = true
-                                    }
-                                },
-                                modifier = Modifier.align(Alignment.BottomEnd)
-                            )
+                            HomeBottomSheet(
+                                tabs = homeTabs,
+                                isTablet = true,
+                                initialTabIndex = selectedTabIndex.intValue,
+                                onTabChanged = { selectedTabIndex.intValue = it },
+                                heightFraction = 0.5f + 0.035f // Cover rounded edges
+                            ) { page ->
+                                if (page == 0) {
+                                    AlarmsScreen(
+                                        alarms = alarms,
+                                        adapter = AlarmsAdapter(
+                                            chronos = chronos!!,
+                                            recycler = dummyRecyclerView,
+                                            alarmViewModel = alarmViewModel,
+                                            onDeleteAlarm = { alarmData ->
+                                                alarmViewModel.delete(alarmData.toEntity())
+                                            }
+                                        ),
+                                        onScrolledToEnd = {  },
+                                    )
+                                } else {
+                                    SettingsScreen(
+                                        context = requireContext(),
+                                        chronos = requireContext().applicationContext as Chronos
+                                    )
+                                }
+                            }
                         }
                     }
+                } else {
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        ClockPageView(
+                            fragments = clockScreens,
+                            backgroundPainter = clockBackground!!,
+                            pageIndicatorVisible = clockScreens.size > 1,
+                            modifier = Modifier.fillMaxHeight(0.5f)
+                        )
 
-                    if (showAlarmDialog) {
-                        AlarmSchedulerDialog(
-                            onDismiss = { showAlarmDialog = false },
-                            onTimeSet = { hour, minute ->
-                                showAlarmDialog = false
-                                scheduleAlarm(hour, minute)
+                        HomeBottomSheet(
+                            tabs = homeTabs,
+                            isTablet = false,
+                            initialTabIndex = selectedTabIndex.intValue,
+                            onTabChanged = { selectedTabIndex.intValue = it },
+                            heightFraction = 0.5f + 0.035f // Cover rounded edges
+                        ) { page ->
+                            if (page == 0) {
+                                AlarmsScreen(
+                                    alarms = alarms,
+                                    adapter = AlarmsAdapter(
+                                        chronos = chronos!!,
+                                        recycler = dummyRecyclerView,
+                                        alarmViewModel = alarmViewModel,
+                                        onDeleteAlarm = { alarmData ->
+                                            alarmViewModel.delete(alarmData.toEntity())
+                                        }
+                                    ),
+                                    onScrolledToEnd = {  },
+                                )
+                            } else {
+                                SettingsScreen(
+                                    context = requireContext(),
+                                    chronos = requireContext().applicationContext as Chronos
+                                )
                             }
+                        }
+                    }
+                }
+
+                if (selectedTabIndex.intValue == 0) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(12.dp)
+                    ) {
+                        AnimatedFabMenu(
+                            icon = R.drawable.ic_add,
+                            text = R.string.title_create,
+                            items = listOf(
+                                timerItem,
+                                watchItem,
+                                alarmItem
+                            ),
+                            onItemClick = { fabItem ->
+                                when (fabItem) {
+                                    timerItem -> showTimerDialog = true
+                                    watchItem -> scheduleWatch()
+                                    alarmItem -> showAlarmDialog = true
+                                }
+                            },
+                            modifier = Modifier.align(Alignment.BottomEnd)
                         )
                     }
+                }
 
-                    if (showTimerDialog) {
-                        TimerSchedulerDialog(
-                            onDismiss = { showTimerDialog = false },
-                            onTimeChosen = { h, m, s, ring, vibrate ->
-                                showTimerDialog = false
-                                scheduleTimer(h, m, s, ring, vibrate)
-                            }
-                        )
-                    }
+                if (showAlarmDialog) {
+                    AlarmSchedulerDialog(
+                        onDismiss = { showAlarmDialog = false },
+                        onTimeSet = { hour, minute ->
+                            showAlarmDialog = false
+                            scheduleAlarm(hour, minute)
+                        }
+                    )
+                }
+
+                if (showTimerDialog) {
+                    TimerSchedulerDialog(
+                        onDismiss = { showTimerDialog = false },
+                        onTimeChosen = { h, m, s, ring, vibrate ->
+                            showTimerDialog = false
+                            scheduleTimer(h, m, s, ring, vibrate)
+                        }
+                    )
                 }
             }
         }

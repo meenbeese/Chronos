@@ -3,6 +3,7 @@ package com.meenbeese.chronos.ui.views
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,17 +38,12 @@ fun HomeBottomSheet(
     initialTabIndex: Int,
     onTabChanged: (Int) -> Unit,
     heightFraction: Float = 0.5f,
+    isTablet: Boolean = false,
     pagerContent: @Composable (Int) -> Unit,
 ) {
     val screenHeightDp = LocalConfiguration.current.screenHeightDp.dp
     val peekHeight = screenHeightDp * heightFraction
 
-    val sheetState = rememberStandardBottomSheetState(
-        initialValue = SheetValue.PartiallyExpanded
-    )
-    val scaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = sheetState
-    )
     val pagerState = rememberPagerState(
         initialPage = initialTabIndex,
         pageCount = { tabs.size }
@@ -61,53 +57,74 @@ fun HomeBottomSheet(
         onTabChanged(currentTabIndex)
     }
 
-    BottomSheetScaffold(
-        scaffoldState = scaffoldState,
-        sheetPeekHeight = peekHeight,
-        sheetDragHandle = null,
-        sheetContent = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(elevation = 4.dp)
-                    .background(MaterialTheme.colorScheme.surface)
-            ) {
-                Box(
+    val tabContent: @Composable ColumnScope.() -> Unit = {
+        CustomTabView(
+            tabs = tabs,
+            selectedTabIndex = currentTabIndex,
+            onTabSelected = { index ->
+                scope.launch {
+                    pagerState.animateScrollToPage(index)
+                }
+            },
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+        )
+
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) { page ->
+            pagerContent(page)
+        }
+    }
+
+    if (isTablet) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            content = tabContent
+        )
+    } else {
+        val sheetState = rememberStandardBottomSheetState(
+            initialValue = SheetValue.PartiallyExpanded
+        )
+        val scaffoldState = rememberBottomSheetScaffoldState(
+            bottomSheetState = sheetState
+        )
+
+        BottomSheetScaffold(
+            scaffoldState = scaffoldState,
+            sheetPeekHeight = peekHeight,
+            sheetDragHandle = null,
+            sheetContent = {
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 12.dp, bottom = 8.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(36.dp)
-                            .height(4.dp)
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
-                    )
-                }
-
-                CustomTabView(
-                    tabs = tabs,
-                    selectedTabIndex = currentTabIndex,
-                    onTabSelected = { index ->
-                        scope.launch {
-                            pagerState.animateScrollToPage(index)
+                        .shadow(elevation = 4.dp)
+                        .background(MaterialTheme.colorScheme.surface),
+                    content = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 12.dp, bottom = 8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .width(36.dp)
+                                    .height(4.dp)
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
+                            )
                         }
-                    },
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.background)
-                )
 
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.background)
-                ) { page ->
-                    pagerContent(page)
-                }
+                        tabContent()
+                    }
+                )
             }
-        }
-    ) { /* No content behind the sheet */ }
+        ) { /* No content behind the sheet */ }
+    }
 }
