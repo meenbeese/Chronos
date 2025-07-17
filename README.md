@@ -36,10 +36,14 @@
 - Custom backgrounds & ringtones
 - No unnecessary permissions
 - Dark, Light, AMOLED themes
+- Custom Catppuccin theme colors 
 - Granular controls everywhere
 - Unique, minimal, efficient design
 - Portrait and landscape orientation
+- Proper tablet-native layout
 - Countless default ringtones
+
+and countless more features...
 
 ## ⚙️ Permissions
 
