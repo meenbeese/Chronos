@@ -22,7 +22,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.Chronos
-import com.meenbeese.chronos.Chronos.ActivityListener
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.ui.dialogs.BackgroundWarnDialog
@@ -41,8 +40,7 @@ import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 
 @UnstableApi
-class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedListener,
-    ActivityListener {
+class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedListener {
     private val audioUtils: AudioUtils by inject()
 
     private var chronos: Chronos? = null
@@ -59,7 +57,6 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
         chronos = applicationContext as Chronos
-        chronos?.setListener(this)
         if (savedInstanceState == null) {
             val fragment = createFragmentFor(intent) ?: return
             supportFragmentManager.beginTransaction()
@@ -213,18 +210,17 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
                 || AlarmClock.ACTION_SET_ALARM == intent.action
     }
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
-        chronos?.setListener(null)
         chronos = null
     }
 
-    public override fun onSaveInstanceState(outState: Bundle) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
     }
 
     @UnstableApi
-    public override fun onPause() {
+    override fun onPause() {
         super.onPause()
         audioUtils.stopCurrentSound()
     }
@@ -247,14 +243,6 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
     override fun onBackStackChanged() {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment) as BaseFragment?
         fragmentRef = fragment
-    }
-
-    override fun fetchFragmentManager(): FragmentManager {
-        return supportFragmentManager
-    }
-
-    override fun getActivity(): AppCompatActivity {
-        return this
     }
 
     companion object {

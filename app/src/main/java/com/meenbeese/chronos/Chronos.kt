@@ -4,9 +4,6 @@ import android.app.Application
 import android.content.Intent
 import android.os.Build
 
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
-
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
@@ -33,7 +30,6 @@ class Chronos : Application() {
     lateinit var alarms: ArrayList<AlarmData>
     lateinit var timers: ArrayList<TimerData>
     private var listeners: MutableList<ChronosListener>? = null
-    private var listener: ActivityListener? = null
 
     lateinit var database: AlarmDatabase
     lateinit var alarmDao: AlarmDao
@@ -134,17 +130,8 @@ class Chronos : Application() {
         listeners?.remove(listener)
     }
 
-    fun setListener(listener: ActivityListener?) {
-        this.listener = listener
-    }
-
     interface ChronosListener {
         fun onAlarmsChanged()
         fun onTimersChanged()
-    }
-
-    interface ActivityListener {
-        fun fetchFragmentManager(): FragmentManager?
-        fun getActivity(): AppCompatActivity?
     }
 }

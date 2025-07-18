@@ -73,10 +73,7 @@ kotlin {
     }
 
     sourceSets.all {
-        languageSettings {
-            optIn("androidx.compose.material3.ExperimentalMaterial3Api")
-            optIn("androidx.media3.common.util.UnstableApi")
-        }
+        languageSettings.optIn("androidx.compose.material3.ExperimentalMaterial3Api")
     }
 }
 
