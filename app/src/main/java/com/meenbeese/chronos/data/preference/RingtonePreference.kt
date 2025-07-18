@@ -71,7 +71,7 @@ fun RingtonePreference(
                 CoroutineScope(Dispatchers.IO).launch {
                     preference.set(context, sound.toString())
                     withContext(Dispatchers.Main) {
-                        soundName = sound.name
+                        soundName = sound?.name ?: context.getString(R.string.title_sound_none)
                         showDialog = false
                     }
                 }

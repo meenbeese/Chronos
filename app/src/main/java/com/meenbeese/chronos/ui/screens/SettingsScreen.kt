@@ -52,11 +52,12 @@ fun SettingsScreen(
 
     val preferenceList = remember(triggerRebuild) {
         mutableStateListOf<@Composable () -> Unit>().apply {
+            add { ImportExportPreference() }
+
             if (batteryOptimizationNeeded) {
                 add { BatteryPreference(context) }
             }
 
-            add { ImportExportPreference() }
             add { AlertWindowPreference(context) }
             add {
                 ThemePreference(
