@@ -39,7 +39,6 @@ class Chronos : Application() {
     lateinit var alarmDao: AlarmDao
     lateinit var repository: AlarmRepository
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate() {
         super.onCreate()
 

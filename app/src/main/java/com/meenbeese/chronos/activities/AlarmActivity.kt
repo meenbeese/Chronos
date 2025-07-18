@@ -123,7 +123,7 @@ class AlarmActivity : ComponentActivity() {
             }
         }
 
-        vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+        vibrator = getSystemService(Vibrator::class.java)
         triggerMillis = System.currentTimeMillis()
 
         handler = Handler(Looper.getMainLooper())
@@ -133,7 +133,7 @@ class AlarmActivity : ComponentActivity() {
                 timeTextState.value = "-${formatMillis(elapsedMillis).dropLast(3)}"
 
                 if (isVibrate) {
-                    vibrator!!.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
+                    vibrator?.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
                 }
 
                 sound?.let {
