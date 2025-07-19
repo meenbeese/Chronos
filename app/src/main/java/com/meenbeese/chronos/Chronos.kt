@@ -14,7 +14,6 @@ import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.di.appModule
 import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
-import com.meenbeese.chronos.ui.theme.ThemeMode
 import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -118,9 +117,6 @@ class Chronos : Application() {
             listener.onTimersChanged()
         }
     }
-
-    internal var activityTheme: ThemeMode = ThemeMode.AUTO
-        get() = ThemeMode.fromInt(Preferences.THEME.get(this))
 
     fun addListener(listener: ChronosListener) {
         listeners?.add(listener)

@@ -200,7 +200,6 @@ class HomeFragment : BaseFragment() {
                                 } else {
                                     SettingsScreen(
                                         context = requireContext(),
-                                        chronos = requireContext().applicationContext as Chronos
                                     )
                                 }
                             }
@@ -243,7 +242,6 @@ class HomeFragment : BaseFragment() {
                             } else {
                                 SettingsScreen(
                                     context = requireContext(),
-                                    chronos = requireContext().applicationContext as Chronos
                                 )
                             }
                         }

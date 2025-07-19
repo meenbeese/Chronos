@@ -15,17 +15,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-import com.meenbeese.chronos.Chronos
+import com.meenbeese.chronos.data.Preferences
 
 @Composable
 fun ChronosTheme(
-    chronos: Chronos,
     customColorScheme: ColorScheme,
     dynamicColor: Boolean,
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
-    val themeValue = chronos.activityTheme
+    val themeValue = ThemeMode.fromInt(Preferences.THEME.get(context))
     val isDarkTheme = themeValue.isDark()
 
     val colorScheme = when {

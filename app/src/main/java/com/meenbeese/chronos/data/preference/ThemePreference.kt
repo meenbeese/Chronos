@@ -29,7 +29,6 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
-import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.ui.theme.ThemeMode
@@ -43,7 +42,6 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun ThemePreference(
-    chronos: Chronos,
     coroutineScope: CoroutineScope,
     modifier: Modifier = Modifier
 ) {
@@ -123,7 +121,6 @@ fun ThemePreference(
                             selectedText = themeName
                             selectedTheme = ThemeMode.fromInt(index)
                             coroutineScope.launch {
-                                chronos.activityTheme = selectedTheme
                                 Preferences.THEME.set(context, selectedTheme.value)
                             }
                         }

@@ -16,7 +16,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.media3.common.util.UnstableApi
 
-import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.ext.isIgnoringBatteryOptimizations
@@ -41,7 +40,6 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 fun SettingsScreen(
     context: Context,
-    chronos: Chronos,
     lifecycleScope: CoroutineScope = rememberCoroutineScope()
 ) {
     var triggerRebuild by remember { mutableIntStateOf(0) }
@@ -61,7 +59,6 @@ fun SettingsScreen(
             add { AlertWindowPreference(context) }
             add {
                 ThemePreference(
-                    chronos = chronos,
                     coroutineScope = lifecycleScope
                 )
             }
