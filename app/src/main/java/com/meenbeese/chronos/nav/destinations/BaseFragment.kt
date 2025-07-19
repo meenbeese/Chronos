@@ -1,13 +1,12 @@
-package com.meenbeese.chronos.fragments
+package com.meenbeese.chronos.nav.destinations
 
 import android.os.Bundle
 
 import androidx.fragment.app.Fragment
 
 import com.meenbeese.chronos.Chronos
-import com.meenbeese.chronos.Chronos.ChronosListener
 
-abstract class BaseFragment : Fragment(), ChronosListener {
+abstract class BaseFragment : Fragment(), Chronos.ChronosListener {
     protected var chronos: Chronos? = null
         private set
 

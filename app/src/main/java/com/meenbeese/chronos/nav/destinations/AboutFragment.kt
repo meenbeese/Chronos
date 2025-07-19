@@ -1,4 +1,4 @@
-package com.meenbeese.chronos.fragments
+package com.meenbeese.chronos.nav.destinations
 
 import android.content.Intent
 import android.os.Bundle

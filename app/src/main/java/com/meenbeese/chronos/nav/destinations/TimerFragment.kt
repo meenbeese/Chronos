@@ -1,4 +1,4 @@
-package com.meenbeese.chronos.fragments
+package com.meenbeese.chronos.nav.destinations
 
 import android.os.Bundle
 import android.os.Handler
@@ -14,8 +14,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 
 import com.meenbeese.chronos.data.TimerData
-import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.ui.screens.TimerScreen
+import com.meenbeese.chronos.utils.FormatUtils
 
 class TimerFragment : BaseFragment() {
     private lateinit var handler: Handler

@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.fragments.AboutFragment
+import com.meenbeese.chronos.nav.destinations.AboutFragment
 import com.meenbeese.chronos.ui.views.PreferenceItem
 
 /**

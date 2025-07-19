@@ -1,4 +1,4 @@
-package com.meenbeese.chronos.fragments
+package com.meenbeese.chronos.nav.destinations
 
 import android.content.ComponentName
 import android.content.Context
@@ -27,10 +27,12 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.ui.screens.StopwatchScreen
 import com.meenbeese.chronos.services.StopwatchService
+import com.meenbeese.chronos.ui.screens.StopwatchScreen
 import com.meenbeese.chronos.ui.views.ProgressTextView
-import com.meenbeese.chronos.utils.FormatUtils.formatMillis
+import com.meenbeese.chronos.utils.FormatUtils
+
+import kotlin.collections.plus
 
 class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConnection {
     private var service: StopwatchService? = null
@@ -68,7 +70,7 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
                     onLapClick = { service?.lap() },
                     onShareClick = {
                         service?.let {
-                            val time = formatMillis(it.elapsedTime)
+                            val time = FormatUtils.formatMillis(it.elapsedTime)
                             val content = buildString {
                                 append(getString(R.string.title_time, time)).append("\n")
                                 var total = 0L
@@ -76,18 +78,40 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
                                     total += lap
                                     append(getString(R.string.title_lap_number, it.laps!!.size - i))
                                         .append("    \t")
-                                        .append(getString(R.string.title_lap_time, formatMillis(lap)))
+                                        .append(
+                                            getString(
+                                                R.string.title_lap_time,
+                                                FormatUtils.formatMillis(lap)
+                                            )
+                                        )
                                         .append("    \t")
-                                        .append(getString(R.string.title_total_time, formatMillis(total)))
+                                        .append(
+                                            getString(
+                                                R.string.title_total_time,
+                                                FormatUtils.formatMillis(total)
+                                            )
+                                        )
                                     if (i < it.laps!!.size - 1) append("\n")
                                 }
                             }
                             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                 type = "text/plain"
-                                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.title_stopwatch_share, getString(R.string.app_name), time))
+                                putExtra(
+                                    Intent.EXTRA_SUBJECT,
+                                    getString(
+                                        R.string.title_stopwatch_share,
+                                        getString(R.string.app_name),
+                                        time
+                                    )
+                                )
                                 putExtra(Intent.EXTRA_TEXT, content)
                             }
-                            startActivity(Intent.createChooser(shareIntent, getString(R.string.title_share_results)))
+                            startActivity(
+                                Intent.createChooser(
+                                    shareIntent,
+                                    getString(R.string.title_share_results)
+                                )
+                            )
                         }
                     },
                     isResetVisible = showReset,
@@ -100,26 +124,35 @@ class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConn
                             maxProgress = maxProgress,
                             referenceProgress = referenceProgress,
                             animate = true,
-                            modifier = Modifier
+                            modifier = Modifier.Companion
                                 .fillMaxWidth()
                                 .aspectRatio(1f)
                         )
                     },
                     lapsContent = {
                         for (lap in laps.reversed()) {
-                            Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                            Row(
+                                modifier = Modifier.Companion.fillMaxWidth()
+                                    .padding(vertical = 4.dp)
+                            ) {
                                 Text(
                                     text = getString(R.string.title_lap_number, lap.number),
                                     color = MaterialTheme.colorScheme.secondary
                                 )
-                                Spacer(Modifier.weight(1f))
+                                Spacer(Modifier.Companion.weight(1f))
                                 Text(
-                                    text = getString(R.string.title_lap_time, formatMillis(lap.lapTime)),
+                                    text = getString(
+                                        R.string.title_lap_time,
+                                        FormatUtils.formatMillis(lap.lapTime)
+                                    ),
                                     color = MaterialTheme.colorScheme.secondary
                                 )
-                                Spacer(Modifier.width(8.dp))
+                                Spacer(Modifier.Companion.width(8.dp))
                                 Text(
-                                    text = getString(R.string.title_total_time, formatMillis(lap.totalTime)),
+                                    text = getString(
+                                        R.string.title_total_time,
+                                        FormatUtils.formatMillis(lap.totalTime)
+                                    ),
                                     color = MaterialTheme.colorScheme.secondary
                                 )
                             }

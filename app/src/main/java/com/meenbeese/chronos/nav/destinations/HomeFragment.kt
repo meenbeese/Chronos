@@ -1,4 +1,4 @@
-package com.meenbeese.chronos.fragments
+package com.meenbeese.chronos.nav.destinations
 
 import android.app.AlarmManager
 import android.content.Context
@@ -33,30 +33,29 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.util.UnstableApi
 
-import com.meenbeese.chronos.R
-import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.ui.dialogs.TimerFactoryDialog
 import com.meenbeese.chronos.BuildConfig
 import com.meenbeese.chronos.Chronos
+import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
+import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.toEntity
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
-import com.meenbeese.chronos.ui.dialogs.TimeChooserDialog
 import com.meenbeese.chronos.ext.getFlow
 import com.meenbeese.chronos.interfaces.AlarmNavigator
+import com.meenbeese.chronos.services.TimerService
+import com.meenbeese.chronos.ui.dialogs.TimeChooserDialog
+import com.meenbeese.chronos.ui.dialogs.TimerFactoryDialog
 import com.meenbeese.chronos.ui.screens.AlarmsScreen
 import com.meenbeese.chronos.ui.screens.ClockScreen
 import com.meenbeese.chronos.ui.screens.SettingsScreen
-import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.ui.views.AnimatedFabMenu
 import com.meenbeese.chronos.ui.views.ClockPageView
 import com.meenbeese.chronos.ui.views.FabItem
 import com.meenbeese.chronos.ui.views.HomeBottomSheet
 import com.meenbeese.chronos.utils.FormatUtils
-import com.meenbeese.chronos.utils.ImageUtils.getContrastingTextColorFromBg
-import com.meenbeese.chronos.utils.ImageUtils.rememberBackgroundPainterState
+import com.meenbeese.chronos.utils.ImageUtils
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -99,7 +98,7 @@ class HomeFragment : BaseFragment() {
                 var showAlarmDialog by remember { mutableStateOf(false) }
                 var showTimerDialog by remember { mutableStateOf(false) }
 
-                val clockBackground = rememberBackgroundPainterState(isAlarm = false)
+                val clockBackground = ImageUtils.rememberBackgroundPainterState(isAlarm = false)
 
                 val timeZoneEnabled by Preferences.TIME_ZONE_ENABLED.getFlow(requireContext()).collectAsState(initial = false)
                 val selectedZonesCsv by Preferences.TIME_ZONES.getFlow(requireContext()).collectAsState(initial = "")
@@ -127,7 +126,7 @@ class HomeFragment : BaseFragment() {
                                 }
                             },
                             getTextColor = {
-                                getContrastingTextColorFromBg(requireContext())
+                                ImageUtils.getContrastingTextColorFromBg(requireContext())
                             }
                         )
                     }
@@ -158,18 +157,18 @@ class HomeFragment : BaseFragment() {
                 val isTablet = LocalConfiguration.current.smallestScreenWidthDp >= 600
 
                 if (isTablet) {
-                    Row(modifier = Modifier.fillMaxSize()) {
+                    Row(modifier = Modifier.Companion.fillMaxSize()) {
                         ClockPageView(
                             fragments = clockScreens,
                             backgroundPainter = clockBackground!!,
                             pageIndicatorVisible = clockScreens.size > 1,
-                            modifier = Modifier
+                            modifier = Modifier.Companion
                                 .weight(1f)
                                 .fillMaxHeight()
                         )
 
                         Box(
-                            modifier = Modifier
+                            modifier = Modifier.Companion
                                 .weight(1f)
                                 .fillMaxHeight()
                                 .padding(8.dp)
@@ -207,13 +206,13 @@ class HomeFragment : BaseFragment() {
                     }
                 } else {
                     Box(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.Companion.fillMaxSize()
                     ) {
                         ClockPageView(
                             fragments = clockScreens,
                             backgroundPainter = clockBackground!!,
                             pageIndicatorVisible = clockScreens.size > 1,
-                            modifier = Modifier.fillMaxHeight(0.5f)
+                            modifier = Modifier.Companion.fillMaxHeight(0.5f)
                         )
 
                         HomeBottomSheet(
@@ -250,7 +249,7 @@ class HomeFragment : BaseFragment() {
 
                 if (selectedTabIndex.intValue == 0) {
                     Box(
-                        modifier = Modifier
+                        modifier = Modifier.Companion
                             .fillMaxSize()
                             .padding(12.dp)
                     ) {
@@ -269,7 +268,7 @@ class HomeFragment : BaseFragment() {
                                     alarmItem -> showAlarmDialog = true
                                 }
                             },
-                            modifier = Modifier.align(Alignment.BottomEnd)
+                            modifier = Modifier.Companion.align(Alignment.Companion.BottomEnd)
                         )
                     }
                 }
@@ -402,10 +401,10 @@ class HomeFragment : BaseFragment() {
         timer.setVibrate(context, isVibrate)
         timer.setSound(context, ringtone)
         timer[chronos] = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        TimerService.startService(context)
+        TimerService.Companion.startService(context)
 
         val args = Bundle().apply {
-            putParcelable(TimerFragment.EXTRA_TIMER, timer)
+            putParcelable(TimerFragment.Companion.EXTRA_TIMER, timer)
         }
 
         parentFragmentManager.beginTransaction()

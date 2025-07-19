@@ -92,9 +92,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.8.8")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.2")
-    implementation("androidx.recyclerview:recyclerview:1.4.0")
-    implementation("androidx.transition:transition-ktx:1.6.0")
-    implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation("androidx.navigation:navigation-compose:2.9.2")
 
     // Compose
     implementation("androidx.compose.ui:ui:1.8.3")
