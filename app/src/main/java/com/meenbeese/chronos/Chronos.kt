@@ -28,7 +28,6 @@ import java.util.Calendar
 class Chronos : Application() {
     lateinit var alarms: ArrayList<AlarmData>
     lateinit var timers: ArrayList<TimerData>
-    private var listeners: MutableList<ChronosListener>? = null
 
     lateinit var database: AlarmDatabase
     lateinit var alarmDao: AlarmDao
@@ -46,7 +45,6 @@ class Chronos : Application() {
         alarmDao = database.alarmDao()
         repository = AlarmRepository(alarmDao)
 
-        listeners = ArrayList()
         alarms = ArrayList()
         timers = ArrayList()
 
@@ -113,21 +111,5 @@ class Chronos : Application() {
         GlobalScope.launch {
             Preferences.TIMER_LENGTH.set(this@Chronos, timers.size)
         }
-        for (listener in listeners!!) {
-            listener.onTimersChanged()
-        }
-    }
-
-    fun addListener(listener: ChronosListener) {
-        listeners?.add(listener)
-    }
-
-    fun removeListener(listener: ChronosListener) {
-        listeners?.remove(listener)
-    }
-
-    interface ChronosListener {
-        fun onAlarmsChanged()
-        fun onTimersChanged()
     }
 }
