@@ -32,14 +32,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.util.UnstableApi
-import androidx.recyclerview.widget.RecyclerView
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.ui.dialogs.TimerFactoryDialog
 import com.meenbeese.chronos.BuildConfig
 import com.meenbeese.chronos.Chronos
-import com.meenbeese.chronos.adapters.AlarmsAdapter
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.toEntity
@@ -157,8 +155,6 @@ class HomeFragment : BaseFragment() {
                     }
                 }
 
-                val dummyRecyclerView = remember { RecyclerView(context) }
-
                 val isTablet = LocalConfiguration.current.smallestScreenWidthDp >= 600
 
                 if (isTablet) {
@@ -188,15 +184,18 @@ class HomeFragment : BaseFragment() {
                                 if (page == 0) {
                                     AlarmsScreen(
                                         alarms = alarms,
-                                        adapter = AlarmsAdapter(
-                                            chronos = chronos!!,
-                                            recycler = dummyRecyclerView,
-                                            alarmViewModel = alarmViewModel,
-                                            onDeleteAlarm = { alarmData ->
+                                        onAlarmUpdated = { alarmData ->
+                                            CoroutineScope(Dispatchers.IO).launch {
+                                                alarmViewModel.update(alarmData.toEntity())
+                                            }
+                                        },
+                                        onAlarmDeleted = { alarmData ->
+                                            CoroutineScope(Dispatchers.IO).launch {
                                                 alarmViewModel.delete(alarmData.toEntity())
                                             }
-                                        ),
-                                        onScrolledToEnd = {  },
+                                        },
+                                        onScrolledToEnd = { },
+                                        isBottomSheetExpanded = isBottomSheetExpanded
                                     )
                                 } else {
                                     SettingsScreen(
@@ -228,15 +227,18 @@ class HomeFragment : BaseFragment() {
                             if (page == 0) {
                                 AlarmsScreen(
                                     alarms = alarms,
-                                    adapter = AlarmsAdapter(
-                                        chronos = chronos!!,
-                                        recycler = dummyRecyclerView,
-                                        alarmViewModel = alarmViewModel,
-                                        onDeleteAlarm = { alarmData ->
+                                    onAlarmUpdated = { alarmData ->
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            alarmViewModel.update(alarmData.toEntity())
+                                        }
+                                    },
+                                    onAlarmDeleted = { alarmData ->
+                                        CoroutineScope(Dispatchers.IO).launch {
                                             alarmViewModel.delete(alarmData.toEntity())
                                         }
-                                    ),
-                                    onScrolledToEnd = {  },
+                                    },
+                                    onScrolledToEnd = { },
+                                    isBottomSheetExpanded = isBottomSheetExpanded
                                 )
                             } else {
                                 SettingsScreen(

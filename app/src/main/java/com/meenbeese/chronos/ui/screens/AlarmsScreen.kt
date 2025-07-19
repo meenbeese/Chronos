@@ -1,77 +1,80 @@
 package com.meenbeese.chronos.ui.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
-import com.meenbeese.chronos.adapters.AlarmsAdapter
+import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.toData
 import com.meenbeese.chronos.db.AlarmEntity
 import com.meenbeese.chronos.ui.views.EmptyAlarmsView
 
+import kotlinx.coroutines.flow.collectLatest
+
 @Composable
 fun AlarmsScreen(
     alarms: List<AlarmEntity>,
-    adapter: AlarmsAdapter,
+    onAlarmUpdated: (AlarmData) -> Unit,
+    onAlarmDeleted: (AlarmData) -> Unit,
     onScrolledToEnd: () -> Unit,
     isBottomSheetExpanded: MutableState<Boolean> = remember { mutableStateOf(false) }
 ) {
-    if (adapter.itemCount == 0) {
+    if (alarms.isEmpty()) {
         EmptyAlarmsView()
     } else {
-        AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = { ctx ->
-                RecyclerView(ctx).apply {
-                    layoutManager = LinearLayoutManager(ctx)
-                    this.adapter = adapter
+        val listState = rememberLazyListState()
+        val alarmsData = remember(alarms) { alarms.map { it.toData() } }
 
-                    addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                        private var lastOffset = 0
-                        private var lastChangeTime = 0L
-                        private val debounceInterval = 300L
+        LaunchedEffect(listState) {
+            var lastOffset = 0
+            var lastChangeTime = 0L
+            val debounceInterval = 300L
 
-                        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                            val offset = recyclerView.computeVerticalScrollOffset()
-                            val now = System.currentTimeMillis()
-                            val direction = offset - lastOffset
+            snapshotFlow { listState.firstVisibleItemScrollOffset }
+                .collectLatest { offset ->
+                    val now = System.currentTimeMillis()
+                    val direction = offset - lastOffset
 
-                            if (direction > 10 && !isBottomSheetExpanded.value) {
-                                if (now - lastChangeTime > debounceInterval) {
-                                    isBottomSheetExpanded.value = true
-                                    lastChangeTime = now
-                                }
-                            } else if (direction < -10 && isBottomSheetExpanded.value) {
-                                if (now - lastChangeTime > debounceInterval) {
-                                    isBottomSheetExpanded.value = false
-                                    lastChangeTime = now
-                                }
-                            }
-
-                            lastOffset = offset
-
-                            // Detect scrolled to bottom
-                            val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
-                            val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition()
-                            val totalItemCount = layoutManager.itemCount
-
-                            if (lastVisibleItem == totalItemCount - 1 && totalItemCount > 0) {
-                                onScrolledToEnd()
-                            }
+                    if (direction > 10 && !isBottomSheetExpanded.value) {
+                        if (now - lastChangeTime > debounceInterval) {
+                            isBottomSheetExpanded.value = true
+                            lastChangeTime = now
                         }
-                    })
+                    } else if (direction < -10 && isBottomSheetExpanded.value) {
+                        if (now - lastChangeTime > debounceInterval) {
+                            isBottomSheetExpanded.value = false
+                            lastChangeTime = now
+                        }
+                    }
+
+                    lastOffset = offset
                 }
-            },
-            update = { recyclerView ->
-                adapter.updateAlarms(alarms.map { it.toData() })
-                recyclerView.adapter = adapter
+        }
+
+        LaunchedEffect(listState) {
+            snapshotFlow {
+                val layoutInfo = listState.layoutInfo
+                val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index
+                lastVisibleItemIndex to layoutInfo.totalItemsCount
+            }.collectLatest { (lastVisible, total) ->
+                if (lastVisible == total - 1 && total > 0) {
+                    onScrolledToEnd()
+                }
             }
+        }
+
+        AlarmListScreen(
+            alarms = alarmsData,
+            onAlarmUpdated = onAlarmUpdated,
+            onAlarmDeleted = onAlarmDeleted,
+            modifier = Modifier.fillMaxSize(),
+            listState = listState
         )
     }
 }
