@@ -123,7 +123,7 @@ dependencies {
     implementation("com.github.skydoves:colorpicker-compose:1.1.2")
 
     // Image
-    implementation("io.coil-kt.coil3:coil-compose:3.2.0")
+    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
 
     // Koin
     implementation("io.insert-koin:koin-android:4.1.0")
