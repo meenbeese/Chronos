@@ -9,11 +9,11 @@ plugins {
 
 android {
     namespace = "com.meenbeese.chronos"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "com.meenbeese.chronos"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 12
         versionName = "2025.2.0"
 
