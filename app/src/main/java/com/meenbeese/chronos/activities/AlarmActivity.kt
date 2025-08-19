@@ -137,12 +137,12 @@ class AlarmActivity : ComponentActivity() {
                 }
 
                 sound?.let {
-                    if (!it.isPlaying(chronos!!)) it.play(chronos!!)
+                    if (!it.isPlaying()) it.play(applicationContext)
                     if (alarm != null && isSlowWake) {
                         val progress = elapsedMillis.toFloat() / slowWakeMillis
                         window.addFlags(WindowManager.LayoutParams.FLAGS_CHANGED)
                         if (it.isSetVolumeSupported) {
-                            it.setVolume(chronos!!, min(1f, progress))
+                            it.setVolume(min(1f, progress))
                         } else if (currentVolume < originalVolume) {
                             val newVolume = min(originalVolume.toFloat(), progress * volumeRange).toInt()
                             if (newVolume != currentVolume) {
@@ -158,8 +158,8 @@ class AlarmActivity : ComponentActivity() {
         }
 
         handler?.post(runnable!!)
-        sound?.play(chronos!!)
-        refreshSleepTime(chronos!!)
+        sound?.play(applicationContext)
+        refreshSleepTime(applicationContext)
 
         setContent {
             val showSnoozeDialog = remember { mutableStateOf(false) }
@@ -245,8 +245,8 @@ class AlarmActivity : ComponentActivity() {
 
     private fun stopAnnoyance() {
         handler?.removeCallbacks(runnable!!)
-        if (sound?.isPlaying(chronos!!) == true) {
-            sound?.stop(chronos!!)
+        if (sound?.isPlaying() == true) {
+            sound?.stop()
             if (isSlowWake && sound?.isSetVolumeSupported == false) {
                 audioManager?.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0)
             }

@@ -1,5 +1,6 @@
 package com.meenbeese.chronos.data
 
+import android.content.Context
 import android.media.AudioAttributes
 import android.media.Ringtone
 import android.media.RingtoneManager
@@ -11,7 +12,6 @@ import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.AudioAttributes as M3AudioAttributes
 
-import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.utils.AudioUtils
 import com.meenbeese.chronos.utils.Option
 
@@ -44,14 +44,14 @@ class SoundData(
      * [Chronos](../Chronos) class, which will store the currently playing sound
      * until it is stopped or cancelled.
      *
-     * @param chronos           The active Application instance.
+     * @param context           The active Application instance.
      */
     @UnstableApi
-    fun play(chronos: Chronos) {
+    fun play(context: Context) {
         if (type == TYPE_RINGTONE && url.startsWith("content://")) {
             if (ringtone.isEmpty()) {
                 ringtone = Option.Some(
-                    RingtoneManager.getRingtone(chronos, url.toUri()).apply {
+                    RingtoneManager.getRingtone(context, url.toUri()).apply {
                         audioAttributes = AudioAttributes.Builder()
                             .setUsage(AudioAttributes.USAGE_ALARM)
                             .build()
@@ -74,24 +74,23 @@ class SoundData(
      * if the sound is a ringtone; if it is a stream, then all streams will be stopped,
      * regardless of whether this sound is in fact the currently playing stream or not.
      *
-     * @param chronos           The active Application instance.
      */
     @UnstableApi
-    fun stop(chronos: Chronos) {
+    fun stop() {
         ringtone.map { it.stop() }.takeIf { ringtone.isDefined() } ?: audioUtils.stopStream()
     }
 
     /**
      * Preview the sound on the "media" volume channel.
      *
-     * @param chronos           The active Application instance.
+     * @param context           The active Application instance.
      */
     @UnstableApi
-    fun preview(chronos: Chronos) {
+    fun preview(context: Context) {
         if (url.startsWith("content://")) {
             if (ringtone.isEmpty()) {
                 ringtone = Option.Some(
-                    RingtoneManager.getRingtone(chronos, url.toUri()).apply {
+                    RingtoneManager.getRingtone(context, url.toUri()).apply {
                         audioAttributes = AudioAttributes.Builder()
                             .setUsage(AudioAttributes.USAGE_ALARM)
                             .build()
@@ -112,22 +111,20 @@ class SoundData(
     /**
      * Decide whether the sound is currently playing or not.
      *
-     * @param chronos           The active Application instance.
      * @return                  True if "this" sound is playing.
      */
     @UnstableApi
-    fun isPlaying(chronos: Chronos): Boolean {
+    fun isPlaying(): Boolean {
         return ringtone.map { it.isPlaying }.getOrElse(audioUtils.isPlayingStream(url))
     }
 
     /**
      * Sets the player volume to the given float.
      *
-     * @param chronos           The active Application instance.
      * @param volume            The volume between 0 and 1
      */
     @UnstableApi
-    fun setVolume(chronos: Chronos, volume: Float) {
+    fun setVolume(volume: Float) {
         ringtone.map {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 it.volume = volume
