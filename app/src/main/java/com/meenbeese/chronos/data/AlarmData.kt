@@ -12,7 +12,6 @@ import com.meenbeese.chronos.db.AlarmDatabase
 import com.meenbeese.chronos.db.AlarmEntity
 import com.meenbeese.chronos.receivers.AlarmReceiver
 import com.meenbeese.chronos.services.SleepReminderService
-import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.CoroutineScope
@@ -85,8 +84,6 @@ class AlarmData(
             timeMillis,
             serviceIntent
         )
-
-        refreshSleepTime(context)
     }
 
     fun cancel(context: Context) {

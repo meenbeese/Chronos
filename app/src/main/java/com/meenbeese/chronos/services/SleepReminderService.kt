@@ -16,23 +16,25 @@ import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 
-import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.Preferences
+import com.meenbeese.chronos.db.TimerAlarmRepository
 import com.meenbeese.chronos.utils.FormatUtils.formatUnit
+
+import org.koin.android.ext.android.inject
 
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 class SleepReminderService : Service() {
-    private var chronos: Chronos? = null
+    private val repo: TimerAlarmRepository by inject()
+
     private var powerManager: PowerManager? = null
     private var receiver: ScreenReceiver? = null
 
     override fun onCreate() {
         super.onCreate()
-        chronos = applicationContext as Chronos
         powerManager = getSystemService(POWER_SERVICE) as PowerManager
         receiver = ScreenReceiver(this)
         refreshState()
@@ -63,7 +65,7 @@ class SleepReminderService : Service() {
      */
     fun refreshState() {
         if (powerManager!!.isInteractive) {
-            val nextAlarm = getSleepyAlarm(chronos)
+            val nextAlarm = getSleepyAlarm(applicationContext, repo)
             if (nextAlarm != null) {
                 val builder: NotificationCompat.Builder = run {
                     val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -100,6 +102,8 @@ class SleepReminderService : Service() {
         stopSelf()
     }
 
+
+
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
@@ -111,18 +115,9 @@ class SleepReminderService : Service() {
     }
 
     companion object {
-        /**
-         * Get a sleepy alarm. Well, get the next alarm that should trigger a sleep alert.
-         *
-         * @param chronos       The active Application instance.
-         * @return              The next [AlarmData](../data/AlarmData) that should trigger a
-         * sleep alert, or null if there isn't one.
-         */
-        fun getSleepyAlarm(chronos: Chronos?): AlarmData? {
-            val context = chronos?.applicationContext ?: return null
-
+        fun getSleepyAlarm(context: Context, repo: TimerAlarmRepository): AlarmData? {
             if (Preferences.SLEEP_REMINDER.get(context)) {
-                val nextAlarm = getNextWakeAlarm(chronos)
+                val nextAlarm = getNextWakeAlarm(repo)
                 if (nextAlarm != null) {
                     val nextTrigger = nextAlarm.getNext()!!
                     nextTrigger[Calendar.MINUTE] -= TimeUnit.MILLISECONDS.toMinutes(
@@ -135,13 +130,8 @@ class SleepReminderService : Service() {
             return null
         }
 
-        /**
-         * Get the next scheduled [AlarmData](../data/AlarmData) that will ring.
-         *
-         * @param chronos       The active Application instance.
-         * @return              The next AlarmData that will wake the user up.
-         */
-        private fun getNextWakeAlarm(chronos: Chronos?): AlarmData? {
+        private fun getNextWakeAlarm(repo: TimerAlarmRepository): AlarmData? {
+            val alarms = repo.alarms
             val nextNoon = Calendar.getInstance()
             nextNoon[Calendar.HOUR_OF_DAY] = 12
             if (nextNoon.before(Calendar.getInstance())) nextNoon[Calendar.DAY_OF_YEAR] =
@@ -150,41 +140,32 @@ class SleepReminderService : Service() {
             nextDay[Calendar.HOUR_OF_DAY] = 0
             while (nextDay.before(Calendar.getInstance())) nextDay[Calendar.DAY_OF_YEAR] =
                 nextDay[Calendar.DAY_OF_YEAR] + 1
-            val alarms = chronos!!.alarms
             var nextAlarm: AlarmData? = null
             for (alarm in alarms) {
                 val next = alarm.getNext()
-                if (alarm.isEnabled && next!!.before(nextNoon) && next.after(nextDay) && (nextAlarm == null || nextAlarm.getNext()!!
-                        .after(next))
-                ) nextAlarm = alarm
+                if (alarm.isEnabled &&
+                    next!!.before(nextNoon) &&
+                    next.after(nextDay) &&
+                    (nextAlarm == null || nextAlarm.getNext()!!.after(next))
+                ) {
+                    nextAlarm = alarm
+                }
             }
             return nextAlarm
         }
 
-        /**
-         * To be called whenever an alarm is changed, might change, or when time might have
-         * unexpectedly leaped forwards. This will start the service if there is a
-         * [sleepy alarm](#getsleepyalarm) present.
-         *
-         * @param context       An active context instance.
-         */
-        @JvmStatic
-        fun refreshSleepTime(context: Context) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.FOREGROUND_SERVICE
-                ) != PackageManager.PERMISSION_GRANTED
+        fun refreshSleepTime(context: Context, repo: TimerAlarmRepository) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
+                ContextCompat.checkSelfPermission(context, Manifest.permission.FOREGROUND_SERVICE)
+                != PackageManager.PERMISSION_GRANTED
             ) return
 
-            val chronos = (context as? Chronos) ?: (context.applicationContext as? Chronos)
-            chronos?.let {
-                val sleepyAlarm = getSleepyAlarm(it)
-                if (sleepyAlarm != null) {
-                    ContextCompat.startForegroundService(
-                        context,
-                        Intent(it, SleepReminderService::class.java)
-                    )
-                }
+            val sleepyAlarm = getSleepyAlarm(context, repo)
+            if (sleepyAlarm != null) {
+                ContextCompat.startForegroundService(
+                    context,
+                    Intent(context, SleepReminderService::class.java)
+                )
             }
         }
     }

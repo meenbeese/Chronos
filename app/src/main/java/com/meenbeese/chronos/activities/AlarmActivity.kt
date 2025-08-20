@@ -25,17 +25,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.core.view.WindowCompat
 import androidx.media3.common.util.UnstableApi
 
-import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
+import com.meenbeese.chronos.db.TimerAlarmRepository
 import com.meenbeese.chronos.ui.dialogs.SnoozeDurationDialog
 import com.meenbeese.chronos.ui.dialogs.DurationChooserDialog
 import com.meenbeese.chronos.ui.screens.AlarmScreen
 import com.meenbeese.chronos.ui.views.SlideActionView
-import com.meenbeese.chronos.services.SleepReminderService.Companion.refreshSleepTime
 import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.utils.FormatUtils.format
@@ -44,6 +43,8 @@ import com.meenbeese.chronos.utils.FormatUtils.formatUnit
 import com.meenbeese.chronos.utils.FormatUtils.getShortFormat
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundPainter
 
+import org.koin.android.ext.android.inject
+
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -51,7 +52,8 @@ import kotlin.math.min
 
 @UnstableApi
 class AlarmActivity : ComponentActivity() {
-    private var chronos: Chronos? = null
+    private val repo: TimerAlarmRepository by inject()
+
     private var vibrator: Vibrator? = null
     private var audioManager: AudioManager? = null
 
@@ -81,7 +83,6 @@ class AlarmActivity : ComponentActivity() {
             }
         }
 
-        chronos = applicationContext as Chronos
         isSlowWake = Preferences.SLOW_WAKE_UP.get(this)
         slowWakeMillis = Preferences.SLOW_WAKE_UP_TIME.get(this)
 
@@ -159,7 +160,6 @@ class AlarmActivity : ComponentActivity() {
 
         handler?.post(runnable!!)
         sound?.play(applicationContext)
-        refreshSleepTime(applicationContext)
 
         setContent {
             val showSnoozeDialog = remember { mutableStateOf(false) }
@@ -198,11 +198,11 @@ class AlarmActivity : ComponentActivity() {
                             onSnoozeSelected = { which ->
                                 stopAnnoyance()
                                 if (which < minutes.size) {
-                                    chronos!!.newTimer().apply {
-                                        setDuration(TimeUnit.MINUTES.toMillis(minutes[which].toLong()), chronos!!)
+                                    repo.newTimer().apply {
+                                        setDuration(TimeUnit.MINUTES.toMillis(minutes[which].toLong()), context)
                                         setVibrate(context, isVibrate)
                                         setSound(context, sound)
-                                        this[chronos!!] = context.getSystemService(ALARM_SERVICE) as AlarmManager
+                                        this[context] = context.getSystemService(ALARM_SERVICE) as AlarmManager
                                     }
                                     TimerService.startService(context)
                                     finish()
@@ -217,16 +217,16 @@ class AlarmActivity : ComponentActivity() {
                         DurationChooserDialog(
                             onDismiss = { showTimeChooserDialog.value = false },
                             onTimeChosen = { hours, minutes, seconds ->
-                                chronos?.newTimer()?.apply {
+                                repo.newTimer().apply {
                                     setVibrate(this@AlarmActivity, isVibrate)
                                     setSound(this@AlarmActivity, sound)
                                     setDuration(
                                         TimeUnit.HOURS.toMillis(hours.toLong()) +
                                                 TimeUnit.MINUTES.toMillis(minutes.toLong()) +
                                                 TimeUnit.SECONDS.toMillis(seconds.toLong()),
-                                        chronos!!
+                                        this@AlarmActivity
                                     )
-                                    this[chronos!!] = getSystemService(ALARM_SERVICE) as AlarmManager
+                                    this[this@AlarmActivity] = getSystemService(ALARM_SERVICE) as AlarmManager
                                 }
                                 TimerService.startService(this@AlarmActivity)
                                 finish()

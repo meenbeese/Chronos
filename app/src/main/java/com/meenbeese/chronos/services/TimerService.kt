@@ -15,34 +15,36 @@ import android.os.Looper
 
 import androidx.core.app.NotificationCompat
 
-import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.activities.MainActivity
-import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.receivers.TimerReceiver
+import com.meenbeese.chronos.db.TimerAlarmRepository
 import com.meenbeese.chronos.utils.FormatUtils.formatMillis
 
+import org.koin.android.ext.android.inject
+
 class TimerService : Service() {
+    private val repo: TimerAlarmRepository by inject()
+
     private val binder: IBinder = LocalBinder()
     private val handler = Handler(Looper.getMainLooper())
+    private var notificationManager: NotificationManager? = null
+    private var notificationString: String? = null
+
     private val runnable: Runnable = object : Runnable {
         override fun run() {
-            if (timers?.isNotEmpty() == true) {
-                val notification: Notification? = notification
-                if (notification != null) {
+            val timers = repo.timers
+            if (timers.isNotEmpty()) {
+                notification?.let {
                     handler.removeCallbacks(this)
                     handler.postDelayed(this, 10)
                 }
             } else stopForeground(STOP_FOREGROUND_REMOVE)
         }
     }
-    private var timers: List<TimerData>? = null
-    private var notificationManager: NotificationManager? = null
-    private var notificationString: String? = null
 
     override fun onCreate() {
         super.onCreate()
-        timers = (applicationContext as Chronos).timers
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     }
 
@@ -52,10 +54,7 @@ class TimerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        val notification = notification
-        if (notification != null) {
-            startForeground(NOTIFICATION_ID, notification)
-        }
+        notification?.let { startForeground(NOTIFICATION_ID, it) }
         handler.removeCallbacks(runnable)
         runnable.run()
         return START_STICKY
@@ -72,7 +71,8 @@ class TimerService : Service() {
             )
             val inboxStyle = NotificationCompat.InboxStyle()
             val string = StringBuilder()
-            for (timer in timers ?: emptyList()) {
+            val timers = repo.timers
+            for (timer in timers) {
                 if (!timer.isSet) continue
                 var time = formatMillis(timer.remainingMillis)
                 time = time.substring(0, time.length - 3)
@@ -82,7 +82,7 @@ class TimerService : Service() {
             if (notificationString != null && notificationString == string.toString()) return null
             notificationString = string.toString()
             val intent = Intent(this, MainActivity::class.java)
-            if (timers?.size == 1) intent.putExtra(TimerReceiver.EXTRA_TIMER_ID, 0)
+            if (timers.size == 1) intent.putExtra(TimerReceiver.EXTRA_TIMER_ID, 0)
 
             return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_TIMERS)
                 .setSmallIcon(R.drawable.ic_timer_notification)

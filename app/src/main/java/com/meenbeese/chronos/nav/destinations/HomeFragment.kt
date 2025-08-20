@@ -34,16 +34,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.BuildConfig
-import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.toEntity
+import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
 import com.meenbeese.chronos.ext.getFlow
 import com.meenbeese.chronos.interfaces.AlarmNavigator
+import com.meenbeese.chronos.db.TimerAlarmRepository
 import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.ui.dialogs.TimeChooserDialog
 import com.meenbeese.chronos.ui.dialogs.TimerFactoryDialog
@@ -61,6 +62,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+import org.koin.android.ext.android.inject
+
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
@@ -68,17 +71,17 @@ import java.util.TimeZone
 @UnstableApi
 class HomeFragment : BaseFragment() {
     private val isBottomSheetExpanded = mutableStateOf(false)
-    private lateinit var alarmViewModel: AlarmViewModel
+    private val repo: TimerAlarmRepository by inject()
+    private val alarmRepo: AlarmRepository by inject()
+    private val alarmViewModel: AlarmViewModel by lazy {
+        ViewModelProvider(this, AlarmViewModelFactory(alarmRepo))[AlarmViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val app = requireActivity().application as Chronos
-        val factory = AlarmViewModelFactory(app.repository)
-
-        alarmViewModel = ViewModelProvider(this, factory)[AlarmViewModel::class.java]
         alarmViewModel.alarms.observe(viewLifecycleOwner) { alarms ->
             Log.d("HomeFragment", "Alarms updated, size: ${alarms.size}")
             if (alarms.isEmpty() && !isBottomSheetExpanded.value) {
@@ -395,12 +398,11 @@ class HomeFragment : BaseFragment() {
             return
         }
 
-        val chronos = context.applicationContext as Chronos
-        val timer = chronos.newTimer()
-        timer.setDuration(totalMillis, chronos)
+        val timer = repo.newTimer()
+        timer.setDuration(totalMillis, context)
         timer.setVibrate(context, isVibrate)
         timer.setSound(context, ringtone)
-        timer[chronos] = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        timer[context] = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         TimerService.Companion.startService(context)
 
         val args = Bundle().apply {
@@ -420,9 +422,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun navigateToNearestAlarm() {
-        val activity = requireActivity()
-        val chronosApp = activity.application as Chronos
-        val allAlarms = chronosApp.alarms
+        val allAlarms = repo.alarms
 
         val alarmsWithNextTrigger = allAlarms
             .filter { it.isEnabled }

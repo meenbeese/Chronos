@@ -12,20 +12,25 @@ import android.util.Log
 
 import androidx.annotation.RequiresApi
 
-import com.meenbeese.chronos.Chronos
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.activities.MainActivity
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.runBlocking
 
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+
 import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.Q)
-class AlarmTileService : TileService() {
+class AlarmTileService : TileService(), KoinComponent {
+
+    private val repo: AlarmRepository by inject()
 
     override fun onStartListening() {
         super.onStartListening()
@@ -54,23 +59,20 @@ class AlarmTileService : TileService() {
 
     private fun updateTile() {
         val tile = qsTile ?: return
-        val app = applicationContext as Chronos
-        val repository = app.repository
         val now = Calendar.getInstance()
 
         val alarms: List<AlarmData> = runBlocking {
-            repository.getAllDirect()
-                .map {
-                    AlarmData(
-                        id = it.id,
-                        name = it.name,
-                        time = Calendar.getInstance().apply { timeInMillis = it.timeInMillis },
-                        isEnabled = it.isEnabled,
-                        days = it.days.toMutableList(),
-                        isVibrate = it.isVibrate,
-                        sound = it.sound?.let { sound -> SoundData.fromString(sound).toNullable() }
-                    )
-                }
+            repo.getAllDirect().map {
+                AlarmData(
+                    id = it.id,
+                    name = it.name,
+                    time = Calendar.getInstance().apply { timeInMillis = it.timeInMillis },
+                    isEnabled = it.isEnabled,
+                    days = it.days.toMutableList(),
+                    isVibrate = it.isVibrate,
+                    sound = it.sound?.let { sound -> SoundData.fromString(sound).toNullable() }
+                )
+            }
         }
 
         alarms.forEach { alarm ->
