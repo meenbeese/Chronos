@@ -15,6 +15,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.media3.common.util.UnstableApi
+import androidx.navigation.NavController
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
@@ -39,6 +40,7 @@ import kotlinx.coroutines.CoroutineScope
 @UnstableApi
 @Composable
 fun SettingsScreen(
+    navController: NavController,
     context: Context,
     lifecycleScope: CoroutineScope = rememberCoroutineScope()
 ) {
@@ -169,7 +171,7 @@ fun SettingsScreen(
                     },
                     {
                         AboutPreference(
-                            context = context
+                            navController = navController
                         )
                     }
                 )

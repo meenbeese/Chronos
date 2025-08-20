@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
@@ -39,6 +40,7 @@ import java.util.TimeZone
 
 @Composable
 fun HomeScreen(
+    navController: NavController,
     alarms: List<AlarmEntity>,
     isBottomSheetExpanded: MutableState<Boolean>,
     onAlarmUpdated: (AlarmData) -> Unit,
@@ -141,7 +143,10 @@ fun HomeScreen(
                             isBottomSheetExpanded = isBottomSheetExpanded
                         )
                     } else {
-                        SettingsScreen(context = context)
+                        SettingsScreen(
+                            navController = navController,
+                            context = context
+                        )
                     }
                 }
             }
@@ -171,7 +176,10 @@ fun HomeScreen(
                         isBottomSheetExpanded = isBottomSheetExpanded
                     )
                 } else {
-                    SettingsScreen(context = context)
+                    SettingsScreen(
+                        navController = navController,
+                        context = context
+                    )
                 }
             }
         }
