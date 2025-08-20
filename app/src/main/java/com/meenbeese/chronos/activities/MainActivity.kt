@@ -7,19 +7,27 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.AlarmClock
 import android.provider.Settings
-import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.platform.ComposeView
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
 import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.R
@@ -50,26 +58,64 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         super.onCreate(savedInstanceState)
         installSplashScreen()
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        requestNotificationPermissionIfNeeded()
+
         window.setFlags(
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
-        if (savedInstanceState == null) {
-            val fragment = createFragmentFor(intent) ?: return
-            supportFragmentManager.beginTransaction()
-                .add(R.id.fragment, fragment)
-                .commit()
-            fragmentRef = fragment
-        } else {
-            var fragment: Fragment? = TimerFragment()
-            if (fragmentRef == null) fragment = HomeFragment()
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment, fragment!!)
-                .commit()
-            fragmentRef = fragment
+
+        setContent {
+            val showDialog = remember { mutableStateOf(false) }
+
+            Box(Modifier.fillMaxSize()) {
+                AndroidView(
+                    modifier = Modifier.matchParentSize(),
+                    factory = { context ->
+                        FragmentContainerView(context).apply {
+                            id = R.id.fragment
+                            layoutParams = ViewGroup.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.MATCH_PARENT
+                            )
+                            post {
+                                if (savedInstanceState == null) {
+                                    val fragment = createFragmentFor(intent) ?: return@post
+                                    supportFragmentManager.beginTransaction()
+                                        .add(id, fragment)
+                                        .commitNow()
+                                    fragmentRef = fragment
+                                }
+                            }
+                        }
+                    }
+                )
+
+                // Background permissions info
+                if (showDialog.value) {
+                    BackgroundWarnDialog(
+                        onDismiss = { showDialog.value = false },
+                        onConfirm = {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                Preferences.INFO_BACKGROUND_PERMISSIONS.set(this@MainActivity, true)
+                                withContext(Dispatchers.Main) {
+                                    showDialog.value = false
+                                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                                    startActivity(intent)
+                                }
+                            }
+                        }
+                    )
+                }
+
+                // Show background dialog if needed
+                LaunchedEffect(Unit) {
+                    if (!Preferences.INFO_BACKGROUND_PERMISSIONS.get(this@MainActivity)) {
+                        showDialog.value = true
+                    }
+                }
+            }
         }
+
         supportFragmentManager.addOnBackStackChangedListener(this)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -83,32 +129,7 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
             }
         })
 
-        // Background permissions info
-        if (!Preferences.INFO_BACKGROUND_PERMISSIONS.get(this)) {
-            val composeView = findViewById<ComposeView>(R.id.backgroundWarnDialog)
-            val showDialog = mutableStateOf(true)
-            composeView.setContent {
-                if (showDialog.value) {
-                    BackgroundWarnDialog(
-                        onDismiss = {
-                            showDialog.value = false
-                            composeView.visibility = View.GONE
-                        },
-                        onConfirm = {
-                            CoroutineScope(Dispatchers.IO).launch {
-                                Preferences.INFO_BACKGROUND_PERMISSIONS.set(this@MainActivity, true)
-                                withContext(Dispatchers.Main) {
-                                    showDialog.value = false
-                                    composeView.visibility = View.GONE
-                                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-                                    startActivity(intent)
-                                }
-                            }
-                        }
-                    )
-                }
-            }
-        }
+        requestNotificationPermissionIfNeeded()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -116,27 +137,29 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         if (isActionableIntent(intent)) {
             val manager = supportFragmentManager
             val newFragment = createFragmentFor(intent)
-            val fragment = if (fragmentRef != null) fragmentRef else null
-            if (newFragment == null || newFragment == fragment) // Check that fragment isn't already displayed
-                return
-            if (newFragment is HomeFragment && manager.backStackEntryCount > 0) // Clear the back stack
+            val fragment = fragmentRef
+            if (newFragment == null || newFragment == fragment) return
+
+            if (newFragment is HomeFragment && manager.backStackEntryCount > 0) {
                 manager.popBackStack(
                     manager.getBackStackEntryAt(0).id,
                     FragmentManager.POP_BACK_STACK_INCLUSIVE
                 )
-            val transaction = manager.beginTransaction()
-                .setCustomAnimations(
+            }
+
+            manager.commit {
+                setCustomAnimations(
                     R.anim.slide_in_up_sheet,
                     R.anim.slide_out_up_sheet,
                     R.anim.slide_in_down_sheet,
                     R.anim.slide_out_down_sheet
                 )
-                .replace(R.id.fragment, newFragment)
-            if (fragment is HomeFragment && newFragment !is HomeFragment) transaction.addToBackStack(
-                null
-            )
+                replace(R.id.fragment, newFragment)
+                if (fragment is HomeFragment && newFragment !is HomeFragment) {
+                    addToBackStack(null)
+                }
+            }
             fragmentRef = newFragment
-            transaction.commit()
         }
     }
 
