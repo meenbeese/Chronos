@@ -3,60 +3,31 @@ package com.meenbeese.chronos.nav.destinations
 import android.app.AlarmManager
 import android.content.Context
 import android.os.Bundle
-import android.provider.AlarmClock
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.BuildConfig
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
-import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.toEntity
 import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
-import com.meenbeese.chronos.ext.getFlow
 import com.meenbeese.chronos.interfaces.AlarmNavigator
 import com.meenbeese.chronos.db.TimerAlarmRepository
 import com.meenbeese.chronos.services.TimerService
-import com.meenbeese.chronos.ui.dialogs.TimeChooserDialog
-import com.meenbeese.chronos.ui.dialogs.TimerFactoryDialog
-import com.meenbeese.chronos.ui.screens.AlarmsScreen
-import com.meenbeese.chronos.ui.screens.ClockScreen
-import com.meenbeese.chronos.ui.screens.SettingsScreen
-import com.meenbeese.chronos.ui.views.AnimatedFabMenu
-import com.meenbeese.chronos.ui.views.ClockPageView
-import com.meenbeese.chronos.ui.views.FabItem
-import com.meenbeese.chronos.ui.views.HomeBottomSheet
+import com.meenbeese.chronos.ui.screens.HomeScreen
 import com.meenbeese.chronos.utils.FormatUtils
-import com.meenbeese.chronos.utils.ImageUtils
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -66,7 +37,6 @@ import org.koin.android.ext.android.inject
 
 import java.util.Calendar
 import java.util.Date
-import java.util.TimeZone
 
 @UnstableApi
 class HomeFragment : BaseFragment() {
@@ -82,255 +52,32 @@ class HomeFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        alarmViewModel.alarms.observe(viewLifecycleOwner) { alarms ->
-            Log.d("HomeFragment", "Alarms updated, size: ${alarms.size}")
-            if (alarms.isEmpty() && !isBottomSheetExpanded.value) {
-                isBottomSheetExpanded.value = true
-            }
-        }
-
-        val homeTabs = listOf(getString(R.string.title_alarms), getString(R.string.title_settings))
-        val selectedTabIndex = mutableIntStateOf(0)
-
-        val timerItem = FabItem(icon = R.drawable.ic_timer, text = R.string.title_set_timer)
-        val watchItem = FabItem(icon = R.drawable.ic_stopwatch, text = R.string.title_set_stopwatch)
-        val alarmItem = FabItem(icon = R.drawable.ic_alarm_add, text = R.string.title_set_alarm)
-
         return ComposeView(requireContext()).apply {
             setContent {
-                var showAlarmDialog by remember { mutableStateOf(false) }
-                var showTimerDialog by remember { mutableStateOf(false) }
-
-                val clockBackground = ImageUtils.rememberBackgroundPainterState(isAlarm = false)
-
-                val timeZoneEnabled by Preferences.TIME_ZONE_ENABLED.getFlow(requireContext()).collectAsState(initial = false)
-                val selectedZonesCsv by Preferences.TIME_ZONES.getFlow(requireContext()).collectAsState(initial = "")
-
                 val alarms by alarmViewModel.alarms.observeAsState(emptyList())
+                val intentAction = arguments?.getString(INTENT_ACTION)
 
-                val selectedZones = buildList {
-                    add(TimeZone.getDefault().id)
-                    if (timeZoneEnabled) {
-                        selectedZonesCsv
-                            .split(",")
-                            .map { it.trim() }
-                            .filter { it.isNotEmpty() && TimeZone.getAvailableIDs().contains(it) }
-                            .forEach { add(it) }
-                    }
-                }
-
-                val clockScreens = selectedZones.map {
-                    @Composable {
-                        ClockScreen(
-                            timezoneId = it,
-                            onClockTap = {
-                                if (Preferences.SCROLL_TO_NEXT.get(requireContext())) {
-                                    navigateToNearestAlarm()
-                                }
-                            },
-                            getTextColor = {
-                                ImageUtils.getContrastingTextColorFromBg(requireContext())
-                            }
-                        )
-                    }
-                }
-
-                /*
-                 * Check actions passed from MainActivity; open timer/alarm
-                 * schedulers if necessary.
-                 */
-                LaunchedEffect(Unit) {
-                    when (arguments?.getString(INTENT_ACTION)) {
-                        AlarmClock.ACTION_SET_ALARM -> showAlarmDialog = true
-                        AlarmClock.ACTION_SET_TIMER -> showTimerDialog = true
-                    }
-                }
-
-                /*
-                 * Observe alarms using LiveData and update the list and
-                 * UI when an alarm is updated or deleted.
-                 */
-                LaunchedEffect(alarms) {
-                    Log.d("HomeFragment", "Alarms updated, size: ${alarms.size}")
-                    if (alarms.isEmpty() && !isBottomSheetExpanded.value) {
-                        isBottomSheetExpanded.value = true
-                    }
-                }
-
-                val isTablet = LocalConfiguration.current.smallestScreenWidthDp >= 600
-
-                if (isTablet) {
-                    Row(modifier = Modifier.Companion.fillMaxSize()) {
-                        ClockPageView(
-                            fragments = clockScreens,
-                            backgroundPainter = clockBackground!!,
-                            pageIndicatorVisible = clockScreens.size > 1,
-                            modifier = Modifier.Companion
-                                .weight(1f)
-                                .fillMaxHeight()
-                        )
-
-                        Box(
-                            modifier = Modifier.Companion
-                                .weight(1f)
-                                .fillMaxHeight()
-                                .padding(8.dp)
-                        ) {
-                            HomeBottomSheet(
-                                tabs = homeTabs,
-                                isTablet = true,
-                                initialTabIndex = selectedTabIndex.intValue,
-                                onTabChanged = { selectedTabIndex.intValue = it },
-                                heightFraction = 0.5f + 0.035f // Cover rounded edges
-                            ) { page ->
-                                if (page == 0) {
-                                    AlarmsScreen(
-                                        alarms = alarms,
-                                        onAlarmUpdated = { alarmData ->
-                                            CoroutineScope(Dispatchers.IO).launch {
-                                                alarmViewModel.update(alarmData.toEntity())
-                                            }
-                                        },
-                                        onAlarmDeleted = { alarmData ->
-                                            CoroutineScope(Dispatchers.IO).launch {
-                                                alarmViewModel.delete(alarmData.toEntity())
-                                            }
-                                        },
-                                        onScrolledToEnd = { },
-                                        isBottomSheetExpanded = isBottomSheetExpanded
-                                    )
-                                } else {
-                                    SettingsScreen(
-                                        context = requireContext(),
-                                    )
-                                }
-                            }
+                HomeScreen(
+                    alarms = alarms,
+                    isBottomSheetExpanded = isBottomSheetExpanded,
+                    onAlarmUpdated = { alarmData ->
+                        CoroutineScope(Dispatchers.IO).launch {
+                            alarmViewModel.update(alarmData.toEntity())
                         }
-                    }
-                } else {
-                    Box(
-                        modifier = Modifier.Companion.fillMaxSize()
-                    ) {
-                        ClockPageView(
-                            fragments = clockScreens,
-                            backgroundPainter = clockBackground!!,
-                            pageIndicatorVisible = clockScreens.size > 1,
-                            modifier = Modifier.Companion.fillMaxHeight(0.5f)
-                        )
-
-                        HomeBottomSheet(
-                            tabs = homeTabs,
-                            isTablet = false,
-                            initialTabIndex = selectedTabIndex.intValue,
-                            onTabChanged = { selectedTabIndex.intValue = it },
-                            heightFraction = 0.5f + 0.035f // Cover rounded edges
-                        ) { page ->
-                            if (page == 0) {
-                                AlarmsScreen(
-                                    alarms = alarms,
-                                    onAlarmUpdated = { alarmData ->
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            alarmViewModel.update(alarmData.toEntity())
-                                        }
-                                    },
-                                    onAlarmDeleted = { alarmData ->
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            alarmViewModel.delete(alarmData.toEntity())
-                                        }
-                                    },
-                                    onScrolledToEnd = { },
-                                    isBottomSheetExpanded = isBottomSheetExpanded
-                                )
-                            } else {
-                                SettingsScreen(
-                                    context = requireContext(),
-                                )
-                            }
+                    },
+                    onAlarmDeleted = { alarmData ->
+                        CoroutineScope(Dispatchers.IO).launch {
+                            alarmViewModel.delete(alarmData.toEntity())
                         }
-                    }
-                }
-
-                if (selectedTabIndex.intValue == 0) {
-                    Box(
-                        modifier = Modifier.Companion
-                            .fillMaxSize()
-                            .padding(12.dp)
-                    ) {
-                        AnimatedFabMenu(
-                            icon = R.drawable.ic_add,
-                            text = R.string.title_create,
-                            items = listOf(
-                                timerItem,
-                                watchItem,
-                                alarmItem
-                            ),
-                            onItemClick = { fabItem ->
-                                when (fabItem) {
-                                    timerItem -> showTimerDialog = true
-                                    watchItem -> scheduleWatch()
-                                    alarmItem -> showAlarmDialog = true
-                                }
-                            },
-                            modifier = Modifier.Companion.align(Alignment.Companion.BottomEnd)
-                        )
-                    }
-                }
-
-                if (showAlarmDialog) {
-                    AlarmSchedulerDialog(
-                        onDismiss = { showAlarmDialog = false },
-                        onTimeSet = { hour, minute ->
-                            showAlarmDialog = false
-                            scheduleAlarm(hour, minute)
-                        }
-                    )
-                }
-
-                if (showTimerDialog) {
-                    TimerSchedulerDialog(
-                        onDismiss = { showTimerDialog = false },
-                        onTimeChosen = { h, m, s, ring, vibrate ->
-                            showTimerDialog = false
-                            scheduleTimer(h, m, s, ring, vibrate)
-                        }
-                    )
-                }
+                    },
+                    onScheduleAlarm = { h, m -> scheduleAlarm(h, m) },
+                    onScheduleWatch = { scheduleWatch() },
+                    onScheduleTimer = { h, m, s, ring, vibrate -> scheduleTimer(h, m, s, ring, vibrate) },
+                    navigateToNearestAlarm = { navigateToNearestAlarm() },
+                    intentAction = intentAction
+                )
             }
         }
-    }
-
-    @Composable
-    fun AlarmSchedulerDialog(
-        onDismiss: () -> Unit,
-        onTimeSet: (hour: Int, minute: Int) -> Unit
-    ) {
-        val calendar = Calendar.getInstance()
-        val hourNow = calendar.get(Calendar.HOUR_OF_DAY)
-        val minuteNow = calendar.get(Calendar.MINUTE)
-
-        TimeChooserDialog(
-            initialHour = hourNow,
-            initialMinute = minuteNow,
-            is24HourClock = Preferences.MILITARY_TIME.get(LocalContext.current),
-            onDismissRequest = onDismiss,
-            onTimeSet = onTimeSet
-        )
-    }
-
-    @Composable
-    fun TimerSchedulerDialog(
-        onDismiss: () -> Unit,
-        onTimeChosen: (hours: Int, minutes: Int, seconds: Int, ringtone: SoundData?, isVibrate: Boolean) -> Unit
-    ) {
-        TimerFactoryDialog(
-            onDismiss = onDismiss,
-            onTimeChosen = { h, m, s, ring, vibrate ->
-                onTimeChosen(h, m, s, ring, vibrate)
-            },
-            defaultHours = 0,
-            defaultMinutes = 1,
-            defaultSeconds = 0
-        )
     }
 
     /**
