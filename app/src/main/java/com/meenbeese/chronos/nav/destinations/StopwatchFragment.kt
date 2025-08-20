@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.services.StopwatchService
@@ -34,7 +35,7 @@ import com.meenbeese.chronos.utils.FormatUtils
 
 import kotlin.collections.plus
 
-class StopwatchFragment : BaseFragment(), StopwatchService.Listener, ServiceConnection {
+class StopwatchFragment : Fragment(), StopwatchService.Listener, ServiceConnection {
     private var service: StopwatchService? = null
 
     private var timeText by mutableStateOf("0s 00")

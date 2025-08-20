@@ -18,13 +18,13 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.ui.dialogs.BackgroundWarnDialog
-import com.meenbeese.chronos.nav.destinations.BaseFragment
 import com.meenbeese.chronos.nav.destinations.HomeFragment
 import com.meenbeese.chronos.nav.destinations.StopwatchFragment
 import com.meenbeese.chronos.nav.destinations.TimerFragment
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
     private val repo: TimerAlarmRepository by inject()
     private val audioUtils: AudioUtils by inject()
 
-    private var fragmentRef: BaseFragment? = null
+    private var fragmentRef: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
                 .commit()
             fragmentRef = fragment
         } else {
-            var fragment: BaseFragment? = TimerFragment()
+            var fragment: Fragment? = TimerFragment()
             if (fragmentRef == null) fragment = HomeFragment()
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment, fragment!!)
@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
      * @return          An instantiated fragment corresponding
      * to the passed intent.
      */
-    private fun createFragmentFor(intent: Intent): BaseFragment? {
+    private fun createFragmentFor(intent: Intent): Fragment? {
         val fragment = if (fragmentRef != null) fragmentRef else null
         return when (intent.getIntExtra(EXTRA_FRAGMENT, -1)) {
             FRAGMENT_STOPWATCH -> {
@@ -161,7 +161,7 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
                     if (repo.timers.size <= id || id < 0) return fragment
                     val args = Bundle()
                     args.putParcelable(TimerFragment.EXTRA_TIMER, repo.timers[id])
-                    val newFragment: BaseFragment = TimerFragment()
+                    val newFragment: Fragment = TimerFragment()
                     newFragment.arguments = args
                     return newFragment
                 }
@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
             else -> {
                 val args = Bundle()
                 args.putString(HomeFragment.INTENT_ACTION, intent.action)
-                val newFragment: BaseFragment = HomeFragment()
+                val newFragment: Fragment = HomeFragment()
                 newFragment.arguments = args
                 newFragment
             }
@@ -235,7 +235,7 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
     }
 
     override fun onBackStackChanged() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.fragment) as BaseFragment?
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment)
         fragmentRef = fragment
     }
 

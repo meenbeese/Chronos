@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.fragment.app.Fragment
 
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.db.TimerAlarmRepository
@@ -20,7 +21,7 @@ import com.meenbeese.chronos.utils.FormatUtils
 
 import org.koin.android.ext.android.inject
 
-class TimerFragment : BaseFragment() {
+class TimerFragment : Fragment() {
     private val repo: TimerAlarmRepository by inject()
 
     private lateinit var handler: Handler

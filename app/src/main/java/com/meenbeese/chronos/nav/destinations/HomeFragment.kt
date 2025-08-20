@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.util.UnstableApi
 
@@ -39,7 +40,7 @@ import java.util.Calendar
 import java.util.Date
 
 @UnstableApi
-class HomeFragment : BaseFragment() {
+class HomeFragment : Fragment() {
     private val isBottomSheetExpanded = mutableStateOf(false)
     private val repo: TimerAlarmRepository by inject()
     private val alarmRepo: AlarmRepository by inject()

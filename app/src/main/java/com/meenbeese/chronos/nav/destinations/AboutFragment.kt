@@ -8,6 +8,7 @@ import android.view.ViewGroup
 
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
 
 import com.meenbeese.chronos.BuildConfig
 import com.meenbeese.chronos.ui.screens.AboutScreen
@@ -15,7 +16,7 @@ import com.meenbeese.chronos.utils.safeStartActivity
 
 import java.util.Calendar
 
-class AboutFragment : BaseFragment() {
+class AboutFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
