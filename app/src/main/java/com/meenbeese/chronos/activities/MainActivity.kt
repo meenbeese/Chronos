@@ -38,6 +38,9 @@ import com.meenbeese.chronos.nav.destinations.StopwatchFragment
 import com.meenbeese.chronos.nav.destinations.TimerFragment
 import com.meenbeese.chronos.receivers.TimerReceiver
 import com.meenbeese.chronos.db.TimerAlarmRepository
+import com.meenbeese.chronos.ui.theme.ChronosTheme
+import com.meenbeese.chronos.ui.theme.ThemeFactory
+import com.meenbeese.chronos.ui.theme.ThemeMode
 import com.meenbeese.chronos.utils.AudioUtils
 
 import kotlinx.coroutines.CoroutineScope
@@ -65,52 +68,60 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         )
 
         setContent {
-            val showDialog = remember { mutableStateOf(false) }
+            ChronosTheme(
+                customColorScheme = ThemeFactory.getSchemeFromSeed(
+                    color = Preferences.COLOR_SEED.get(this),
+                    dark = ThemeMode.fromInt(Preferences.THEME.get(this)).isDark()
+                ),
+                dynamicColor = Preferences.DYNAMIC_COLOR.get(this)
+            ) {
+                val showDialog = remember { mutableStateOf(false) }
 
-            Box(Modifier.fillMaxSize()) {
-                AndroidView(
-                    modifier = Modifier.matchParentSize(),
-                    factory = { context ->
-                        FragmentContainerView(context).apply {
-                            id = R.id.fragment
-                            layoutParams = ViewGroup.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.MATCH_PARENT
-                            )
-                            post {
-                                if (savedInstanceState == null) {
-                                    val fragment = createFragmentFor(intent) ?: return@post
-                                    supportFragmentManager.beginTransaction()
-                                        .add(id, fragment)
-                                        .commitNow()
-                                    fragmentRef = fragment
-                                }
-                            }
-                        }
-                    }
-                )
-
-                // Background permissions info
-                if (showDialog.value) {
-                    BackgroundWarnDialog(
-                        onDismiss = { showDialog.value = false },
-                        onConfirm = {
-                            CoroutineScope(Dispatchers.IO).launch {
-                                Preferences.INFO_BACKGROUND_PERMISSIONS.set(this@MainActivity, true)
-                                withContext(Dispatchers.Main) {
-                                    showDialog.value = false
-                                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-                                    startActivity(intent)
+                Box(Modifier.fillMaxSize()) {
+                    AndroidView(
+                        modifier = Modifier.matchParentSize(),
+                        factory = { context ->
+                            FragmentContainerView(context).apply {
+                                id = R.id.fragment
+                                layoutParams = ViewGroup.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.MATCH_PARENT
+                                )
+                                post {
+                                    if (savedInstanceState == null) {
+                                        val fragment = createFragmentFor(intent) ?: return@post
+                                        supportFragmentManager.beginTransaction()
+                                            .add(id, fragment)
+                                            .commitNow()
+                                        fragmentRef = fragment
+                                    }
                                 }
                             }
                         }
                     )
-                }
 
-                // Show background dialog if needed
-                LaunchedEffect(Unit) {
-                    if (!Preferences.INFO_BACKGROUND_PERMISSIONS.get(this@MainActivity)) {
-                        showDialog.value = true
+                    // Background permissions info
+                    if (showDialog.value) {
+                        BackgroundWarnDialog(
+                            onDismiss = { showDialog.value = false },
+                            onConfirm = {
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    Preferences.INFO_BACKGROUND_PERMISSIONS.set(this@MainActivity, true)
+                                    withContext(Dispatchers.Main) {
+                                        showDialog.value = false
+                                        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                                        startActivity(intent)
+                                    }
+                                }
+                            }
+                        )
+                    }
+
+                    // Show background dialog if needed
+                    LaunchedEffect(Unit) {
+                        if (!Preferences.INFO_BACKGROUND_PERMISSIONS.get(this@MainActivity)) {
+                            showDialog.value = true
+                        }
                     }
                 }
             }

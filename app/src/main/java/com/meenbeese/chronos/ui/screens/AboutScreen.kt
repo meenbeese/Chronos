@@ -61,13 +61,19 @@ fun AboutScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val showHearts = remember { mutableStateOf(false) }
-    val textStyle16 = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp)
-    val textStyle14 = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp)
+    val textStyle16 = MaterialTheme.typography.bodyMedium.copy(
+        fontSize = 16.sp,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+    val textStyle14 = MaterialTheme.typography.bodySmall.copy(
+        fontSize = 14.sp,
+        color = MaterialTheme.colorScheme.onBackground
+    )
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.onPrimary)
+            .background(MaterialTheme.colorScheme.background)
             .verticalScroll(rememberScrollState())
             .padding(24.dp)
     ) {
@@ -87,7 +93,8 @@ fun AboutScreen(
 
         Text(
             text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.headlineSmall,
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -147,6 +154,7 @@ fun AboutScreen(
         Text(
             text = stringResource(R.string.engage_title),
             style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 44.dp)
@@ -185,7 +193,7 @@ fun AboutScreen(
         EngagementItem(
             iconRes = R.drawable.ic_copyright,
             label = stringResource(R.string.copyright_info, year),
-            color = Color.Unspecified,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Toast.makeText(context, context.getString(R.string.copyright_info, year), Toast.LENGTH_SHORT).show()
