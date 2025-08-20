@@ -1,0 +1,5 @@
+🎊 The biggest release for Chronos ever 🎊
+
+The UI has been rewritten from scratch using Jetpack Compose, which means that it looks beautiful from the start, supports Material 3 and Material You, and features customizable accent colours. Moreover, a slew of other features have been implemented, such as initial support for large screens (tablets) and the ability to import/export alarms.
+
+**Full Changelog**: https://github.com/meenbeese/Chronos/compare/v2025.2.0...v2025.3.0
