@@ -20,10 +20,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
+import com.meenbeese.chronos.data.Preferences
+import com.meenbeese.chronos.ui.theme.ThemeMode
 
 @Composable
 fun DayCircleView(
@@ -33,6 +37,9 @@ fun DayCircleView(
     size: Dp = 36.dp,
     onCheckedChange: (Boolean) -> Unit
 ) {
+    val context = LocalContext.current
+    val themeValue = ThemeMode.fromInt(Preferences.THEME.get(context))
+    val isDarkTheme = themeValue.isDark()
     var isChecked by remember { mutableStateOf(isChecked) }
 
     val transition = updateTransition(targetState = isChecked, label = "DayCircleTransition")
@@ -47,7 +54,11 @@ fun DayCircleView(
     ) { checked -> if (checked) 1f else 0f }
 
     val bgColor = if (scale > 0.5f) MaterialTheme.colorScheme.primary else Color.Transparent
-    val textColor = if (scale > 0.5f) Color.White else Color.Black
+    val textColor = if (isDarkTheme) {
+        if (scale > 0.5f) Color.Black else Color.White
+    } else {
+        if (scale > 0.5f) Color.White else Color.Black
+    }
 
     Box(
         modifier = modifier
