@@ -94,7 +94,7 @@ fun AlarmItemView(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -120,7 +120,7 @@ fun AlarmItemView(
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                    .padding(horizontal = 12.dp, vertical = 4.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }

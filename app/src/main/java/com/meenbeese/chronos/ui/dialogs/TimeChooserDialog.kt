@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -41,7 +42,8 @@ fun TimeChooserDialog(
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             shape = MaterialTheme.shapes.medium,
-            tonalElevation = 6.dp
+            tonalElevation = 6.dp,
+            modifier = Modifier.widthIn(max = 320.dp)
         ) {
             Column(modifier = Modifier.padding(24.dp)) {
                 Text(

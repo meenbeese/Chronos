@@ -22,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -48,6 +49,12 @@ fun StopwatchDestination(navController: NavController) {
     var showReset by remember { mutableStateOf(false) }
     var showLap by remember { mutableStateOf(false) }
     var showShare by remember { mutableStateOf(false) }
+
+    val progressModifier = if (LocalConfiguration.current.screenWidthDp > 600) {
+        Modifier.fillMaxWidth(0.5f)
+    } else {
+        Modifier.fillMaxWidth()
+    }
 
     val listener = remember {
         object : StopwatchService.Listener {
@@ -181,8 +188,7 @@ fun StopwatchDestination(navController: NavController) {
                 maxProgress = maxProgress,
                 referenceProgress = referenceProgress,
                 animate = true,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = progressModifier
                     .aspectRatio(1f)
             )
         },

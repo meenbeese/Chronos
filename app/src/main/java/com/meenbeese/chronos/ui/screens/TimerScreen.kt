@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -17,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
@@ -32,6 +34,12 @@ fun TimerScreen(
     maxProgress: Float,
     referenceProgress: Float? = null
 ) {
+    val progressModifier = if (LocalConfiguration.current.screenWidthDp > 600) {
+        Modifier.fillMaxWidth(0.5f)
+    } else {
+        Modifier.fillMaxWidth()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,8 +74,7 @@ fun TimerScreen(
                 maxProgress = maxProgress,
                 referenceProgress = referenceProgress,
                 animate = true,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = progressModifier
                     .aspectRatio(1f)
             )
         }
@@ -78,7 +85,7 @@ fun TimerScreen(
             contentColor = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(bottom = 32.dp)
+                .padding(top = 16.dp, bottom = 32.dp)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_close),

@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,14 +66,19 @@ fun SoundChooserDialog(
         }
     }
 
+    val sheetWidthModifier = if (LocalConfiguration.current.screenWidthDp > 600) {
+        Modifier.fillMaxWidth(0.6f)
+    } else {
+        Modifier.fillMaxWidth()
+    }
+
     ModalBottomSheet(
         onDismissRequest = {
             audioUtils.stopCurrentSound()
             onDismissRequest()
         },
         sheetState = sheetState,
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = sheetWidthModifier
             .wrapContentHeight()
             .displayCutoutPadding()
     ) {
