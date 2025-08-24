@@ -26,7 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -109,8 +109,8 @@ fun CatppuccinColorSelector(
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        catpucchinLatte.forEach { colorInt ->
-            val color = Color(colorInt)
+        catpucchinLatte.forEach { color ->
+            val colorInt = color.toArgb()
             val isSelected = selectedColor == colorInt
 
             Box(

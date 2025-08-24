@@ -113,9 +113,6 @@ dependencies {
     implementation("androidx.room:room-ktx:2.7.2")
     implementation("androidx.room:room-runtime:2.7.2")
 
-    // Material
-    implementation("com.google.android.material:material:1.12.0")
-
     // Picker
     implementation("com.github.skydoves:colorpicker-compose:1.1.2")
 

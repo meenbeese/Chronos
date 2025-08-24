@@ -2,6 +2,8 @@ package com.meenbeese.chronos.data
 
 import android.graphics.Color
 
+import androidx.compose.ui.graphics.toArgb
+
 import com.meenbeese.chronos.ui.theme.ThemeFactory
 import com.meenbeese.chronos.ui.theme.ThemeMode
 
@@ -40,7 +42,7 @@ object Preferences {
     // Theme
     val THEME = PreferenceEntry.IntPref(name = "theme", default = ThemeMode.AUTO.value)
     val DYNAMIC_COLOR = PreferenceEntry.BooleanPref(name = "dynamic_color", default = true)
-    val COLOR_SEED = PreferenceEntry.IntPref(name = "color_seed", default = ThemeFactory.catpucchinLatte.first())
+    val COLOR_SEED = PreferenceEntry.IntPref(name = "color_seed", default = ThemeFactory.catpucchinLatte.first().toArgb())
 
     // Other
     val INFO_BACKGROUND_PERMISSIONS = PreferenceEntry.BooleanPref(name = "info_background_permissions", default = false)
