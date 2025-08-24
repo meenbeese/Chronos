@@ -15,6 +15,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -28,6 +30,7 @@ import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.ui.dialogs.BackgroundWarnDialog
 import com.meenbeese.chronos.receivers.TimerReceiver
 import com.meenbeese.chronos.db.TimerAlarmRepository
+import com.meenbeese.chronos.ext.getFlow
 import com.meenbeese.chronos.nav.NavGraph
 import com.meenbeese.chronos.nav.NavScreen
 import com.meenbeese.chronos.ui.theme.ChronosTheme
@@ -37,6 +40,7 @@ import com.meenbeese.chronos.utils.AudioUtils
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -58,12 +62,19 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
+            val colorSeed by Preferences.COLOR_SEED.getFlow(this)
+                .collectAsState(initial = Preferences.COLOR_SEED.get(this))
+            val themeMode by Preferences.THEME.getFlow(this).map { ThemeMode.fromInt(it) }
+                .collectAsState(initial = ThemeMode.fromInt(Preferences.THEME.get(this)))
+            val dynamicColor by Preferences.DYNAMIC_COLOR.getFlow(this)
+                .collectAsState(initial = Preferences.DYNAMIC_COLOR.get(this))
+
             ChronosTheme(
                 customColorScheme = ThemeFactory.getSchemeFromSeed(
-                    color = Preferences.COLOR_SEED.get(this),
-                    dark = ThemeMode.fromInt(Preferences.THEME.get(this)).isDark()
+                    color = colorSeed,
+                    dark = themeMode.isDark()
                 ),
-                dynamicColor = Preferences.DYNAMIC_COLOR.get(this)
+                dynamicColor = dynamicColor
             ) {
                 val navController = rememberNavController()
                 val showDialog = remember { mutableStateOf(false) }
