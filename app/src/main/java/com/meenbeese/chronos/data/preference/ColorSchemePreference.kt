@@ -1,6 +1,7 @@
 package com.meenbeese.chronos.data.preference
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -106,18 +107,21 @@ fun CatppuccinColorSelector(
     Row(
         modifier = Modifier
             .horizontalScroll(scrollState)
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .height(40.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         catpucchinLatte.forEach { color ->
             val colorInt = color.toArgb()
             val isSelected = selectedColor == colorInt
 
+            val animatedSize by animateDpAsState(if (isSelected) 40.dp else 32.dp, label = "colorSize")
+
             Box(
                 modifier = Modifier
                     .padding(end = 16.dp)
-                    .size(if (isSelected) 40.dp else 32.dp)
-                    .clip(MaterialTheme.shapes.small)
+                    .size(animatedSize)
+                    .clip(if (isSelected) MaterialTheme.shapes.small else MaterialTheme.shapes.large)
                     .background(color)
                     .clickable { onColorSelected(colorInt) }
                     .then(
