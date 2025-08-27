@@ -44,7 +44,6 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.ui.views.TimeNumpadItem
-import com.meenbeese.chronos.utils.Option
 
 import java.util.concurrent.TimeUnit
 
@@ -69,10 +68,7 @@ fun TimerFactoryDialog(
 
     val initialRingtone = remember {
         Preferences.DEFAULT_TIMER_RINGTONE.get(context).let {
-            when (val opt = SoundData.fromString(it)) {
-                is Option.Some -> opt.value
-                is Option.None -> null
-            }
+            SoundData.fromString(it).getOrNull()
         }
     }
 

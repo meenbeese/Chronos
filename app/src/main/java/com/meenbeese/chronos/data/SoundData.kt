@@ -12,8 +12,12 @@ import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.AudioAttributes as M3AudioAttributes
 
+import arrow.core.Option
+import arrow.core.None
+import arrow.core.Some
+import arrow.core.getOrElse
+
 import com.meenbeese.chronos.utils.AudioUtils
-import com.meenbeese.chronos.utils.Option
 
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
@@ -33,10 +37,10 @@ class SoundData(
     private val audioUtils: AudioUtils by inject()
 
     @IgnoredOnParcel
-    private var ringtone: Option<Ringtone> = Option.None
+    private var ringtone: Option<Ringtone> = None
 
     constructor(name: String, type: String, url: String, ringtone: Ringtone?) : this(name, type, url) {
-        this.ringtone = if (ringtone != null) Option.Some(ringtone) else Option.None
+        this.ringtone = if (ringtone != null) Some(ringtone) else None
     }
 
     /**
@@ -49,8 +53,8 @@ class SoundData(
     @UnstableApi
     fun play(context: Context) {
         if (type == TYPE_RINGTONE && url.startsWith("content://")) {
-            if (ringtone.isEmpty()) {
-                ringtone = Option.Some(
+            if (ringtone is None) {
+                ringtone = Some(
                     RingtoneManager.getRingtone(context, url.toUri()).apply {
                         audioAttributes = AudioAttributes.Builder()
                             .setUsage(AudioAttributes.USAGE_ALARM)
@@ -77,7 +81,7 @@ class SoundData(
      */
     @UnstableApi
     fun stop() {
-        ringtone.map { it.stop() }.takeIf { ringtone.isDefined() } ?: audioUtils.stopStream()
+        ringtone.map { it.stop() }.getOrElse { audioUtils.stopStream() }
     }
 
     /**
@@ -88,8 +92,8 @@ class SoundData(
     @UnstableApi
     fun preview(context: Context) {
         if (url.startsWith("content://")) {
-            if (ringtone.isEmpty()) {
-                ringtone = Option.Some(
+            if (ringtone is None) {
+                ringtone = Some(
                     RingtoneManager.getRingtone(context, url.toUri()).apply {
                         audioAttributes = AudioAttributes.Builder()
                             .setUsage(AudioAttributes.USAGE_ALARM)
@@ -115,7 +119,7 @@ class SoundData(
      */
     @UnstableApi
     fun isPlaying(): Boolean {
-        return ringtone.map { it.isPlaying }.getOrElse(audioUtils.isPlayingStream(url))
+        return ringtone.map { it.isPlaying }.getOrElse { audioUtils.isPlayingStream(url) }
     }
 
     /**
@@ -131,7 +135,7 @@ class SoundData(
             } else {
                 throw IllegalArgumentException("Attempted to set the ringtone volume on a device older than Android P.")
             }
-        }.takeIf { ringtone.isDefined() } ?: audioUtils.setStreamVolume(volume)
+        }.getOrElse { audioUtils.setStreamVolume(volume) }
     }
 
     val isSetVolumeSupported: Boolean
@@ -140,7 +144,7 @@ class SoundData(
          *
          * @return true if supported
          */
-        get() = ringtone is Option.None || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+        get() = ringtone is None || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
 
     /**
      * Returns an identifier string that can be used to recreate this
@@ -163,11 +167,7 @@ class SoundData(
     }
 
     override fun hashCode(): Int {
-        var result = name.hashCode()
-        result = 31 * result + type.hashCode()
-        result = 31 * result + url.hashCode()
-        result = 31 * result + (ringtone.map { it.hashCode() }.getOrElse(0))
-        return result
+        return 31 * (31 * (31 * name.hashCode() + type.hashCode()) + url.hashCode()) + ringtone.hashCode()
     }
 
     companion object {
@@ -184,14 +184,9 @@ class SoundData(
          */
         @JvmStatic
         fun fromString(string: String): Option<SoundData> {
-            if (string.contains(SEPARATOR)) {
-                val data = string.split(SEPARATOR.toRegex()).dropLastWhile { it.isEmpty() }
-                    .toTypedArray()
-                if (data.size == 3 && data.all { it.isNotEmpty() }) {
-                    return Option.Some(SoundData(data[0], data[1], data[2]))
-                }
-            }
-            return Option.None
+            val data = string.split(SEPARATOR).takeIf { it.size == 3 } ?: return None
+            val (name, type, url) = data
+            return Some(SoundData(name, type, url))
         }
     }
 }

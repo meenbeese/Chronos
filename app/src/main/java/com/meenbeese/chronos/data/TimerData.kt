@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Parcelable
 
 import com.meenbeese.chronos.receivers.TimerReceiver
-import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -41,7 +40,7 @@ open class TimerData(
             null
         }
 
-        sound = defaultSound?.let { SoundData.fromString(it).toNullable() }
+        sound = defaultSound?.let { SoundData.fromString(it).getOrNull() }
     }
 
     val isSet: Boolean

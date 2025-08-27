@@ -18,7 +18,6 @@ import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.utils.FormatUtils
-import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.runBlocking
 
@@ -70,7 +69,7 @@ class AlarmTileService : TileService(), KoinComponent {
                     isEnabled = it.isEnabled,
                     days = it.days.toMutableList(),
                     isVibrate = it.isVibrate,
-                    sound = it.sound?.let { sound -> SoundData.fromString(sound).toNullable() }
+                    sound = it.sound?.let { sound -> SoundData.fromString(sound).getOrNull() }
                 )
             }
         }

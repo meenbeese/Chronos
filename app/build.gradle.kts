@@ -116,6 +116,9 @@ dependencies {
     // Picker
     implementation("com.github.skydoves:colorpicker-compose:1.1.2")
 
+    // Arrow
+    implementation("io.arrow-kt:arrow-core:2.1.2")
+
     // Image
     implementation("io.coil-kt.coil3:coil-compose:3.3.0")
 

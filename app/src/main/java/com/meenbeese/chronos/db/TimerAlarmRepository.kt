@@ -12,7 +12,6 @@ import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.services.TimerService
-import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,7 +50,7 @@ class TimerAlarmRepository(
                             isEnabled = entity.isEnabled,
                             days = entity.days.toMutableList(),
                             isVibrate = entity.isVibrate,
-                            sound = entity.sound?.let { SoundData.fromString(it).toNullable() }
+                            sound = entity.sound?.let { SoundData.fromString(it).getOrNull() }
                         )
                     }
                 )

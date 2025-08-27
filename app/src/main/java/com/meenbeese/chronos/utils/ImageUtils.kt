@@ -15,6 +15,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.core.graphics.get
 import androidx.core.net.toUri
 
+import arrow.core.Either
+import arrow.core.getOrElse
+
 import coil3.compose.rememberAsyncImagePainter
 import coil3.imageLoader
 import coil3.request.ImageRequest
@@ -138,7 +141,7 @@ object ImageUtils {
     suspend fun getContrastingTextColorFromBg(context: Context): Int {
         val backgroundImage = Preferences.BACKGROUND_IMAGE.get(context)
 
-        return try {
+        val result: Either<Throwable, Int> = Either.catch {
             val imageRequest = ImageRequest.Builder(context)
                 .data(backgroundImage.toUri())
                 .size(200, 200)
@@ -146,15 +149,12 @@ object ImageUtils {
                 .build()
 
             val drawable = context.imageLoader.execute(imageRequest).image
-
             val bitmap = drawable?.toBitmap()
+            val isDark = bitmap?.let { isBitmapDark(it) } ?: false
 
-            bitmap?.let {
-                val isDark = isBitmapDark(it)
-                if (isDark) Color.LTGRAY else Color.DKGRAY
-            } ?: Color.DKGRAY
-        } catch (_: Exception) {
-            Color.DKGRAY
+            if (isDark) Color.LTGRAY else Color.DKGRAY
         }
+
+        return result.getOrElse { Color.DKGRAY }
     }
 }

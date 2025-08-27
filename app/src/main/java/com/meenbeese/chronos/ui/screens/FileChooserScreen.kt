@@ -70,15 +70,18 @@ fun FileChooserScreen(
     ) { uri ->
         if (uri != null) {
             coroutineScope.launch {
-                try {
-                    context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-                        val serdes = AlarmSerdes()
-                        val (appDataJson, count) = serdes.exportAlarmDataAsJson(context)
-                        outputStream.write(appDataJson.toByteArray(Charsets.UTF_8))
-                        Toast.makeText(context, "Exported $count alarms", Toast.LENGTH_SHORT).show()
-                    }
-                } catch (e: Exception) {
-                    Toast.makeText(context, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                context.contentResolver.openOutputStream(uri)?.use { outputStream ->
+                    val serdes = AlarmSerdes()
+                    val result = serdes.exportAlarmDataAsJson(context)
+                    result.fold(
+                        ifLeft = { e ->
+                            Toast.makeText(context, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                        },
+                        ifRight = { (json, count) ->
+                            outputStream.write(json.toByteArray(Charsets.UTF_8))
+                            Toast.makeText(context, "Exported $count alarms", Toast.LENGTH_SHORT).show()
+                        }
+                    )
                 }
                 onDismiss()
             }
@@ -97,18 +100,21 @@ fun FileChooserScreen(
 
             coroutineScope.launch {
                 if (type == FileChooserType.IMPORT_JSON) {
-                    try {
-                        val inputStream = context.contentResolver.openInputStream(uri)
-                        val json = inputStream?.bufferedReader()?.use { it.readText() }
-                        if (json != null) {
-                            val serdes = AlarmSerdes()
-                            val count = serdes.importAlarmDataFromJson(context, json)
-                            Toast.makeText(context, "Imported $count alarms", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(context, "Failed to read file", Toast.LENGTH_SHORT).show()
-                        }
-                    } catch (e: Exception) {
-                        Toast.makeText(context, "Import failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                    val inputStream = context.contentResolver.openInputStream(uri)
+                    val json = inputStream?.bufferedReader()?.use { it.readText() }
+                    if (json != null) {
+                        val serdes = AlarmSerdes()
+                        val result = serdes.importAlarmDataFromJson(context, json)
+                        result.fold(
+                            ifLeft = { e ->
+                                Toast.makeText(context, "Import failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                            },
+                            ifRight = { count ->
+                                Toast.makeText(context, "Imported $count alarms", Toast.LENGTH_SHORT).show()
+                            }
+                        )
+                    } else {
+                        Toast.makeText(context, "Failed to read file", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     // Regular file preference

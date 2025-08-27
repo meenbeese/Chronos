@@ -12,7 +12,6 @@ import com.meenbeese.chronos.db.AlarmDatabase
 import com.meenbeese.chronos.db.AlarmEntity
 import com.meenbeese.chronos.receivers.AlarmReceiver
 import com.meenbeese.chronos.services.SleepReminderService
-import com.meenbeese.chronos.utils.toNullable
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -148,6 +147,6 @@ fun AlarmEntity.toData(): AlarmData {
         isEnabled = this.isEnabled,
         days = this.days.toMutableList(),
         isVibrate = this.isVibrate,
-        sound = this.sound?.let { SoundData.fromString(it).toNullable() }
+        sound = this.sound?.let { SoundData.fromString(it).getOrNull() }
     )
 }
