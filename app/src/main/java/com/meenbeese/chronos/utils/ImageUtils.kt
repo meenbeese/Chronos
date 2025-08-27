@@ -2,12 +2,12 @@ package com.meenbeese.chronos.utils
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.net.Uri
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
@@ -82,7 +82,7 @@ object ImageUtils {
         return if (!isAlarm || Preferences.RINGING_BACKGROUND_IMAGE.get(context)) {
             if (Preferences.COLORFUL_BACKGROUND.get(context)) {
                 val colorInt = Preferences.BACKGROUND_COLOR.get(context)
-                val color = androidx.compose.ui.graphics.Color(colorInt)
+                val color = Color(colorInt)
                 ColorPainter(color)
             } else {
                 getBackgroundImageAsync()
@@ -102,7 +102,7 @@ object ImageUtils {
 
         if (!isAlarm || Preferences.RINGING_BACKGROUND_IMAGE.get(context)) {
             return if (colorfulBg) {
-                ColorPainter(androidx.compose.ui.graphics.Color(bgColor))
+                ColorPainter(Color(bgColor))
             } else {
                 getBackgroundImageAsync(bgImage, context)
             }
@@ -129,19 +129,20 @@ object ImageUtils {
         return darkPixels >= totalPixels / 2
     }
 
-    fun isColorDark(color: Int): Boolean {
+    fun isColorDark(colorInt: Int): Boolean {
+        val color = Color(colorInt)
         val darkness = 1 - (
-            0.299 * Color.red(color) +
-            0.587 * Color.green(color) +
-            0.114 * Color.blue(color)
-        ) / 255
+            0.299 * color.red +
+            0.587 * color.green +
+            0.114 * color.blue
+        )
         return darkness >= 0.5
     }
 
-    suspend fun getContrastingTextColorFromBg(context: Context): Int {
+    suspend fun getContrastingTextColorFromBg(context: Context): Color {
         val backgroundImage = Preferences.BACKGROUND_IMAGE.get(context)
 
-        val result: Either<Throwable, Int> = Either.catch {
+        val result: Either<Throwable, Color> = Either.catch {
             val imageRequest = ImageRequest.Builder(context)
                 .data(backgroundImage.toUri())
                 .size(200, 200)
@@ -152,9 +153,9 @@ object ImageUtils {
             val bitmap = drawable?.toBitmap()
             val isDark = bitmap?.let { isBitmapDark(it) } ?: false
 
-            if (isDark) Color.LTGRAY else Color.DKGRAY
+            if (isDark) Color.LightGray else Color.DarkGray
         }
 
-        return result.getOrElse { Color.DKGRAY }
+        return result.getOrElse { Color.DarkGray }
     }
 }
