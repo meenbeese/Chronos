@@ -123,7 +123,7 @@ dependencies {
     implementation("io.coil-kt.coil3:coil-compose:3.3.0")
 
     // Koin
-    implementation("io.insert-koin:koin-androidx-compose:4.1.0")
+    implementation("io.insert-koin:koin-androidx-compose:4.1.1")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
