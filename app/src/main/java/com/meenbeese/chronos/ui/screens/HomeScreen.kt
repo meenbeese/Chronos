@@ -136,7 +136,7 @@ fun HomeScreen(
                     isTablet = true,
                     initialTabIndex = selectedTabIndex.intValue,
                     onTabChanged = { selectedTabIndex.intValue = it },
-                    heightFraction = 0.5f + 0.035f
+                    heightFraction = 0.5f
                 ) { page ->
                     if (page == 0) {
                         AlarmsScreen(
@@ -161,7 +161,7 @@ fun HomeScreen(
                 fragments = clockScreens,
                 backgroundPainter = clockBackground!!,
                 pageIndicatorVisible = clockScreens.size > 1,
-                modifier = Modifier.fillMaxHeight(0.5f)
+                modifier = Modifier.fillMaxHeight(0.5f + 0.025f)
             )
 
             HomeBottomSheet(
@@ -169,7 +169,7 @@ fun HomeScreen(
                 isTablet = false,
                 initialTabIndex = selectedTabIndex.intValue,
                 onTabChanged = { selectedTabIndex.intValue = it },
-                heightFraction = 0.5f + 0.035f
+                heightFraction = 0.5f
             ) { page ->
                 if (page == 0) {
                     AlarmsScreen(

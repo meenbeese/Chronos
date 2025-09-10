@@ -22,7 +22,7 @@ fun ClockPageView(
     pageIndicatorVisible: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val backgroundDimConstant = 0.15f
+    val backgroundDimConstant = 0.1f
     val pagerState = rememberPagerState { fragments.size }
 
     Box(
@@ -58,7 +58,7 @@ fun ClockPageView(
                 pageCount = fragments.size,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 48.dp)
+                    .padding(bottom = 36.dp)
             )
         }
     }
