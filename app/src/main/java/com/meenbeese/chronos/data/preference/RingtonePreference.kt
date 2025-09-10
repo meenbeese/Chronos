@@ -12,6 +12,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.media3.common.util.UnstableApi
 
+import arrow.core.getOrElse
+
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceEntry
 import com.meenbeese.chronos.data.SoundData
@@ -50,7 +52,7 @@ fun RingtonePreference(
         soundName = if (soundStr.isNotEmpty()) {
             SoundData.fromString(soundStr)
                 .map { it.name }
-                .getOrElse(context.getString(R.string.title_sound_none))
+                .getOrElse { context.getString(R.string.title_sound_none) }
         } else {
             context.getString(R.string.title_sound_none)
         }
