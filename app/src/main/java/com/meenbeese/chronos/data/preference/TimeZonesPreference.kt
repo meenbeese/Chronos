@@ -8,7 +8,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
@@ -22,7 +21,6 @@ import kotlinx.coroutines.runBlocking
  * from multiple time zones (preference is a boolean,
  * should have a parameter for the zone id).
  */
-@UnstableApi
 @Composable
 fun TimeZonesPreference(
     modifier: Modifier = Modifier,

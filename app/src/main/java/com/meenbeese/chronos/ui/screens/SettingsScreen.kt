@@ -7,12 +7,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavController
@@ -24,15 +21,11 @@ import com.meenbeese.chronos.data.preference.AboutPreference
 import com.meenbeese.chronos.data.preference.AlertWindowPreference
 import com.meenbeese.chronos.data.preference.BatteryPreference
 import com.meenbeese.chronos.data.preference.BooleanPreference
-import com.meenbeese.chronos.data.preference.ColorPreference
 import com.meenbeese.chronos.data.preference.ColorSchemePreference
-import com.meenbeese.chronos.data.preference.ImageFilePreference
 import com.meenbeese.chronos.data.preference.ImportExportPreference
 import com.meenbeese.chronos.data.preference.RingtonePreference
-import com.meenbeese.chronos.data.preference.SegmentedPreference
 import com.meenbeese.chronos.data.preference.ThemePreference
 import com.meenbeese.chronos.data.preference.TimePreference
-import com.meenbeese.chronos.data.preference.TimeZonesPreference
 
 import kotlinx.coroutines.CoroutineScope
 
@@ -44,13 +37,11 @@ fun SettingsScreen(
     context: Context,
     lifecycleScope: CoroutineScope = rememberCoroutineScope()
 ) {
-    var triggerRebuild by remember { mutableIntStateOf(0) }
-
     val batteryOptimizationNeeded = remember {
         !isIgnoringBatteryOptimizations(context)
     }
 
-    val preferenceList = remember(triggerRebuild) {
+    val preferenceList = remember {
         mutableStateListOf<@Composable () -> Unit>().apply {
             add { ImportExportPreference() }
 
@@ -74,36 +65,6 @@ fun SettingsScreen(
                 )
             }
 
-            add {
-                SegmentedPreference(
-                    nameRes = R.string.title_background_mode,
-                    onSelectionChanged = {
-                        triggerRebuild++
-                    }
-                )
-            }
-
-            // Add background detail (color or image)
-            val isColor = Preferences.COLORFUL_BACKGROUND.get(context)
-            add(
-                if (isColor) {
-                    {
-                        ColorPreference(
-                            preference = Preferences.BACKGROUND_COLOR,
-                            title = R.string.title_background_color
-                        )
-                    }
-                } else {
-                    {
-                        ImageFilePreference(
-                            preference = Preferences.BACKGROUND_IMAGE,
-                            title = R.string.title_background_image,
-                            description = R.string.desc_background_image
-                        )
-                    }
-                }
-            )
-
             addAll(
                 listOf(
                     {
@@ -118,17 +79,6 @@ fun SettingsScreen(
                             preference = Preferences.SCROLL_TO_NEXT,
                             title = R.string.title_scroll_next,
                             description = R.string.desc_scroll_next
-                        )
-                    },
-                    {
-                        TimeZonesPreference(
-                            onTimeZonesChanged = {}
-                        )
-                    },
-                    {
-                        BooleanPreference(
-                            preference = Preferences.MILITARY_TIME,
-                            title = R.string.title_military_time
                         )
                     },
                     {
