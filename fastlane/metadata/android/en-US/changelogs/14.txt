@@ -1,0 +1,3 @@
+This release improves the home screen layout and custom color themes.
+
+**Full Changelog**: https://github.com/meenbeese/Chronos/compare/v2025.3.0...v2025.3.1
