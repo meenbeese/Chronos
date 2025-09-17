@@ -12,11 +12,12 @@ import androidx.compose.ui.tooling.preview.Preview
 
 import com.meenbeese.chronos.ui.views.TimeZoneItem
 
-import java.util.Locale
-import java.util.TimeZone
-import java.util.concurrent.TimeUnit
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.offsetAt
 
 import kotlin.math.abs
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 @Preview
 @Composable
@@ -29,11 +30,13 @@ fun TimeZoneChooserDialog(
         mutableStateSetOf<String>().apply { addAll(initialSelected) }
     }
 
+    val now = Clock.System.now()
+
     val timeZones = remember {
-        TimeZone.getAvailableIDs()
-            .distinctBy { TimeZone.getTimeZone(it).displayName }
-            .filterNot { TimeZone.getTimeZone(it).displayName.startsWith("GMT") }
-            .sortedBy { TimeZone.getTimeZone(it).rawOffset }
+        TimeZone.availableZoneIds.sortedBy { tzId ->
+            val zone = TimeZone.of(tzId)
+            zone.offsetAt(now).totalSeconds
+        }
     }
 
     AlertDialog(
@@ -41,6 +44,7 @@ fun TimeZoneChooserDialog(
         title = { Text("Choose Time Zones") },
         text = {
             TimeZonesList(
+                now = now,
                 timeZones = timeZones,
                 selected = selected,
                 onSelectionChanged = { id, isChecked ->
@@ -61,24 +65,21 @@ fun TimeZoneChooserDialog(
 
 @Composable
 fun TimeZonesList(
+    now: Instant,
     timeZones: List<String>,
     selected: MutableSet<String>,
     onSelectionChanged: (String, Boolean) -> Unit
 ) {
     LazyColumn {
         items(timeZones) { timeZoneId ->
-            val timeZone = TimeZone.getTimeZone(timeZoneId)
-            val offsetMillis = timeZone.rawOffset
+            val zone = TimeZone.of(timeZoneId)
+            val offsetSeconds = zone.offsetAt(now).totalSeconds
+            val hours = abs(offsetSeconds / 3600)
+            val minutes = abs(offsetSeconds % 3600 / 60)
+            val sign = if (offsetSeconds >= 0) "+" else "-"
 
-            val offsetFormatted = String.format(
-                Locale.getDefault(),
-                "GMT%s%02d:%02d",
-                if (offsetMillis >= 0) "+" else "-",
-                TimeUnit.MILLISECONDS.toHours(abs(offsetMillis.toLong())),
-                TimeUnit.MILLISECONDS.toMinutes(abs(offsetMillis.toLong())) % TimeUnit.HOURS.toMinutes(1)
-            )
-
-            val title = timeZone.getDisplayName(Locale.getDefault())
+            val offsetFormatted = "GMT$sign%02d:%02d".format(hours, minutes)
+            val title = timeZoneId
             val isChecked = selected.contains(timeZoneId)
 
             TimeZoneItem(

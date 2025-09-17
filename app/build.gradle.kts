@@ -73,6 +73,7 @@ kotlin {
 
     sourceSets.all {
         languageSettings.optIn("androidx.compose.material3.ExperimentalMaterial3Api")
+        languageSettings.optIn("kotlin.time.ExperimentalTime")
     }
 }
 
@@ -131,4 +132,7 @@ dependencies {
 
     // JSON
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+
+    // Date
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
 }

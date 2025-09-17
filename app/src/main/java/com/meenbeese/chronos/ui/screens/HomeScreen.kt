@@ -38,7 +38,7 @@ import com.meenbeese.chronos.ui.views.FabItem
 import com.meenbeese.chronos.ui.views.HomeBottomSheet
 import com.meenbeese.chronos.utils.ImageUtils
 
-import java.util.TimeZone
+import kotlinx.datetime.TimeZone
 
 @Composable
 fun HomeScreen(
@@ -88,12 +88,12 @@ fun HomeScreen(
     }
 
     val selectedZones = buildList {
-        add(TimeZone.getDefault().id)
+        add(TimeZone.currentSystemDefault().id)
         if (timeZoneEnabled) {
             selectedZonesCsv
                 .split(",")
                 .map { it.trim() }
-                .filter { it.isNotEmpty() && TimeZone.getAvailableIDs().contains(it) }
+                .filter { it.isNotEmpty() && TimeZone.availableZoneIds.contains(it) }
                 .forEach { add(it) }
         }
     }

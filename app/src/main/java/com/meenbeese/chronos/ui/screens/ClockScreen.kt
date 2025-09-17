@@ -22,7 +22,11 @@ import androidx.compose.ui.unit.sp
 
 import com.meenbeese.chronos.ui.views.DigitalClockView
 
-import java.util.TimeZone
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.offsetAt
+
+import kotlin.math.abs
+import kotlin.time.Clock
 
 @Composable
 fun ClockScreen(
@@ -30,12 +34,20 @@ fun ClockScreen(
     onClockTap: () -> Unit,
     getTextColor: suspend () -> Int
 ) {
-    val timezone = TimeZone.getTimeZone(timezoneId)
+    val timezone = remember(timezoneId) { TimeZone.of(timezoneId) }
+
+    val gmtOffset = remember(timezoneId) {
+        val totalSeconds = timezone.offsetAt(Clock.System.now()).totalSeconds
+        val hours = totalSeconds / 3600
+        val minutes = (totalSeconds % 3600) / 60
+        val sign = if (totalSeconds >= 0) "+" else "-"
+        "GMT$sign%02d:%02d".format(abs(hours), abs(minutes))
+    }
 
     var timezoneLabel by remember {
         mutableStateOf(
-            if (timezone.id != TimeZone.getDefault().id) {
-                "${timezone.id.replace("_", " ")}\n${timezone.displayName}"
+            if (timezone.id != TimeZone.currentSystemDefault().id) {
+                "${timezone.id.replace("_", " ")}\n$gmtOffset"
             } else ""
         )
     }

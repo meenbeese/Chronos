@@ -20,28 +20,28 @@ import androidx.compose.ui.unit.sp
 import com.meenbeese.chronos.utils.FormatUtils
 
 import kotlinx.coroutines.delay
+import kotlinx.datetime.TimeZone
 
-import java.util.Calendar
-import java.util.TimeZone
+import kotlin.time.Clock
 
 @Composable
 fun DigitalClockView(
     modifier: Modifier = Modifier,
-    timezoneId: String = TimeZone.getDefault().id,
+    timezoneId: String = TimeZone.currentSystemDefault().id,
     onClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
-    val timezone = remember(timezoneId) { TimeZone.getTimeZone(timezoneId) }
+    val timezone = remember(timezoneId) { TimeZone.of(timezoneId) }
 
-    var currentTime by remember { mutableStateOf("") }
+    var currentTime by remember { mutableStateOf("00:00:00") }
 
     LaunchedEffect(timezoneId) {
         while (true) {
-            val defaultZone = TimeZone.getDefault()
-            TimeZone.setDefault(timezone)
-            val formatted = FormatUtils.format(context, Calendar.getInstance().time)
+            val now = Clock.System.now()
+            val formatted = FormatUtils.format(context, now, timezone)
+
             currentTime = formatted.ifEmpty { "00:00:00" }
-            TimeZone.setDefault(defaultZone)
+
             delay(1000)
         }
     }

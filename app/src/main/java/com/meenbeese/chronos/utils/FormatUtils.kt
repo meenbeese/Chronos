@@ -5,10 +5,15 @@ import android.content.Context
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
 
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+
+import kotlin.time.Instant
 
 object FormatUtils {
     private const val FORMAT_12H = "h:mm:ss"
@@ -54,6 +59,28 @@ object FormatUtils {
      */
     fun format(context: Context?, time: Date?): String {
         return format(time, getFormat(context))
+    }
+
+    /**
+     * Formats an [Instant] into a time string in the given [TimeZone],
+     * respecting the user's 24-hour format preference.
+     *
+     * @param context Context to check 24-hour format preference.
+     * @param instant The [Instant] to format.
+     * @param tz The [TimeZone] to use when converting the instant.
+     * @return Formatted time string (hh:mm:ss or HH:mm:ss)
+     */
+    fun format(context: Context?, instant: Instant, tz: TimeZone): String {
+        val ldt = instant.toLocalDateTime(tz)
+        val pattern = getFormat(context)
+        return when (pattern) {
+            "HH:mm:ss" -> "%02d:%02d:%02d".format(ldt.hour, ldt.minute, ldt.second)
+            "h:mm:ss" -> {
+                val hour12 = if (ldt.hour % 12 == 0) 12 else ldt.hour % 12
+                "%d:%02d:%02d".format(hour12, ldt.minute, ldt.second)
+            }
+            else -> "%02d:%02d:%02d".format(ldt.hour, ldt.minute, ldt.second)
+        }
     }
 
     /**
