@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 
+import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.utils.FormatUtils
 
 import kotlinx.coroutines.delay
@@ -28,7 +29,7 @@ import kotlin.time.Clock
 fun DigitalClockView(
     modifier: Modifier = Modifier,
     timezoneId: String = TimeZone.currentSystemDefault().id,
-    onClick: (() -> Unit)? = null
+    navigateToNearestAlarm: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     val timezone = remember(timezoneId) { TimeZone.of(timezoneId) }
@@ -55,7 +56,11 @@ fun DigitalClockView(
             fontSize = 64.sp,
             fontFamily = FontFamily.Default,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier = if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier
+            modifier = Modifier.clickable {
+                if (Preferences.SCROLL_TO_NEXT.get(context)) {
+                    navigateToNearestAlarm?.invoke()
+                }
+            }
         )
     }
 }

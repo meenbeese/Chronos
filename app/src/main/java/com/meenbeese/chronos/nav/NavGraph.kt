@@ -27,9 +27,6 @@ fun NavGraph(navController: NavHostController) {
                     navController.currentBackStackEntry?.savedStateHandle?.set("timer", timer)
                     navController.navigate(NavScreen.Timer.route)
                 },
-                navigateToNearestAlarm = { alarmId ->
-
-                }
             )
         }
 

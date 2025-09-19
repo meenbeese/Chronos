@@ -45,6 +45,7 @@ fun HomeScreen(
     navController: NavController,
     alarms: List<AlarmEntity>,
     isBottomSheetExpanded: MutableState<Boolean>,
+    nearestAlarmId: MutableState<Int>,
     onAlarmUpdated: (AlarmData) -> Unit,
     onAlarmDeleted: (AlarmData) -> Unit,
     onScheduleAlarm: (hour: Int, minute: Int) -> Unit,
@@ -102,14 +103,10 @@ fun HomeScreen(
         @Composable {
             ClockScreen(
                 timezoneId = tz,
-                onClockTap = {
-                    if (Preferences.SCROLL_TO_NEXT.get(context)) {
-                        navigateToNearestAlarm()
-                    }
-                },
                 getTextColor = {
                     ImageUtils.getContrastingTextColorFromBg(context).toArgb()
-                }
+                },
+                navigateToNearestAlarm = navigateToNearestAlarm
             )
         }
     }
@@ -143,7 +140,7 @@ fun HomeScreen(
                             alarms = alarms,
                             onAlarmUpdated = onAlarmUpdated,
                             onAlarmDeleted = onAlarmDeleted,
-                            onScrolledToEnd = { },
+                            nearestAlarmId = nearestAlarmId.value,
                             isBottomSheetExpanded = isBottomSheetExpanded
                         )
                     } else {
@@ -176,7 +173,7 @@ fun HomeScreen(
                         alarms = alarms,
                         onAlarmUpdated = onAlarmUpdated,
                         onAlarmDeleted = onAlarmDeleted,
-                        onScrolledToEnd = { },
+                        nearestAlarmId = nearestAlarmId.value,
                         isBottomSheetExpanded = isBottomSheetExpanded
                     )
                 } else {

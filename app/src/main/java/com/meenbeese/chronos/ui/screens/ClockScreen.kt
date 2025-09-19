@@ -31,8 +31,8 @@ import kotlin.time.Clock
 @Composable
 fun ClockScreen(
     timezoneId: String,
-    onClockTap: () -> Unit,
-    getTextColor: suspend () -> Int
+    getTextColor: suspend () -> Int,
+    navigateToNearestAlarm: (() -> Unit)? = null
 ) {
     val timezone = remember(timezoneId) { TimeZone.of(timezoneId) }
 
@@ -64,7 +64,7 @@ fun ClockScreen(
         DigitalClockView(
             modifier = Modifier.fillMaxSize(),
             timezoneId = timezoneId,
-            onClick = onClockTap
+            navigateToNearestAlarm = navigateToNearestAlarm
         )
 
         if (timezoneLabel.isNotBlank()) {

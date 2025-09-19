@@ -3,8 +3,9 @@ package com.meenbeese.chronos.nav.destinations
 import android.app.AlarmManager
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.runtime.Composable
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -43,7 +44,6 @@ fun HomeDestination(
     intentAction: String?,
     navigateToStopwatch: () -> Unit,
     navigateToTimer: (timer: TimerData) -> Unit,
-    navigateToNearestAlarm: (alarmId: Int) -> Unit
 ) {
     val repo: TimerAlarmRepository = koinInject()
     val alarmRepo: AlarmRepository = koinInject()
@@ -54,10 +54,17 @@ fun HomeDestination(
     val alarms by alarmViewModel.alarms.observeAsState(emptyList())
     val isBottomSheetExpanded = remember { mutableStateOf(false) }
 
+    val nearestAlarmId = remember { mutableStateOf(getNearestAlarmId(repo)) }
+
+    LaunchedEffect(alarms) {
+        nearestAlarmId.value = getNearestAlarmId(repo)
+    }
+
     HomeScreen(
         navController = navController,
         alarms = alarms,
         isBottomSheetExpanded = isBottomSheetExpanded,
+        nearestAlarmId = nearestAlarmId,
         onAlarmUpdated = { alarmData ->
             CoroutineScope(Dispatchers.IO).launch {
                 alarmViewModel.update(alarmData.toEntity())
@@ -76,7 +83,7 @@ fun HomeDestination(
             scheduleTimer(context, repo, h, m, s, ring, vibrate, navigateToTimer)
         },
         navigateToNearestAlarm = {
-            navigateToNearestAlarm(getNearestAlarmId(repo))
+            nearestAlarmId.value = getNearestAlarmId(repo)
         },
         intentAction = intentAction
     )
