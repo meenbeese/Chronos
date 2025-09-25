@@ -1,118 +1,27 @@
 package com.meenbeese.chronos.utils
 
 import android.content.Context
-import android.media.Ringtone
-import android.widget.Toast
+import android.media.AudioDeviceInfo
+import android.media.AudioManager
 
-import androidx.core.net.toUri
-import androidx.media3.common.AudioAttributes
-import androidx.media3.common.MediaItem
-import androidx.media3.common.PlaybackException
-import androidx.media3.common.Player
-import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.DefaultDataSource
-import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.hls.HlsMediaSource
-import androidx.media3.exoplayer.source.MediaSource
-import androidx.media3.exoplayer.source.ProgressiveMediaSource
+object AudioUtils {
 
-@UnstableApi
-class AudioUtils(private val context: Context) : Player.Listener {
-    private var player: ExoPlayer? = null
-    private var currentStream: String? = null
-    private var currentRingtone: Ringtone? = null
+    /**
+     * Returns true if any wired or Bluetooth headphones are currently connected.
+     */
+    fun areHeadphonesConnected(context: Context): Boolean {
+        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val devices = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS)
 
-    private val isRingtonePlaying: Boolean
-        get() = currentRingtone?.isPlaying == true
-
-    init {
-        initializePlayer()
-    }
-
-    private fun initializePlayer(attributes: AudioAttributes? = null) {
-        player?.release()
-        player = ExoPlayer.Builder(context)
-            .apply {
-                attributes?.let {
-                    setAudioAttributes(it, true)
-                }
-            }
-            .build().also {
-                it.addListener(this)
-            }
-    }
-
-    override fun onPlaybackStateChanged(playbackState: Int) {
-        when (playbackState) {
-            Player.STATE_BUFFERING, Player.STATE_READY, Player.STATE_IDLE -> {}
-            else -> currentStream = null
-        }
-    }
-
-    override fun onPlayerError(error: PlaybackException) {
-        currentStream = null
-        error.cause?.printStackTrace()
-        Toast.makeText(
-            context,
-            "${error.cause?.javaClass?.simpleName}: ${error.cause?.message}",
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-
-    fun isPlayingStream(url: String): Boolean {
-        return currentStream != null && currentStream == url
-    }
-
-    fun stopCurrentSound() {
-        if (isRingtonePlaying) {
-            currentRingtone?.stop()
-        }
-        stopStream()
-    }
-
-    fun stopStream() {
-        player?.stop()
-        currentStream = null
-    }
-
-    fun setStreamVolume(volume: Float) {
-        player?.volume = volume
-    }
-
-    fun playRingtone(ringtone: Ringtone) {
-        stopCurrentSound()
-        if (!ringtone.isPlaying) {
-            ringtone.play()
-        }
-        currentRingtone = ringtone
-    }
-
-    fun playStream(url: String, type: String = "auto", attributes: AudioAttributes? = null) {
-        stopCurrentSound()
-        if (attributes != null) {
-            initializePlayer(attributes)
-        }
-
-        val uri = url.toUri()
-        val mediaItem = MediaItem.fromUri(uri)
-
-        val dataSourceFactory = DefaultDataSource.Factory(context)
-
-        val mediaSource: MediaSource = when {
-            type.equals("hls", ignoreCase = true) || url.endsWith(".m3u8", ignoreCase = true) -> {
-                HlsMediaSource.Factory(dataSourceFactory).createMediaSource(mediaItem)
-            }
-            else -> {
-                ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(mediaItem)
+        return devices.any { device ->
+            when (device.type) {
+                AudioDeviceInfo.TYPE_WIRED_HEADPHONES,
+                AudioDeviceInfo.TYPE_WIRED_HEADSET,
+                AudioDeviceInfo.TYPE_USB_HEADSET,
+                AudioDeviceInfo.TYPE_BLUETOOTH_A2DP,
+                AudioDeviceInfo.TYPE_BLUETOOTH_SCO -> true
+                else -> false
             }
         }
-
-        player?.apply {
-            setMediaSource(mediaSource)
-            prepare()
-            playWhenReady = true
-        }
-
-        currentStream = url
     }
 }

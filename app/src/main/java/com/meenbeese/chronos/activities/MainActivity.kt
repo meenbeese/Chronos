@@ -36,7 +36,7 @@ import com.meenbeese.chronos.nav.NavScreen
 import com.meenbeese.chronos.ui.theme.ChronosTheme
 import com.meenbeese.chronos.ui.theme.ThemeFactory
 import com.meenbeese.chronos.ui.theme.ThemeMode
-import com.meenbeese.chronos.utils.AudioUtils
+import com.meenbeese.chronos.utils.AudioManager
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +49,7 @@ import org.koin.android.ext.android.inject
 @UnstableApi
 class MainActivity : ComponentActivity() {
     private val repo: TimerAlarmRepository by inject()
-    private val audioUtils: AudioUtils by inject()
+    private val audioUtils: AudioManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

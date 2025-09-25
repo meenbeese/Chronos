@@ -33,7 +33,7 @@ import com.meenbeese.chronos.ext.dataStore
 import com.meenbeese.chronos.ui.screens.FileChooserScreen
 import com.meenbeese.chronos.ui.screens.FileChooserType
 import com.meenbeese.chronos.ui.views.SoundItemView
-import com.meenbeese.chronos.utils.AudioUtils
+import com.meenbeese.chronos.utils.AudioManager
 
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -47,7 +47,7 @@ fun FileSoundChooserView(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val audioUtils = AudioUtils(context)
+    val audioUtils = AudioManager(context)
     val prefKey = remember { stringSetPreferencesKey("previousFiles") }
 
     var sounds by remember { mutableStateOf<List<SoundData>>(emptyList()) }

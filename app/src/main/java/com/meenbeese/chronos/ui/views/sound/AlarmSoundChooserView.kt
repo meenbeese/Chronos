@@ -18,7 +18,7 @@ import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.ui.views.SoundItemView
-import com.meenbeese.chronos.utils.AudioUtils
+import com.meenbeese.chronos.utils.AudioManager
 
 @UnstableApi
 @Composable
@@ -27,7 +27,7 @@ fun AlarmSoundChooserView(
     onSoundChosen: (SoundData) -> Unit
 ) {
     val context = LocalContext.current
-    val audioUtils = AudioUtils(context)
+    val audioUtils = AudioManager(context)
     var currentlyPlayingUrl by remember { mutableStateOf<String?>(null) }
 
     LazyColumn(

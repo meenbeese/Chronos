@@ -18,6 +18,9 @@ object Preferences {
     val SLEEP_REMINDER = PreferenceEntry.BooleanPref(name = "sleep_reminder", default = true)
     val SLEEP_REMINDER_TIME = PreferenceEntry.LongPref(name = "sleep_reminder_time", default = 25200000L)
 
+    // Media
+    val PLAY_ON_HEADPHONES = PreferenceEntry.BooleanPref(name = "play_on_headphones", default = false)
+
     // Ringtone
     val DEFAULT_ALARM_RINGTONE = PreferenceEntry.StringPref(name = "default_alarm_ringtone", default = "")
     val DEFAULT_TIMER_RINGTONE = PreferenceEntry.StringPref(name = "default_timer_ringtone", default = "")

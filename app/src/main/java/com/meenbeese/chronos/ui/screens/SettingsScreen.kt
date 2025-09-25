@@ -85,6 +85,13 @@ fun SettingsScreen(
             }),
             PreferenceItem({
                 BooleanPreference(
+                    preference = Preferences.PLAY_ON_HEADPHONES,
+                    title = R.string.title_play_headphones,
+                    description = R.string.desc_play_headphones
+                )
+            }),
+            PreferenceItem({
+                BooleanPreference(
                     preference = Preferences.SLEEP_REMINDER,
                     title = R.string.title_sleep_reminder,
                     description = R.string.desc_sleep_reminder

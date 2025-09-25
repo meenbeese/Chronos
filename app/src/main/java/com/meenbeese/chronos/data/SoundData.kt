@@ -17,7 +17,7 @@ import arrow.core.None
 import arrow.core.Some
 import arrow.core.getOrElse
 
-import com.meenbeese.chronos.utils.AudioUtils
+import com.meenbeese.chronos.utils.AudioManager
 
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
@@ -34,7 +34,7 @@ class SoundData(
 ) : Parcelable, KoinComponent {
 
     @IgnoredOnParcel
-    private val audioUtils: AudioUtils by inject()
+    private val audioUtils: AudioManager by inject()
 
     @IgnoredOnParcel
     private var ringtone: Option<Ringtone> = None

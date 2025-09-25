@@ -129,4 +129,6 @@
     <string name="word_none">No alarms</string>
     <string name="next_alarm">Next Alarm</string>
     <string name="color_scheme">Color Scheme</string>
+    <string name="title_play_headphones">Only play over headphones</string>
+    <string name="desc_play_headphones">Alarm sounds will only play over connected headphones or a bluetooth device.</string>
 </resources>
