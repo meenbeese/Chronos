@@ -1,5 +1,6 @@
 package com.meenbeese.chronos.ui.screens
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -135,7 +136,7 @@ fun FileChooserScreen(
                 }
                 FileChooserType.IMPORT_JSON -> {
                     Toast.makeText(context, "Warning: Existing alarms will be deleted!", Toast.LENGTH_LONG).show()
-                    startFileChooser(type, openDocumentLauncher)
+                    startFileChooser(type, openDocumentLauncher, context)
                 }
                 FileChooserType.IMAGE -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -143,11 +144,11 @@ fun FileChooserScreen(
                     } else if (permission != null && ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
                         permissionLauncher.launch(permission)
                     } else {
-                        startFileChooser(type, openDocumentLauncher)
+                        startFileChooser(type, openDocumentLauncher, context)
                     }
                 }
                 else -> {
-                    startFileChooser(type, openDocumentLauncher)
+                    startFileChooser(type, openDocumentLauncher, context)
                 }
             }
         }
@@ -156,7 +157,9 @@ fun FileChooserScreen(
 
 private fun startFileChooser(
     type: String,
-    launcher: ManagedActivityResultLauncher<Array<String>, Uri?>? = null
+    launcher: ManagedActivityResultLauncher<Array<String>, Uri?>? = null,
+    context: Context? = null,
+    onDismiss: (() -> Unit)? = null
 ) {
     val mimeTypes = when (type) {
         FileChooserType.IMAGE -> arrayOf(
@@ -179,7 +182,24 @@ private fun startFileChooser(
         else -> arrayOf("*/*")
     }
 
-    launcher?.launch(mimeTypes)
+    try {
+        val pm = context?.packageManager
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            this.type = mimeTypes.firstOrNull() ?: "*/*"
+        }
+        val resolveInfo = pm?.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+        if (resolveInfo == null) {
+            Toast.makeText(context, "No file manager found", Toast.LENGTH_SHORT).show()
+            onDismiss?.invoke()
+            return
+        }
+
+        launcher?.launch(mimeTypes)
+    } catch (_: ActivityNotFoundException) {
+        Toast.makeText(context, "No file manager available", Toast.LENGTH_SHORT).show()
+        onDismiss?.invoke()
+    }
 }
 
 private fun getDisplayName(
