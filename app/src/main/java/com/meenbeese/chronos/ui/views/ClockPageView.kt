@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
@@ -38,9 +39,12 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.preference.BooleanPreference
 import com.meenbeese.chronos.data.preference.ColorPreference
+import com.meenbeese.chronos.data.preference.DialogPreference
 import com.meenbeese.chronos.data.preference.ImageFilePreference
 import com.meenbeese.chronos.data.preference.SegmentedPreference
-import com.meenbeese.chronos.data.preference.TimeZonesPreference
+import com.meenbeese.chronos.ui.dialogs.TimeZoneChooserDialog
+
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun ClockPageView(
@@ -156,9 +160,41 @@ fun ClockOptions(context: Context) {
 
             // Global time zones list
             add {
-                TimeZonesPreference(
-                    onTimeZonesChanged = {}
+                var selectedZonesCsv by remember {
+                    mutableStateOf(Preferences.TIME_ZONES.get(context))
+                }
+
+                val selectedCount = selectedZonesCsv
+                    .split(",")
+                    .count { it.isNotBlank() }
+
+                val summary = stringResource(
+                    R.string.msg_time_zones_selected,
+                    selectedCount
                 )
+
+                DialogPreference(
+                    title = R.string.title_time_zones,
+                    description = summary
+                ) { onDismiss ->
+                    TimeZoneChooserDialog(
+                        initialSelected = selectedZonesCsv
+                            .split(",")
+                            .filter { it.isNotBlank() }
+                            .toMutableSet(),
+                        onDismiss = onDismiss,
+                        onSelectionDone = { updatedSelection ->
+                            val csv = updatedSelection.joinToString(",")
+                            runBlocking {
+                                Preferences.TIME_ZONES.set(context, csv)
+                                Preferences.TIME_ZONE_ENABLED.set(context, updatedSelection.isNotEmpty())
+                            }
+                            selectedZonesCsv = csv
+                            triggerRebuild++
+                            onDismiss()
+                        }
+                    )
+                }
             }
 
             // Option to enable military time
