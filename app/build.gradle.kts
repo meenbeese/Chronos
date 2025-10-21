@@ -92,16 +92,16 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.9.5")
 
     // Compose
-    implementation("androidx.compose.ui:ui:1.9.2")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.9.2")
-    implementation("androidx.compose.animation:animation:1.9.2")
-    implementation("androidx.compose.foundation:foundation:1.9.2")
-    implementation("androidx.compose.runtime:runtime:1.9.2")
-    implementation("androidx.compose.runtime:runtime-livedata:1.9.2")
+    implementation("androidx.compose.ui:ui:1.9.3")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.9.3")
+    implementation("androidx.compose.animation:animation:1.9.3")
+    implementation("androidx.compose.foundation:foundation:1.9.3")
+    implementation("androidx.compose.runtime:runtime:1.9.3")
+    implementation("androidx.compose.runtime:runtime-livedata:1.9.3")
     implementation("androidx.compose.material3:material3:1.4.0")
     implementation("androidx.compose.material:material-icons-core:1.7.8")
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.9.2")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.9.3")
 
     // Media
     implementation("androidx.media3:media3-exoplayer:1.8.0")
@@ -109,9 +109,9 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.8.0")
 
     // Room DB
-    ksp("androidx.room:room-compiler:2.8.1")
-    implementation("androidx.room:room-ktx:2.8.1")
-    implementation("androidx.room:room-runtime:2.8.1")
+    ksp("androidx.room:room-compiler:2.8.2")
+    implementation("androidx.room:room-ktx:2.8.2")
+    implementation("androidx.room:room-runtime:2.8.2")
 
     // Picker
     implementation("com.github.skydoves:colorpicker-compose:1.1.2")
