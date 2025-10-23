@@ -14,5 +14,8 @@ data class AlarmEntity(
     val isEnabled: Boolean,
     val days: List<Boolean>,
     val isVibrate: Boolean,
-    val sound: String?
+    val sound: String?,
+    // new fields for pre-notification
+    val preNotificationMinutes: Int = 0,
+    val preNotificationText: String? = null
 )

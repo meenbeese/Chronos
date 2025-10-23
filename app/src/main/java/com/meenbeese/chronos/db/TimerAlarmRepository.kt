@@ -10,14 +10,10 @@ import androidx.lifecycle.Observer
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
-import com.meenbeese.chronos.data.TimerData
-import com.meenbeese.chronos.services.TimerService
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
-import java.util.Calendar
 
 class TimerAlarmRepository(
     private val application: Application,
@@ -28,12 +24,9 @@ class TimerAlarmRepository(
     private val _alarms = mutableListOf<AlarmData>()
     val alarms: List<AlarmData> get() = _alarms
 
-    private val _timers = mutableListOf<TimerData>()
-    val timers: List<TimerData> get() = _timers
-
     init {
+        // Only observe alarms — timers removed in this fork
         observeAlarms()
-        loadTimers()
     }
 
     private fun observeAlarms() {
@@ -46,11 +39,13 @@ class TimerAlarmRepository(
                         AlarmData(
                             id = entity.id,
                             name = entity.name,
-                            time = Calendar.getInstance().apply { timeInMillis = entity.timeInMillis },
+                            time = java.util.Calendar.getInstance().apply { timeInMillis = entity.timeInMillis },
                             isEnabled = entity.isEnabled,
                             days = entity.days.toMutableList(),
                             isVibrate = entity.isVibrate,
-                            sound = entity.sound?.let { SoundData.fromString(it).getOrNull() }
+                            sound = entity.sound?.let { SoundData.fromString(it).getOrNull() },
+                            preNotificationMinutes = entity.preNotificationMinutes,
+                            preNotificationText = entity.preNotificationText
                         )
                     }
                 )
@@ -58,42 +53,22 @@ class TimerAlarmRepository(
         })
     }
 
-    private fun loadTimers() {
-        val timerLength = Preferences.TIMER_LENGTH.get(application)
-        for (id in 0 until timerLength) {
-            val timer = TimerData(id, application)
-            if (timer.isSet) _timers.add(timer)
-        }
-
-        if (timerLength > 0) {
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-                application.startForegroundService(Intent(application, TimerService::class.java))
-            } else {
-                application.startService(Intent(application, TimerService::class.java))
-            }
-        }
-    }
-
-    fun newTimer(): TimerData {
-        val timer = TimerData(_timers.size, application)
-        _timers.add(timer)
+    fun newAlarm(): AlarmData {
+        val alarm = AlarmData(0)
+        _alarms.add(alarm)
         coroutineScope.launch {
-            Preferences.TIMER_LENGTH.set(application, _timers.size)
+            Preferences.TIMER_LENGTH.set(application, _alarms.size) // This line can be cleaned up if TIMER_LENGTH preference is removed.
         }
-        return timer
+        return alarm
     }
 
-    fun removeTimer(timer: TimerData) {
-        timer.onRemoved(application)
-        val index = _timers.indexOf(timer)
+    fun removeAlarm(alarm: AlarmData) {
+        alarm.deleteFromDatabase(application)
+        val index = _alarms.indexOf(alarm)
         if (index != -1) {
-            _timers.removeAt(index)
-            for (i in index until _timers.size) {
-                _timers[i].onIdChanged(i, application)
-            }
-            coroutineScope.launch {
-                Preferences.TIMER_LENGTH.set(application, _timers.size)
-            }
+            _alarms.removeAt(index)
         }
     }
+
+    // (Other alarm-related repository methods remain available here; timer-specific APIs were removed)
 }

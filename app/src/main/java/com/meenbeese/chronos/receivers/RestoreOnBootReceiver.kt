@@ -21,8 +21,6 @@ class RestoreOnBootReceiver : BroadcastReceiver(), KoinComponent {
             if (alarm.isEnabled) alarm.set(context)
         }
 
-        for (timer in repo.timers) {
-            if (timer.remainingMillis > 0) timer.setAlarm(context, manager)
-        }
+        // timers were removed; no timer re-registration here
     }
 }
