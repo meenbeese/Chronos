@@ -1,6 +1,5 @@
 package com.meenbeese.chronos.nav.destinations
 
-import android.app.AlarmManager
 import android.content.Context
 import android.widget.Toast
 
@@ -23,7 +22,6 @@ import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.db.AlarmViewModel
 import com.meenbeese.chronos.db.AlarmViewModelFactory
 import com.meenbeese.chronos.db.TimerAlarmRepository
-import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.ui.screens.HomeScreen
 import com.meenbeese.chronos.utils.FormatUtils
 
@@ -75,12 +73,12 @@ fun HomeDestination(
                 alarmViewModel.delete(alarmData.toEntity())
             }
         },
-        onScheduleAlarm = { h, m ->
-            scheduleAlarm(context, alarmViewModel, h, m)
+        onScheduleAlarm = { h, m, preMinutes, preText ->
+            scheduleAlarm(context, alarmViewModel, h, m, preMinutes, preText)
         },
         onScheduleWatch = { navigateToStopwatch() },
-        onScheduleTimer = { h, m, s, ring, vibrate ->
-            scheduleTimer(context, repo, h, m, s, ring, vibrate, navigateToTimer)
+        onScheduleTimer = { _, _, _, _, _ ->
+            // Timer feature being removed; no-op (or remove this in timer cleanup)
         },
         navigateToNearestAlarm = {
             nearestAlarmId.value = getNearestAlarmId(repo)
@@ -90,14 +88,15 @@ fun HomeDestination(
 }
 
 /**
- * Open the alarm scheduler dialog to allow the user to create
- * a new alarm.
+ * Create and persist a new alarm with optional pre-notification settings.
  */
 private fun scheduleAlarm(
     context: Context,
     alarmViewModel: AlarmViewModel,
     hour: Int,
-    minute: Int
+    minute: Int,
+    preMinutes: Int,
+    preText: String?
 ) {
     val time = Calendar.getInstance().apply {
         set(Calendar.HOUR_OF_DAY, hour)
@@ -113,7 +112,9 @@ private fun scheduleAlarm(
         isEnabled = true,
         days = MutableList(7) { false },
         isVibrate = true,
-        sound = null
+        sound = null,
+        preNotificationMinutes = preMinutes.coerceAtLeast(0),
+        preNotificationText = preText
     )
 
     CoroutineScope(Dispatchers.IO).launch {
@@ -125,36 +126,6 @@ private fun scheduleAlarm(
 
     val formatted = FormatUtils.formatShort(context, Date(time))
     Toast.makeText(context, "Alarm set for $formatted", Toast.LENGTH_SHORT).show()
-}
-
-/**
- * Open the timer scheduler dialog to allow the user to start
- * a timer.
- */
-private fun scheduleTimer(
-    context: Context,
-    repo: TimerAlarmRepository,
-    hours: Int,
-    minutes: Int,
-    seconds: Int,
-    ringtone: SoundData?,
-    isVibrate: Boolean,
-    navigateToTimer: (TimerData) -> Unit
-) {
-    val totalMillis = ((hours * 3600) + (minutes * 60) + seconds) * 1000L
-    if (totalMillis <= 0) {
-        Toast.makeText(context, "Invalid timer duration", Toast.LENGTH_SHORT).show()
-        return
-    }
-
-    val timer = repo.newTimer()
-    timer.setDuration(totalMillis, context)
-    timer.setVibrate(context, isVibrate)
-    timer.setSound(context, ringtone)
-    timer[context] = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    TimerService.Companion.startService(context)
-
-    navigateToTimer(timer)
 }
 
 private fun getNearestAlarmId(repo: TimerAlarmRepository): Int {

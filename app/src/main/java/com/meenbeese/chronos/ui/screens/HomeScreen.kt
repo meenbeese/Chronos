@@ -48,7 +48,7 @@ fun HomeScreen(
     nearestAlarmId: MutableState<Int>,
     onAlarmUpdated: (AlarmData) -> Unit,
     onAlarmDeleted: (AlarmData) -> Unit,
-    onScheduleAlarm: (hour: Int, minute: Int) -> Unit,
+    onScheduleAlarm: (hour: Int, minute: Int, preMinutes: Int, preText: String?) -> Unit,
     onScheduleWatch: () -> Unit,
     onScheduleTimer: (h: Int, m: Int, s: Int, ring: SoundData?, vibrate: Boolean) -> Unit,
     navigateToNearestAlarm: () -> Unit,
@@ -211,9 +211,9 @@ fun HomeScreen(
     if (showAlarmDialog) {
         AlarmSchedulerDialog(
             onDismiss = { showAlarmDialog = false },
-            onTimeSet = { hour, minute ->
+            onTimeSet = { hour, minute, preMinutes, preText ->
                 showAlarmDialog = false
-                onScheduleAlarm(hour, minute)
+                onScheduleAlarm(hour, minute, preMinutes, preText)
             }
         )
     }

@@ -98,12 +98,12 @@ class AlarmData(
 
         manager.set(AlarmManager.RTC_WAKEUP, timeMillis, serviceIntent)
 
-        # Schedule pre-notification if configured
+        // Schedule pre-notification if configured
           if (preNotificationMinutes > 0) {
               val preTime = timeMillis - preNotificationMinutes * 60_000L
               if (preTime > System.currentTimeMillis()) {
                   val preIntent = getIntent(context, isPreNotification = true)
-                  # Use exact scheduling for pre-notifications to be reliable
+                  // Use exact scheduling for pre-notifications to be reliable
                   if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                       manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, preTime, preIntent)
                   } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
