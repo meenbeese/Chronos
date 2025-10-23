@@ -36,445 +36,445 @@ jobs:
 
           # File: AlarmEntity.kt
           cat > app/src/main/java/com/meenbeese/chronos/db/AlarmEntity.kt <<'EOF'
-package com.meenbeese.chronos.db
+          package com.meenbeese.chronos.db
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+          import androidx.room.Entity
+          import androidx.room.PrimaryKey
 
-import kotlinx.serialization.Serializable
+          import kotlinx.serialization.Serializable
 
-@Serializable
-@Entity(tableName = "alarms")
-data class AlarmEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val name: String?,
-    val timeInMillis: Long,
-    val isEnabled: Boolean,
-    val days: List<Boolean>,
-    val isVibrate: Boolean,
-    val sound: String?,
-    // new fields for pre-notification
-    val preNotificationMinutes: Int = 0,
-    val preNotificationText: String? = null
-)
-EOF
+          @Serializable
+          @Entity(tableName = "alarms")
+          data class AlarmEntity(
+              @PrimaryKey(autoGenerate = true) val id: Int = 0,
+              val name: String?,
+              val timeInMillis: Long,
+              val isEnabled: Boolean,
+              val days: List<Boolean>,
+              val isVibrate: Boolean,
+              val sound: String?,
+              // new fields for pre-notification
+              val preNotificationMinutes: Int = 0,
+              val preNotificationText: String? = null
+          )
+          EOF
 
           # File: AlarmData.kt
           cat > app/src/main/java/com/meenbeese/chronos/data/AlarmData.kt <<'EOF'
-package com.meenbeese.chronos.data
+          package com.meenbeese.chronos.data
 
-import android.app.AlarmManager
-import android.app.AlarmManager.AlarmClockInfo
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.os.Parcelable
+          import android.app.AlarmManager
+          import android.app.AlarmManager.AlarmClockInfo
+          import android.app.PendingIntent
+          import android.content.Context
+          import android.content.Intent
+          import android.os.Parcelable
 
-import com.meenbeese.chronos.activities.MainActivity
-import com.meenbeese.chronos.db.AlarmDatabase
-import com.meenbeese.chronos.db.AlarmEntity
-import com.meenbeese.chronos.receivers.AlarmReceiver
-import com.meenbeese.chronos.services.SleepReminderService
+          import com.meenbeese.chronos.activities.MainActivity
+          import com.meenbeese.chronos.db.AlarmDatabase
+          import com.meenbeese.chronos.db.AlarmEntity
+          import com.meenbeese.chronos.receivers.AlarmReceiver
+          import com.meenbeese.chronos.services.SleepReminderService
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.parcelize.Parcelize
+          import kotlinx.coroutines.CoroutineScope
+          import kotlinx.coroutines.Dispatchers
+          import kotlinx.coroutines.launch
+          import kotlinx.parcelize.Parcelize
 
-import java.util.Calendar
-import java.util.Date
+          import java.util.Calendar
+          import java.util.Date
 
-@Parcelize
-class AlarmData(
-    var id: Int,
-    var name: String? = null,
-    var time: Calendar = Calendar.getInstance(),
-    var isEnabled: Boolean = true,
-    var days: MutableList<Boolean> = MutableList(7) { false },
-    var isVibrate: Boolean = true,
-    var sound: SoundData? = null,
-    // added fields for pre-notification
-    var preNotificationMinutes: Int = 0,
-    var preNotificationText: String? = null
-) : Parcelable {
+          @Parcelize
+          class AlarmData(
+              var id: Int,
+              var name: String? = null,
+              var time: Calendar = Calendar.getInstance(),
+              var isEnabled: Boolean = true,
+              var days: MutableList<Boolean> = MutableList(7) { false },
+              var isVibrate: Boolean = true,
+              var sound: SoundData? = null,
+              // added fields for pre-notification
+              var preNotificationMinutes: Int = 0,
+              var preNotificationText: String? = null
+          ) : Parcelable {
 
-    fun saveToDatabase(context: Context) {
-        val alarmDao = AlarmDatabase.getDatabase(context).alarmDao()
-        val alarmEntity = AlarmEntity(
-            id = id,
-            name = name,
-            timeInMillis = time.timeInMillis,
-            isEnabled = isEnabled,
-            days = days,
-            isVibrate = isVibrate,
-            sound = sound?.toString(),
-            preNotificationMinutes = preNotificationMinutes,
-            preNotificationText = preNotificationText
-        )
-        CoroutineScope(Dispatchers.IO).launch {
-            if (alarmDao.getAlarmById(id) == null) {
-                alarmDao.insert(alarmEntity)
-            } else {
-                alarmDao.update(alarmEntity)
-            }
-        }
-    }
-
-    fun deleteFromDatabase(context: Context) {
-        val alarmDao = AlarmDatabase.getDatabase(context).alarmDao()
-        CoroutineScope(Dispatchers.IO).launch {
-            alarmDao.getAlarmById(id)?.let { alarmDao.delete(it) }
-        }
-    }
-
-    fun calculateNextTriggerTime(): Long {
-        return getNext()?.timeInMillis ?: Long.MAX_VALUE
-    }
-
-    fun set(context: Context): Date? {
-        val nextTime = getNext() ?: return null
-        setAlarm(context, nextTime.timeInMillis)
-        return nextTime.time
-    }
-
-    private fun setAlarm(context: Context, timeMillis: Long) {
-        val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        // Main alarm PendingIntent (broadcast to AlarmReceiver)
-        val alarmIntent = getIntent(context, isPreNotification = false)
-
-        // Keep the alarm clock UI entry (this shows the system alarm icon/time on lock screen)
-        manager.setAlarmClock(
-            AlarmClockInfo(timeMillis, PendingIntent.getActivity(
-                context, id, Intent(context, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE
-            )),
-            alarmIntent
-        )
-
-        // An additional service intent is kept for legacy behavior (SleepReminderService)
-        val serviceIntent = PendingIntent.getService(
-            context,
-            id,
-            Intent(context, SleepReminderService::class.java),
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        manager.set(AlarmManager.RTC_WAKEUP, timeMillis, serviceIntent)
-
-        # Schedule pre-notification if configured
-          if (preNotificationMinutes > 0) {
-              val preTime = timeMillis - preNotificationMinutes * 60_000L
-              if (preTime > System.currentTimeMillis()) {
-                  val preIntent = getIntent(context, isPreNotification = true)
-                  # Use exact scheduling for pre-notifications to be reliable
-                  if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                      manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, preTime, preIntent)
-                  } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                      manager.setExact(AlarmManager.RTC_WAKEUP, preTime, preIntent)
-                  } else {
-                      manager.set(AlarmManager.RTC_WAKEUP, preTime, preIntent)
+              fun saveToDatabase(context: Context) {
+                  val alarmDao = AlarmDatabase.getDatabase(context).alarmDao()
+                  val alarmEntity = AlarmEntity(
+                      id = id,
+                      name = name,
+                      timeInMillis = time.timeInMillis,
+                      isEnabled = isEnabled,
+                      days = days,
+                      isVibrate = isVibrate,
+                      sound = sound?.toString(),
+                      preNotificationMinutes = preNotificationMinutes,
+                      preNotificationText = preNotificationText
+                  )
+                  CoroutineScope(Dispatchers.IO).launch {
+                      if (alarmDao.getAlarmById(id) == null) {
+                          alarmDao.insert(alarmEntity)
+                      } else {
+                          alarmDao.update(alarmEntity)
+                      }
                   }
               }
-          }
-      }
 
-      fun cancel(context: Context) {
-          val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-          // Cancel main alarm
-          manager.cancel(getIntent(context, isPreNotification = false))
-          // Cancel pre-notification alarm (if any)
-          manager.cancel(getIntent(context, isPreNotification = true))
-      }
-
-      private fun getIntent(context: Context, isPreNotification: Boolean): PendingIntent {
-          val intent = Intent(context, AlarmReceiver::class.java).apply {
-              putExtra(AlarmReceiver.EXTRA_ALARM_ID, id)
-              putExtra(AlarmReceiver.EXTRA_PRE_NOTIFICATION, isPreNotification)
-          }
-          // Use a distinct request code for pre-notifications so they can be cancelled/updated independently.
-          val requestCode = if (isPreNotification) id + 100_000 else id
-          return PendingIntent.getBroadcast(
-              context,
-              requestCode,
-              intent,
-              PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-          )
-      }
-
-      fun getNext(): Calendar? {
-          if (!isEnabled) return null
-          val now = Calendar.getInstance()
-          val next = time.clone() as Calendar
-          next.set(Calendar.SECOND, 0)
-          while (now.after(next)) next.add(Calendar.DATE, 1)
-          if (days.any { it }) {
-              var nextDay = next.get(Calendar.DAY_OF_WEEK) - 1
-              repeat(7) {
-                  if (days[nextDay]) return@repeat
-                  nextDay = (nextDay + 1) % 7
+              fun deleteFromDatabase(context: Context) {
+                  val alarmDao = AlarmDatabase.getDatabase(context).alarmDao()
+                  CoroutineScope(Dispatchers.IO).launch {
+                      alarmDao.getAlarmById(id)?.let { alarmDao.delete(it) }
+                  }
               }
-              next.set(Calendar.DAY_OF_WEEK, nextDay + 1)
-              while (now.after(next)) next.add(Calendar.DATE, 7)
-          }
-          return next
-      }
 
-      fun isRepeat(): Boolean = days.count { it } > 1
-  }
+              fun calculateNextTriggerTime(): Long {
+                  return getNext()?.timeInMillis ?: Long.MAX_VALUE
+              }
 
-  fun AlarmData.toEntity(): AlarmEntity {
-      return AlarmEntity(
-          id = this.id,
-          name = this.name,
-          timeInMillis = this.time.timeInMillis,
-          isEnabled = this.isEnabled,
-          days = this.days,
-          isVibrate = this.isVibrate,
-          sound = this.sound?.toString(),
-          preNotificationMinutes = this.preNotificationMinutes,
-          preNotificationText = this.preNotificationText
-      )
-  }
+              fun set(context: Context): Date? {
+                  val nextTime = getNext() ?: return null
+                  setAlarm(context, nextTime.timeInMillis)
+                  return nextTime.time
+              }
 
-  fun AlarmEntity.toData(): AlarmData {
-      val calendar = Calendar.getInstance().apply {
-          timeInMillis = this@toData.timeInMillis
-      }
+              private fun setAlarm(context: Context, timeMillis: Long) {
+                  val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-      return AlarmData(
-          id = this.id,
-          name = this.name,
-          time = calendar,
-          isEnabled = this.isEnabled,
-          days = this.days.toMutableList(),
-          isVibrate = this.isVibrate,
-          sound = this.sound?.let { SoundData.fromString(it).getOrNull() },
-          preNotificationMinutes = this.preNotificationMinutes,
-          preNotificationText = this.preNotificationText
-      )
-  }
-EOF
+                  // Main alarm PendingIntent (broadcast to AlarmReceiver)
+                  val alarmIntent = getIntent(context, isPreNotification = false)
+
+                  // Keep the alarm clock UI entry (this shows the system alarm icon/time on lock screen)
+                  manager.setAlarmClock(
+                      AlarmClockInfo(timeMillis, PendingIntent.getActivity(
+                          context, id, Intent(context, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE
+                      )),
+                      alarmIntent
+                  )
+
+                  // An additional service intent is kept for legacy behavior (SleepReminderService)
+                  val serviceIntent = PendingIntent.getService(
+                      context,
+                      id,
+                      Intent(context, SleepReminderService::class.java),
+                      PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                  )
+
+                  manager.set(AlarmManager.RTC_WAKEUP, timeMillis, serviceIntent)
+
+                  # Schedule pre-notification if configured
+                    if (preNotificationMinutes > 0) {
+                        val preTime = timeMillis - preNotificationMinutes * 60_000L
+                        if (preTime > System.currentTimeMillis()) {
+                            val preIntent = getIntent(context, isPreNotification = true)
+                            # Use exact scheduling for pre-notifications to be reliable
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                                manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, preTime, preIntent)
+                            } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                                manager.setExact(AlarmManager.RTC_WAKEUP, preTime, preIntent)
+                            } else {
+                                manager.set(AlarmManager.RTC_WAKEUP, preTime, preIntent)
+                            }
+                        }
+                    }
+                }
+
+                fun cancel(context: Context) {
+                    val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                    // Cancel main alarm
+                    manager.cancel(getIntent(context, isPreNotification = false))
+                    // Cancel pre-notification alarm (if any)
+                    manager.cancel(getIntent(context, isPreNotification = true))
+                }
+
+                private fun getIntent(context: Context, isPreNotification: Boolean): PendingIntent {
+                    val intent = Intent(context, AlarmReceiver::class.java).apply {
+                        putExtra(AlarmReceiver.EXTRA_ALARM_ID, id)
+                        putExtra(AlarmReceiver.EXTRA_PRE_NOTIFICATION, isPreNotification)
+                    }
+                    // Use a distinct request code for pre-notifications so they can be cancelled/updated independently.
+                    val requestCode = if (isPreNotification) id + 100_000 else id
+                    return PendingIntent.getBroadcast(
+                        context,
+                        requestCode,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                    )
+                }
+
+                fun getNext(): Calendar? {
+                    if (!isEnabled) return null
+                    val now = Calendar.getInstance()
+                    val next = time.clone() as Calendar
+                    next.set(Calendar.SECOND, 0)
+                    while (now.after(next)) next.add(Calendar.DATE, 1)
+                    if (days.any { it }) {
+                        var nextDay = next.get(Calendar.DAY_OF_WEEK) - 1
+                        repeat(7) {
+                            if (days[nextDay]) return@repeat
+                            nextDay = (nextDay + 1) % 7
+                        }
+                        next.set(Calendar.DAY_OF_WEEK, nextDay + 1)
+                        while (now.after(next)) next.add(Calendar.DATE, 7)
+                    }
+                    return next
+                }
+
+                fun isRepeat(): Boolean = days.count { it } > 1
+            }
+
+            fun AlarmData.toEntity(): AlarmEntity {
+                return AlarmEntity(
+                    id = this.id,
+                    name = this.name,
+                    timeInMillis = this.time.timeInMillis,
+                    isEnabled = this.isEnabled,
+                    days = this.days,
+                    isVibrate = this.isVibrate,
+                    sound = this.sound?.toString(),
+                    preNotificationMinutes = this.preNotificationMinutes,
+                    preNotificationText = this.preNotificationText
+                )
+            }
+
+            fun AlarmEntity.toData(): AlarmData {
+                val calendar = Calendar.getInstance().apply {
+                    timeInMillis = this@toData.timeInMillis
+                }
+
+                return AlarmData(
+                    id = this.id,
+                    name = this.name,
+                    time = calendar,
+                    isEnabled = this.isEnabled,
+                    days = this.days.toMutableList(),
+                    isVibrate = this.isVibrate,
+                    sound = this.sound?.let { SoundData.fromString(it).getOrNull() },
+                    preNotificationMinutes = this.preNotificationMinutes,
+                    preNotificationText = this.preNotificationText
+                )
+            }
+          EOF
 
           # File: AlarmReceiver.kt
           cat > app/src/main/java/com/meenbeese/chronos/receivers/AlarmReceiver.kt <<'EOF'
-package com.meenbeese.chronos.receivers
+          package com.meenbeese.chronos.receivers
 
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.BroadcastReceiver
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.service.quicksettings.TileService
-import android.util.Log
+          import android.app.NotificationManager
+          import android.app.PendingIntent
+          import android.content.BroadcastReceiver
+          import android.content.ComponentName
+          import android.content.Context
+          import android.content.Intent
+          import android.service.quicksettings.TileService
+          import android.util.Log
 
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
+          import androidx.core.app.NotificationCompat
+          import androidx.core.app.NotificationManagerCompat
 
-import com.meenbeese.chronos.activities.AlarmActivity
-import com.meenbeese.chronos.activities.MainActivity
-import com.meenbeese.chronos.data.AlarmData
-import com.meenbeese.chronos.data.SoundData
-import com.meenbeese.chronos.db.AlarmDatabase
-import com.meenbeese.chronos.services.AlarmTileService
+          import com.meenbeese.chronos.activities.AlarmActivity
+          import com.meenbeese.chronos.activities.MainActivity
+          import com.meenbeese.chronos.data.AlarmData
+          import com.meenbeese.chronos.data.SoundData
+          import com.meenbeese.chronos.db.AlarmDatabase
+          import com.meenbeese.chronos.services.AlarmTileService
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+          import kotlinx.coroutines.CoroutineScope
+          import kotlinx.coroutines.Dispatchers
+          import kotlinx.coroutines.launch
+          import kotlinx.coroutines.withContext
 
-import java.util.Calendar
+          import java.util.Calendar
 
-class AlarmReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        val alarmId = intent.getIntExtra(EXTRA_ALARM_ID, -1)
-        val isPre = intent.getBooleanExtra(EXTRA_PRE_NOTIFICATION, false)
-        Log.d("AlarmReceiver", "Alarm received with id: $alarmId (pre=$isPre)")
+          class AlarmReceiver : BroadcastReceiver() {
+              override fun onReceive(context: Context, intent: Intent) {
+                  val alarmId = intent.getIntExtra(EXTRA_ALARM_ID, -1)
+                  val isPre = intent.getBooleanExtra(EXTRA_PRE_NOTIFICATION, false)
+                  Log.d("AlarmReceiver", "Alarm received with id: $alarmId (pre=$isPre)")
 
-        if (alarmId == -1) {
-            Log.w("AlarmReceiver", "No alarm ID found in intent!")
-            return
-        }
-        val db = AlarmDatabase.getDatabase(context).alarmDao()
+                  if (alarmId == -1) {
+                      Log.w("AlarmReceiver", "No alarm ID found in intent!")
+                      return
+                  }
+                  val db = AlarmDatabase.getDatabase(context).alarmDao()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val alarmEntity = db.getAlarmById(alarmId)
-            alarmEntity?.let {
-                val alarm = AlarmData(
-                    id = it.id,
-                    name = it.name,
-                    time = Calendar.getInstance().apply { timeInMillis = it.timeInMillis },
-                    isEnabled = it.isEnabled,
-                    days = it.days.toMutableList(),
-                    isVibrate = it.isVibrate,
-                    sound = it.sound?.let { sound -> SoundData.fromString(sound).getOrNull() },
-                    preNotificationMinutes = it.preNotificationMinutes,
-                    preNotificationText = it.preNotificationText
-                )
+                  CoroutineScope(Dispatchers.IO).launch {
+                      val alarmEntity = db.getAlarmById(alarmId)
+                      alarmEntity?.let {
+                          val alarm = AlarmData(
+                              id = it.id,
+                              name = it.name,
+                              time = Calendar.getInstance().apply { timeInMillis = it.timeInMillis },
+                              isEnabled = it.isEnabled,
+                              days = it.days.toMutableList(),
+                              isVibrate = it.isVibrate,
+                              sound = it.sound?.let { sound -> SoundData.fromString(sound).getOrNull() },
+                              preNotificationMinutes = it.preNotificationMinutes,
+                              preNotificationText = it.preNotificationText
+                          )
 
-                if (isPre) {
-                    // Show a light pre-notification and do not launch AlarmActivity.
-                    val notificationText = alarm.preNotificationText
-                        ?: "Upcoming alarm: ${alarm.name ?: "Alarm"} in ${alarm.preNotificationMinutes} min"
-                    val channelId = context.getString(com.meenbeese.chronos.R.string.notification_channel_id)
-                    val contentIntent = PendingIntent.getActivity(
-                        context,
-                        alarmId,
-                        Intent(context, MainActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
-                        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-                    )
-                    val notification = NotificationCompat.Builder(context, channelId)
-                        .setContentTitle(context.getString(com.meenbeese.chronos.R.string.app_name))
-                        .setContentText(notificationText)
-                        .setSmallIcon(android.R.drawable.ic_dialog_info)
-                        .setAutoCancel(true)
-                        .setContentIntent(contentIntent)
-                        .build()
+                          if (isPre) {
+                              // Show a light pre-notification and do not launch AlarmActivity.
+                              val notificationText = alarm.preNotificationText
+                                  ?: "Upcoming alarm: ${alarm.name ?: "Alarm"} in ${alarm.preNotificationMinutes} min"
+                              val channelId = context.getString(com.meenbeese.chronos.R.string.notification_channel_id)
+                              val contentIntent = PendingIntent.getActivity(
+                                  context,
+                                  alarmId,
+                                  Intent(context, MainActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
+                                  PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                              )
+                              val notification = NotificationCompat.Builder(context, channelId)
+                                  .setContentTitle(context.getString(com.meenbeese.chronos.R.string.app_name))
+                                  .setContentText(notificationText)
+                                  .setSmallIcon(android.R.drawable.ic_dialog_info)
+                                  .setAutoCancel(true)
+                                  .setContentIntent(contentIntent)
+                                  .build()
 
-                    val preNotificationId = 1_000_000 + alarmId
-                    val nm = NotificationManagerCompat.from(context)
-                    nm.notify(preNotificationId, notification)
-                    return@launch
-                }
+                              val preNotificationId = 1_000_000 + alarmId
+                              val nm = NotificationManagerCompat.from(context)
+                              nm.notify(preNotificationId, notification)
+                              return@launch
+                          }
 
-                // Main alarm behavior: reschedule if repeating or disable and save, then start AlarmActivity
-                if (alarm.getNext() != null) {
-                    alarm.set(context)
-                } else {
-                    alarm.isEnabled = false
-                    alarm.saveToDatabase(context)
-                }
+                          // Main alarm behavior: reschedule if repeating or disable and save, then start AlarmActivity
+                          if (alarm.getNext() != null) {
+                              alarm.set(context)
+                          } else {
+                              alarm.isEnabled = false
+                              alarm.saveToDatabase(context)
+                          }
 
-                TileService.requestListeningState(
-                    context,
-                    ComponentName(context, AlarmTileService::class.java)
-                )
+                          TileService.requestListeningState(
+                              context,
+                              ComponentName(context, AlarmTileService::class.java)
+                          )
 
-                withContext(Dispatchers.Main) {
-                    val ringer = Intent(context, AlarmActivity::class.java).apply {
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        putExtra(AlarmActivity.EXTRA_ALARM, alarm)
-                    }
-                    context.startActivity(ringer)
-                }
-            }
-        }
-    }
+                          withContext(Dispatchers.Main) {
+                              val ringer = Intent(context, AlarmActivity::class.java).apply {
+                                  addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                  putExtra(AlarmActivity.EXTRA_ALARM, alarm)
+                              }
+                              context.startActivity(ringer)
+                          }
+                      }
+                  }
+              }
 
-    companion object {
-        const val EXTRA_ALARM_ID = "meenbeese.chronos.EXTRA_ALARM_ID"
-        const val EXTRA_PRE_NOTIFICATION = "meenbeese.chronos.EXTRA_PRE_NOTIFICATION"
-    }
-}
-EOF
+              companion object {
+                  const val EXTRA_ALARM_ID = "meenbeese.chronos.EXTRA_ALARM_ID"
+                  const val EXTRA_PRE_NOTIFICATION = "meenbeese.chronos.EXTRA_PRE_NOTIFICATION"
+              }
+          }
+          EOF
 
           # File: TimerAlarmRepository.kt
           cat > app/src/main/java/com/meenbeese/chronos/db/TimerAlarmRepository.kt <<'EOF'
-package com.meenbeese.chronos.db
+          package com.meenbeese.chronos.db
 
-import android.app.Application
-import android.content.Intent
-import android.os.Build
+          import android.app.Application
+          import android.content.Intent
+          import android.os.Build
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
+          import androidx.lifecycle.LiveData
+          import androidx.lifecycle.Observer
 
-import com.meenbeese.chronos.data.AlarmData
-import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.data.SoundData
+          import com.meenbeese.chronos.data.AlarmData
+          import com.meenbeese.chronos.data.Preferences
+          import com.meenbeese.chronos.data.SoundData
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+          import kotlinx.coroutines.CoroutineScope
+          import kotlinx.coroutines.Dispatchers
+          import kotlinx.coroutines.launch
 
-class TimerAlarmRepository(
-    private val application: Application,
-    private val alarmDao: AlarmDao
-) {
-    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+          class TimerAlarmRepository(
+              private val application: Application,
+              private val alarmDao: AlarmDao
+          ) {
+              private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    private val _alarms = mutableListOf<AlarmData>()
-    val alarms: List<AlarmData> get() = _alarms
+              private val _alarms = mutableListOf<AlarmData>()
+              val alarms: List<AlarmData> get() = _alarms
 
-    init {
-        // Only observe alarms — timers removed in this fork
-        observeAlarms()
-    }
+              init {
+                  // Only observe alarms — timers removed in this fork
+                  observeAlarms()
+              }
 
-    private fun observeAlarms() {
-        val liveAlarms: LiveData<List<AlarmEntity>> = alarmDao.getAllAlarms()
-        liveAlarms.observeForever(object : Observer<List<AlarmEntity>> {
-            override fun onChanged(value: List<AlarmEntity>) {
-                _alarms.clear()
-                _alarms.addAll(
-                    value.map { entity ->
-                        AlarmData(
-                            id = entity.id,
-                            name = entity.name,
-                            time = java.util.Calendar.getInstance().apply { timeInMillis = entity.timeInMillis },
-                            isEnabled = entity.isEnabled,
-                            days = entity.days.toMutableList(),
-                            isVibrate = entity.isVibrate,
-                            sound = entity.sound?.let { SoundData.fromString(it).getOrNull() },
-                            preNotificationMinutes = entity.preNotificationMinutes,
-                            preNotificationText = entity.preNotificationText
-                        )
-                    }
-                )
-            }
-        })
-    }
+              private fun observeAlarms() {
+                  val liveAlarms: LiveData<List<AlarmEntity>> = alarmDao.getAllAlarms()
+                  liveAlarms.observeForever(object : Observer<List<AlarmEntity>> {
+                      override fun onChanged(value: List<AlarmEntity>) {
+                          _alarms.clear()
+                          _alarms.addAll(
+                              value.map { entity ->
+                                  AlarmData(
+                                      id = entity.id,
+                                      name = entity.name,
+                                      time = java.util.Calendar.getInstance().apply { timeInMillis = entity.timeInMillis },
+                                      isEnabled = entity.isEnabled,
+                                      days = entity.days.toMutableList(),
+                                      isVibrate = entity.isVibrate,
+                                      sound = entity.sound?.let { SoundData.fromString(it).getOrNull() },
+                                      preNotificationMinutes = entity.preNotificationMinutes,
+                                      preNotificationText = entity.preNotificationText
+                                  )
+                              }
+                          )
+                      }
+                  })
+              }
 
-    fun newAlarm(): AlarmData {
-        val alarm = AlarmData(0)
-        _alarms.add(alarm)
-        coroutineScope.launch {
-            Preferences.TIMER_LENGTH.set(application, _alarms.size) // This line can be cleaned up if TIMER_LENGTH preference is removed.
-        }
-        return alarm
-    }
+              fun newAlarm(): AlarmData {
+                  val alarm = AlarmData(0)
+                  _alarms.add(alarm)
+                  coroutineScope.launch {
+                      Preferences.TIMER_LENGTH.set(application, _alarms.size) // This line can be cleaned up if TIMER_LENGTH preference is removed.
+                  }
+                  return alarm
+              }
 
-    fun removeAlarm(alarm: AlarmData) {
-        alarm.deleteFromDatabase(application)
-        val index = _alarms.indexOf(alarm)
-        if (index != -1) {
-            _alarms.removeAt(index)
-        }
-    }
+              fun removeAlarm(alarm: AlarmData) {
+                  alarm.deleteFromDatabase(application)
+                  val index = _alarms.indexOf(alarm)
+                  if (index != -1) {
+                      _alarms.removeAt(index)
+                  }
+              }
 
-    // (Other alarm-related repository methods remain available here; timer-specific APIs were removed)
-}
-EOF
+              // (Other alarm-related repository methods remain available here; timer-specific APIs were removed)
+          }
+          EOF
 
           # File: RestoreOnBootReceiver.kt
           cat > app/src/main/java/com/meenbeese/chronos/receivers/RestoreOnBootReceiver.kt <<'EOF'
-package com.meenbeese.chronos.receivers
+          package com.meenbeese.chronos.receivers
 
-import android.app.AlarmManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
+          import android.app.AlarmManager
+          import android.content.BroadcastReceiver
+          import android.content.Context
+          import android.content.Intent
 
-import com.meenbeese.chronos.db.TimerAlarmRepository
+          import com.meenbeese.chronos.db.TimerAlarmRepository
 
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+          import org.koin.core.component.KoinComponent
+          import org.koin.core.component.inject
 
-class RestoreOnBootReceiver : BroadcastReceiver(), KoinComponent {
+          class RestoreOnBootReceiver : BroadcastReceiver(), KoinComponent {
 
-    private val repo: TimerAlarmRepository by inject()
+              private val repo: TimerAlarmRepository by inject()
 
-    override fun onReceive(context: Context, intent: Intent) {
-        val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+              override fun onReceive(context: Context, intent: Intent) {
+                  val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        for (alarm in repo.alarms) {
-            if (alarm.isEnabled) alarm.set(context)
-        }
+                  for (alarm in repo.alarms) {
+                      if (alarm.isEnabled) alarm.set(context)
+                  }
 
-        // timers were removed; no timer re-registration here
-    }
-}
-EOF
+                  // timers were removed; no timer re-registration here
+              }
+          }
+          EOF
 
           # Stage, commit and push
           git add -A
