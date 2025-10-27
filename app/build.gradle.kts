@@ -109,9 +109,9 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.8.0")
 
     // Room DB
-    ksp("androidx.room:room-compiler:2.8.2")
-    implementation("androidx.room:room-ktx:2.8.2")
-    implementation("androidx.room:room-runtime:2.8.2")
+    ksp("androidx.room:room-compiler:2.8.3")
+    implementation("androidx.room:room-ktx:2.8.3")
+    implementation("androidx.room:room-runtime:2.8.3")
 
     // Picker
     implementation("com.github.skydoves:colorpicker-compose:1.1.2")
