@@ -16,7 +16,7 @@ enum class ThemeMode(val value: Int) {
         return when (this) {
             NIGHT, AMOLED -> true
             DAY -> false
-            AUTO -> currentHour < 6 || currentHour >= 18
+            AUTO -> currentHour !in 6..<18
         }
     }
 }

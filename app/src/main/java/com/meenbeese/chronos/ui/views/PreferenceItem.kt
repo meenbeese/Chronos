@@ -1,6 +1,5 @@
 package com.meenbeese.chronos.ui.views
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-@SuppressLint("ModifierParameter")
 fun PreferenceItem(
     title: String,
     description: String? = null,

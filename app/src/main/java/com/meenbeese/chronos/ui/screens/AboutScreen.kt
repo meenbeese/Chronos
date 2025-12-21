@@ -253,7 +253,7 @@ fun FallingHeartsOverlay() {
 
     LaunchedEffect(Unit) {
         while (true) {
-            hearts.forEachIndexed { index, state ->
+            hearts.forEachIndexed { _, state ->
                 scope.launch {
                     delay((0..1000L).random())
                     state.floatValue = 0f
