@@ -104,9 +104,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:1.9.3")
 
     // Media
-    implementation("androidx.media3:media3-exoplayer:1.8.0")
-    implementation("androidx.media3:media3-exoplayer-hls:1.8.0")
-    implementation("androidx.media3:media3-ui:1.8.0")
+    implementation("androidx.media3:media3-exoplayer:1.9.0")
+    implementation("androidx.media3:media3-exoplayer-hls:1.9.0")
 
     // Room DB
     ksp("androidx.room:room-compiler:2.8.2")
