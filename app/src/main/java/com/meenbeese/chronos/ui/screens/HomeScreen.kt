@@ -158,7 +158,7 @@ fun HomeScreen(
                 fragments = clockScreens,
                 backgroundPainter = clockBackground!!,
                 pageIndicatorVisible = clockScreens.size > 1,
-                modifier = Modifier.fillMaxHeight(0.5f + 0.025f)
+                modifier = Modifier.fillMaxHeight(0.5f + 0.05f)
             )
 
             HomeBottomSheet(

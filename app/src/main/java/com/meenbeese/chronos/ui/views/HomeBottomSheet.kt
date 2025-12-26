@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 
@@ -96,8 +97,11 @@ fun HomeBottomSheet(
         )
 
         BottomSheetScaffold(
+            modifier = Modifier.fillMaxSize(),
             scaffoldState = scaffoldState,
             sheetPeekHeight = peekHeight,
+            containerColor = Color.Transparent,
+            contentColor = Color.Transparent,
             sheetDragHandle = null,
             sheetContent = {
                 Column(

@@ -101,7 +101,7 @@ fun ClockPageView(
             containerColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(bottom = 32.dp, end = 8.dp)
+                .padding(bottom = 56.dp, end = 8.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.Edit,
