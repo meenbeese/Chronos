@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.ui.theme.ThemeFactory.catpucchinLatte
+import com.meenbeese.chronos.ui.theme.ThemeFactory.catppuccinLatte
 
 import kotlinx.coroutines.runBlocking
 
@@ -111,7 +111,7 @@ fun CatppuccinColorSelector(
             .height(40.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        catpucchinLatte.forEach { color ->
+        catppuccinLatte.forEach { color ->
             val colorInt = color.toArgb()
             val isSelected = selectedColor == colorInt
 

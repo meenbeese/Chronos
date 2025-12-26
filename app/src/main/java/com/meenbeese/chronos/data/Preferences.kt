@@ -45,7 +45,7 @@ object Preferences {
     // Theme
     val THEME = PreferenceEntry.IntPref(name = "theme", default = ThemeMode.AUTO.value)
     val DYNAMIC_COLOR = PreferenceEntry.BooleanPref(name = "dynamic_color", default = true)
-    val COLOR_SEED = PreferenceEntry.IntPref(name = "color_seed", default = ThemeFactory.catpucchinLatte.first().toArgb())
+    val COLOR_SEED = PreferenceEntry.IntPref(name = "color_seed", default = ThemeFactory.catppuccinLatte.first().toArgb())
 
     // Other
     val INFO_BACKGROUND_PERMISSIONS = PreferenceEntry.BooleanPref(name = "info_background_permissions", default = false)

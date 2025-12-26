@@ -41,10 +41,22 @@ object ThemeFactory {
                 surfaceBright = Color(0.15f, 0.15f, 0.15f),
                 surfaceDim = Color(0.05f, 0.05f, 0.05f),
                 surfaceContainer = Color(0.08f, 0.08f, 0.08f),
-                surfaceContainerHigh = Color(0.1f, 0.1f, 0.1f),
+                surfaceContainerHigh = Color(0.10f, 0.10f, 0.10f),
                 surfaceContainerHighest = Color(0.12f, 0.12f, 0.12f),
                 surfaceContainerLow = Color(0.06f, 0.06f, 0.06f),
-                surfaceContainerLowest = Color(0.04f, 0.04f, 0.04f)
+                surfaceContainerLowest = Color(0.04f, 0.04f, 0.04f),
+                primaryFixed = seed,
+                primaryFixedDim = seed.copy(alpha = 0.85f),
+                onPrimaryFixed = Color.Black,
+                onPrimaryFixedVariant = Color.Black,
+                secondaryFixed = Color.Gray,
+                secondaryFixedDim = Color.DarkGray,
+                onSecondaryFixed = Color.Black,
+                onSecondaryFixedVariant = Color.Black,
+                tertiaryFixed = Color.LightGray,
+                tertiaryFixedDim = Color.Gray,
+                onTertiaryFixed = Color.Black,
+                onTertiaryFixedVariant = Color.Black
             )
         } else {
             ColorScheme(
@@ -78,17 +90,29 @@ object ThemeFactory {
                 outlineVariant = Color.DarkGray,
                 scrim = Color.Black,
                 surfaceBright = Color(0.98f, 0.98f, 0.98f),
-                surfaceDim = Color(0.9f, 0.9f, 0.9f),
+                surfaceDim = Color(0.90f, 0.90f, 0.90f),
                 surfaceContainer = Color(0.94f, 0.94f, 0.94f),
                 surfaceContainerHigh = Color(0.96f, 0.96f, 0.96f),
                 surfaceContainerHighest = Color(0.98f, 0.98f, 0.98f),
                 surfaceContainerLow = Color(0.92f, 0.92f, 0.92f),
-                surfaceContainerLowest = Color(0.9f, 0.9f, 0.9f)
+                surfaceContainerLowest = Color(0.90f, 0.90f, 0.90f),
+                primaryFixed = seed,
+                primaryFixedDim = seed.copy(alpha = 0.85f),
+                onPrimaryFixed = Color.Black,
+                onPrimaryFixedVariant = Color.Black,
+                secondaryFixed = Color.Gray,
+                secondaryFixedDim = Color.DarkGray,
+                onSecondaryFixed = Color.Black,
+                onSecondaryFixedVariant = Color.Black,
+                tertiaryFixed = Color.Gray,
+                tertiaryFixedDim = Color.LightGray,
+                onTertiaryFixed = Color.Black,
+                onTertiaryFixedVariant = Color.Black
             )
         }
     }
 
-    val catpucchinLatte = arrayOf(
+    val catppuccinLatte = arrayOf(
         Color(220, 138, 120),
         Color(221, 120, 120),
         Color(234, 118, 203),
