@@ -12,6 +12,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
@@ -20,7 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.media3.common.util.UnstableApi
@@ -50,6 +50,16 @@ import org.koin.android.ext.android.inject
 class MainActivity : ComponentActivity() {
     private val repo: TimerAlarmRepository by inject()
     private val audioUtils: AudioManager by inject()
+
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            // Permission granted
+        } else {
+            // Permission denied
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,10 +150,8 @@ class MainActivity : ComponentActivity() {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                 != PackageManager.PERMISSION_GRANTED
             ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                    REQUEST_NOTIFICATION_PERMISSION
+                notificationPermissionLauncher.launch(
+                    Manifest.permission.POST_NOTIFICATIONS
                 )
             }
         }
@@ -159,25 +167,9 @@ class MainActivity : ComponentActivity() {
         audioUtils.stopCurrentSound()
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted
-            } else {
-                // Permission denied
-            }
-        }
-    }
-
     companion object {
         const val EXTRA_FRAGMENT = "com.meenbeese.chronos.MainActivity.EXTRA_FRAGMENT"
         const val FRAGMENT_TIMER = 0
         const val FRAGMENT_STOPWATCH = 2
-        private const val REQUEST_NOTIFICATION_PERMISSION = 1001
     }
 }
