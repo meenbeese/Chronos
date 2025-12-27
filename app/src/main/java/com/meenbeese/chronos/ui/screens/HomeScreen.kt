@@ -102,13 +102,15 @@ fun HomeScreen(
 
     if (isTablet) {
         Row(modifier = modifier.fillMaxSize()) {
-            ClockPageView(
-                timeZones = selectedZones,
-                backgroundPainter = clockBackground!!,
-                pageIndicatorVisible = selectedZones.size > 1,
-                navigateToNearestAlarm = navigateToNearestAlarm,
-                modifier = Modifier.weight(1f).fillMaxHeight()
-            )
+            clockBackground?.let { painter ->
+                ClockPageView(
+                    timeZones = selectedZones,
+                    backgroundPainter = painter,
+                    pageIndicatorVisible = selectedZones.size > 1,
+                    navigateToNearestAlarm = navigateToNearestAlarm,
+                    modifier = Modifier.weight(1f).fillMaxHeight()
+                )
+            }
 
             Box(
                 modifier = Modifier
@@ -142,13 +144,15 @@ fun HomeScreen(
         }
     } else {
         Box(modifier = modifier.fillMaxSize()) {
-            ClockPageView(
-                timeZones = selectedZones,
-                backgroundPainter = clockBackground!!,
-                pageIndicatorVisible = selectedZones.size > 1,
-                navigateToNearestAlarm = navigateToNearestAlarm,
-                modifier = Modifier.fillMaxHeight(0.5f + 0.05f)
-            )
+            clockBackground?.let { painter ->
+                ClockPageView(
+                    timeZones = selectedZones,
+                    backgroundPainter = painter,
+                    pageIndicatorVisible = selectedZones.size > 1,
+                    navigateToNearestAlarm = navigateToNearestAlarm,
+                    modifier = Modifier.fillMaxHeight(0.5f + 0.05f)
+                )
+            }
 
             HomeBottomSheet(
                 tabs = homeTabs,

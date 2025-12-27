@@ -59,23 +59,27 @@ class StopwatchService : Service() {
 
         runnable = object : Runnable {
             override fun run() {
-                if (isRunning) {
-                    val currentTime = System.currentTimeMillis() - startTime
-                    var text = formatMillis(currentTime)
-                    listener?.onTick(currentTime, text)
-
-                    text = text.substring(0, text.length - 3)
-                    if (notificationText == null || notificationText != text) {
-                        startForeground(NOTIFICATION_ID, getNotification(text))
-                        notificationText = text
+                if (!isRunning) {
+                    listener?.let {
+                        val time = if (startTime == 0L) 0L else stopTime - startTime
+                        it.onTick(time, formatMillis(time))
                     }
-
-                    handler?.removeCallbacks(this)
-                    handler?.postDelayed(this, 10)
-                } else if (listener != null) {
-                    val time = if (startTime == 0L) 0 else stopTime - startTime
-                    listener?.onTick(time, formatMillis(time))
+                    return
                 }
+
+                val currentTime = System.currentTimeMillis() - startTime
+                val formatted = formatMillis(currentTime)
+
+                listener?.onTick(currentTime, formatted)
+
+                val notificationTime = formatted.dropLast(3)
+                if (notificationText != notificationTime) {
+                    startForeground(NOTIFICATION_ID, getNotification(notificationTime))
+                    notificationText = notificationTime
+                }
+
+                handler?.removeCallbacks(this)
+                handler?.postDelayed(this, 10)
             }
         }
 
@@ -173,7 +177,7 @@ class StopwatchService : Service() {
      * @return          A notification to use for this stopwatch.
      */
     private fun getNotification(time: String): Notification {
-        notificationManager!!.createNotificationChannel(
+        notificationManager?.createNotificationChannel(
             NotificationChannel(
                 NOTIFICATION_CHANNEL_STOPWATCH,
                 getString(R.string.title_stopwatch),

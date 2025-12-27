@@ -64,45 +64,51 @@ class SleepReminderService : Service() {
      * should be shown, or stop the service if it shouldn't.
      */
     fun refreshState() {
-        if (powerManager!!.isInteractive) {
-            val nextAlarm = getSleepyAlarm(applicationContext, repo)
-            if (nextAlarm != null) {
-                val builder: NotificationCompat.Builder = run {
-                    val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                    manager.createNotificationChannel(
-                        NotificationChannel(
-                            "sleepReminder",
-                            getString(R.string.title_sleep_reminder),
-                            NotificationManager.IMPORTANCE_DEFAULT
-                        )
-                    )
-                    NotificationCompat.Builder(this, "sleepReminder")
-                }
-                startForeground(
-                    540, builder.setContentTitle(getString(R.string.title_sleep_reminder))
-                        .setContentText(
-                            String.format(
-                                getString(R.string.msg_sleep_reminder),
-                                formatUnit(
-                                    this,
-                                    TimeUnit.MILLISECONDS.toMinutes(nextAlarm.getNext()!!.timeInMillis - System.currentTimeMillis())
-                                        .toInt()
-                                )
-                            )
-                        )
-                        .setSmallIcon(R.drawable.ic_notification_sleep)
-                        .setPriority(NotificationCompat.PRIORITY_LOW)
-                        .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                        .build()
-                )
-                return
-            }
+        val pm = powerManager ?: run {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+            stopSelf()
+            return
         }
-        stopForeground(STOP_FOREGROUND_REMOVE)
-        stopSelf()
+
+        if (!pm.isInteractive) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+            stopSelf()
+            return
+        }
+
+        val nextAlarm = getSleepyAlarm(applicationContext, repo)
+        val nextInstance = nextAlarm?.getNext()
+
+        if (nextInstance == null) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+            stopSelf()
+            return
+        }
+
+        val minutesUntil = TimeUnit.MILLISECONDS.toMinutes(
+            nextInstance.timeInMillis - System.currentTimeMillis()
+        ).toInt()
+
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+        notificationManager.createNotificationChannel(
+            NotificationChannel(
+                "sleepReminder",
+                getString(R.string.title_sleep_reminder),
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+        )
+
+        val notification = NotificationCompat.Builder(this, "sleepReminder")
+            .setContentTitle(getString(R.string.title_sleep_reminder))
+            .setContentText(getString(R.string.msg_sleep_reminder, formatUnit(this, minutesUntil)))
+            .setSmallIcon(R.drawable.ic_notification_sleep)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .build()
+
+        startForeground(540, notification)
     }
-
-
 
     override fun onBind(intent: Intent): IBinder? {
         return null
