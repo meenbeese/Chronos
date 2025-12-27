@@ -9,7 +9,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 
-import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.db.TimerAlarmRepository
 import com.meenbeese.chronos.ui.screens.TimerScreen
 import com.meenbeese.chronos.utils.FormatUtils
@@ -21,9 +20,18 @@ import org.koin.compose.koinInject
 @Composable
 fun TimerDestination(
     navController: NavController,
-    timer: TimerData
+    timerId: Int
 ) {
     val repo: TimerAlarmRepository = koinInject()
+
+    val timer = remember(timerId) {
+        repo.timers.getOrNull(timerId)
+    } ?: run {
+        LaunchedEffect(Unit) {
+            navController.popBackStack()
+        }
+        return
+    }
 
     var timeText by remember { mutableStateOf("") }
     var progress by remember { mutableFloatStateOf(0f) }

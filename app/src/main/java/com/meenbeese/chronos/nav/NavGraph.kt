@@ -5,8 +5,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 
-import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.nav.destinations.AboutDestination
 import com.meenbeese.chronos.nav.destinations.HomeDestination
 import com.meenbeese.chronos.nav.destinations.StopwatchDestination
@@ -16,35 +16,34 @@ import com.meenbeese.chronos.nav.destinations.TimerDestination
 fun NavGraph(navController: NavHostController) {
     val context = LocalContext.current
 
-    NavHost(navController = navController, startDestination = NavScreen.Home.route) {
-        composable(NavScreen.Home.route) {
+    NavHost(
+        navController = navController,
+        startDestination = HomeRoute
+    ) {
+        composable<HomeRoute> {
             HomeDestination(
                 navController = navController,
                 context = context,
                 intentAction = null,
-                navigateToStopwatch = { navController.navigate(NavScreen.Watch.route) },
+                navigateToStopwatch = {
+                    navController.navigate(WatchRoute)
+                },
                 navigateToTimer = { timer ->
-                    navController.currentBackStackEntry?.savedStateHandle?.set("timer", timer)
-                    navController.navigate(NavScreen.Timer.route)
+                    navController.navigate(TimerRoute(timer.id))
                 },
             )
         }
 
-        composable(NavScreen.Watch.route) {
+        composable<WatchRoute> {
             StopwatchDestination(navController)
         }
 
-        composable(NavScreen.Timer.route) { backStackEntry ->
-            val timer: TimerData? = navController.previousBackStackEntry
-                ?.savedStateHandle
-                ?.get<TimerData>("timer")
-
-            if (timer != null) {
-                TimerDestination(navController, timer)
-            }
+        composable<TimerRoute> { entry ->
+            val route = entry.toRoute<TimerRoute>()
+            TimerDestination(navController, route.timerId)
         }
 
-        composable(NavScreen.About.route) {
+        composable<AboutRoute> {
             AboutDestination(context)
         }
     }

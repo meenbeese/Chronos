@@ -32,7 +32,8 @@ import com.meenbeese.chronos.receivers.TimerReceiver
 import com.meenbeese.chronos.db.TimerAlarmRepository
 import com.meenbeese.chronos.ext.getFlow
 import com.meenbeese.chronos.nav.NavGraph
-import com.meenbeese.chronos.nav.NavScreen
+import com.meenbeese.chronos.nav.TimerRoute
+import com.meenbeese.chronos.nav.WatchRoute
 import com.meenbeese.chronos.ui.theme.ChronosTheme
 import com.meenbeese.chronos.ui.theme.ThemeFactory
 import com.meenbeese.chronos.ui.theme.ThemeMode
@@ -128,12 +129,11 @@ class MainActivity : ComponentActivity() {
 
                     if (isTimerIntent || isStopwatchIntent) {
                         when (extraFragment) {
-                            FRAGMENT_STOPWATCH -> navController.navigate(NavScreen.Watch.route)
+                            FRAGMENT_STOPWATCH -> navController.navigate(WatchRoute)
                             FRAGMENT_TIMER -> {
                                 val timerId = intent.getIntExtra(TimerReceiver.EXTRA_TIMER_ID, 0)
                                 repo.timers.getOrNull(timerId)?.let { timer ->
-                                    navController.currentBackStackEntry?.savedStateHandle?.set("timer", timer)
-                                    navController.navigate(NavScreen.Timer.route)
+                                    navController.navigate(TimerRoute(timer.id))
                                 }
                             }
                         }

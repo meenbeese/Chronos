@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 import com.meenbeese.chronos.R
-import com.meenbeese.chronos.nav.NavScreen
+import com.meenbeese.chronos.nav.AboutRoute
 import com.meenbeese.chronos.ui.views.PreferenceItem
 
 /**
@@ -22,7 +22,7 @@ fun AboutPreference(
     PreferenceItem(
         title = stringResource(id = R.string.title_about),
         onClick = {
-            navController.navigate(NavScreen.About.route)
+            navController.navigate(AboutRoute)
         },
         modifier = modifier.padding(bottom = 16.dp)
     )
