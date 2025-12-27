@@ -7,6 +7,13 @@ object ThemeFactory {
     fun getSchemeFromSeed(color: Int, dark: Boolean): ColorScheme {
         val seed = Color(color)
 
+        val tertiary = Color(
+            red = seed.red * 0.6f + 0.4f,
+            green = seed.green * 0.6f + 0.4f,
+            blue = seed.blue * 0.6f + 0.4f,
+            alpha = 1f
+        )
+
         return if (dark) {
             ColorScheme(
                 primary = seed.copy(alpha = 1f),
@@ -18,10 +25,10 @@ object ThemeFactory {
                 onSecondary = Color.White,
                 secondaryContainer = Color.DarkGray,
                 onSecondaryContainer = Color.White,
-                tertiary = Color.LightGray,
+                tertiary = tertiary.copy(alpha = 0.9f),
                 onTertiary = Color.Black,
-                tertiaryContainer = Color.Gray,
-                onTertiaryContainer = Color.White,
+                tertiaryContainer = tertiary.copy(alpha = 0.6f),
+                onTertiaryContainer = Color.Black,
                 background = Color.Black,
                 onBackground = Color.White,
                 surface = Color.Black,
@@ -53,8 +60,8 @@ object ThemeFactory {
                 secondaryFixedDim = Color.DarkGray,
                 onSecondaryFixed = Color.Black,
                 onSecondaryFixedVariant = Color.Black,
-                tertiaryFixed = Color.LightGray,
-                tertiaryFixedDim = Color.Gray,
+                tertiaryFixed = tertiary,
+                tertiaryFixedDim = tertiary.copy(alpha = 0.8f),
                 onTertiaryFixed = Color.Black,
                 onTertiaryFixedVariant = Color.Black
             )
@@ -69,9 +76,9 @@ object ThemeFactory {
                 onSecondary = Color.Black,
                 secondaryContainer = Color.LightGray,
                 onSecondaryContainer = Color.Black,
-                tertiary = Color.Gray,
+                tertiary = tertiary,
                 onTertiary = Color.Black,
-                tertiaryContainer = Color.LightGray,
+                tertiaryContainer = tertiary.copy(alpha = 0.25f),
                 onTertiaryContainer = Color.Black,
                 background = Color.White,
                 onBackground = Color.Black,
@@ -104,8 +111,8 @@ object ThemeFactory {
                 secondaryFixedDim = Color.DarkGray,
                 onSecondaryFixed = Color.Black,
                 onSecondaryFixedVariant = Color.Black,
-                tertiaryFixed = Color.Gray,
-                tertiaryFixedDim = Color.LightGray,
+                tertiaryFixed = tertiary,
+                tertiaryFixedDim = tertiary.copy(alpha = 0.85f),
                 onTertiaryFixed = Color.Black,
                 onTertiaryFixedVariant = Color.Black
             )
