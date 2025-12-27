@@ -68,15 +68,19 @@ fun SlideActionView(
                     },
                     onDrag = { change, _ ->
                         val newX = change.position.x.coerceIn(0f, size.width.toFloat())
-                        val snapEdgePaddingPx = with(density) { (32.dp + 20.dp).toPx() }
+                        val snapEdgePaddingPx = (32.dp + 20.dp).toPx()
+                        val radiusPx = (12 + (20 * selected.value)).dp.toPx()
+
                         positionX.floatValue = newX
-                        inLeftSnapZone.value = newX <= snapEdgePaddingPx
-                        inRightSnapZone.value = newX >= size.width - snapEdgePaddingPx
+                        inLeftSnapZone.value = newX - radiusPx <= snapEdgePaddingPx
+                        inRightSnapZone.value = newX + radiusPx >= size.width - snapEdgePaddingPx
                         change.consume()
                     },
                     onDragEnd = {
                         scope.launch {
-                            val snapEdgePaddingPx = with(density) { (32.dp + 20.dp).toPx() }
+                            val snapEdgePaddingPx = (32.dp + 20.dp).toPx()
+                            val radiusPx = (12 + (20 * selected.value)).dp.toPx()
+
                             val width = size.width.toFloat()
                             val center = width / 2f
 
@@ -84,14 +88,14 @@ fun SlideActionView(
                             val rightSnapZone = width - snapEdgePaddingPx
 
                             when {
-                                positionX.floatValue <= leftSnapZone -> {
+                                positionX.floatValue - radiusPx <= leftSnapZone -> {
                                     // Trigger action, then return to center
                                     onSlideLeft()
                                     animateToPosition(positionX.floatValue, center, 16L, 150) {
                                         positionX.floatValue = it
                                     }
                                 }
-                                positionX.floatValue >= rightSnapZone -> {
+                                positionX.floatValue + radiusPx >= rightSnapZone -> {
                                     // Trigger action, then return to center
                                     onSlideRight()
                                     animateToPosition(positionX.floatValue, center, 16L, 150) {
