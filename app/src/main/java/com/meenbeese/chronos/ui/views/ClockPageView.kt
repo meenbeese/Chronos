@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -43,19 +44,22 @@ import com.meenbeese.chronos.data.preference.DialogPreference
 import com.meenbeese.chronos.data.preference.ImageFilePreference
 import com.meenbeese.chronos.data.preference.SegmentedPreference
 import com.meenbeese.chronos.ui.dialogs.TimeZoneChooserDialog
+import com.meenbeese.chronos.ui.screens.ClockScreen
+import com.meenbeese.chronos.utils.ImageUtils
 
 import kotlinx.coroutines.runBlocking
 
 @Composable
 fun ClockPageView(
-    fragments: List<@Composable () -> Unit>,
+    timeZones: List<String>,
     backgroundPainter: Painter,
     pageIndicatorVisible: Boolean,
+    navigateToNearestAlarm: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val backgroundDimConstant = 0.1f
-    val pagerState = rememberPagerState { fragments.size }
+    val pagerState = rememberPagerState { timeZones.size }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -79,7 +83,15 @@ fun ClockPageView(
             state = pagerState,
             modifier = Modifier.matchParentSize()
         ) { page ->
-            fragments[page]()
+            ClockScreen(
+                timezoneId = timeZones[page],
+                getTextColor = {
+                    ImageUtils
+                        .getContrastingTextColorFromBg(context)
+                        .toArgb()
+                },
+                navigateToNearestAlarm = navigateToNearestAlarm
+            )
         }
 
         if (pageIndicatorVisible) {
@@ -89,10 +101,10 @@ fun ClockPageView(
             PageIndicatorView(
                 currentPage = currentPage,
                 pageOffset = pageOffset,
-                pageCount = fragments.size,
+                pageCount = timeZones.size,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 36.dp)
+                    .padding(bottom = 56.dp)
             )
         }
 

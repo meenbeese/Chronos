@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -99,26 +98,15 @@ fun HomeScreen(
         }
     }
 
-    val clockScreens = selectedZones.map { tz ->
-        @Composable {
-            ClockScreen(
-                timezoneId = tz,
-                getTextColor = {
-                    ImageUtils.getContrastingTextColorFromBg(context).toArgb()
-                },
-                navigateToNearestAlarm = navigateToNearestAlarm
-            )
-        }
-    }
-
     val isTablet = LocalConfiguration.current.smallestScreenWidthDp >= 600
 
     if (isTablet) {
         Row(modifier = modifier.fillMaxSize()) {
             ClockPageView(
-                fragments = clockScreens,
+                timeZones = selectedZones,
                 backgroundPainter = clockBackground!!,
-                pageIndicatorVisible = clockScreens.size > 1,
+                pageIndicatorVisible = selectedZones.size > 1,
+                navigateToNearestAlarm = navigateToNearestAlarm,
                 modifier = Modifier.weight(1f).fillMaxHeight()
             )
 
@@ -155,9 +143,10 @@ fun HomeScreen(
     } else {
         Box(modifier = modifier.fillMaxSize()) {
             ClockPageView(
-                fragments = clockScreens,
+                timeZones = selectedZones,
                 backgroundPainter = clockBackground!!,
-                pageIndicatorVisible = clockScreens.size > 1,
+                pageIndicatorVisible = selectedZones.size > 1,
+                navigateToNearestAlarm = navigateToNearestAlarm,
                 modifier = Modifier.fillMaxHeight(0.5f + 0.05f)
             )
 
