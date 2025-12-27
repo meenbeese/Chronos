@@ -51,6 +51,7 @@ import kotlinx.coroutines.runBlocking
 
 @Composable
 fun ClockPageView(
+    isTablet: Boolean,
     timeZones: List<String>,
     backgroundPainter: Painter,
     pageIndicatorVisible: Boolean,
@@ -62,6 +63,7 @@ fun ClockPageView(
     val pagerState = rememberPagerState { timeZones.size }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(false) }
+    val bottomPadding = if (isTablet) 16.dp else 56.dp
 
     Box(
         modifier = modifier.fillMaxWidth()
@@ -104,7 +106,7 @@ fun ClockPageView(
                 pageCount = timeZones.size,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 56.dp)
+                    .padding(bottom = bottomPadding)
             )
         }
 
@@ -113,7 +115,7 @@ fun ClockPageView(
             containerColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(bottom = 56.dp, end = 8.dp)
+                .padding(bottom = bottomPadding, end = 8.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.Edit,

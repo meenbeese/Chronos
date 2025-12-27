@@ -1,12 +1,15 @@
 package com.meenbeese.chronos.ui.screens
 
+import android.content.res.Configuration
 import android.provider.AlarmClock
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -99,11 +102,13 @@ fun HomeScreen(
     }
 
     val isTablet = LocalConfiguration.current.smallestScreenWidthDp >= 600
+    val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-    if (isTablet) {
+    if (isTablet || isLandscape) {
         Row(modifier = modifier.fillMaxSize()) {
             clockBackground?.let { painter ->
                 ClockPageView(
+                    isTablet = true,
                     timeZones = selectedZones,
                     backgroundPainter = painter,
                     pageIndicatorVisible = selectedZones.size > 1,
@@ -116,6 +121,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(8.dp)
             ) {
                 HomeBottomSheet(
@@ -146,6 +152,7 @@ fun HomeScreen(
         Box(modifier = modifier.fillMaxSize()) {
             clockBackground?.let { painter ->
                 ClockPageView(
+                    isTablet = false,
                     timeZones = selectedZones,
                     backgroundPainter = painter,
                     pageIndicatorVisible = selectedZones.size > 1,
