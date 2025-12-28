@@ -8,14 +8,10 @@ import android.content.Intent
 import android.os.Parcelable
 
 import com.meenbeese.chronos.activities.MainActivity
-import com.meenbeese.chronos.db.AlarmDatabase
 import com.meenbeese.chronos.db.AlarmEntity
 import com.meenbeese.chronos.receivers.AlarmReceiver
 import com.meenbeese.chronos.services.SleepReminderService
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 import java.util.Calendar
@@ -31,29 +27,6 @@ class AlarmData(
     var isVibrate: Boolean = true,
     var sound: SoundData? = null
 ) : Parcelable {
-
-    fun saveToDatabase(context: Context) {
-        val alarmDao = AlarmDatabase.getDatabase(context).alarmDao()
-        val alarmEntity = AlarmEntity(id, name, time.timeInMillis, isEnabled, days, isVibrate, sound?.toString())
-        CoroutineScope(Dispatchers.IO).launch {
-            if (alarmDao.getAlarmById(id) == null) {
-                alarmDao.insert(alarmEntity)
-            } else {
-                alarmDao.update(alarmEntity)
-            }
-        }
-    }
-
-    fun deleteFromDatabase(context: Context) {
-        val alarmDao = AlarmDatabase.getDatabase(context).alarmDao()
-        CoroutineScope(Dispatchers.IO).launch {
-            alarmDao.getAlarmById(id)?.let { alarmDao.delete(it) }
-        }
-    }
-
-    fun calculateNextTriggerTime(): Long {
-        return getNext()?.timeInMillis ?: Long.MAX_VALUE
-    }
 
     fun set(context: Context): Date? {
         val nextTime = getNext() ?: return null

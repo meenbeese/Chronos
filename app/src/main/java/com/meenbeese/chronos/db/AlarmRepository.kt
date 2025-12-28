@@ -18,6 +18,10 @@ class AlarmRepository(private val alarmDao: AlarmDao) {
         alarmDao.delete(alarm)
     }
 
+    suspend fun deleteAlarmById(id: Int) = withContext(Dispatchers.IO) {
+        alarmDao.getAlarmById(id)?.let { alarmDao.delete(it) }
+    }
+
     suspend fun getAlarmById(id: Int): AlarmEntity? = withContext(Dispatchers.IO) {
         alarmDao.getAlarmById(id)
     }
@@ -28,5 +32,22 @@ class AlarmRepository(private val alarmDao: AlarmDao) {
 
     fun getAll(): LiveData<List<AlarmEntity>> {
         return alarmDao.getAllAlarms()
+    }
+
+    suspend fun saveAlarm(
+        id: Int,
+        name: String?,
+        timeInMillis: Long,
+        isEnabled: Boolean,
+        days: MutableList<Boolean>,
+        isVibrate: Boolean,
+        sound: String?
+    ) = withContext(Dispatchers.IO) {
+        val entity = AlarmEntity(id, name, timeInMillis, isEnabled, days, isVibrate, sound)
+        if (alarmDao.getAlarmById(id) == null) {
+            alarmDao.insert(entity)
+        } else {
+            alarmDao.update(entity)
+        }
     }
 }

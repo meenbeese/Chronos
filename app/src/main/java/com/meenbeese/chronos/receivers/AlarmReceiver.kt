@@ -11,6 +11,7 @@ import com.meenbeese.chronos.activities.AlarmActivity
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.db.AlarmDatabase
+import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.services.AlarmTileService
 
 import kotlinx.coroutines.CoroutineScope
@@ -18,9 +19,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+
 import java.util.Calendar
 
-class AlarmReceiver : BroadcastReceiver() {
+class AlarmReceiver : BroadcastReceiver(), KoinComponent {
+
+    private val alarmRepository: AlarmRepository by inject()
+
     override fun onReceive(context: Context, intent: Intent) {
         val alarmId = intent.getIntExtra(EXTRA_ALARM_ID, -1)
         Log.d("AlarmReceiver", "Alarm received with id: $alarmId")
@@ -48,7 +55,15 @@ class AlarmReceiver : BroadcastReceiver() {
                     alarm.set(context)
                 } else {
                     alarm.isEnabled = false
-                    alarm.saveToDatabase(context)
+                    alarmRepository.saveAlarm(
+                        alarm.id,
+                        alarm.name,
+                        alarm.time.timeInMillis,
+                        alarm.isEnabled,
+                        alarm.days,
+                        alarm.isVibrate,
+                        alarm.sound?.toString()
+                    )
                 }
 
                 TileService.requestListeningState(
