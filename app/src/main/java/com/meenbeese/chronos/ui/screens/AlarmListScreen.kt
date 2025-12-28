@@ -47,6 +47,7 @@ fun AlarmListScreen(
             AlarmItemView(
                 alarm = alarm,
                 isExpanded = isExpanded,
+                onAlarmUpdated = onAlarmUpdated,
                 onTimeClick = { timePickerAlarm = alarm },
                 onToggleEnabled = { enabled ->
                     alarm.isEnabled = enabled

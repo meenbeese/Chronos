@@ -46,6 +46,7 @@ import java.util.concurrent.TimeUnit
 @Composable
 fun AlarmItemView(
     alarm: AlarmData,
+    onAlarmUpdated: (AlarmData) -> Unit,
     onTimeClick: () -> Unit,
     onToggleEnabled: (Boolean) -> Unit,
     onRepeatToggle: (Boolean) -> Unit,
@@ -234,6 +235,7 @@ fun AlarmItemView(
                         onValueChange = {
                             name = it
                             alarm.name = it
+                            onAlarmUpdated(alarm)
                         },
                         textStyle = TextStyle(
                             fontSize = 16.sp,
