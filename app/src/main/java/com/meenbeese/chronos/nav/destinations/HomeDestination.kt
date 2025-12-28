@@ -60,10 +60,15 @@ fun HomeDestination(
         onAlarmUpdated = { alarmData ->
             CoroutineScope(Dispatchers.IO).launch {
                 alarmViewModel.update(alarmData.toEntity())
+                alarmData.cancel(context)
+                if (alarmData.isEnabled) {
+                    alarmData.set(context)
+                }
             }
         },
         onAlarmDeleted = { alarmData ->
             CoroutineScope(Dispatchers.IO).launch {
+                alarmData.cancel(context)
                 alarmViewModel.delete(alarmData.toEntity())
             }
         },
