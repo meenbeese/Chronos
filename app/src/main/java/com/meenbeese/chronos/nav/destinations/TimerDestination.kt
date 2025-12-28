@@ -56,9 +56,6 @@ fun TimerDestination(
         progress = progress,
         maxProgress = maxProgress,
         onBack = { navController.popBackStack() },
-        onStop = {
-            repo.removeTimer(timer)
-            navController.popBackStack()
-        }
+        onStop = { repo.removeTimer(timer) }
     )
 }
