@@ -16,7 +16,7 @@ import kotlinx.parcelize.Parcelize
 import kotlin.math.max
 
 @Parcelize
-open class TimerData(
+class TimerData(
     var id: Int,
     var duration: Long = 600_000,
     var endTime: Long = 0,
@@ -29,16 +29,12 @@ open class TimerData(
         endTime = Preferences.TIMER_END_TIME.get(context)
         isVibrate = Preferences.TIMER_VIBRATE.get(context)
 
-        val defaultSoundPref: String? = Preferences.DEFAULT_TIMER_RINGTONE.get(context)
-        val fallbackSound: String? = Preferences.TIMER_SOUND.get(context)
+        val defaultSoundPref = Preferences.DEFAULT_TIMER_RINGTONE.get(context)
+        val fallbackSound = Preferences.TIMER_SOUND.get(context)
 
-        val defaultSound: String? = if (!defaultSoundPref.isNullOrEmpty()) {
-            defaultSoundPref
-        } else if (!fallbackSound.isNullOrEmpty()) {
-            fallbackSound
-        } else {
-            null
-        }
+        val defaultSound = defaultSoundPref
+            .takeIf { it.isNotEmpty() }
+            ?: fallbackSound.takeIf { it.isNotEmpty() }
 
         sound = defaultSound?.let { SoundData.fromString(it).getOrNull() }
     }
