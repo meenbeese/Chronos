@@ -53,13 +53,6 @@ fun AlarmListScreen(
                     alarm.isEnabled = enabled
                     onAlarmUpdated(alarm)
                 },
-                onRepeatToggle = { repeat ->
-                    onAlarmUpdated(alarm)
-                },
-                onDayToggle = { day, checked ->
-                    alarm.days[day] = checked
-                    onAlarmUpdated(alarm)
-                },
                 onRingtoneClick = { soundPickerAlarm = alarm },
                 onVibrateToggle = {
                     alarm.isVibrate = !alarm.isVibrate

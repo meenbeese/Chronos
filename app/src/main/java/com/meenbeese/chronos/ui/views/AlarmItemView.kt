@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,7 +42,11 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.utils.FormatUtils
 
+import kotlinx.coroutines.delay
+
 import java.util.concurrent.TimeUnit
+
+import kotlin.time.Duration.Companion.minutes
 
 @Composable
 fun AlarmItemView(
@@ -49,8 +54,6 @@ fun AlarmItemView(
     onAlarmUpdated: (AlarmData) -> Unit,
     onTimeClick: () -> Unit,
     onToggleEnabled: (Boolean) -> Unit,
-    onRepeatToggle: (Boolean) -> Unit,
-    onDayToggle: (Int, Boolean) -> Unit,
     onRingtoneClick: () -> Unit,
     onVibrateToggle: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -59,8 +62,18 @@ fun AlarmItemView(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val nextAlarmTime = alarm.getNext()?.timeInMillis
-    val now = System.currentTimeMillis()
+    val now by produceState(
+        initialValue = System.currentTimeMillis()
+    ) {
+        while (true) {
+            delay(1.minutes)
+            value = System.currentTimeMillis()
+        }
+    }
+
+    val nextAlarmTime by remember(alarm, now) {
+        mutableStateOf(alarm.getNext()?.timeInMillis)
+    }
 
     var name by remember { mutableStateOf(alarm.name.orEmpty()) }
     var days by remember { mutableStateOf(alarm.days.toMutableList()) }
@@ -70,9 +83,11 @@ fun AlarmItemView(
         label = "ExpandIconRotation"
     )
 
-    val alarmText = if (alarm.isEnabled && nextAlarmTime != null && nextAlarmTime > now) {
-        val minutes = TimeUnit.MILLISECONDS.toMinutes(nextAlarmTime - now)
-        "Next alarm: ${FormatUtils.formatUnit(context, minutes.toInt())}"
+    val alarmText = if (alarm.isEnabled && nextAlarmTime != null && nextAlarmTime!! > now) {
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(nextAlarmTime!! - now)
+        stringResource(
+            R.string.next_alarm
+        ) + ": " + FormatUtils.formatUnit(context, minutes.toInt())
     } else null
 
     val dayLabels = listOf(
@@ -135,8 +150,10 @@ fun AlarmItemView(
                     Checkbox(
                         checked = days.any { it },
                         onCheckedChange = { isChecked ->
-                            days = List(7) { isChecked }.toMutableList()
-                            onRepeatToggle(isChecked)
+                            val newDays = MutableList(7) { isChecked }
+                            days = newDays
+                            alarm.days = newDays
+                            onAlarmUpdated(alarm)
                         }
                     )
                     Text(
@@ -160,8 +177,10 @@ fun AlarmItemView(
                                 isChecked = days[i],
                                 onCheckedChange = {
                                     days[i] = it
-                                    days = days.toMutableList()
-                                    onDayToggle(i, it)
+                                    val updatedDays = days.toMutableList()
+                                    days = updatedDays
+                                    alarm.days = updatedDays
+                                    onAlarmUpdated(alarm)
                                 },
                                 modifier = Modifier.padding(horizontal = 4.dp)
                             )
@@ -223,7 +242,7 @@ fun AlarmItemView(
                 ) {
                     if (name.isEmpty()) {
                         Text(
-                            text = "Alarm Name",
+                            text = stringResource(R.string.title_alarm_name),
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
