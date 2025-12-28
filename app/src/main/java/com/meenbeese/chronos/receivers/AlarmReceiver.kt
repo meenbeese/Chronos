@@ -73,7 +73,9 @@ class AlarmReceiver : BroadcastReceiver(), KoinComponent {
 
                 withContext(Dispatchers.Main) {
                     val ringer = Intent(context, AlarmActivity::class.java).apply {
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                Intent.FLAG_ACTIVITY_NO_USER_ACTION
                         putExtra(AlarmActivity.EXTRA_ALARM, alarm)
                     }
                     context.startActivity(ringer)
