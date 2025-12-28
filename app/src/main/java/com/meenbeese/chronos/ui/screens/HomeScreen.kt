@@ -30,6 +30,7 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.data.toData
 import com.meenbeese.chronos.db.AlarmEntity
 import com.meenbeese.chronos.ext.getFlow
 import com.meenbeese.chronos.ui.dialogs.AlarmSchedulerDialog
@@ -47,27 +48,52 @@ fun HomeScreen(
     navController: NavController,
     alarms: List<AlarmEntity>,
     isBottomSheetExpanded: MutableState<Boolean>,
-    nearestAlarmId: MutableState<Int>,
     onAlarmUpdated: (AlarmData) -> Unit,
     onAlarmDeleted: (AlarmData) -> Unit,
     onScheduleAlarm: (hour: Int, minute: Int) -> Unit,
     onScheduleWatch: () -> Unit,
     onScheduleTimer: (h: Int, m: Int, s: Int, ring: SoundData?, vibrate: Boolean) -> Unit,
-    navigateToNearestAlarm: () -> Unit,
     intentAction: String?,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val homeTabs = listOf("Alarms", "Settings")
+
     val selectedTabIndex = remember { mutableIntStateOf(0) }
+    val scrollToAlarmId = remember { mutableStateOf<Int?>(null) }
 
     var showAlarmDialog by remember { mutableStateOf(false) }
     var showTimerDialog by remember { mutableStateOf(false) }
 
     val clockBackground = ImageUtils.rememberBackgroundPainterState(isAlarm = false)
 
-    val context = LocalContext.current
     val timeZoneEnabled by Preferences.TIME_ZONE_ENABLED.getFlow(context).collectAsState(initial = false)
     val selectedZonesCsv by Preferences.TIME_ZONES.getFlow(context).collectAsState(initial = "")
+
+    val isTablet = LocalConfiguration.current.smallestScreenWidthDp >= 600
+    val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    val nearestAlarmId = remember(alarms) {
+        alarms
+            .filter { it.isEnabled }
+            .mapNotNull { alarm ->
+                alarm.toData().getNext()?.timeInMillis?.let { alarm.id to it }
+            }
+            .minByOrNull { it.second }
+            ?.first
+    }
+
+    val handleNavigateToNearestAlarm = {
+        selectedTabIndex.intValue = 0
+
+        if (!isTablet && !isLandscape) {
+            isBottomSheetExpanded.value = true
+        }
+
+        if (nearestAlarmId != null) {
+            scrollToAlarmId.value = nearestAlarmId
+        }
+    }
 
     /*
      * Check actions passed from MainActivity; open timer/alarm
@@ -101,9 +127,6 @@ fun HomeScreen(
         }
     }
 
-    val isTablet = LocalConfiguration.current.smallestScreenWidthDp >= 600
-    val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
-
     if (isTablet || isLandscape) {
         Row(modifier = modifier.fillMaxSize()) {
             clockBackground?.let { painter ->
@@ -112,7 +135,7 @@ fun HomeScreen(
                     timeZones = selectedZones,
                     backgroundPainter = painter,
                     pageIndicatorVisible = selectedZones.size > 1,
-                    navigateToNearestAlarm = navigateToNearestAlarm,
+                    navigateToNearestAlarm = handleNavigateToNearestAlarm,
                     modifier = Modifier.weight(1f).fillMaxHeight()
                 )
             }
@@ -134,9 +157,10 @@ fun HomeScreen(
                     if (page == 0) {
                         AlarmsScreen(
                             alarms = alarms,
+                            scrollToAlarmId = scrollToAlarmId.value,
+                            onScrollHandled = { scrollToAlarmId.value = null },
                             onAlarmUpdated = onAlarmUpdated,
                             onAlarmDeleted = onAlarmDeleted,
-                            nearestAlarmId = nearestAlarmId.value,
                             isBottomSheetExpanded = isBottomSheetExpanded
                         )
                     } else {
@@ -156,7 +180,7 @@ fun HomeScreen(
                     timeZones = selectedZones,
                     backgroundPainter = painter,
                     pageIndicatorVisible = selectedZones.size > 1,
-                    navigateToNearestAlarm = navigateToNearestAlarm,
+                    navigateToNearestAlarm = handleNavigateToNearestAlarm,
                     modifier = Modifier.fillMaxHeight(0.5f + 0.05f)
                 )
             }
@@ -171,9 +195,10 @@ fun HomeScreen(
                 if (page == 0) {
                     AlarmsScreen(
                         alarms = alarms,
+                        scrollToAlarmId = scrollToAlarmId.value,
+                        onScrollHandled = { scrollToAlarmId.value = null },
                         onAlarmUpdated = onAlarmUpdated,
                         onAlarmDeleted = onAlarmDeleted,
-                        nearestAlarmId = nearestAlarmId.value,
                         isBottomSheetExpanded = isBottomSheetExpanded
                     )
                 } else {
@@ -187,7 +212,11 @@ fun HomeScreen(
     }
 
     if (selectedTabIndex.intValue == 0) {
-        Box(modifier = Modifier.fillMaxSize().padding(12.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp)
+        ) {
             AnimatedFabMenu(
                 icon = R.drawable.ic_add,
                 text = R.string.title_create,

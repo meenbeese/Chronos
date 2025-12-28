@@ -5,7 +5,6 @@ import android.content.Context
 import android.widget.Toast
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -54,17 +53,10 @@ fun HomeDestination(
     val alarms by alarmViewModel.alarms.observeAsState(emptyList())
     val isBottomSheetExpanded = remember { mutableStateOf(false) }
 
-    val nearestAlarmId = remember { mutableStateOf(getNearestAlarmId(repo)) }
-
-    LaunchedEffect(alarms) {
-        nearestAlarmId.value = getNearestAlarmId(repo)
-    }
-
     HomeScreen(
         navController = navController,
         alarms = alarms,
         isBottomSheetExpanded = isBottomSheetExpanded,
-        nearestAlarmId = nearestAlarmId,
         onAlarmUpdated = { alarmData ->
             CoroutineScope(Dispatchers.IO).launch {
                 alarmViewModel.update(alarmData.toEntity())
@@ -81,9 +73,6 @@ fun HomeDestination(
         onScheduleWatch = { navigateToStopwatch() },
         onScheduleTimer = { h, m, s, ring, vibrate ->
             scheduleTimer(context, repo, h, m, s, ring, vibrate, navigateToTimer)
-        },
-        navigateToNearestAlarm = {
-            nearestAlarmId.value = getNearestAlarmId(repo)
         },
         intentAction = intentAction
     )
@@ -152,24 +141,7 @@ private fun scheduleTimer(
     timer.setVibrate(context, isVibrate)
     timer.setSound(context, ringtone)
     timer[context] = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    TimerService.Companion.startService(context)
+    TimerService.startService(context)
 
     navigateToTimer(timer)
-}
-
-private fun getNearestAlarmId(repo: TimerAlarmRepository): Int {
-    val allAlarms = repo.alarms
-
-    val alarmsWithNextTrigger = allAlarms
-        .filter { it.isEnabled }
-        .mapNotNull { alarm -> alarm.getNext()?.timeInMillis?.let { alarm to it } }
-
-    val targetAlarm = alarmsWithNextTrigger
-        .minByOrNull { it.second }?.first
-        ?: allAlarms
-            .mapNotNull { alarm -> alarm.getNext()?.timeInMillis?.let { alarm to it } }
-            .minByOrNull { it.second }
-            ?.first
-
-    return targetAlarm?.id ?: -1
 }
