@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AlarmsScreen(
-    alarms: List<AlarmEntity>,
+    alarms: List<AlarmData>,
     scrollToAlarmId: Int?,
     onScrollHandled: () -> Unit,
     onAlarmUpdated: (AlarmData) -> Unit,
@@ -30,7 +30,6 @@ fun AlarmsScreen(
         EmptyAlarmsView()
     } else {
         val listState = rememberLazyListState()
-        val alarmsData = remember(alarms) { alarms.map { it.toData() } }
 
         LaunchedEffect(scrollToAlarmId, alarms) {
             val targetId = scrollToAlarmId ?: return@LaunchedEffect
@@ -70,7 +69,7 @@ fun AlarmsScreen(
         }
 
         AlarmListScreen(
-            alarms = alarmsData,
+            alarms = alarms,
             onAlarmUpdated = onAlarmUpdated,
             onAlarmDeleted = onAlarmDeleted,
             modifier = Modifier.fillMaxSize(),
