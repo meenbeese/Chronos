@@ -79,12 +79,11 @@ fun TimeZonesList(
             val sign = if (offsetSeconds >= 0) "+" else "-"
 
             val offsetFormatted = "GMT$sign%02d:%02d".format(hours, minutes)
-            val title = timeZoneId
             val isChecked = selected.contains(timeZoneId)
 
             TimeZoneItem(
                 timeText = offsetFormatted,
-                titleText = title,
+                titleText = timeZoneId,
                 isChecked = isChecked,
                 onCheckedChange = { checked ->
                     if (checked) selected.add(timeZoneId) else selected.remove(timeZoneId)
