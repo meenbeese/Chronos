@@ -40,7 +40,10 @@ import androidx.compose.ui.unit.sp
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
+import com.meenbeese.chronos.utils.EmojiUtils
 import com.meenbeese.chronos.utils.FormatUtils
+
+import dev.alexdametto.compose_emoji_picker.presentation.EmojiPicker
 
 import kotlinx.coroutines.delay
 
@@ -75,7 +78,6 @@ fun AlarmItemView(
         mutableStateOf(alarm.getNext()?.timeInMillis)
     }
 
-    var name by remember { mutableStateOf(alarm.name.orEmpty()) }
     var days by remember { mutableStateOf(alarm.days.toMutableList()) }
 
     val rotationAngle by animateFloatAsState(
@@ -99,6 +101,14 @@ fun AlarmItemView(
         stringResource(R.string.day_friday_abbr),
         stringResource(R.string.day_saturday_abbr)
     )
+
+    val (initialEmoji, initialName) = remember(alarm.name) {
+        EmojiUtils.decodeAlarmName(alarm.name)
+    }
+
+    var emoji by remember { mutableStateOf(initialEmoji) }
+    var name by remember { mutableStateOf(initialName) }
+    val openEmojiPicker = remember { mutableStateOf(false) }
 
     Column(
         modifier
@@ -230,6 +240,26 @@ fun AlarmItemView(
                     .clickable(onClick = onExpandClick)
             )
 
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clickable { openEmojiPicker.value = true },
+                contentAlignment = Alignment.Center
+            ) {
+                if (emoji == null) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_emoji),
+                        contentDescription = "Pick emoji",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                } else {
+                    Text(
+                        text = emoji!!,
+                        fontSize = 22.sp
+                    )
+                }
+            }
+
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -320,4 +350,17 @@ fun AlarmItemView(
             }
         }
     }
+
+    EmojiPicker(
+        open = openEmojiPicker.value,
+        onClose = {
+            openEmojiPicker.value = false
+        },
+        onEmojiSelected = {
+            emoji = it.emoji
+            alarm.name = EmojiUtils.encodeAlarmName(emoji, name)
+            onAlarmUpdated(alarm)
+            openEmojiPicker.value = false
+        }
+    )
 }

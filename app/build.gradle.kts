@@ -114,6 +114,7 @@ dependencies {
     implementation("androidx.room:room-runtime:2.8.4")
 
     implementation("com.github.skydoves:colorpicker-compose:1.1.3")
+    implementation("com.github.alexdametto:compose-emoji-picker:1.0.0")
 
     implementation("io.arrow-kt:arrow-core:2.2.1.1")
     implementation("io.coil-kt.coil3:coil-compose:3.3.0")
