@@ -21,6 +21,7 @@ import com.meenbeese.chronos.data.preference.AlertWindowPreference
 import com.meenbeese.chronos.data.preference.BooleanPreference
 import com.meenbeese.chronos.data.preference.ColorSchemePreference
 import com.meenbeese.chronos.data.preference.ImportExportPreference
+import com.meenbeese.chronos.data.preference.RadioPreference
 import com.meenbeese.chronos.data.preference.RingtonePreference
 import com.meenbeese.chronos.data.preference.ThemePreference
 import com.meenbeese.chronos.data.preference.TimePreference
@@ -28,6 +29,8 @@ import com.meenbeese.chronos.ext.handleBatteryOptimizationClick
 import com.meenbeese.chronos.ui.views.PreferenceItem
 
 import kotlinx.coroutines.CoroutineScope
+
+import kotlin.time.Duration.Companion.minutes
 
 data class PreferenceBlock(
     val visible: Boolean = true,
@@ -122,9 +125,17 @@ fun SettingsScreen(
                 )
             },
             PreferenceBlock {
-                TimePreference(
+                RadioPreference(
                     preference = Preferences.SLOW_WAKE_UP_TIME,
-                    titleRes = R.string.title_slow_wake_up_time
+                    titleRes = R.string.title_slow_wake_up_time,
+                    options = listOf(
+                        1.minutes,
+                        2.minutes,
+                        5.minutes,
+                        10.minutes,
+                        15.minutes,
+                        30.minutes
+                    )
                 )
             },
             PreferenceBlock {
