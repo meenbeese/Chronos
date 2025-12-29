@@ -120,18 +120,24 @@ fun CatppuccinColorSelector(
             Box(
                 modifier = Modifier
                     .padding(end = 16.dp)
-                    .size(animatedSize)
-                    .clip(if (isSelected) MaterialTheme.shapes.small else MaterialTheme.shapes.large)
-                    .background(color)
-                    .clickable { onColorSelected(colorInt) }
-                    .then(
-                        if (isSelected) Modifier.border(
-                            2.dp,
-                            MaterialTheme.colorScheme.primary,
-                            MaterialTheme.shapes.small
-                        ) else Modifier
-                    )
-            )
+                    .size(40.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(animatedSize)
+                        .clip(if (isSelected) MaterialTheme.shapes.small else MaterialTheme.shapes.large)
+                        .background(color)
+                        .clickable { onColorSelected(colorInt) }
+                        .then(
+                            if (isSelected) Modifier.border(
+                                2.dp,
+                                MaterialTheme.colorScheme.primary,
+                                MaterialTheme.shapes.small
+                            ) else Modifier
+                        )
+                )
+            }
         }
     }
 }
