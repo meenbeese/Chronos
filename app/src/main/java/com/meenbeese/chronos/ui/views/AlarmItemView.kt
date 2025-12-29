@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -132,9 +134,13 @@ fun AlarmItemView(
 
             Switch(
                 checked = alarm.isEnabled,
-                onCheckedChange = onToggleEnabled,
-                modifier = Modifier
-                    .padding(start = 12.dp)
+                onCheckedChange = { enabled ->
+                    onToggleEnabled(enabled)
+                    if (!enabled) {
+                        onExpandClick()
+                    }
+                },
+                modifier = Modifier.padding(start = 12.dp)
             )
         }
 
@@ -241,7 +247,17 @@ fun AlarmItemView(
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .clickable { openEmojiPicker.value = true },
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onTap = { openEmojiPicker.value = true },
+                            onLongPress = {
+                                emoji = null
+                                name = initialName
+                                alarm.name = initialName
+                                onAlarmUpdated(alarm)
+                            }
+                        )
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 if (emoji == null) {

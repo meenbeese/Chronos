@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -64,6 +65,14 @@ fun ClockPageView(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(false) }
     val bottomPadding = if (isTablet) 16.dp else 56.dp
+    val textColorArgb by produceState(
+        initialValue = Color.White.toArgb(),
+        key1 = backgroundPainter
+    ) {
+        value = ImageUtils
+            .getContrastingTextColorFromBg(context)
+            .toArgb()
+    }
 
     Box(
         modifier = modifier.fillMaxWidth()
@@ -87,11 +96,7 @@ fun ClockPageView(
         ) { page ->
             ClockScreen(
                 timezoneId = timeZones[page],
-                getTextColor = {
-                    ImageUtils
-                        .getContrastingTextColorFromBg(context)
-                        .toArgb()
-                },
+                getTextColor = { textColorArgb },
                 navigateToNearestAlarm = navigateToNearestAlarm
             )
         }
