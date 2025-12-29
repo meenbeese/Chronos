@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
@@ -55,7 +56,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val homeTabs = listOf("Alarms", "Settings")
+    val homeTabs = listOf(stringResource(R.string.title_alarms), stringResource(R.string.title_settings))
 
     val selectedTabIndex = remember { mutableIntStateOf(0) }
     val scrollToAlarmId = remember { mutableStateOf<Int?>(null) }

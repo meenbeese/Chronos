@@ -12,8 +12,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.media3.common.util.UnstableApi
 
-import arrow.core.getOrElse
-
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceEntry
 import com.meenbeese.chronos.data.SoundData
@@ -41,7 +39,7 @@ fun RingtonePreference(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    var soundName by remember { mutableStateOf("") }
+    var soundName by remember { mutableStateOf<String?>(null) }
     var showDialog by remember { mutableStateOf(false) }
     var showFileChooser by remember { mutableStateOf(false) }
     var fileChooserCallback by remember { mutableStateOf<(String, String) -> Unit>({ _, _ -> }) }
@@ -49,18 +47,15 @@ fun RingtonePreference(
     // Load sound name on composition and when preference changes
     LaunchedEffect(preference) {
         val soundStr = preference.get(context)
-        soundName = if (soundStr.isNotEmpty()) {
-            SoundData.fromString(soundStr)
-                .map { it.name }
-                .getOrElse { context.getString(R.string.title_sound_none) }
-        } else {
-            context.getString(R.string.title_sound_none)
-        }
+        soundName = SoundData
+            .fromString(soundStr)
+            .map { it.name }
+            .getOrNull()
     }
 
     PreferenceItem(
         title = stringResource(id = titleRes),
-        description = soundName,
+        description = soundName ?: stringResource(R.string.title_sound_none),
         onClick = { showDialog = true },
         modifier = modifier
     )
@@ -73,7 +68,7 @@ fun RingtonePreference(
                 CoroutineScope(Dispatchers.IO).launch {
                     preference.set(context, sound.toString())
                     withContext(Dispatchers.Main) {
-                        soundName = sound?.name ?: context.getString(R.string.title_sound_none)
+                        soundName = sound?.name
                         showDialog = false
                     }
                 }

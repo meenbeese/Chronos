@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
@@ -200,17 +201,17 @@ fun StopwatchDestination(navController: NavController) {
                         .padding(vertical = 4.dp)
                 ) {
                     Text(
-                        text = context.getString(R.string.title_lap_number, lap.number),
+                        text = stringResource(R.string.title_lap_number, lap.number),
                         color = MaterialTheme.colorScheme.secondary
                     )
                     Spacer(Modifier.weight(1f))
                     Text(
-                        text = context.getString(R.string.title_lap_time, FormatUtils.formatMillis(lap.lapTime)),
+                        text = stringResource(R.string.title_lap_time, FormatUtils.formatMillis(lap.lapTime)),
                         color = MaterialTheme.colorScheme.secondary
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = context.getString(R.string.title_total_time, FormatUtils.formatMillis(lap.totalTime)),
+                        text = stringResource(R.string.title_total_time, FormatUtils.formatMillis(lap.totalTime)),
                         color = MaterialTheme.colorScheme.secondary
                     )
                 }

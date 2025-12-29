@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.core.view.WindowCompat
 import androidx.media3.common.util.UnstableApi
 
@@ -39,7 +40,7 @@ import com.meenbeese.chronos.services.TimerService
 import com.meenbeese.chronos.utils.FormatUtils
 import com.meenbeese.chronos.utils.FormatUtils.format
 import com.meenbeese.chronos.utils.FormatUtils.formatMillis
-import com.meenbeese.chronos.utils.FormatUtils.formatUnit
+import com.meenbeese.chronos.utils.FormatUtils.formatMins
 import com.meenbeese.chronos.utils.FormatUtils.getShortFormat
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundPainter
 
@@ -190,7 +191,7 @@ class AlarmActivity : ComponentActivity() {
                     if (showSnoozeDialog.value) {
                         val context = LocalContext.current
                         val minutes = listOf(2, 5, 10, 20, 30, 60)
-                        val names = minutes.map { formatUnit(context, it) } + context.getString(R.string.title_snooze_custom)
+                        val names = minutes.map { formatMins(it) } + stringResource(R.string.title_snooze_custom)
 
                         SnoozeDurationDialog(
                             names = names,

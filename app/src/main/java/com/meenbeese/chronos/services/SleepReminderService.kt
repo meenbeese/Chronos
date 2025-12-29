@@ -20,7 +20,7 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.db.TimerAlarmRepository
-import com.meenbeese.chronos.utils.FormatUtils.formatUnit
+import com.meenbeese.chronos.utils.FormatUtils.formatMins
 
 import org.koin.android.ext.android.inject
 
@@ -101,7 +101,7 @@ class SleepReminderService : Service() {
 
         val notification = NotificationCompat.Builder(this, "sleepReminder")
             .setContentTitle(getString(R.string.title_sleep_reminder))
-            .setContentText(getString(R.string.msg_sleep_reminder, formatUnit(this, minutesUntil)))
+//            .setContentText(getString(R.string.msg_sleep_reminder, formatMins(this, minutesUntil)))
             .setSmallIcon(R.drawable.ic_notification_sleep)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)

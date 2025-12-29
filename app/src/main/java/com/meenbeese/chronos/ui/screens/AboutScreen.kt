@@ -69,6 +69,7 @@ fun AboutScreen(
         fontSize = 14.sp,
         color = MaterialTheme.colorScheme.onBackground
     )
+    val copyrightText = stringResource(R.string.copyright_info, year)
 
     Column(
         modifier = Modifier
@@ -196,7 +197,7 @@ fun AboutScreen(
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            Toast.makeText(context, context.getString(R.string.copyright_info, year), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, copyrightText, Toast.LENGTH_SHORT).show()
         }
     }
 

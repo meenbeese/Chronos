@@ -2,6 +2,10 @@ package com.meenbeese.chronos.utils
 
 import android.content.Context
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
+
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
 
@@ -139,37 +143,44 @@ object FormatUtils {
      * idk maybe a sentence or something. An input of 60 becomes "1 hour", 59
      * becomes "59 minutes", and so on.
      *
-     * @param context       An active context instance.
      * @param minutes       The duration of minutes to format.
      * @return              The formatted time string.
      */
     @JvmStatic
-    fun formatUnit(context: Context, minutes: Int): String {
-        var mins = minutes
-        val days = TimeUnit.MINUTES.toDays(mins.toLong())
-        val hours = TimeUnit.MINUTES.toHours(mins.toLong()) % TimeUnit.DAYS.toHours(1)
-        mins %= TimeUnit.HOURS.toMinutes(1).toInt()
-        return if (days > 0) String.format(
-            Locale.getDefault(),
-            "%d " + context.getString(if (days > 1) R.string.word_days else R.string.word_day) + ", %d " + context.getString(
-                if (hours > 1) R.string.word_hours else R.string.word_hour
-            ) + if (mins > 0) ", " + context.getString(R.string.word_join) + " %d " + context.getString(
-                if (mins > 1) R.string.word_minutes else R.string.word_minute
-            ) else "",
-            days,
-            hours,
-            mins
-        ) else if (hours > 0) String.format(
-            Locale.getDefault(),
-            "%d " + context.getString(if (hours > 1) R.string.word_hours else R.string.word_hour) + if (mins > 0) " " + context.getString(
-                R.string.word_join
-            ) + " %d " + context.getString(if (mins > 1) R.string.word_minutes else R.string.word_minute) else "",
-            hours,
-            mins
-        ) else String.format(
-            Locale.getDefault(),
-            "%d " + context.getString(if (mins > 1) R.string.word_minutes else R.string.word_minute),
-            mins
-        )
+    @Composable
+    fun formatMins(minutes: Int): String {
+        var remainingMinutes = minutes
+
+        val days = TimeUnit.MINUTES.toDays(remainingMinutes.toLong()).toInt()
+        remainingMinutes -= TimeUnit.DAYS.toMinutes(days.toLong()).toInt()
+
+        val hours = TimeUnit.MINUTES.toHours(remainingMinutes.toLong()).toInt()
+        remainingMinutes -= TimeUnit.HOURS.toMinutes(hours.toLong()).toInt()
+
+        val mins = remainingMinutes
+
+        val parts = buildList {
+            if (days > 0) {
+                add(pluralStringResource(R.plurals.word_day, days, days))
+            }
+            if (hours > 0) {
+                add(pluralStringResource(R.plurals.word_hour, hours, hours))
+            }
+            if (mins > 0 || isEmpty()) {
+                add(pluralStringResource(R.plurals.word_minute, mins, mins))
+            }
+        }
+
+        return when (parts.size) {
+            1 -> parts[0]
+            2 -> parts.joinToString(
+                separator = " ${stringResource(R.string.word_join)} "
+            )
+            else -> {
+                parts.dropLast(1).joinToString(", ") +
+                    ", ${stringResource(R.string.word_join)} " +
+                    parts.last()
+            }
+        }
     }
 }

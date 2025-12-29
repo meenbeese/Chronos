@@ -86,10 +86,8 @@ fun AlarmItemView(
     )
 
     val alarmText = if (alarm.isEnabled && nextAlarmTime != null && nextAlarmTime!! > now) {
-        val minutes = TimeUnit.MILLISECONDS.toMinutes(nextAlarmTime!! - now)
-        stringResource(
-            R.string.next_alarm
-        ) + ": " + FormatUtils.formatUnit(context, minutes.toInt())
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(nextAlarmTime!! - now).toInt()
+        stringResource(R.string.next_alarm) + ": " + FormatUtils.formatMins(minutes)
     } else null
 
     val dayLabels = listOf(
