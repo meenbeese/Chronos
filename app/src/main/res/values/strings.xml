@@ -11,7 +11,6 @@
     <string name="number_nine" translatable="false">9</string>
     <string name="app_name" translatable="false">Chronos</string>
     <string name="title_lap_number" translatable="false">#%d</string>
-
     <string name="day_sunday_abbr">S</string>
     <string name="day_monday_abbr">M</string>
     <string name="day_tuesday_abbr">T</string>
@@ -114,22 +113,18 @@
     <string name="visit_website">Visit my website</string>
     <string name="word_join">and</string>
     <string name="word_none">No alarms</string>
-
     <plurals name="word_day">
         <item quantity="one">%d day</item>
         <item quantity="other">%d days</item>
     </plurals>
-
     <plurals name="word_hour">
         <item quantity="one">%d hour</item>
         <item quantity="other">%d hours</item>
     </plurals>
-
     <plurals name="word_minute">
         <item quantity="one">%d minute</item>
         <item quantity="other">%d minutes</item>
     </plurals>
-
     <string-array name="array_themes">
         <item>Auto</item>
         <item>Day</item>

@@ -1,73 +1,16 @@
 <resources>
-    <string name="title_alarm">%d. ébresztés</string>
-    <string name="title_alarm_next">%s múlva.</string>
-    <string name="title_none">Nincs</string>
-    <string name="title_vibrate">Rezgés</string>
-    <string name="title_repeat">Ismétlés</string>
-    <string name="title_set_alarm">Ébresztés</string>
-    <string name="title_set_timer">Időzítő</string>
-    <string name="title_set_stopwatch">Stopper</string>
-    <string name="title_lap">Kör</string>
-    <string name="title_stopwatch">Stopper</string>
-    <string name="title_stopwatch_share">%s stopper: %s</string>
-    <string name="title_time">Idő: %s</string>
-    <string name="title_lap_time">Kör: %s</string>
-    <string name="title_total_time">Összesen: %s</string>
-    <string name="title_share_results">Eredmények megosztása…</string>
-    <string name="msg_delete_confirmation">Biztos, hogy törli a következőt: %s?</string>
-    <string name="title_delete">Törlés</string>
-    <string name="title_start_timer">Időzítő indítása</string>
-    <string name="title_sunrise">Napkelte</string>
-    <string name="title_sunset">Napnyugta</string>
-    <string name="title_theme">Téma</string>
-    <string name="title_appearance">Megjelenés</string>
-    <string name="title_sound_none">Nincs</string>
-    <string name="title_snooze">Szundi</string>
-    <string name="title_alarms">Ébresztések</string>
-    <string name="title_settings">Beállítások</string>
-    <string name="title_ringtones">Csengőhangok</string>
-    <string name="word_day">nap</string>
-    <string name="word_days">nap</string>
-    <string name="word_minute">perc</string>
-    <string name="word_minutes">perc</string>
-    <string name="word_hour">óra</string>
-    <string name="word_hours">óra</string>
-    <string name="word_join">és</string>
-    <string name="title_snooze_custom">Egyéni…</string>
-    <string name="msg_snoozed_until">Szundi eddig: %s</string>
-    <string name="title_time_zones">Időzónák</string>
-    <string name="title_behavior">Viselkedés</string>
-    <string name="title_default_alarm_ringtone">Alapértelmezett ébresztési csengőhang</string>
-    <string name="title_default_timer_ringtone">Alapértelmezett időzítő csengőhang</string>
-    <string name="title_sleep_reminder">Alvásemlékeztető</string>
-    <string name="desc_sleep_reminder">Értesítés küldése, amely figyelmezteti, hogy menjen aludni egy bizonyos idővel az ébresztő csörgése előtt, ha használja a telefont.</string>
-    <string name="title_sleep_reminder_time">Ébresztési emlékeztető ideje</string>
-    <string name="desc_sleep_reminder_time">%1$d órával korábban</string>
-    <string name="title_slow_wake_up">Lassú ébresztés</string>
-    <string name="desc_slow_wake_up">Fokozatosan növeli a fény- és hangerőt, ha az ébresztés csörög.</string>
-    <string name="title_slow_wake_up_time">Lassú ébresztés időtartama</string>
-    <string name="title_about">A Chronosról</string>
-    <string name="title_choose_time_zone">Válasszon időzónát</string>
-    <string name="msg_sleep_reminder">A következő ébresztés körülbelül %s múlva fog csörögni. Hogy annyit aludjon, amennyit a beállítások menüben megadott, most kellene aludni mennie.</string>
-    <string name="title_alarm_name">Ébresztés neve</string>
-    <string name="title_background_image">Háttérkép</string>
-    <string name="title_ringing_background_image">Háttérkép megjelenítése az ébresztőknél/időzítőknél</string>
-    <string name="desc_ringing_background_image">Megjelenjen-e a háttérkép, ha az ébresztő vagy időzítő csörög.</string>
-    <string name="msg_alarms_empty">Még nincsenek ébresztések beállítva. Nyomja meg a „+” gombot egy új létrehozásához.</string>
-    <string name="msg_time_zones_selected">%d kiválasztva</string>
-    <string name="title_files">Fájlok</string>
-    <string name="title_files_audio_files">Hangfájlok</string>
-    <string name="title_files_add_audio">Válasszon fájlt</string>
-    <string-array name="array_themes">
-        <item>Időzített</item>
-        <item>Nappal</item>
-        <item>Éjszaka</item>
-        <item>AMOLED</item>
-    </string-array>
-
-    <string name="msg_battery_optimizations_switch_enable">Kapcsolja be az „Chronos” melletti kapcsolót. Lehet hogy sokáig kell görgetnie… nagyon.</string>
-    <string name="title_ignore_battery_optimizations">Akkumulátor optimalizációk mellőzése</string>
-
+    <string name="number_zero" translatable="false">0</string>
+    <string name="number_one" translatable="false">1</string>
+    <string name="number_two" translatable="false">2</string>
+    <string name="number_three" translatable="false">3</string>
+    <string name="number_four" translatable="false">4</string>
+    <string name="number_five" translatable="false">5</string>
+    <string name="number_six" translatable="false">6</string>
+    <string name="number_seven" translatable="false">7</string>
+    <string name="number_eight" translatable="false">8</string>
+    <string name="number_nine" translatable="false">9</string>
+    <string name="app_name" translatable="false">Chronos</string>
+    <string name="title_lap_number" translatable="false">#%d</string>
     <string name="day_sunday_abbr">V</string>
     <string name="day_monday_abbr">H</string>
     <string name="day_tuesday_abbr">K</string>
@@ -75,9 +18,117 @@
     <string name="day_thursday_abbr">Cs</string>
     <string name="day_friday_abbr">P</string>
     <string name="day_saturday_abbr">Sz</string>
-
-    <!-- untranslated strings -->
-    <string name="info_background_permissions_title">System Alerts / Background Permissions</string>
+    <string name="app_description">Simple, yet customizable alarm clock app \n focused on simplicity, usability and design.</string>
+    <string name="button_color">Color</string>
+    <string name="button_custom">Catppuccin</string>
+    <string name="button_image">Image</string>
+    <string name="button_system">System</string>
+    <string name="color_scheme">Color Scheme</string>
+    <string name="copyright_info">Copyright %1$d Kuzey Bilgin</string>
+    <string name="default_alarm_label">this alarm</string>
+    <string name="desc_audio_file">Choose an audio file in one of the following formats: MPEG, MP4, OGG, AAC, OPUS, or FLAC.</string>
+    <string name="desc_background_image">Choose an image file in one of the following formats: JPEG, PNG, WebP, GIF, BMP, or HEIF.</string>
+    <string name="desc_play_headphones">Alarm sounds will only play over connected headphones or a bluetooth device.</string>
+    <string name="desc_ringing_background_image">Megjelenjen-e a háttérkép, ha az ébresztő vagy időzítő csörög.</string>
+    <string name="desc_scroll_next">Navigates to the next alarm based on its scheduled time when the clock is pressed.</string>
+    <string name="desc_sleep_reminder">Értesítés küldése, amely figyelmezteti, hogy menjen aludni egy bizonyos idővel az ébresztő csörgése előtt, ha használja a telefont.</string>
+    <string name="desc_sleep_reminder_time">%1$d órával korábban</string>
+    <string name="desc_slow_wake_up">Fokozatosan növeli a fény- és hangerőt, ha az ébresztés csörög.</string>
+    <string name="description_default">Example default description</string>
+    <string name="engage_title">Engage with Chronos</string>
+    <string name="feature_list">
+        • Custom backgrounds &amp; ringtones\n
+        • No unnecessary permissions\n
+        • Dark, Light, AMOLED themes\n
+        • Granular controls everywhere\n
+        • Unique, minimal, efficient design\n
+        • Portrait and landscape orientation\n
+        • Countless default ringtones
+    </string>
+    <string name="fork_github">Fork GitHub repo</string>
     <string name="info_background_permissions_body">Newer versions of Android are becoming increasingly unreliable at starting apps from the background without user interaction; with the introduction of Doze/App Standby in Android 6.0, the requirements for an app to be started are ambiguous and often device-specific.\n\nAs such, while it is not always a requirement for this app to function, it is highly recommended that you grant the System Overlays permission on the next page. This will grant Chronos an exemption from Android\'s usual requirements for starting an app without user interaction, and allow it to function much more reliably.</string>
+    <string name="info_background_permissions_title">System Alerts / Background Permissions</string>
+    <string name="made_with_love">Made with ❤ in Canada.</string>
+    <string name="msg_alarms_empty">Még nincsenek ébresztések beállítva. Nyomja meg a „+” gombot egy új létrehozásához.</string>
+    <string name="msg_battery_optimizations_switch_enable">Kapcsolja be az „Chronos” melletti kapcsolót. Lehet hogy sokáig kell görgetnie… nagyon.</string>
+    <string name="msg_delete_confirmation">Biztos, hogy törli a következőt: %s?</string>
+    <string name="msg_sleep_reminder">A következő ébresztés körülbelül %s múlva fog csörögni. Hogy annyit aludjon, amennyit a beállítások menüben megadott, most kellene aludni mennie.</string>
+    <string name="msg_snoozed_until">Szundi eddig: %s</string>
+    <string name="msg_time_zones_selected">%d kiválasztva</string>
+    <string name="next_alarm">Next Alarm</string>
+    <string name="send_email">Send me an email</string>
+    <string name="title_about">A Chronosról</string>
+    <string name="title_alarm">%d. ébresztés</string>
+    <string name="title_alarm_name">Ébresztés neve</string>
+    <string name="title_alarm_next">%s múlva.</string>
+    <string name="title_alarms">Ébresztések</string>
+    <string name="title_appearance">Megjelenés</string>
+    <string name="title_background_color">Custom Background Color</string>
+    <string name="title_background_image">Háttérkép</string>
+    <string name="title_background_mode">Background Mode</string>
+    <string name="title_behavior">Viselkedés</string>
+    <string name="title_choose_time_zone">Válasszon időzónát</string>
+    <string name="title_create">New</string>
+    <string name="title_default_alarm_ringtone">Alapértelmezett ébresztési csengőhang</string>
+    <string name="title_default_timer_ringtone">Alapértelmezett időzítő csengőhang</string>
+    <string name="title_delete">Törlés</string>
+    <string name="title_files">Fájlok</string>
+    <string name="title_files_add_audio">Válasszon fájlt</string>
+    <string name="title_files_audio_files">Hangfájlok</string>
+    <string name="title_ignore_battery_optimizations">Akkumulátor optimalizációk mellőzése</string>
+    <string name="title_lap">Kör</string>
+    <string name="title_lap_time">Kör: %s</string>
+    <string name="title_military_time">Enable 24-hour Clock</string>
+    <string name="title_none">Nincs</string>
+    <string name="title_picker_dialog">Choose a Color</string>
+    <string name="title_play_headphones">Only play over headphones</string>
+    <string name="title_repeat">Ismétlés</string>
+    <string name="title_ringing_background_image">Háttérkép megjelenítése az ébresztőknél/időzítőknél</string>
+    <string name="title_ringtones">Csengőhangok</string>
+    <string name="title_scroll_next">Scroll to the Next Alarm</string>
+    <string name="title_set_alarm">Ébresztés</string>
+    <string name="title_set_stopwatch">Stopper</string>
+    <string name="title_set_timer">Időzítő</string>
+    <string name="title_settings">Beállítások</string>
+    <string name="title_share_results">Eredmények megosztása…</string>
+    <string name="title_sleep_reminder">Alvásemlékeztető</string>
+    <string name="title_sleep_reminder_time">Ébresztési emlékeztető ideje</string>
+    <string name="title_slow_wake_up">Lassú ébresztés</string>
+    <string name="title_slow_wake_up_time">Lassú ébresztés időtartama</string>
+    <string name="title_snooze">Szundi</string>
+    <string name="title_snooze_custom">Egyéni…</string>
     <string name="title_snooze_duration">Choose Snooze Duration</string>
+    <string name="title_sound_none">Nincs</string>
+    <string name="title_start_timer">Időzítő indítása</string>
+    <string name="title_stopwatch">Stopper</string>
+    <string name="title_stopwatch_share">%s stopper: %s</string>
+    <string name="title_sunrise">Napkelte</string>
+    <string name="title_sunset">Napnyugta</string>
+    <string name="title_theme">Téma</string>
+    <string name="title_time">Idő: %s</string>
+    <string name="title_time_zones">Időzónák</string>
+    <string name="title_total_time">Összesen: %s</string>
+    <string name="title_vibrate">Rezgés</string>
+    <string name="unable_start_activity">Unable to start activity</string>
+    <string name="visit_website">Visit my website</string>
+    <string name="word_join">és</string>
+    <string name="word_none">No alarms</string>
+    <plurals name="word_day">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="word_hour">
+        <item quantity="one">%d hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
+    <plurals name="word_minute">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+    <string-array name="array_themes">
+        <item>Időzített</item>
+        <item>Nappal</item>
+        <item>Éjszaka</item>
+        <item>AMOLED</item>
+    </string-array>
 </resources>

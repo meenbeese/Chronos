@@ -1,73 +1,16 @@
 <resources>
-    <string name="title_alarm">Alarme %d</string>
-    <string name="title_none">Nenhum</string>
-    <string name="title_vibrate">Vibrar</string>
-    <string name="title_repeat">Repetir</string>
-    <string name="title_set_alarm">Alarme</string>
-    <string name="title_set_timer">Temporizador</string>
-    <string name="title_set_stopwatch">Cronômetro</string>
-    <string name="title_lap">Volta</string>
-    <string name="title_stopwatch">Cronômetro</string>
-    <string name="title_stopwatch_share">%s Cronômetro: %s</string>
-    <string name="title_time">Hora: %s</string>
-    <string name="title_lap_time">Volta: %s</string>
-    <string name="title_total_time">Total: %s</string>
-    <string name="title_share_results">Compartilhar os resultados…</string>
-    <string name="msg_delete_confirmation">Tem certeza de que deseja excluir %s?</string>
-    <string name="title_delete">Excluir</string>
-    <string name="title_start_timer">Iniciar temporizador</string>
-    <string name="title_sunrise">Nascer do Sol</string>
-    <string name="title_sunset">Pôr do Sol</string>
-    <string name="title_theme">Tema</string>
-    <string name="title_appearance">Aparência</string>
-    <string name="title_sound_none">Nenhum</string>
-    <string name="title_snooze">Adiar</string>
-    <string name="word_minute">minuto</string>
-    <string name="word_minutes">minutos</string>
-    <string name="word_hour">hora</string>
-    <string name="word_hours">horas</string>
-    <string name="word_join">e</string>
-    <string name="title_snooze_custom">Personalizar…</string>
-    <string name="msg_snoozed_until">Suspenso até %s</string>
-    <string name="title_time_zones">Fusos Horários</string>
-    <string name="title_behavior">Comportamento</string>
-    <string name="title_default_alarm_ringtone">Toque de Alarme Padrão</string>
-    <string name="title_default_timer_ringtone">Toque do Timer Padrão</string>
-    <string name="title_sleep_reminder">Lembrete de suspensão</string>
-    <string name="desc_sleep_reminder">Envie uma notificação lembrando você de ir dormir um certo tempo antes que seu alarme toque se você estiver usando o seu telefone.</string>
-    <string name="title_sleep_reminder_time">Hora do lembrete de suspensão</string>
-    <string name="desc_sleep_reminder_time">%1$d horas antes</string>
-    <string name="title_slow_wake_up">Despertar lento</string>
-    <string name="desc_slow_wake_up">Aumente gradualmente o brilho e o volume quando um alarme estiver tocando.</string>
-    <string name="title_slow_wake_up_time">Duração do Despertar Lento</string>
-    <string name="title_about">Sobre Chronos</string>
-    <string name="title_choose_time_zone">Escolha um fuso horário</string>
-    <string name="msg_sleep_reminder">Seu próximo alarme tocará aproximadamente% s a partir de agora. Para obter a quantidade especificada de sono no menu de configurações, você deve ir para a cama agora.</string>
-    <string name="title_alarm_name">Nome do Alarme</string>
-    <string name="title_background_image">Imagem de fundo</string>
-    <string name="title_ringing_background_image">Mostra a imagem de fundo nos alarmes / temporizadores</string>
-    <string name="desc_ringing_background_image">Exibe a imagem de fundo quando um alarme ou timer estiver tocando.</string>
-    <string name="msg_alarms_empty">Você não possui nenhum alarme definido. Pressione o botão \'+\' para criar um.</string>
-    <string name="msg_time_zones_selected">%d Selecionado</string>
-    <string-array name="array_themes">
-        <item>Agenda</item>
-        <item>Claro</item>
-        <item>Noturno</item>
-        <item>AMOLED</item>
-    </string-array>
-
-    <!-- untranslated strings -->
-    <string name="title_alarm_next">%s from now.</string>
-    <string name="msg_battery_optimizations_switch_enable">Turn on the switch next to \"Chronos\". You may need to scroll down… a lot.</string>
-    <string name="title_ignore_battery_optimizations">Ignore Battery Optimizations</string>
-    <string name="word_day">day</string>
-    <string name="word_days">days</string>
-    <string name="title_alarms">Alarms</string>
-    <string name="title_settings">Settings</string>
-    <string name="title_ringtones">Ringtones</string>
-    <string name="title_files">Files</string>
-    <string name="title_files_audio_files">Audio Files</string>
-    <string name="title_files_add_audio">Choose File</string>
+    <string name="number_zero" translatable="false">0</string>
+    <string name="number_one" translatable="false">1</string>
+    <string name="number_two" translatable="false">2</string>
+    <string name="number_three" translatable="false">3</string>
+    <string name="number_four" translatable="false">4</string>
+    <string name="number_five" translatable="false">5</string>
+    <string name="number_six" translatable="false">6</string>
+    <string name="number_seven" translatable="false">7</string>
+    <string name="number_eight" translatable="false">8</string>
+    <string name="number_nine" translatable="false">9</string>
+    <string name="app_name" translatable="false">Chronos</string>
+    <string name="title_lap_number" translatable="false">#%d</string>
     <string name="day_sunday_abbr">D</string>
     <string name="day_monday_abbr">S</string>
     <string name="day_tuesday_abbr">T</string>
@@ -75,7 +18,117 @@
     <string name="day_thursday_abbr">Q</string>
     <string name="day_friday_abbr">S</string>
     <string name="day_saturday_abbr">S</string>
-    <string name="info_background_permissions_title">System Alerts / Background Permissions</string>
+    <string name="app_description">Simple, yet customizable alarm clock app \n focused on simplicity, usability and design.</string>
+    <string name="button_color">Color</string>
+    <string name="button_custom">Catppuccin</string>
+    <string name="button_image">Image</string>
+    <string name="button_system">System</string>
+    <string name="color_scheme">Color Scheme</string>
+    <string name="copyright_info">Copyright %1$d Kuzey Bilgin</string>
+    <string name="default_alarm_label">this alarm</string>
+    <string name="desc_audio_file">Choose an audio file in one of the following formats: MPEG, MP4, OGG, AAC, OPUS, or FLAC.</string>
+    <string name="desc_background_image">Choose an image file in one of the following formats: JPEG, PNG, WebP, GIF, BMP, or HEIF.</string>
+    <string name="desc_play_headphones">Alarm sounds will only play over connected headphones or a bluetooth device.</string>
+    <string name="desc_ringing_background_image">Exibe a imagem de fundo quando um alarme ou timer estiver tocando.</string>
+    <string name="desc_scroll_next">Navigates to the next alarm based on its scheduled time when the clock is pressed.</string>
+    <string name="desc_sleep_reminder">Envie uma notificação lembrando você de ir dormir um certo tempo antes que seu alarme toque se você estiver usando o seu telefone.</string>
+    <string name="desc_sleep_reminder_time">%1$d horas antes</string>
+    <string name="desc_slow_wake_up">Aumente gradualmente o brilho e o volume quando um alarme estiver tocando.</string>
+    <string name="description_default">Example default description</string>
+    <string name="engage_title">Engage with Chronos</string>
+    <string name="feature_list">
+        • Custom backgrounds &amp; ringtones\n
+        • No unnecessary permissions\n
+        • Dark, Light, AMOLED themes\n
+        • Granular controls everywhere\n
+        • Unique, minimal, efficient design\n
+        • Portrait and landscape orientation\n
+        • Countless default ringtones
+    </string>
+    <string name="fork_github">Fork GitHub repo</string>
     <string name="info_background_permissions_body">Newer versions of Android are becoming increasingly unreliable at starting apps from the background without user interaction; with the introduction of Doze/App Standby in Android 6.0, the requirements for an app to be started are ambiguous and often device-specific.\n\nAs such, while it is not always a requirement for this app to function, it is highly recommended that you grant the System Overlays permission on the next page. This will grant Chronos an exemption from Android\'s usual requirements for starting an app without user interaction, and allow it to function much more reliably.</string>
+    <string name="info_background_permissions_title">System Alerts / Background Permissions</string>
+    <string name="made_with_love">Made with ❤ in Canada.</string>
+    <string name="msg_alarms_empty">Você não possui nenhum alarme definido. Pressione o botão \'+\' para criar um.</string>
+    <string name="msg_battery_optimizations_switch_enable">Turn on the switch next to \"Chronos\". You may need to scroll down… a lot.</string>
+    <string name="msg_delete_confirmation">Tem certeza de que deseja excluir %s?</string>
+    <string name="msg_sleep_reminder">Seu próximo alarme tocará aproximadamente% s a partir de agora. Para obter a quantidade especificada de sono no menu de configurações, você deve ir para a cama agora.</string>
+    <string name="msg_snoozed_until">Suspenso até %s</string>
+    <string name="msg_time_zones_selected">%d Selecionado</string>
+    <string name="next_alarm">Next Alarm</string>
+    <string name="send_email">Send me an email</string>
+    <string name="title_about">Sobre Chronos</string>
+    <string name="title_alarm">Alarme %d</string>
+    <string name="title_alarm_name">Nome do Alarme</string>
+    <string name="title_alarm_next">%s from now.</string>
+    <string name="title_alarms">Alarms</string>
+    <string name="title_appearance">Aparência</string>
+    <string name="title_background_color">Custom Background Color</string>
+    <string name="title_background_image">Imagem de fundo</string>
+    <string name="title_background_mode">Background Mode</string>
+    <string name="title_behavior">Comportamento</string>
+    <string name="title_choose_time_zone">Escolha um fuso horário</string>
+    <string name="title_create">New</string>
+    <string name="title_default_alarm_ringtone">Toque de Alarme Padrão</string>
+    <string name="title_default_timer_ringtone">Toque do Timer Padrão</string>
+    <string name="title_delete">Excluir</string>
+    <string name="title_files">Files</string>
+    <string name="title_files_add_audio">Choose File</string>
+    <string name="title_files_audio_files">Audio Files</string>
+    <string name="title_ignore_battery_optimizations">Ignore Battery Optimizations</string>
+    <string name="title_lap">Volta</string>
+    <string name="title_lap_time">Volta: %s</string>
+    <string name="title_military_time">Enable 24-hour Clock</string>
+    <string name="title_none">Nenhum</string>
+    <string name="title_picker_dialog">Choose a Color</string>
+    <string name="title_play_headphones">Only play over headphones</string>
+    <string name="title_repeat">Repetir</string>
+    <string name="title_ringing_background_image">Mostra a imagem de fundo nos alarmes / temporizadores</string>
+    <string name="title_ringtones">Ringtones</string>
+    <string name="title_scroll_next">Scroll to the Next Alarm</string>
+    <string name="title_set_alarm">Alarme</string>
+    <string name="title_set_stopwatch">Cronômetro</string>
+    <string name="title_set_timer">Temporizador</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_share_results">Compartilhar os resultados…</string>
+    <string name="title_sleep_reminder">Lembrete de suspensão</string>
+    <string name="title_sleep_reminder_time">Hora do lembrete de suspensão</string>
+    <string name="title_slow_wake_up">Despertar lento</string>
+    <string name="title_slow_wake_up_time">Duração do Despertar Lento</string>
+    <string name="title_snooze">Adiar</string>
+    <string name="title_snooze_custom">Personalizar…</string>
     <string name="title_snooze_duration">Choose Snooze Duration</string>
+    <string name="title_sound_none">Nenhum</string>
+    <string name="title_start_timer">Iniciar temporizador</string>
+    <string name="title_stopwatch">Cronômetro</string>
+    <string name="title_stopwatch_share">%s Cronômetro: %s</string>
+    <string name="title_sunrise">Nascer do Sol</string>
+    <string name="title_sunset">Pôr do Sol</string>
+    <string name="title_theme">Tema</string>
+    <string name="title_time">Hora: %s</string>
+    <string name="title_time_zones">Fusos Horários</string>
+    <string name="title_total_time">Total: %s</string>
+    <string name="title_vibrate">Vibrar</string>
+    <string name="unable_start_activity">Unable to start activity</string>
+    <string name="visit_website">Visit my website</string>
+    <string name="word_join">e</string>
+    <string name="word_none">No alarms</string>
+    <plurals name="word_day">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="word_hour">
+        <item quantity="one">%d hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
+    <plurals name="word_minute">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+    <string-array name="array_themes">
+        <item>Agenda</item>
+        <item>Claro</item>
+        <item>Noturno</item>
+        <item>AMOLED</item>
+    </string-array>
 </resources>
