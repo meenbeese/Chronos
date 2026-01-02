@@ -6,14 +6,8 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -24,13 +18,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.services.StopwatchService
 import com.meenbeese.chronos.ui.screens.StopwatchScreen
+import com.meenbeese.chronos.ui.views.LapItemView
 import com.meenbeese.chronos.ui.views.ProgressTextView
 import com.meenbeese.chronos.utils.FormatUtils
 
@@ -189,32 +182,12 @@ fun StopwatchDestination(navController: NavController) {
                 maxProgress = maxProgress,
                 referenceProgress = referenceProgress,
                 animate = true,
-                modifier = progressModifier
-                    .aspectRatio(1f)
+                modifier = progressModifier.aspectRatio(1f)
             )
         },
         lapsContent = {
             for (lap in laps.reversed()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.title_lap_number, lap.number),
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                    Spacer(Modifier.weight(1f))
-                    Text(
-                        text = stringResource(R.string.title_lap_time, FormatUtils.formatMillis(lap.lapTime)),
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(R.string.title_total_time, FormatUtils.formatMillis(lap.totalTime)),
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                }
+                LapItemView(lap = lap)
             }
         }
     )

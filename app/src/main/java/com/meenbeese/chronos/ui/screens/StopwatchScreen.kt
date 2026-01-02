@@ -77,7 +77,6 @@ fun StopwatchScreen(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .verticalScroll(rememberScrollState())
                 .padding(vertical = 16.dp)
         ) {
             Box(
@@ -92,7 +91,9 @@ fun StopwatchScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .weight(1f)
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState()),
                 content = lapsContent
             )
         }
