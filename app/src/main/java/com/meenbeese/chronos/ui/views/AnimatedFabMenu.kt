@@ -39,10 +39,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -54,8 +55,28 @@ fun AnimatedFabMenu(
     modifier: Modifier = Modifier,
     fabColor: Color = MaterialTheme.colorScheme.tertiary,
     menuColor: Color = MaterialTheme.colorScheme.surfaceVariant,
-    expandedWidth: Dp = 140.dp,
 ){
+    val density = LocalDensity.current
+    val textMeasurer = rememberTextMeasurer()
+    val typography = MaterialTheme.typography.bodyLarge
+
+    val allStrings = remember(items, text) {
+        items.map { it.text } + text
+    }.map { stringResource(it) }
+
+    val expandedWidth = remember(allStrings, typography, density) {
+        with(density) {
+            val maxTextWidthPx = allStrings.maxOf { str ->
+                textMeasurer.measure(
+                    text = str,
+                    style = typography
+                ).size.width
+            }
+
+            maxTextWidthPx.toDp() + 75.dp
+        }
+    }
+
     var isFabExpanded by remember {
         mutableStateOf(false)
     }
