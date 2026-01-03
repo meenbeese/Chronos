@@ -5,6 +5,9 @@ import android.widget.Toast
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -25,7 +28,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -51,6 +53,8 @@ import com.meenbeese.chronos.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+import kotlin.random.Random
+
 @Composable
 fun AboutScreen(
     onOpenUrl: (String) -> Unit,
@@ -70,6 +74,11 @@ fun AboutScreen(
         color = MaterialTheme.colorScheme.onBackground
     )
     val copyrightText = stringResource(R.string.copyright_info, year)
+    val madeWithLove = stringResource(R.string.made_with_love)
+    val (beforeHeart, afterHeart) = remember(madeWithLove) {
+        val parts = madeWithLove.split("❤️", limit = 2)
+        parts.getOrElse(0) { "" } to parts.getOrElse(1) { "" }
+    }
 
     Column(
         modifier = Modifier
@@ -126,7 +135,7 @@ fun AboutScreen(
                 .padding(vertical = 44.dp)
         ) {
             Text(
-                text = "Made with ",
+                text = beforeHeart,
                 style = textStyle16,
             )
             Text(
@@ -141,7 +150,7 @@ fun AboutScreen(
                 }
             )
             Text(
-                text = " in Canada.",
+                text = afterHeart,
                 style = textStyle16,
             )
         }
@@ -245,38 +254,69 @@ fun EngagementItem(
 @Composable
 fun FallingHeartsOverlay() {
     val heartCount = 100
-    val scope = rememberCoroutineScope()
+
     val hearts = remember {
         List(heartCount) {
-            mutableFloatStateOf(0f)
+            mutableStateOf(
+                HeartState(
+                    x = Math.random().toFloat(),
+                    scale = (0.6f..1.2f).random(),
+                    rotation = (-25f..25f).random(),
+                    duration = (2500..4500).random()
+                )
+            )
         }
     }
 
-    LaunchedEffect(Unit) {
-        while (true) {
-            hearts.forEachIndexed { _, state ->
-                scope.launch {
-                    delay((0..1000L).random())
-                    state.floatValue = 0f
-                    while (state.floatValue < 1f) {
-                        delay(16)
-                        state.floatValue += 0.01f
-                    }
-                }
-            }
-            delay(3000)
+    val animatables = remember {
+        hearts.map { Animatable(0f) }
+    }
+
+    hearts.forEachIndexed { index, state ->
+        LaunchedEffect(index) {
+            delay((0L..1500L).random())
+            animatables[index].animateTo(
+                targetValue = 1f,
+                animationSpec = tween(
+                    durationMillis = state.value.duration,
+                    easing = FastOutSlowInEasing
+                )
+            )
+            animatables[index].snapTo(0f)
         }
     }
 
     Canvas(
         modifier = Modifier.fillMaxSize()
     ) {
-        hearts.forEachIndexed { index, anim ->
-            val x = (size.width / heartCount) * index + 10
-            val y = size.height * anim.floatValue
-            drawContext.canvas.nativeCanvas.drawText("❤️", x, y, Paint().apply {
-                textSize = 48f
-            })
+        hearts.forEachIndexed { index, state ->
+            val heart = state.value
+            drawContext.canvas.nativeCanvas.apply {
+                save()
+                translate(
+                    heart.x * size.width,
+                    animatables[index].value * size.height
+                )
+                rotate(heart.rotation)
+                scale(heart.scale, heart.scale)
+                drawText(
+                    "❤️",
+                    0f,
+                    0f,
+                    Paint().apply { textSize = 48f }
+                )
+                restore()
+            }
         }
     }
 }
+
+private fun ClosedFloatingPointRange<Float>.random(): Float =
+    Random.nextFloat() * (endInclusive - start) + start
+
+private data class HeartState(
+    val x: Float,
+    val scale: Float,
+    val rotation: Float,
+    val duration: Int,
+)
