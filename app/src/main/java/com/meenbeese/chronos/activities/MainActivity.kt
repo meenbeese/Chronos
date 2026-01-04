@@ -132,9 +132,11 @@ class MainActivity : ComponentActivity() {
                             FRAGMENT_STOPWATCH -> navController.navigate(WatchRoute)
                             FRAGMENT_TIMER -> {
                                 val timerId = intent.getIntExtra(TimerReceiver.EXTRA_TIMER_ID, 0)
-                                repo.timers.getOrNull(timerId)?.let { timer ->
-                                    navController.navigate(TimerRoute(timer.id))
-                                }
+                                repo.timers.value
+                                    ?.getOrNull(timerId)
+                                    ?.let { timer ->
+                                        navController.navigate(TimerRoute(timer.id))
+                                    }
                             }
                         }
                     }

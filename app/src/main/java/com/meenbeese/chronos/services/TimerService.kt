@@ -33,7 +33,7 @@ class TimerService : Service() {
 
     private val runnable: Runnable = object : Runnable {
         override fun run() {
-            val timers = repo.timers
+            val timers = repo.timers.value.orEmpty()
             if (timers.isNotEmpty()) {
                 notification?.let {
                     handler.removeCallbacks(this)
@@ -71,7 +71,7 @@ class TimerService : Service() {
             )
             val inboxStyle = NotificationCompat.InboxStyle()
             val string = StringBuilder()
-            val timers = repo.timers
+            val timers = repo.timers.value.orEmpty()
             for (timer in timers) {
                 if (!timer.isSet) continue
                 var time = formatMillis(timer.remainingMillis)

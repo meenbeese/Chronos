@@ -3,6 +3,7 @@ package com.meenbeese.chronos.nav.destinations
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,9 +25,10 @@ fun TimerDestination(
 ) {
     val repo: TimerAlarmRepository = koinInject()
 
-    val timer = remember(timerId) {
-        repo.timers.getOrNull(timerId)
-    } ?: run {
+    val timers by repo.timers.observeAsState(emptyList())
+    val timer = timers.getOrNull(timerId)
+
+    if (timer == null) {
         LaunchedEffect(Unit) {
             navController.popBackStack()
         }

@@ -17,12 +17,16 @@ class RestoreOnBootReceiver : BroadcastReceiver(), KoinComponent {
     override fun onReceive(context: Context, intent: Intent) {
         val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        for (alarm in repo.alarms) {
-            if (alarm.isEnabled) alarm.set(context)
-        }
+        repo.alarms.value
+            ?.filter { it.isEnabled }
+            ?.forEach { alarm ->
+                alarm.set(context)
+            }
 
-        for (timer in repo.timers) {
-            if (timer.remainingMillis > 0) timer.setAlarm(context, manager)
-        }
+        repo.timers.value
+            ?.filter { it.remainingMillis > 0 }
+            ?.forEach { timer ->
+                timer.setAlarm(context, manager)
+            }
     }
 }

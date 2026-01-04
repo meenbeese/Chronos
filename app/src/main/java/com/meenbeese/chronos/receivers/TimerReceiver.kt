@@ -16,7 +16,9 @@ class TimerReceiver : BroadcastReceiver(), KoinComponent {
 
     override fun onReceive(context: Context, intent: Intent) {
         val timerId = intent.getIntExtra(EXTRA_TIMER_ID, 0)
-        val timer = repo.timers.getOrNull(timerId) ?: return
+        val timer = repo.timers.value
+            ?.getOrNull(timerId)
+            ?: return
 
         repo.removeTimer(timer)
 

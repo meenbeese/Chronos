@@ -137,7 +137,7 @@ class SleepReminderService : Service() {
         }
 
         private fun getNextWakeAlarm(repo: TimerAlarmRepository): AlarmData? {
-            val alarms = repo.alarms
+            val alarms = repo.alarms.value.orEmpty()
             val nextNoon = Calendar.getInstance()
             nextNoon[Calendar.HOUR_OF_DAY] = 12
             if (nextNoon.before(Calendar.getInstance())) nextNoon[Calendar.DAY_OF_YEAR] =
