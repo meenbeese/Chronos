@@ -63,7 +63,7 @@ class TimerAlarmRepository(
             if (timer.isSet) loaded.add(timer)
         }
 
-        _timers.value = loaded
+        _timers.postValue(loaded)
 
         if (loaded.isNotEmpty()) {
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
@@ -78,7 +78,7 @@ class TimerAlarmRepository(
         val timer = TimerData(_timers.value!!.size, application)
         val updated = _timers.value!!.toMutableList().apply { add(timer) }
 
-        _timers.value = updated
+        _timers.postValue(updated)
         coroutineScope.launch {
             Preferences.TIMER_LENGTH.set(application, updated.size)
         }
@@ -98,7 +98,7 @@ class TimerAlarmRepository(
             t.onIdChanged(i, application)
         }
 
-        _timers.value = updated
+        _timers.postValue(updated)
 
         coroutineScope.launch {
             Preferences.TIMER_LENGTH.set(application, updated.size)
