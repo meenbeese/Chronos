@@ -4,11 +4,13 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.unit.dp
 
 /**
@@ -19,13 +21,19 @@ import androidx.compose.ui.unit.dp
 fun ProgressLineView(
     progress: Float,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.LightGray,
-    lineColor: Color = Color.DarkGray
+    backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    lineColor: Color = MaterialTheme.colorScheme.primary
 ) {
     val animatedProgress by animateFloatAsState(
         targetValue = progress.coerceIn(0f, 1f),
         label = "progressLineAnim"
     )
+
+    val shadowColor = if (backgroundColor.luminance() < 0.5f) {
+        lineColor.copy(alpha = 0.3f)
+    } else {
+        lineColor.copy(alpha = 0.2f).copy(alpha = 0.6f)
+    }
 
     Canvas(
         modifier = modifier
@@ -38,13 +46,17 @@ fun ProgressLineView(
         drawRect(
             color = backgroundColor,
             size = size,
-            style = Fill
+        )
+
+        drawRect(
+            color = shadowColor,
+            size = size.copy(width = canvasWidth * animatedProgress, height = canvasHeight),
+            topLeft = Offset(0f, 2f)
         )
 
         drawRect(
             color = lineColor,
             size = size.copy(width = canvasWidth * animatedProgress),
-            style = Fill
         )
     }
 }

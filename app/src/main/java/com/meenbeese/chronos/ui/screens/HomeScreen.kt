@@ -31,6 +31,7 @@ import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.ext.getFlow
 import com.meenbeese.chronos.ui.dialogs.AlarmSchedulerDialog
 import com.meenbeese.chronos.ui.dialogs.TimerSchedulerDialog
@@ -46,6 +47,7 @@ import kotlinx.datetime.TimeZone
 fun HomeScreen(
     navController: NavController,
     alarms: List<AlarmData>,
+    timers: List<TimerData>,
     isBottomSheetExpanded: MutableState<Boolean>,
     onAlarmUpdated: (AlarmData) -> Unit,
     onAlarmDeleted: (AlarmData) -> Unit,
@@ -156,6 +158,7 @@ fun HomeScreen(
                     if (page == 0) {
                         AlarmsScreen(
                             alarms = alarms,
+                            timers = timers,
                             scrollToAlarmId = scrollToAlarmId.value,
                             onScrollHandled = { scrollToAlarmId.value = null },
                             onAlarmUpdated = onAlarmUpdated,
@@ -194,6 +197,7 @@ fun HomeScreen(
                 if (page == 0) {
                     AlarmsScreen(
                         alarms = alarms,
+                        timers = timers,
                         scrollToAlarmId = scrollToAlarmId.value,
                         onScrollHandled = { scrollToAlarmId.value = null },
                         onAlarmUpdated = onAlarmUpdated,

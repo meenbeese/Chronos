@@ -44,6 +44,7 @@ fun HomeDestination(
     HomeScreen(
         navController = navController,
         alarms = alarms,
+        timers = timers,
         isBottomSheetExpanded = isBottomSheetExpanded,
         onAlarmUpdated = { alarmData ->
             homeViewModel.updateAlarm(context, alarmData)
