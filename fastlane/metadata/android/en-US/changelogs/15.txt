@@ -1,0 +1,3 @@
+Exciting new features such as emoji support in alarms, improved launching on alarms, and updated French translations. There are also various bug fixes and improvements under the hood for a better experience.
+
+**Full Changelog**: https://github.com/meenbeese/Chronos/compare/v2025.3.1...v2026.1.0
