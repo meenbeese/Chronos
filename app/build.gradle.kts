@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     id("com.android.application")
@@ -70,8 +69,6 @@ android {
 
 kotlin {
     compilerOptions {
-        languageVersion.set(KotlinVersion.KOTLIN_2_0)
-        apiVersion.set(KotlinVersion.KOTLIN_2_0)
         jvmTarget.set(JvmTarget.JVM_17)
 
         optIn.add("androidx.compose.material3.ExperimentalMaterial3Api")
@@ -84,7 +81,7 @@ ksp {
 }
 
 dependencies {
-    implementation("androidx.activity:activity-compose:1.12.2")
+    implementation("androidx.activity:activity-compose:1.12.4")
     implementation("androidx.core:core-ktx:1.17.0")
     implementation("androidx.core:core-splashscreen:1.2.0")
     implementation("androidx.datastore:datastore-preferences:1.2.0")
@@ -92,19 +89,19 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
     implementation("androidx.navigation:navigation-compose:2.9.7")
 
-    implementation("androidx.compose.ui:ui:1.9.3")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.9.3")
-    implementation("androidx.compose.animation:animation:1.9.3")
-    implementation("androidx.compose.foundation:foundation:1.9.3")
-    implementation("androidx.compose.runtime:runtime:1.9.3")
-    implementation("androidx.compose.runtime:runtime-livedata:1.9.3")
+    implementation("androidx.compose.ui:ui:1.10.3")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.10.3")
+    implementation("androidx.compose.animation:animation:1.10.3")
+    implementation("androidx.compose.foundation:foundation:1.10.3")
+    implementation("androidx.compose.runtime:runtime:1.10.3")
+    implementation("androidx.compose.runtime:runtime-livedata:1.10.3")
     implementation("androidx.compose.material3:material3:1.4.0")
     implementation("androidx.compose.material:material-icons-core:1.7.8")
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.9.3")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.10.3")
 
-    implementation("androidx.media3:media3-exoplayer:1.9.1")
-    implementation("androidx.media3:media3-exoplayer-hls:1.9.1")
+    implementation("androidx.media3:media3-exoplayer:1.9.2")
+    implementation("androidx.media3:media3-exoplayer-hls:1.9.2")
 
     ksp("androidx.room:room-compiler:2.8.4")
     implementation("androidx.room:room-ktx:2.8.4")
@@ -119,6 +116,6 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
 }
