@@ -108,6 +108,7 @@
     <string name="title_time">Hora: %s</string>
     <string name="title_time_zones">Fusos Horários</string>
     <string name="title_total_time">Total: %s</string>
+    <string name="title_typeface">Clock Typeface</string>
     <string name="title_vibrate">Vibrar</string>
     <string name="unable_start_activity">Unable to start activity</string>
     <string name="visit_website">Visit my website</string>
@@ -130,5 +131,11 @@
         <item>Claro</item>
         <item>Noturno</item>
         <item>AMOLED</item>
+    </string-array>
+    <string-array name="array_typefaces">
+        <item>Normal</item>
+        <item>Bold</item>
+        <item>Italic</item>
+        <item>Underline</item>
     </string-array>
 </resources>

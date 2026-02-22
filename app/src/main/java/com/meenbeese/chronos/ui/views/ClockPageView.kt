@@ -26,6 +26,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +46,7 @@ import com.meenbeese.chronos.data.preference.ColorPreference
 import com.meenbeese.chronos.data.preference.DialogPreference
 import com.meenbeese.chronos.data.preference.ImageFilePreference
 import com.meenbeese.chronos.data.preference.SegmentedPreference
+import com.meenbeese.chronos.data.preference.TypefacePreference
 import com.meenbeese.chronos.ui.dialogs.TimeZoneChooserDialog
 import com.meenbeese.chronos.ui.screens.ClockScreen
 import com.meenbeese.chronos.utils.ImageUtils
@@ -149,9 +151,15 @@ fun ClockPageView(
 @Composable
 fun ClockOptions(context: Context) {
     var triggerRebuild by remember { mutableIntStateOf(0) }
+    val coroutineScope = rememberCoroutineScope()
 
     val preferenceList = remember(triggerRebuild) {
         mutableListOf<@Composable () -> Unit>().apply {
+            // Clock typeface list
+            add {
+                TypefacePreference(coroutineScope)
+            }
+
             // Background mode toggle
             add {
                 SegmentedPreference(

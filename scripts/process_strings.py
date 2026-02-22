@@ -2,8 +2,8 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from copy import deepcopy
 
-source_xml = r"C:\Users\kuzey\GitHub\Chronos\app\src\main\res\values\strings.xml"
-res_dir = Path(r"C:\Users\kuzey\GitHub\Chronos\app\src\main\res")
+source_xml = r"/home/kuzey/GitHub/Chronos/app/src/main/res/values/strings.xml"
+res_dir = Path(r"/home/kuzey/GitHub/Chronos/app/src/main/res")
 base_xml = Path(source_xml)
 
 tree = ET.parse(source_xml)

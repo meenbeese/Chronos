@@ -108,6 +108,7 @@
     <string name="title_time">Temps: %s</string>
     <string name="title_time_zones">Fuseaux horaires globaux</string>
     <string name="title_total_time">Total: %s</string>
+    <string name="title_typeface">Clock Typeface</string>
     <string name="title_vibrate">Vibrer</string>
     <string name="unable_start_activity">Impossible d\'ouvrir l\'activité</string>
     <string name="visit_website">Visitez mon site web</string>
@@ -130,5 +131,11 @@
         <item>Jour</item>
         <item>Nuit</item>
         <item>AMOLED</item>
+    </string-array>
+    <string-array name="array_typefaces">
+        <item>Normal</item>
+        <item>Bold</item>
+        <item>Italic</item>
+        <item>Underline</item>
     </string-array>
 </resources>

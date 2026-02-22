@@ -108,6 +108,7 @@
     <string name="title_time">时长: %s</string>
     <string name="title_time_zones">时区</string>
     <string name="title_total_time">总记: %s</string>
+    <string name="title_typeface">Clock Typeface</string>
     <string name="title_vibrate">震动</string>
     <string name="unable_start_activity">Unable to start activity</string>
     <string name="visit_website">Visit my website</string>
@@ -130,5 +131,11 @@
         <item>白天</item>
         <item>夜间</item>
         <item>AMOLED</item>
+    </string-array>
+    <string-array name="array_typefaces">
+        <item>Normal</item>
+        <item>Bold</item>
+        <item>Italic</item>
+        <item>Underline</item>
     </string-array>
 </resources>

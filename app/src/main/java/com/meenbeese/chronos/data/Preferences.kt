@@ -51,4 +51,5 @@ object Preferences {
     val INFO_BACKGROUND_PERMISSIONS = PreferenceEntry.BooleanPref(name = "info_background_permissions", default = false)
     val TIMER_LENGTH = PreferenceEntry.IntPref(name = "timer_length", default = 0)
     val SCROLL_TO_NEXT = PreferenceEntry.BooleanPref(name = "scroll_to_next", default = false)
+    val TYPEFACE = PreferenceEntry.IntPref(name = "typeface", default = 0)
 }

@@ -14,7 +14,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 
 import com.meenbeese.chronos.data.Preferences
@@ -36,6 +40,30 @@ fun DigitalClockView(
 
     var currentTime by remember { mutableStateOf("00:00:00") }
 
+    val typefaceIndex = Preferences.TYPEFACE.get(context)
+
+    val fontWeight = when (typefaceIndex) {
+        1 -> FontWeight.Bold
+        else -> FontWeight.Normal
+    }
+
+    val fontStyle = when (typefaceIndex) {
+        2 -> FontStyle.Italic
+        else -> FontStyle.Normal
+    }
+
+    val textDecoration = when (typefaceIndex) {
+        3 -> TextDecoration.Underline
+        else -> null
+    }
+
+    val textStyle = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = fontWeight,
+        fontStyle = fontStyle,
+        textDecoration = textDecoration
+    )
+
     LaunchedEffect(timezoneId) {
         while (true) {
             val now = Clock.System.now()
@@ -54,7 +82,7 @@ fun DigitalClockView(
         Text(
             text = currentTime,
             fontSize = 64.sp,
-            fontFamily = FontFamily.Default,
+            style = textStyle,
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.clickable {
                 if (Preferences.SCROLL_TO_NEXT.get(context)) {
