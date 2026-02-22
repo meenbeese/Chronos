@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -49,6 +50,11 @@ import com.meenbeese.chronos.ui.screens.ClockScreen
 import com.meenbeese.chronos.utils.ImageUtils
 
 import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.offsetAt
+
+import kotlin.math.abs
+import kotlin.time.Clock
 
 @Composable
 fun ClockPageView(
@@ -236,6 +242,36 @@ fun ClockOptions(context: Context) {
                     .fillMaxWidth()
                     .padding(all = 8.dp)
             )
+        }
+
+        item {
+            val systemTimeZone = TimeZone.currentSystemDefault()
+            val offset = systemTimeZone.offsetAt(Clock.System.now())
+
+            val totalSeconds = offset.totalSeconds
+            val hours = totalSeconds / 3600
+            val minutes = (abs(totalSeconds) % 3600) / 60
+
+            val gmtString = "GMT%+03d:%02d".format(hours, minutes)
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Current Time Zone",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.weight(1f)
+                )
+
+                Text(
+                    text = "${systemTimeZone.id} • $gmtString",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                )
+            }
         }
 
         items(preferenceList) { item ->
