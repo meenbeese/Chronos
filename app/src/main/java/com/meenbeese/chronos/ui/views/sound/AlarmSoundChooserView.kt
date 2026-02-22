@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,10 +38,25 @@ fun AlarmSoundChooserView(
     ) {
         items(sounds) { sound ->
             val isPlaying = currentlyPlayingUrl == sound.url
+            var progress by remember { mutableStateOf(0f) }
+
+            if (isPlaying) {
+                LaunchedEffect(currentlyPlayingUrl) {
+                    while (true) {
+                        val pos = audioUtils.getCurrentPosition(sound.url)
+                        val dur = audioUtils.getDuration(sound.url)
+                        progress = if (dur > 0L) pos.toFloat() / dur.toFloat() else 0f
+                        kotlinx.coroutines.delay(100L)
+                    }
+                }
+            } else {
+                progress = 0f
+            }
 
             SoundItemView(
                 title = sound.name,
                 isPlaying = isPlaying,
+                progress = progress,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 4.dp)

@@ -6,6 +6,7 @@ import android.widget.Toast
 
 import androidx.core.net.toUri
 import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
@@ -129,5 +130,18 @@ class AudioManager(private val context: Context) : Player.Listener {
         }
 
         currentStream = url
+    }
+
+    fun getCurrentPosition(url: String): Long {
+        return if (currentStream == url) {
+            player?.currentPosition ?: 0L
+        } else 0L
+    }
+
+    fun getDuration(url: String): Long {
+        return if (currentStream == url) {
+            val dur = player?.duration ?: 0L
+            if (dur == C.TIME_UNSET) 0L else dur
+        } else 0L
     }
 }

@@ -92,10 +92,25 @@ fun FileSoundChooserView(
         ) {
             items(sounds) { sound ->
                 val isPlaying = currentlyPlayingUrl == sound.url
+                var progress by remember { mutableStateOf(0f) }
+
+                if (isPlaying) {
+                    LaunchedEffect(currentlyPlayingUrl) {
+                        while (true) {
+                            val pos = audioUtils.getCurrentPosition(sound.url)
+                            val dur = audioUtils.getDuration(sound.url)
+                            progress = if (dur > 0L) pos.toFloat() / dur.toFloat() else 0f
+                            kotlinx.coroutines.delay(100L)
+                        }
+                    }
+                } else {
+                    progress = 0f
+                }
 
                 SoundItemView(
                     title = sound.name,
                     isPlaying = isPlaying,
+                    progress = progress,
                     modifier = Modifier
                         .padding(vertical = 4.dp)
                         .clickable { onSoundChosen(sound) },

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,7 +28,7 @@ fun RingtoneSoundChooserView(
 ) {
     val context = LocalContext.current
     val audioUtils = AudioManager(context)
-    var currentPlayingUrl by remember { mutableStateOf<String?>(null) }
+    var currentlyPlayingUrl by remember { mutableStateOf<String?>(null) }
 
     LazyColumn(
         modifier = Modifier
@@ -35,22 +36,37 @@ fun RingtoneSoundChooserView(
             .padding(vertical = 12.dp)
     ) {
         items(sounds) { sound ->
-            val isPlaying = currentPlayingUrl == sound.url
+            val isPlaying = currentlyPlayingUrl == sound.url
+            var progress by remember { mutableStateOf(0f) }
+
+            if (isPlaying) {
+                LaunchedEffect(currentlyPlayingUrl) {
+                    while (true) {
+                        val pos = audioUtils.getCurrentPosition(sound.url)
+                        val dur = audioUtils.getDuration(sound.url)
+                        progress = if (dur > 0L) pos.toFloat() / dur.toFloat() else 0f
+                        kotlinx.coroutines.delay(100L)
+                    }
+                }
+            } else {
+                progress = 0f
+            }
 
             SoundItemView(
                 title = sound.name,
                 isPlaying = isPlaying,
+                progress = progress,
                 modifier = Modifier
                     .padding(horizontal = 8.dp, vertical = 4.dp)
                     .clickable { onSoundChosen(sound) },
                 onIconClick = {
                     if (isPlaying) {
                         audioUtils.stopCurrentSound()
-                        currentPlayingUrl = null
+                        currentlyPlayingUrl = null
                     } else {
                         audioUtils.stopCurrentSound()
                         audioUtils.playStream(sound.url, sound.type, null)
-                        currentPlayingUrl = sound.url
+                        currentlyPlayingUrl = sound.url
                     }
                 }
             )
