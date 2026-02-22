@@ -5,8 +5,6 @@ import android.content.Intent
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.HapticFeedbackConstants
@@ -16,6 +14,7 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -44,6 +43,8 @@ import com.meenbeese.chronos.utils.FormatUtils.formatMins
 import com.meenbeese.chronos.utils.FormatUtils.getShortFormat
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundPainter
 
+import kotlinx.coroutines.delay
+
 import org.koin.android.ext.android.inject
 
 import java.util.Date
@@ -67,8 +68,6 @@ class AlarmActivity : ComponentActivity() {
     private var currentVolume = 0
     private var originalVolume = 0
     private var volumeRange = 0
-    private var handler: Handler? = null
-    private var runnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,7 +111,6 @@ class AlarmActivity : ComponentActivity() {
         }
 
         val dateText = format(Date(), FormatUtils.FORMAT_DATE + ", " + getShortFormat(this))
-        val timeTextState = mutableStateOf("-0:00")
 
         if (sound?.isSetVolumeSupported == false) {
             audioManager = getSystemService(AudioManager::class.java)
@@ -128,43 +126,44 @@ class AlarmActivity : ComponentActivity() {
         vibrator = getSystemService(Vibrator::class.java)
         triggerMillis = System.currentTimeMillis()
 
-        handler = Handler(Looper.getMainLooper())
-        runnable = object : Runnable {
-            override fun run() {
-                val elapsedMillis = System.currentTimeMillis() - triggerMillis
-                timeTextState.value = "-${formatMillis(elapsedMillis).dropLast(3)}"
-
-                if (isVibrate) {
-                    vibrator?.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
-                }
-
-                sound?.let {
-                    if (!it.isPlaying()) it.play(applicationContext)
-                    if (alarm != null && isSlowWake) {
-                        val progress = elapsedMillis.toFloat() / slowWakeMillis
-                        window.addFlags(WindowManager.LayoutParams.FLAGS_CHANGED)
-                        if (it.isSetVolumeSupported) {
-                            it.setVolume(min(1f, progress))
-                        } else if (currentVolume < originalVolume) {
-                            val newVolume = min(originalVolume.toFloat(), progress * volumeRange).toInt()
-                            if (newVolume != currentVolume) {
-                                audioManager?.setStreamVolume(AudioManager.STREAM_ALARM, newVolume, 0)
-                                currentVolume = newVolume
-                            }
-                        }
-                    }
-                }
-
-                handler?.postDelayed(this, 1000)
-            }
-        }
-
-        handler?.post(runnable!!)
         sound?.play(applicationContext)
 
         setContent {
             val showSnoozeDialog = remember { mutableStateOf(false) }
             val showTimeChooserDialog = remember { mutableStateOf(false) }
+
+            val timeTextState = remember { mutableStateOf("-0:00") }
+
+            LaunchedEffect(alarm, sound, isVibrate, isSlowWake) {
+                val startTime = System.currentTimeMillis()
+                while (true) {
+                    val elapsedMillis = System.currentTimeMillis() - startTime
+                    timeTextState.value = "-${formatMillis(elapsedMillis).dropLast(3)}"
+
+                    if (isVibrate) {
+                        vibrator?.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
+                    }
+
+                    sound?.let {
+                        if (!it.isPlaying()) it.play(applicationContext)
+                        if (alarm != null && isSlowWake) {
+                            val progress = elapsedMillis.toFloat() / slowWakeMillis
+                            window.addFlags(WindowManager.LayoutParams.FLAGS_CHANGED)
+                            if (it.isSetVolumeSupported) {
+                                it.setVolume(min(1f, progress))
+                            } else if (currentVolume < originalVolume) {
+                                val newVolume = min(originalVolume.toFloat(), progress * volumeRange).toInt()
+                                if (newVolume != currentVolume) {
+                                    audioManager?.setStreamVolume(AudioManager.STREAM_ALARM, newVolume, 0)
+                                    currentVolume = newVolume
+                                }
+                            }
+                        }
+                    }
+
+                    delay(1000)
+                }
+            }
 
             AlarmScreen(
                 backgroundPainter = getBackgroundPainter(isAlarm = true),
@@ -245,7 +244,6 @@ class AlarmActivity : ComponentActivity() {
     }
 
     private fun stopAnnoyance() {
-        handler?.removeCallbacks(runnable!!)
         if (sound?.isPlaying() == true) {
             sound?.stop()
             if (isSlowWake && sound?.isSetVolumeSupported == false) {
