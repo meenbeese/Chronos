@@ -82,26 +82,26 @@ ksp {
 
 dependencies {
     implementation("androidx.activity:activity-compose:1.12.4")
-    implementation("androidx.core:core-ktx:1.17.0")
+    implementation("androidx.core:core-ktx:1.18.0")
     implementation("androidx.core:core-splashscreen:1.2.0")
-    implementation("androidx.datastore:datastore-preferences:1.2.0")
+    implementation("androidx.datastore:datastore-preferences:1.2.1")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.10.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
     implementation("androidx.navigation:navigation-compose:2.9.7")
 
-    implementation("androidx.compose.ui:ui:1.10.3")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.10.3")
-    implementation("androidx.compose.animation:animation:1.10.3")
-    implementation("androidx.compose.foundation:foundation:1.10.3")
-    implementation("androidx.compose.runtime:runtime:1.10.3")
-    implementation("androidx.compose.runtime:runtime-livedata:1.10.3")
+    implementation("androidx.compose.ui:ui:1.10.5")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.10.5")
+    implementation("androidx.compose.animation:animation:1.10.5")
+    implementation("androidx.compose.foundation:foundation:1.10.5")
+    implementation("androidx.compose.runtime:runtime:1.10.5")
+    implementation("androidx.compose.runtime:runtime-livedata:1.10.5")
     implementation("androidx.compose.material3:material3:1.4.0")
     implementation("androidx.compose.material:material-icons-core:1.7.8")
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.10.3")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.10.5")
 
-    implementation("androidx.media3:media3-exoplayer:1.9.2")
-    implementation("androidx.media3:media3-exoplayer-hls:1.9.2")
+    implementation("androidx.media3:media3-exoplayer:1.9.3")
+    implementation("androidx.media3:media3-exoplayer-hls:1.9.3")
 
     ksp("androidx.room:room-compiler:2.8.4")
     implementation("androidx.room:room-ktx:2.8.4")
@@ -110,8 +110,8 @@ dependencies {
     implementation("com.github.skydoves:colorpicker-compose:1.1.3")
     implementation("com.github.alexdametto:compose-emoji-picker:1.0.0")
 
-    implementation("io.arrow-kt:arrow-core:2.2.1.1")
-    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
+    implementation("io.arrow-kt:arrow-core:2.2.2")
+    implementation("io.coil-kt.coil3:coil-compose:3.4.0")
     implementation("io.insert-koin:koin-androidx-compose:4.1.1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
