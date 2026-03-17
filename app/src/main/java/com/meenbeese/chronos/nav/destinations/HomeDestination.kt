@@ -16,6 +16,7 @@ import com.meenbeese.chronos.data.TimerData
 import com.meenbeese.chronos.db.TimerAlarmRepository
 import com.meenbeese.chronos.ui.screens.HomeScreen
 import com.meenbeese.chronos.utils.FormatUtils
+import com.meenbeese.chronos.utils.SharedTime
 import com.meenbeese.chronos.viewmodel.HomeViewModel
 import com.meenbeese.chronos.viewmodel.HomeViewModelFactory
 
@@ -29,6 +30,7 @@ fun HomeDestination(
     navController: NavController,
     context: Context,
     intentAction: String?,
+    sharedTime: SharedTime?,
     navigateToStopwatch: () -> Unit,
     navigateToTimer: (timer: TimerData) -> Unit,
 ) {
@@ -71,6 +73,7 @@ fun HomeDestination(
                 }
             )
         },
-        intentAction = intentAction
+        intentAction = intentAction,
+        sharedTime = sharedTime
     )
 }

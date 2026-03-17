@@ -40,6 +40,7 @@ import com.meenbeese.chronos.ui.views.ClockPageView
 import com.meenbeese.chronos.ui.views.FabItem
 import com.meenbeese.chronos.ui.views.HomeBottomSheet
 import com.meenbeese.chronos.utils.ImageUtils
+import com.meenbeese.chronos.utils.SharedTime
 
 import kotlinx.datetime.TimeZone
 
@@ -55,6 +56,7 @@ fun HomeScreen(
     onScheduleWatch: () -> Unit,
     onScheduleTimer: (h: Int, m: Int, s: Int, ring: SoundData?, vibrate: Boolean) -> Unit,
     intentAction: String?,
+    sharedTime: SharedTime? = null,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -100,6 +102,15 @@ fun HomeScreen(
      * Check actions passed from MainActivity; open timer/alarm
      * schedulers if necessary.
      */
+    var pendingSharedTime by remember { mutableStateOf<SharedTime?>(null) }
+
+    LaunchedEffect(sharedTime) {
+        if (sharedTime != null) {
+            pendingSharedTime = sharedTime
+            showAlarmDialog = true
+        }
+    }
+
     LaunchedEffect(intentAction) {
         when (intentAction) {
             AlarmClock.ACTION_SET_ALARM -> showAlarmDialog = true
@@ -238,11 +249,17 @@ fun HomeScreen(
 
     if (showAlarmDialog) {
         AlarmSchedulerDialog(
-            onDismiss = { showAlarmDialog = false },
+            onDismiss = {
+                showAlarmDialog = false
+                pendingSharedTime = null
+            },
             onTimeSet = { hour, minute ->
                 showAlarmDialog = false
                 onScheduleAlarm(hour, minute)
-            }
+                pendingSharedTime = null
+            },
+            initialHour = pendingSharedTime?.hour,
+            initialMinute = pendingSharedTime?.minute
         )
     }
 

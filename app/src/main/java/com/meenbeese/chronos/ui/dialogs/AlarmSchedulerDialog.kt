@@ -10,11 +10,13 @@ import java.util.Calendar
 @Composable
 fun AlarmSchedulerDialog(
     onDismiss: () -> Unit,
-    onTimeSet: (hour: Int, minute: Int) -> Unit
+    onTimeSet: (hour: Int, minute: Int) -> Unit,
+    initialHour: Int? = null,
+    initialMinute: Int? = null
 ) {
     val calendar = Calendar.getInstance()
-    val hourNow = calendar.get(Calendar.HOUR_OF_DAY)
-    val minuteNow = calendar.get(Calendar.MINUTE)
+    val hourNow = initialHour ?: calendar.get(Calendar.HOUR_OF_DAY)
+    val minuteNow = initialMinute ?: calendar.get(Calendar.MINUTE)
 
     TimeChooserDialog(
         initialHour = hourNow,

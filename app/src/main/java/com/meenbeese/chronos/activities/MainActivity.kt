@@ -38,6 +38,7 @@ import com.meenbeese.chronos.ui.theme.ChronosTheme
 import com.meenbeese.chronos.ui.theme.ThemeFactory
 import com.meenbeese.chronos.ui.theme.ThemeMode
 import com.meenbeese.chronos.utils.AudioManager
+import com.meenbeese.chronos.utils.ShareIntentUtils
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,6 +52,7 @@ import org.koin.android.ext.android.inject
 class MainActivity : ComponentActivity() {
     private val repo: TimerAlarmRepository by inject()
     private val audioUtils: AudioManager by inject()
+    private val intentState = mutableStateOf<Intent?>(null)
 
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -66,6 +68,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         enableEdgeToEdge()
+        intentState.value = intent
 
         window.setFlags(
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
@@ -89,10 +92,18 @@ class MainActivity : ComponentActivity() {
             ) {
                 val navController = rememberNavController()
                 val showDialog = remember { mutableStateOf(false) }
+                val incomingIntent = intentState.value
+                val sharedTime = remember(incomingIntent) {
+                    ShareIntentUtils.extractSharedTime(incomingIntent)
+                }
 
                 Box(Modifier.fillMaxSize()) {
 
-                    NavGraph(navController = navController)
+                    NavGraph(
+                        navController = navController,
+                        intentAction = incomingIntent?.action,
+                        sharedTime = sharedTime
+                    )
 
                     if (showDialog.value) {
                         BackgroundWarnDialog(
@@ -145,6 +156,11 @@ class MainActivity : ComponentActivity() {
         }
 
         requestNotificationPermissionIfNeeded()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        intentState.value = intent
     }
 
     private fun requestNotificationPermissionIfNeeded() {

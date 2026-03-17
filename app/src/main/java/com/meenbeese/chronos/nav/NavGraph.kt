@@ -11,9 +11,14 @@ import com.meenbeese.chronos.nav.destinations.AboutDestination
 import com.meenbeese.chronos.nav.destinations.HomeDestination
 import com.meenbeese.chronos.nav.destinations.StopwatchDestination
 import com.meenbeese.chronos.nav.destinations.TimerDestination
+import com.meenbeese.chronos.utils.SharedTime
 
 @Composable
-fun NavGraph(navController: NavHostController) {
+fun NavGraph(
+    navController: NavHostController,
+    intentAction: String?,
+    sharedTime: SharedTime?
+) {
     val context = LocalContext.current
 
     NavHost(
@@ -24,7 +29,8 @@ fun NavGraph(navController: NavHostController) {
             HomeDestination(
                 navController = navController,
                 context = context,
-                intentAction = null,
+                intentAction = intentAction,
+                sharedTime = sharedTime,
                 navigateToStopwatch = {
                     navController.navigate(WatchRoute)
                 },
