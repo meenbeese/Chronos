@@ -167,10 +167,7 @@ fun HomeScreen(
                             isBottomSheetExpanded = isBottomSheetExpanded
                         )
                     } else {
-                        SettingsScreen(
-                            navController = navController,
-                            context = context
-                        )
+                        SettingsScreen(navController = navController)
                     }
                 }
             }
@@ -207,10 +204,7 @@ fun HomeScreen(
                         isBottomSheetExpanded = isBottomSheetExpanded
                     )
                 } else {
-                    SettingsScreen(
-                        navController = navController,
-                        context = context
-                    )
+                    SettingsScreen(navController = navController)
                 }
             }
         }
