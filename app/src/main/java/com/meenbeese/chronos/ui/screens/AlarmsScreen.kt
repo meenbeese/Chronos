@@ -24,6 +24,8 @@ import com.meenbeese.chronos.ui.views.EmptyAlarmsView
 import com.meenbeese.chronos.ui.views.ProgressLineView
 import com.meenbeese.chronos.ui.views.TimerItemView
 
+import kotlinx.coroutines.delay
+
 @Composable
 fun AlarmsScreen(
     alarms: List<AlarmData>,
@@ -40,13 +42,28 @@ fun AlarmsScreen(
         EmptyAlarmsView()
     } else {
         val listState = rememberLazyListState()
+        val activeTimers = timers.filter { it.isSet }
+        var expandAlarmId by remember { mutableStateOf<Int?>(null) }
+        var highlightAlarmId by remember { mutableStateOf<Int?>(null) }
 
-        LaunchedEffect(scrollToAlarmId, alarms) {
+        LaunchedEffect(scrollToAlarmId) {
+            val targetId = scrollToAlarmId ?: return@LaunchedEffect
+            expandAlarmId = targetId
+            highlightAlarmId = targetId
+        }
+
+        LaunchedEffect(highlightAlarmId) {
+            if (highlightAlarmId == null) return@LaunchedEffect
+            delay(2500)
+            highlightAlarmId = null
+        }
+
+        LaunchedEffect(scrollToAlarmId, alarms, activeTimers.size) {
             val targetId = scrollToAlarmId ?: return@LaunchedEffect
             val index = alarms.indexOfFirst { it.id == targetId }
 
             if (index != -1) {
-                listState.animateScrollToItem(index)
+                listState.animateScrollToItem(index + activeTimers.size)
             }
 
             onScrollHandled()
@@ -61,8 +78,6 @@ fun AlarmsScreen(
                 isBottomSheetExpanded.value = false
             }
         }
-
-        val activeTimers = timers.filter { it.isSet }
 
         LazyColumn(
             state = listState,
@@ -81,11 +96,21 @@ fun AlarmsScreen(
                 }
             }
 
-            items(alarms.size) { index ->
+            items(
+                items = alarms,
+                key = { it.id }
+            ) { alarm ->
                 AlarmListView(
-                    alarm = alarms[index],
+                    alarm = alarm,
                     onAlarmUpdated = onAlarmUpdated,
                     onAlarmDeleted = onAlarmDeleted,
+                    forceExpanded = alarm.id == expandAlarmId,
+                    highlighted = alarm.id == highlightAlarmId,
+                    onForceExpandHandled = {
+                        if (expandAlarmId == alarm.id) {
+                            expandAlarmId = null
+                        }
+                    }
                 )
             }
         }

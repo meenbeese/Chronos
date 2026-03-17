@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
@@ -19,16 +20,27 @@ import java.util.Calendar
 fun AlarmListView(
     alarm: AlarmData,
     onAlarmUpdated: (AlarmData) -> Unit,
-    onAlarmDeleted: (AlarmData) -> Unit
+    onAlarmDeleted: (AlarmData) -> Unit,
+    forceExpanded: Boolean = false,
+    highlighted: Boolean = false,
+    onForceExpandHandled: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     var isExpanded by rememberSaveable { mutableStateOf(false) }
     var timePickerAlarm by remember { mutableStateOf<AlarmData?>(null) }
     var soundPickerAlarm by remember { mutableStateOf<AlarmData?>(null) }
 
+    LaunchedEffect(forceExpanded) {
+        if (forceExpanded && !isExpanded) {
+            isExpanded = true
+            onForceExpandHandled?.invoke()
+        }
+    }
+
     AlarmItemView(
         alarm = alarm,
         isExpanded = isExpanded,
+        highlighted = highlighted,
         onAlarmUpdated = onAlarmUpdated,
         onTimeClick = { timePickerAlarm = alarm },
         onToggleEnabled = { enabled ->

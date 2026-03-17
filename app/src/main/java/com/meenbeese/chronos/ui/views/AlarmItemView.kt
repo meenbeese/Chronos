@@ -1,8 +1,10 @@
 package com.meenbeese.chronos.ui.views
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
@@ -64,6 +67,7 @@ fun AlarmItemView(
     onDeleteClick: () -> Unit,
     onExpandClick: () -> Unit,
     isExpanded: Boolean,
+    highlighted: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -86,6 +90,26 @@ fun AlarmItemView(
         targetValue = if (isExpanded) 180f else 0f,
         label = "ExpandIconRotation"
     )
+
+    val highlightBackground by animateColorAsState(
+        targetValue = if (highlighted) {
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.16f)
+        } else {
+            Color.Transparent
+        },
+        label = "AlarmHighlightBackground"
+    )
+
+    val highlightOutline by animateColorAsState(
+        targetValue = if (highlighted) {
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.9f)
+        } else {
+            Color.Transparent
+        },
+        label = "AlarmHighlightOutline"
+    )
+
+    val containerShape = RoundedCornerShape(12.dp)
 
     val alarmText = if (alarm.isEnabled && nextAlarmTime != null && nextAlarmTime!! > now) {
         val minutes = TimeUnit.MILLISECONDS.toMinutes(nextAlarmTime!! - now).toInt()
@@ -114,7 +138,9 @@ fun AlarmItemView(
         modifier
             .fillMaxWidth()
             .animateContentSize()
-            .background(if (isExpanded) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent)
+            .background(if (isExpanded) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent, containerShape)
+            .background(highlightBackground, containerShape)
+            .border(width = 2.dp, color = highlightOutline, shape = containerShape)
             .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
         Row(

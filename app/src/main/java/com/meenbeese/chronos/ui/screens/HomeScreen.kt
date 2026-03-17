@@ -153,7 +153,8 @@ fun HomeScreen(
                     isTablet = true,
                     initialTabIndex = selectedTabIndex.intValue,
                     onTabChanged = { selectedTabIndex.intValue = it },
-                    heightFraction = 0.5f
+                    heightFraction = 0.5f,
+                    isExpanded = isBottomSheetExpanded.value
                 ) { page ->
                     if (page == 0) {
                         AlarmsScreen(
@@ -192,7 +193,8 @@ fun HomeScreen(
                 isTablet = false,
                 initialTabIndex = selectedTabIndex.intValue,
                 onTabChanged = { selectedTabIndex.intValue = it },
-                heightFraction = 0.5f
+                heightFraction = 0.5f,
+                isExpanded = isBottomSheetExpanded.value
             ) { page ->
                 if (page == 0) {
                     AlarmsScreen(

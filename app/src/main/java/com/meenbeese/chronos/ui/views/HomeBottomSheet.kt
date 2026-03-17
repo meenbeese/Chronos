@@ -40,6 +40,7 @@ fun HomeBottomSheet(
     onTabChanged: (Int) -> Unit,
     heightFraction: Float = 0.5f,
     isTablet: Boolean = false,
+    isExpanded: Boolean = false,
     pagerContent: @Composable (Int) -> Unit,
 ) {
     val screenHeightDp = LocalConfiguration.current.screenHeightDp.dp
@@ -95,6 +96,14 @@ fun HomeBottomSheet(
         val scaffoldState = rememberBottomSheetScaffoldState(
             bottomSheetState = sheetState
         )
+
+        LaunchedEffect(isExpanded) {
+            if (isExpanded) {
+                sheetState.expand()
+            } else {
+                sheetState.partialExpand()
+            }
+        }
 
         BottomSheetScaffold(
             modifier = Modifier.fillMaxSize(),
