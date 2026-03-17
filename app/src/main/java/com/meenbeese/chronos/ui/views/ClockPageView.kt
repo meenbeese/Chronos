@@ -41,12 +41,12 @@ import androidx.compose.ui.unit.dp
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.data.preference.BooleanPreference
-import com.meenbeese.chronos.data.preference.ColorPreference
-import com.meenbeese.chronos.data.preference.DialogPreference
-import com.meenbeese.chronos.data.preference.ImageFilePreference
-import com.meenbeese.chronos.data.preference.SegmentedPreference
-import com.meenbeese.chronos.data.preference.TypefacePreference
+import com.meenbeese.chronos.ui.preferences.BooleanPreference
+import com.meenbeese.chronos.ui.preferences.ColorPreference
+import com.meenbeese.chronos.ui.preferences.DialogPreference
+import com.meenbeese.chronos.ui.preferences.ImageFilePreference
+import com.meenbeese.chronos.ui.preferences.SegmentedPreference
+import com.meenbeese.chronos.ui.preferences.TypefacePreference
 import com.meenbeese.chronos.ui.dialogs.TimeZoneChooserDialog
 import com.meenbeese.chronos.ui.screens.ClockScreen
 import com.meenbeese.chronos.utils.ImageUtils

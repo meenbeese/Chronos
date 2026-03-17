@@ -16,15 +16,15 @@ import androidx.navigation.NavController
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.ext.isIgnoringBatteryOptimizations
-import com.meenbeese.chronos.data.preference.AboutPreference
-import com.meenbeese.chronos.data.preference.AlertWindowPreference
-import com.meenbeese.chronos.data.preference.BooleanPreference
-import com.meenbeese.chronos.data.preference.ColorSchemePreference
-import com.meenbeese.chronos.data.preference.ImportExportPreference
-import com.meenbeese.chronos.data.preference.RadioPreference
-import com.meenbeese.chronos.data.preference.RingtonePreference
-import com.meenbeese.chronos.data.preference.ThemePreference
-import com.meenbeese.chronos.data.preference.TimePreference
+import com.meenbeese.chronos.ui.preferences.AboutPreference
+import com.meenbeese.chronos.ui.preferences.AlertWindowPreference
+import com.meenbeese.chronos.ui.preferences.BooleanPreference
+import com.meenbeese.chronos.ui.preferences.ColorSchemePreference
+import com.meenbeese.chronos.ui.preferences.ImportExportPreference
+import com.meenbeese.chronos.ui.preferences.RadioPreference
+import com.meenbeese.chronos.ui.preferences.RingtonePreference
+import com.meenbeese.chronos.ui.preferences.ThemePreference
+import com.meenbeese.chronos.ui.preferences.TimePreference
 import com.meenbeese.chronos.ext.handleBatteryOptimizationClick
 import com.meenbeese.chronos.ui.views.PreferenceItem
 

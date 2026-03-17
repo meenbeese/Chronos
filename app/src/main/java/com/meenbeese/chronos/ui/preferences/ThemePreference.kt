@@ -1,19 +1,25 @@
-package com.meenbeese.chronos.data.preference
+package com.meenbeese.chronos.ui.preferences
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AutoMode
+import androidx.compose.material.icons.outlined.Battery0Bar
+import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -26,25 +32,32 @@ import androidx.compose.ui.unit.dp
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
+import com.meenbeese.chronos.ui.theme.ThemeMode
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
- * Allow the user to choose the typeface of the application.
+ * Allow the user to choose the theme of the
+ * application.
  */
 @Composable
-fun TypefacePreference(
+fun ThemePreference(
     coroutineScope: CoroutineScope,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val typefaces = stringArrayResource(id = R.array.array_typefaces)
-    val currentTypefaceValue = remember { Preferences.TYPEFACE.get(context) }
+    val themes = stringArrayResource(id = R.array.array_themes)
+    val currentThemeValue = remember { Preferences.THEME.get(context) }
     var expanded by remember { mutableStateOf(false) }
 
-    var selectedTypefaceIndex by remember { mutableIntStateOf(currentTypefaceValue) }
-    var selectedText by remember { mutableStateOf(typefaces.getOrNull(selectedTypefaceIndex) ?: typefaces.first()) }
+    var selectedTheme by remember {
+        mutableStateOf(ThemeMode.fromInt(currentThemeValue))
+    }
+
+    var selectedText by remember {
+        mutableStateOf(themes.getOrNull(selectedTheme.value) ?: themes.first())
+    }
 
     Row(
         modifier = modifier
@@ -53,7 +66,7 @@ fun TypefacePreference(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(R.string.title_typeface),
+            text = stringResource(id = R.string.title_theme),
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.weight(1f)
         )
@@ -67,7 +80,10 @@ fun TypefacePreference(
                 value = selectedText,
                 onValueChange = {},
                 modifier = Modifier
-                    .menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                    .menuAnchor(
+                        type = ExposedDropdownMenuAnchorType.PrimaryNotEditable,
+                        enabled = true
+                    )
                     .width(180.dp),
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
@@ -80,15 +96,36 @@ fun TypefacePreference(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                typefaces.forEachIndexed { index, typefaceName ->
+                themes.forEachIndexed { index, themeName ->
                     DropdownMenuItem(
-                        text = { Text(text = typefaceName) },
+                        text = {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = themeName,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Icon(
+                                    imageVector = when (index) {
+                                        0 -> Icons.Outlined.AutoMode    // AUTO
+                                        1 -> Icons.Outlined.WbSunny     // DAY
+                                        2 -> Icons.Outlined.DarkMode    // NIGHT
+                                        3 -> Icons.Outlined.Battery0Bar // AMOLED
+                                        else -> Icons.Outlined.Settings
+                                    },
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(start = 8.dp)
+                                )
+                            }
+                        },
                         onClick = {
                             expanded = false
-                            selectedText = typefaceName
-                            selectedTypefaceIndex = index
+                            selectedText = themeName
+                            selectedTheme = ThemeMode.fromInt(index)
                             coroutineScope.launch {
-                                Preferences.TYPEFACE.set(context, index)
+                                Preferences.THEME.set(context, selectedTheme.value)
                             }
                         }
                     )

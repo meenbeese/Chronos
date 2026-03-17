@@ -1,4 +1,4 @@
-package com.meenbeese.chronos.data.preference
+package com.meenbeese.chronos.ui.preferences
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
