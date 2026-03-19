@@ -139,6 +139,17 @@ object FormatUtils {
     }
 
     /**
+     * Formats a duration for media playback like "0:03" or "3:45".
+     */
+    @JvmStatic
+    fun formatPlaybackTime(millis: Long): String {
+        val totalSeconds = (millis.coerceAtLeast(0) / 1000)
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+        return String.format(Locale.getDefault(), "%d:%02d", minutes, seconds)
+    }
+
+    /**
      * Formats a duration of minutes into a meaningful string to be used in
      * idk maybe a sentence or something. An input of 60 becomes "1 hour", 59
      * becomes "59 minutes", and so on.

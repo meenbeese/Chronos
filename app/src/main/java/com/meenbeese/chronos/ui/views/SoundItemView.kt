@@ -23,13 +23,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
+import com.meenbeese.chronos.utils.FormatUtils
+
 @Composable
 fun SoundItemView(
     title: String,
     isPlaying: Boolean,
     onIconClick: () -> Unit,
     modifier: Modifier = Modifier,
-    progress: Float = 0f
+    progress: Float = 0f,
+    currentMillis: Long = 0L,
+    totalMillis: Long = 0L
 ) {
     val playIcon = Icons.Sharp.PlayArrow
     val pauseIcon = Icons.Sharp.Pause
@@ -72,19 +76,41 @@ fun SoundItemView(
         }
 
         if (isPlaying) {
-            Slider(
-                value = animatedProgress.value,
-                onValueChange = {},
+            val hasDuration = totalMillis > 0L
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp),
-                enabled = false,
-                colors = SliderDefaults.colors(
-                    thumbColor = MaterialTheme.colorScheme.primary,
-                    activeTrackColor = MaterialTheme.colorScheme.primary,
-                    inactiveTrackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                    .padding(start = 8.dp, end = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (hasDuration) {
+                    Text(
+                        text = FormatUtils.formatPlaybackTime(currentMillis),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Slider(
+                    value = animatedProgress.value,
+                    onValueChange = {},
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = if (hasDuration) 8.dp else 0.dp),
+                    enabled = false,
+                    colors = SliderDefaults.colors(
+                        thumbColor = MaterialTheme.colorScheme.primary,
+                        activeTrackColor = MaterialTheme.colorScheme.primary,
+                        inactiveTrackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                    )
                 )
-            )
+                if (hasDuration) {
+                    Text(
+                        text = FormatUtils.formatPlaybackTime(totalMillis),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
         }
     }
 }
