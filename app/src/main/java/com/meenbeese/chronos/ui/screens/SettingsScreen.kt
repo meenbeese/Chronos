@@ -72,8 +72,7 @@ fun SettingsScreen(navController: NavController) {
     val preferenceList = listOf(
         PreferenceBlock(id = "section_data") {
             PreferenceSectionHeader(
-                title = stringResource(R.string.title_section_data),
-                topPadding = 8.dp
+                title = stringResource(R.string.title_section_data)
             )
         },
         PreferenceBlock(id = "import_export") {
@@ -92,7 +91,9 @@ fun SettingsScreen(navController: NavController) {
             AlertWindowPreference(context)
         },
         PreferenceBlock(id = "section_appearance") {
-            PreferenceSectionHeader(title = stringResource(R.string.title_appearance))
+            PreferenceSectionHeader(
+                title = stringResource(R.string.title_appearance)
+            )
         },
         PreferenceBlock(id = "theme") {
             ThemePreference(coroutineScope = lifecycleScope)

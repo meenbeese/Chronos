@@ -26,7 +26,7 @@ import kotlin.math.sin
 fun PreferenceSectionHeader(
     title: String,
     modifier: Modifier = Modifier,
-    topPadding: Dp = 24.dp
+    topPadding: Dp = 16.dp
 ) {
     Row(
         modifier = modifier

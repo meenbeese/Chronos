@@ -49,7 +49,7 @@ fun AlertWindowPreference(
                     openOverlaySettings(context)
                 }
             }
-            .padding(16.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
         Text(
             text = stringResource(id = R.string.info_background_permissions_title),
