@@ -1,12 +1,15 @@
 package com.meenbeese.chronos.utils
 
 import android.content.Context
+import android.media.AudioAttributes
 import android.media.Ringtone
+import android.media.RingtoneManager
+import android.os.Build
 import android.widget.Toast
 
 import androidx.core.net.toUri
-import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
+import androidx.media3.common.AudioAttributes as M3AudioAttributes
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
@@ -18,13 +21,15 @@ import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 
 import com.meenbeese.chronos.data.Preferences
-import com.meenbeese.chronos.utils.AudioUtils.areHeadphonesConnected
+import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.utils.MediaUtils.areHeadphonesConnected
 
 @UnstableApi
-class AudioManager(private val context: Context) : Player.Listener {
+class MediaManager(private val context: Context) : Player.Listener {
     private var player: ExoPlayer? = null
     private var currentStream: String? = null
     private var currentRingtone: Ringtone? = null
+    private var currentRingtoneUrl: String? = null
 
     private val isRingtonePlaying: Boolean
         get() = currentRingtone?.isPlaying == true
@@ -35,7 +40,7 @@ class AudioManager(private val context: Context) : Player.Listener {
         initializePlayer()
     }
 
-    private fun initializePlayer(attributes: AudioAttributes? = null) {
+    private fun initializePlayer(attributes: M3AudioAttributes? = null) {
         player?.release()
         player = ExoPlayer.Builder(context)
             .apply {
@@ -74,6 +79,7 @@ class AudioManager(private val context: Context) : Player.Listener {
             currentRingtone?.stop()
         }
         stopStream()
+        currentRingtoneUrl = null
     }
 
     fun stopStream() {
@@ -97,7 +103,7 @@ class AudioManager(private val context: Context) : Player.Listener {
         currentRingtone = ringtone
     }
 
-    fun playStream(url: String, type: String = "auto", attributes: AudioAttributes? = null) {
+    fun playStream(url: String, type: String = "auto", attributes: M3AudioAttributes? = null) {
         stopCurrentSound()
 
         if (onlyPlayOverHeadphones && !areHeadphonesConnected(context)) {
@@ -131,6 +137,45 @@ class AudioManager(private val context: Context) : Player.Listener {
 
         currentStream = url
     }
+
+    fun play(sound: SoundData) {
+        if (sound.type == SoundData.TYPE_RINGTONE && sound.url.startsWith("content://")) {
+            val ringtone = RingtoneManager.getRingtone(context, sound.url.toUri()).apply {
+                audioAttributes = AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .build()
+            }
+            currentRingtoneUrl = sound.url
+            playRingtone(ringtone)
+        } else {
+            playStream(
+                sound.url, sound.type,
+                M3AudioAttributes.Builder()
+                    .setUsage(C.USAGE_ALARM)
+                    .build()
+            )
+        }
+    }
+
+    fun stop(sound: SoundData?) {
+        if (sound == null) return
+        stopCurrentSound()
+    }
+
+    fun isPlaying(sound: SoundData): Boolean {
+        return if (sound.type == SoundData.TYPE_RINGTONE) {
+            currentRingtoneUrl == sound.url && isRingtonePlaying
+        } else {
+            isPlayingStream(sound.url)
+        }
+    }
+
+    fun setVolume(sound: SoundData, volume: Float) {
+        setStreamVolume(volume)
+    }
+
+    val isSetVolumeSupported: Boolean
+        get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
 
     fun getCurrentPosition(url: String): Long {
         return if (currentStream == url) {

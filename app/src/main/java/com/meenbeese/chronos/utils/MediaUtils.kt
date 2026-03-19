@@ -4,7 +4,7 @@ import android.content.Context
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
 
-object AudioUtils {
+object MediaUtils {
 
     /**
      * Returns true if any wired or Bluetooth headphones are currently connected.

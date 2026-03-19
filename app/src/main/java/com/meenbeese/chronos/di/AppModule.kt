@@ -5,13 +5,13 @@ import androidx.media3.common.util.UnstableApi
 import com.meenbeese.chronos.db.AlarmDatabase
 import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.db.TimerAlarmRepository
-import com.meenbeese.chronos.utils.AudioManager
+import com.meenbeese.chronos.utils.MediaManager
 
 import org.koin.dsl.module
 
 @UnstableApi
 val appModule = module {
-    single { AudioManager(get()) }
+    single { MediaManager(get()) }
     single { AlarmDatabase.getDatabase(get()) }
     single { get<AlarmDatabase>().alarmDao() }
     single { AlarmRepository(get()) }

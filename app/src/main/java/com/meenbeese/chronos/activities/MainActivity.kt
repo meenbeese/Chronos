@@ -37,7 +37,7 @@ import com.meenbeese.chronos.nav.WatchRoute
 import com.meenbeese.chronos.ui.theme.ChronosTheme
 import com.meenbeese.chronos.ui.theme.ThemeFactory
 import com.meenbeese.chronos.ui.theme.ThemeMode
-import com.meenbeese.chronos.utils.AudioManager
+import com.meenbeese.chronos.utils.MediaManager
 import com.meenbeese.chronos.utils.ShareIntentUtils
 
 import kotlinx.coroutines.CoroutineScope
@@ -51,7 +51,7 @@ import org.koin.android.ext.android.inject
 @UnstableApi
 class MainActivity : ComponentActivity() {
     private val repo: TimerAlarmRepository by inject()
-    private val audioUtils: AudioManager by inject()
+    private val audioUtils: MediaManager by inject()
     private val intentState = mutableStateOf<Intent?>(null)
 
     private val notificationPermissionLauncher = registerForActivityResult(

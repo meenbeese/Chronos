@@ -42,6 +42,7 @@ import com.meenbeese.chronos.utils.FormatUtils.formatMillis
 import com.meenbeese.chronos.utils.FormatUtils.formatMins
 import com.meenbeese.chronos.utils.FormatUtils.getShortFormat
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundPainter
+import com.meenbeese.chronos.utils.MediaManager
 import com.meenbeese.chronos.utils.VibrationPatterns
 
 import kotlinx.coroutines.delay
@@ -56,6 +57,7 @@ import kotlin.math.min
 @UnstableApi
 class AlarmActivity : ComponentActivity() {
     private val repo: TimerAlarmRepository by inject()
+    private val audioUtils: MediaManager by inject()
 
     private var vibrator: Vibrator? = null
     private var audioManager: AudioManager? = null
@@ -114,7 +116,7 @@ class AlarmActivity : ComponentActivity() {
 
         val dateText = format(Date(), FormatUtils.FORMAT_DATE + ", " + getShortFormat(this))
 
-        if (sound?.isSetVolumeSupported == false) {
+        if (sound != null && !audioUtils.isSetVolumeSupported) {
             audioManager = getSystemService(AudioManager::class.java)
             originalVolume = audioManager?.getStreamVolume(AudioManager.STREAM_ALARM) ?: 0
 
@@ -128,7 +130,7 @@ class AlarmActivity : ComponentActivity() {
         vibrator = getSystemService(Vibrator::class.java)
         triggerMillis = System.currentTimeMillis()
 
-        sound?.play(applicationContext)
+        sound?.let { audioUtils.play(it) }
         startVibrationIfNeeded()
 
         setContent {
@@ -144,12 +146,12 @@ class AlarmActivity : ComponentActivity() {
                     timeTextState.value = "-${formatMillis(elapsedMillis).dropLast(3)}"
 
                     sound?.let {
-                        if (!it.isPlaying()) it.play(applicationContext)
+                        if (!audioUtils.isPlaying(it)) audioUtils.play(it)
                         if (alarm != null && isSlowWake) {
                             val progress = elapsedMillis.toFloat() / slowWakeMillis
                             window.addFlags(WindowManager.LayoutParams.FLAGS_CHANGED)
-                            if (it.isSetVolumeSupported) {
-                                it.setVolume(min(1f, progress))
+                            if (audioUtils.isSetVolumeSupported) {
+                                audioUtils.setVolume(it, min(1f, progress))
                             } else if (currentVolume < originalVolume) {
                                 val newVolume = min(originalVolume.toFloat(), progress * volumeRange).toInt()
                                 if (newVolume != currentVolume) {
@@ -243,10 +245,12 @@ class AlarmActivity : ComponentActivity() {
     }
 
     private fun stopAnnoyance() {
-        if (sound?.isPlaying() == true) {
-            sound?.stop()
-            if (isSlowWake && sound?.isSetVolumeSupported == false) {
-                audioManager?.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0)
+        sound?.let {
+            if (audioUtils.isPlaying(it)) {
+                audioUtils.stop(it)
+                if (isSlowWake && !audioUtils.isSetVolumeSupported) {
+                    audioManager?.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0)
+                }
             }
         }
         vibrator?.cancel()

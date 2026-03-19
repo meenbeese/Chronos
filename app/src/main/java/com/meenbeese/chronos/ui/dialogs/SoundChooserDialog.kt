@@ -42,7 +42,7 @@ import com.meenbeese.chronos.ext.loadRingtones
 import com.meenbeese.chronos.ui.views.sound.AlarmSoundChooserView
 import com.meenbeese.chronos.ui.views.sound.FileSoundChooserView
 import com.meenbeese.chronos.ui.views.sound.RingtoneSoundChooserView
-import com.meenbeese.chronos.utils.AudioManager
+import com.meenbeese.chronos.utils.MediaManager
 
 @UnstableApi
 @Preview
@@ -52,7 +52,7 @@ fun SoundChooserDialog(
     onSoundChosen: (SoundData?) -> Unit = {},
 ) {
     val context = LocalContext.current
-    val audioUtils = AudioManager(context)
+    val audioUtils = MediaManager(context)
     val alarmSounds = remember { loadAlarmSounds(context) }
     val ringtoneSounds = remember { loadRingtones(context) }
     val sheetState = rememberModalBottomSheetState(
