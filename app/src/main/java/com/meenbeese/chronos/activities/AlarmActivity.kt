@@ -42,6 +42,7 @@ import com.meenbeese.chronos.utils.FormatUtils.formatMillis
 import com.meenbeese.chronos.utils.FormatUtils.formatMins
 import com.meenbeese.chronos.utils.FormatUtils.getShortFormat
 import com.meenbeese.chronos.utils.ImageUtils.getBackgroundPainter
+import com.meenbeese.chronos.utils.VibrationPatterns
 
 import kotlinx.coroutines.delay
 
@@ -68,6 +69,7 @@ class AlarmActivity : ComponentActivity() {
     private var currentVolume = 0
     private var originalVolume = 0
     private var volumeRange = 0
+    private var isVibrationStarted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,6 +129,7 @@ class AlarmActivity : ComponentActivity() {
         triggerMillis = System.currentTimeMillis()
 
         sound?.play(applicationContext)
+        startVibrationIfNeeded()
 
         setContent {
             val showSnoozeDialog = remember { mutableStateOf(false) }
@@ -139,10 +142,6 @@ class AlarmActivity : ComponentActivity() {
                 while (true) {
                     val elapsedMillis = System.currentTimeMillis() - startTime
                     timeTextState.value = "-${formatMillis(elapsedMillis).dropLast(3)}"
-
-                    if (isVibrate) {
-                        vibrator?.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
-                    }
 
                     sound?.let {
                         if (!it.isPlaying()) it.play(applicationContext)
@@ -250,12 +249,21 @@ class AlarmActivity : ComponentActivity() {
                 audioManager?.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0)
             }
         }
+        vibrator?.cancel()
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         finish()
         startActivity(Intent(intent))
+    }
+
+    private fun startVibrationIfNeeded() {
+        if (!isVibrate || isVibrationStarted) return
+        val patternKey = Preferences.ALARM_VIBRATION_PATTERN.get(this)
+        val pattern = VibrationPatterns.patternFor(patternKey)
+        vibrator?.vibrate(VibrationEffect.createWaveform(pattern, 0))
+        isVibrationStarted = true
     }
 
     companion object {

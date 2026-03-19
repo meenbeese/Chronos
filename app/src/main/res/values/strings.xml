@@ -61,6 +61,7 @@
     <string name="title_alarm">Alarm %d</string>
     <string name="title_alarm_name">Alarm Name</string>
     <string name="title_alarm_next">%s from now.</string>
+    <string name="title_alarm_vibration_pattern">Vibration Pattern</string>
     <string name="title_alarms">Alarms</string>
     <string name="title_appearance">Appearance</string>
     <string name="title_background_color">Custom Background Color</string>
@@ -81,7 +82,7 @@
     <string name="title_military_time">Enable 24-hour Clock</string>
     <string name="title_none">None</string>
     <string name="title_picker_dialog">Choose a Color</string>
-    <string name="title_play_headphones">Only play over headphones</string>
+    <string name="title_play_headphones">Only Play Over Headphones</string>
     <string name="title_repeat">Repeat</string>
     <string name="title_ringing_background_image">Always Show Background</string>
     <string name="title_ringtones">Ringtones</string>
@@ -116,6 +117,10 @@
     <string name="title_typeface">Clock Typeface</string>
     <string name="title_vibrate">Vibrate</string>
     <string name="unable_start_activity">Unable to start activity</string>
+    <string name="vibration_pattern_default">Default</string>
+    <string name="vibration_pattern_heartbeat">Heartbeat</string>
+    <string name="vibration_pattern_pulse">Pulse</string>
+    <string name="vibration_pattern_rapid">Rapid</string>
     <string name="visit_website">Visit my website</string>
     <string name="word_join">and</string>
     <string name="word_none">No alarms</string>

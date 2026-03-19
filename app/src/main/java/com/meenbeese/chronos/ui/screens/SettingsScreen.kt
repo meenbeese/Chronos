@@ -30,11 +30,14 @@ import com.meenbeese.chronos.ui.preferences.ColorSchemePreference
 import com.meenbeese.chronos.ui.preferences.ImportExportPreference
 import com.meenbeese.chronos.ui.preferences.RadioPreference
 import com.meenbeese.chronos.ui.preferences.RingtonePreference
+import com.meenbeese.chronos.ui.preferences.StringRadioOption
+import com.meenbeese.chronos.ui.preferences.StringRadioPreference
 import com.meenbeese.chronos.ui.preferences.ThemePreference
 import com.meenbeese.chronos.ui.preferences.TimePreference
 import com.meenbeese.chronos.ext.handleBatteryOptimizationClick
 import com.meenbeese.chronos.ui.views.PreferenceItem
 import com.meenbeese.chronos.ui.views.PreferenceSectionHeader
+import com.meenbeese.chronos.utils.VibrationPatterns
 
 import kotlin.time.Duration.Companion.minutes
 
@@ -130,6 +133,18 @@ fun SettingsScreen(navController: NavController) {
             RingtonePreference(
                 preference = Preferences.DEFAULT_TIMER_RINGTONE,
                 titleRes = R.string.title_default_timer_ringtone
+            )
+        },
+        PreferenceBlock(id = "alarm_vibration_pattern") {
+            StringRadioPreference(
+                preference = Preferences.ALARM_VIBRATION_PATTERN,
+                titleRes = R.string.title_alarm_vibration_pattern,
+                options = listOf(
+                    StringRadioOption(VibrationPatterns.DEFAULT, R.string.vibration_pattern_default),
+                    StringRadioOption(VibrationPatterns.PULSE, R.string.vibration_pattern_pulse),
+                    StringRadioOption(VibrationPatterns.HEARTBEAT, R.string.vibration_pattern_heartbeat),
+                    StringRadioOption(VibrationPatterns.RAPID, R.string.vibration_pattern_rapid)
+                )
             )
         },
         PreferenceBlock(id = "play_on_headphones") {

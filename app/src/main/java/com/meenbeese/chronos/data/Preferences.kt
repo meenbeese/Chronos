@@ -24,6 +24,7 @@ object Preferences {
     // Ringtone
     val DEFAULT_ALARM_RINGTONE = PreferenceEntry.StringPref(name = "default_alarm_ringtone", default = "")
     val DEFAULT_TIMER_RINGTONE = PreferenceEntry.StringPref(name = "default_timer_ringtone", default = "")
+    val ALARM_VIBRATION_PATTERN = PreferenceEntry.StringPref(name = "alarm_vibration_pattern", default = "default")
 
     // Wake Up
     val SLOW_WAKE_UP = PreferenceEntry.BooleanPref(name = "slow_wake_up", default = true)

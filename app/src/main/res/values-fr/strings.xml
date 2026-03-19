@@ -61,6 +61,7 @@
     <string name="title_alarm">Alarme %d</string>
     <string name="title_alarm_name">Nom de l\'alarme</string>
     <string name="title_alarm_next">%s à partir de maintenant.</string>
+    <string name="title_alarm_vibration_pattern">Vibration Pattern</string>
     <string name="title_alarms">Alarmes</string>
     <string name="title_appearance">Apparence</string>
     <string name="title_background_color">Couleur d\'arrière-plan personnalisée</string>
@@ -116,6 +117,10 @@
     <string name="title_typeface">Clock Typeface</string>
     <string name="title_vibrate">Vibrer</string>
     <string name="unable_start_activity">Impossible d\'ouvrir l\'activité</string>
+    <string name="vibration_pattern_default">Default</string>
+    <string name="vibration_pattern_heartbeat">Heartbeat</string>
+    <string name="vibration_pattern_pulse">Pulse</string>
+    <string name="vibration_pattern_rapid">Rapid</string>
     <string name="visit_website">Visitez mon site web</string>
     <string name="word_join">et</string>
     <string name="word_none">Pas d\'alarmes</string>
