@@ -86,6 +86,11 @@
     <string name="title_ringing_background_image">Afficher l\'image d\'arrière-plan sur les alarmes/minuteries</string>
     <string name="title_ringtones">Sonneries</string>
     <string name="title_scroll_next">Défilez vers la prochaine alarme</string>
+    <string name="title_section_about">About</string>
+    <string name="title_section_data">Data</string>
+    <string name="title_section_sleep">Sleep</string>
+    <string name="title_section_sound">Sound</string>
+    <string name="title_section_system">System</string>
     <string name="title_set_alarm">Alarme</string>
     <string name="title_set_stopwatch">Chronomètre</string>
     <string name="title_set_timer">Minuterie</string>

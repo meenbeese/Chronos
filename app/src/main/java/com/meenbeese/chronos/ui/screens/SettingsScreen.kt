@@ -13,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -33,6 +34,7 @@ import com.meenbeese.chronos.ui.preferences.ThemePreference
 import com.meenbeese.chronos.ui.preferences.TimePreference
 import com.meenbeese.chronos.ext.handleBatteryOptimizationClick
 import com.meenbeese.chronos.ui.views.PreferenceItem
+import com.meenbeese.chronos.ui.views.PreferenceSectionHeader
 
 import kotlin.time.Duration.Companion.minutes
 
@@ -65,8 +67,17 @@ fun SettingsScreen(navController: NavController) {
     }
 
     val preferenceList = listOf(
+        PreferenceBlock(id = "section_data") {
+            PreferenceSectionHeader(
+                title = stringResource(R.string.title_section_data),
+                topPadding = 8.dp
+            )
+        },
         PreferenceBlock(id = "import_export") {
             ImportExportPreference()
+        },
+        PreferenceBlock(id = "section_system") {
+            PreferenceSectionHeader(title = stringResource(R.string.title_section_system))
         },
         PreferenceBlock(id = "battery_optimizations", visible = batteryOptimizationNeeded) {
             PreferenceItem(
@@ -76,6 +87,9 @@ fun SettingsScreen(navController: NavController) {
         },
         PreferenceBlock(id = "alert_window") {
             AlertWindowPreference(context)
+        },
+        PreferenceBlock(id = "section_appearance") {
+            PreferenceSectionHeader(title = stringResource(R.string.title_appearance))
         },
         PreferenceBlock(id = "theme") {
             ThemePreference(coroutineScope = lifecycleScope)
@@ -93,12 +107,18 @@ fun SettingsScreen(navController: NavController) {
                 description = R.string.desc_ringing_background_image
             )
         },
+        PreferenceBlock(id = "section_behavior") {
+            PreferenceSectionHeader(title = stringResource(R.string.title_behavior))
+        },
         PreferenceBlock(id = "scroll_to_next") {
             BooleanPreference(
                 preference = Preferences.SCROLL_TO_NEXT,
                 title = R.string.title_scroll_next,
                 description = R.string.desc_scroll_next
             )
+        },
+        PreferenceBlock(id = "section_sound") {
+            PreferenceSectionHeader(title = stringResource(R.string.title_section_sound))
         },
         PreferenceBlock(id = "default_alarm_ringtone") {
             RingtonePreference(
@@ -118,6 +138,9 @@ fun SettingsScreen(navController: NavController) {
                 title = R.string.title_play_headphones,
                 description = R.string.desc_play_headphones
             )
+        },
+        PreferenceBlock(id = "section_sleep") {
+            PreferenceSectionHeader(title = stringResource(R.string.title_section_sleep))
         },
         PreferenceBlock(id = "sleep_reminder") {
             BooleanPreference(
@@ -152,6 +175,9 @@ fun SettingsScreen(navController: NavController) {
                     30.minutes
                 )
             )
+        },
+        PreferenceBlock(id = "section_about") {
+            PreferenceSectionHeader(title = stringResource(R.string.title_section_about))
         },
         PreferenceBlock(id = "about") {
             AboutPreference(navController = navController)
