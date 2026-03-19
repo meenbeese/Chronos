@@ -43,6 +43,7 @@ import androidx.media3.common.util.UnstableApi
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.utils.MediaManager
 import com.meenbeese.chronos.ui.views.TimeNumpadItem
 
 import java.util.concurrent.TimeUnit
@@ -68,7 +69,7 @@ fun TimerFactoryDialog(
 
     val initialRingtone = remember {
         Preferences.DEFAULT_TIMER_RINGTONE.get(context).let {
-            SoundData.fromString(it).getOrNull()
+            MediaManager.decode(it).getOrNull()
         }
     }
 

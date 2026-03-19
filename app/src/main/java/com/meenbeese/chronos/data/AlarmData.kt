@@ -9,6 +9,7 @@ import android.os.Parcelable
 
 import com.meenbeese.chronos.activities.MainActivity
 import com.meenbeese.chronos.db.AlarmEntity
+import com.meenbeese.chronos.utils.MediaManager
 import com.meenbeese.chronos.receivers.AlarmReceiver
 import com.meenbeese.chronos.services.SleepReminderService
 
@@ -104,7 +105,7 @@ fun AlarmData.toEntity(): AlarmEntity {
         isEnabled = this.isEnabled,
         days = this.days,
         isVibrate = this.isVibrate,
-        sound = this.sound?.toString()
+        sound = this.sound?.let { MediaManager.encode(it) }
     )
 }
 
@@ -120,6 +121,6 @@ fun AlarmEntity.toData(): AlarmData {
         isEnabled = this.isEnabled,
         days = this.days.toMutableList(),
         isVibrate = this.isVibrate,
-        sound = this.sound?.let { SoundData.fromString(it).getOrNull() }
+        sound = this.sound?.let { MediaManager.decode(it).getOrNull() }
     )
 }

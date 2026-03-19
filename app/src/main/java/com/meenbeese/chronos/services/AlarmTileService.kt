@@ -15,7 +15,7 @@ import androidx.annotation.RequiresApi
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.activities.MainActivity
 import com.meenbeese.chronos.data.AlarmData
-import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.utils.MediaManager
 import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.utils.FormatUtils
 
@@ -69,7 +69,7 @@ class AlarmTileService : TileService(), KoinComponent {
                     isEnabled = it.isEnabled,
                     days = it.days.toMutableList(),
                     isVibrate = it.isVibrate,
-                    sound = it.sound?.let { sound -> SoundData.fromString(sound).getOrNull() }
+                    sound = it.sound?.let { sound -> MediaManager.decode(sound).getOrNull() }
                 )
             }
         }

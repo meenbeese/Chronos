@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Parcelable
 
 import com.meenbeese.chronos.receivers.TimerReceiver
+import com.meenbeese.chronos.utils.MediaManager
 
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -36,7 +37,7 @@ class TimerData(
             .takeIf { it.isNotEmpty() }
             ?: fallbackSound.takeIf { it.isNotEmpty() }
 
-        sound = defaultSound?.let { SoundData.fromString(it).getOrNull() }
+        sound = defaultSound?.let { MediaManager.decode(it).getOrNull() }
     }
 
     val isSet: Boolean
@@ -57,7 +58,7 @@ class TimerData(
             Preferences.TIMER_DURATION.set(context, duration.toInt())
             Preferences.TIMER_END_TIME.set(context, endTime)
             Preferences.TIMER_VIBRATE.set(context, isVibrate)
-            Preferences.TIMER_SOUND.set(context, sound?.toString() ?: "")
+            Preferences.TIMER_SOUND.set(context, sound?.let { MediaManager.encode(it) } ?: "")
         }
         onRemoved(context)
         this.id = id
@@ -122,7 +123,7 @@ class TimerData(
     @OptIn(DelicateCoroutinesApi::class)
     fun setSound(context: Context, sound: SoundData?) {
         this.sound = sound
-        GlobalScope.launch { Preferences.TIMER_SOUND.set(context, sound?.toString() ?: "") }
+        GlobalScope.launch { Preferences.TIMER_SOUND.set(context, sound?.let { MediaManager.encode(it) } ?: "") }
     }
 
     /**

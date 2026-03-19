@@ -10,6 +10,7 @@ import android.util.Log
 import com.meenbeese.chronos.activities.AlarmActivity
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.utils.MediaManager
 import com.meenbeese.chronos.db.AlarmDatabase
 import com.meenbeese.chronos.db.AlarmRepository
 import com.meenbeese.chronos.services.AlarmTileService
@@ -48,7 +49,7 @@ class AlarmReceiver : BroadcastReceiver(), KoinComponent {
                     isEnabled = it.isEnabled,
                     days = it.days.toMutableList(),
                     isVibrate = it.isVibrate,
-                    sound = it.sound?.let { sound -> SoundData.fromString(sound).getOrNull() }
+                    sound = it.sound?.let { sound -> MediaManager.decode(sound).getOrNull() }
                 )
 
                 if (alarm.getNext() != null) {
@@ -62,7 +63,7 @@ class AlarmReceiver : BroadcastReceiver(), KoinComponent {
                         alarm.isEnabled,
                         alarm.days,
                         alarm.isVibrate,
-                        alarm.sound?.toString()
+                        alarm.sound?.let { sound -> MediaManager.encode(sound) }
                     )
                 }
 

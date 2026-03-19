@@ -6,6 +6,7 @@ import android.media.RingtoneManager
 import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.data.SoundData
+import com.meenbeese.chronos.utils.MediaManager
 
 @UnstableApi
 fun loadRingtones(context: Context): List<SoundData> {
@@ -18,7 +19,7 @@ fun loadRingtones(context: Context): List<SoundData> {
         do {
             val title = cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX)
             val uri = manager.getRingtoneUri(cursor.position).toString()
-            sounds.add(SoundData(name = title, type = SoundData.TYPE_RINGTONE, url = uri))
+            sounds.add(SoundData(name = title, type = MediaManager.TYPE_RINGTONE, url = uri))
         } while (cursor.moveToNext())
     }
     return sounds
@@ -35,7 +36,7 @@ fun loadAlarmSounds(context: Context): List<SoundData> {
         do {
             val title = cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX)
             val uri = manager.getRingtoneUri(cursor.position).toString()
-            sounds.add(SoundData(name = title, type = SoundData.TYPE_RINGTONE, url = uri))
+            sounds.add(SoundData(name = title, type = MediaManager.TYPE_RINGTONE, url = uri))
         } while (cursor.moveToNext())
     }
     return sounds

@@ -14,11 +14,11 @@ import androidx.media3.common.util.UnstableApi
 
 import com.meenbeese.chronos.R
 import com.meenbeese.chronos.data.PreferenceEntry
-import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.ui.dialogs.SoundChooserDialog
 import com.meenbeese.chronos.ui.screens.FileChooserScreen
 import com.meenbeese.chronos.ui.screens.FileChooserType
 import com.meenbeese.chronos.ui.views.PreferenceItem
+import com.meenbeese.chronos.utils.MediaManager
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,8 +47,8 @@ fun RingtonePreference(
     // Load sound name on composition and when preference changes
     LaunchedEffect(preference) {
         val soundStr = preference.get(context)
-        soundName = SoundData
-            .fromString(soundStr)
+        soundName = MediaManager
+            .decode(soundStr)
             .map { it.name }
             .getOrNull()
     }
@@ -66,7 +66,7 @@ fun RingtonePreference(
             onSoundChosen = { sound ->
                 // Save selection asynchronously
                 CoroutineScope(Dispatchers.IO).launch {
-                    preference.set(context, sound.toString())
+                    preference.set(context, sound?.let { MediaManager.encode(it) } ?: "")
                     withContext(Dispatchers.Main) {
                         soundName = sound?.name
                         showDialog = false

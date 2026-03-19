@@ -63,7 +63,7 @@ fun FileSoundChooserView(
             }
             .mapNotNull { str ->
                 val parts = str.split(SEPARATOR)
-                if (parts.size == 3) SoundData(parts[1], SoundData.TYPE_RINGTONE, parts[2]) else null
+                if (parts.size == 3) SoundData(parts[1], MediaManager.TYPE_RINGTONE, parts[2]) else null
             }
     }
 
@@ -142,7 +142,7 @@ fun FileSoundChooserView(
             type = FileChooserType.AUDIO,
             preference = null,
             onFileChosen = { name, uri ->
-                val sound = SoundData(name, SoundData.TYPE_RINGTONE, uri)
+                val sound = SoundData(name, MediaManager.TYPE_RINGTONE, uri)
                 onSoundChosen(sound)
 
                 // Insert new file at top

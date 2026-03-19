@@ -24,6 +24,10 @@ import com.meenbeese.chronos.data.Preferences
 import com.meenbeese.chronos.data.SoundData
 import com.meenbeese.chronos.utils.MediaUtils.areHeadphonesConnected
 
+import arrow.core.None
+import arrow.core.Option
+import arrow.core.Some
+
 @UnstableApi
 class MediaManager(private val context: Context) : Player.Listener {
     private var player: ExoPlayer? = null
@@ -139,7 +143,7 @@ class MediaManager(private val context: Context) : Player.Listener {
     }
 
     fun play(sound: SoundData) {
-        if (sound.type == SoundData.TYPE_RINGTONE && sound.url.startsWith("content://")) {
+        if (sound.type == TYPE_RINGTONE && sound.url.startsWith("content://")) {
             val ringtone = RingtoneManager.getRingtone(context, sound.url.toUri()).apply {
                 audioAttributes = AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_ALARM)
@@ -163,7 +167,7 @@ class MediaManager(private val context: Context) : Player.Listener {
     }
 
     fun isPlaying(sound: SoundData): Boolean {
-        return if (sound.type == SoundData.TYPE_RINGTONE) {
+        return if (sound.type == TYPE_RINGTONE) {
             currentRingtoneUrl == sound.url && isRingtonePlaying
         } else {
             isPlayingStream(sound.url)
@@ -188,5 +192,20 @@ class MediaManager(private val context: Context) : Player.Listener {
             val dur = player?.duration ?: 0L
             if (dur == C.TIME_UNSET) 0L else dur
         } else 0L
+    }
+
+    companion object {
+        private const val SEPARATOR = ":ChronosSoundData:"
+        const val TYPE_RINGTONE: String = "ringtone"
+
+        fun encode(sound: SoundData): String {
+            return sound.name + SEPARATOR + sound.type + SEPARATOR + sound.url
+        }
+
+        fun decode(string: String): Option<SoundData> {
+            val data = string.split(SEPARATOR).takeIf { it.size == 3 } ?: return None
+            val (name, type, url) = data
+            return Some(SoundData(name, type, url))
+        }
     }
 }
