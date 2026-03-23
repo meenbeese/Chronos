@@ -112,7 +112,7 @@ dependencies {
 
     implementation("io.arrow-kt:arrow-core:2.2.2")
     implementation("io.coil-kt.coil3:coil-compose:3.4.0")
-    implementation("io.insert-koin:koin-androidx-compose:4.1.1")
+    implementation("io.insert-koin:koin-androidx-compose:4.2.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
