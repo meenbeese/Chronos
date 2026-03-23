@@ -110,7 +110,7 @@ dependencies {
     implementation("com.github.skydoves:colorpicker-compose:1.1.3")
     implementation("com.github.alexdametto:compose-emoji-picker:1.0.0")
 
-    implementation("io.arrow-kt:arrow-core:2.2.2")
+    implementation("io.arrow-kt:arrow-core:2.2.2.1")
     implementation("io.coil-kt.coil3:coil-compose:3.4.0")
     implementation("io.insert-koin:koin-androidx-compose:4.1.1")
 
