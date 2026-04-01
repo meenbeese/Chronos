@@ -18,14 +18,6 @@ class AlarmRepository(private val alarmDao: AlarmDao) {
         alarmDao.delete(alarm)
     }
 
-    suspend fun deleteAlarmById(id: Int) = withContext(Dispatchers.IO) {
-        alarmDao.getAlarmById(id)?.let { alarmDao.delete(it) }
-    }
-
-    suspend fun getAlarmById(id: Int): AlarmEntity? = withContext(Dispatchers.IO) {
-        alarmDao.getAlarmById(id)
-    }
-
     suspend fun getAllDirect(): List<AlarmEntity> = withContext(Dispatchers.IO) {
         alarmDao.getAllAlarmsDirect()
     }
