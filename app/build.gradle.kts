@@ -81,7 +81,7 @@ ksp {
 }
 
 dependencies {
-    implementation("androidx.activity:activity-compose:1.12.4")
+    implementation("androidx.activity:activity-compose:1.13.0")
     implementation("androidx.core:core-ktx:1.18.0")
     implementation("androidx.core:core-splashscreen:1.2.0")
     implementation("androidx.datastore:datastore-preferences:1.2.1")
