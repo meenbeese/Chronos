@@ -89,16 +89,16 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
     implementation("androidx.navigation:navigation-compose:2.9.7")
 
-    implementation("androidx.compose.ui:ui:1.10.5")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.10.5")
-    implementation("androidx.compose.animation:animation:1.10.5")
-    implementation("androidx.compose.foundation:foundation:1.10.5")
-    implementation("androidx.compose.runtime:runtime:1.10.5")
-    implementation("androidx.compose.runtime:runtime-livedata:1.10.5")
+    implementation("androidx.compose.ui:ui:1.10.6")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.10.6")
+    implementation("androidx.compose.animation:animation:1.10.6")
+    implementation("androidx.compose.foundation:foundation:1.10.6")
+    implementation("androidx.compose.runtime:runtime:1.10.6")
+    implementation("androidx.compose.runtime:runtime-livedata:1.10.6")
     implementation("androidx.compose.material3:material3:1.4.0")
     implementation("androidx.compose.material:material-icons-core:1.7.8")
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.10.5")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.10.6")
 
     implementation("androidx.media3:media3-exoplayer:1.10.0")
     implementation("androidx.media3:media3-exoplayer-hls:1.10.0")
@@ -112,10 +112,10 @@ dependencies {
 
     implementation("io.arrow-kt:arrow-core:2.2.2.1")
     implementation("io.coil-kt.coil3:coil-compose:3.4.0")
-    implementation("io.insert-koin:koin-androidx-compose:4.2.0")
+    implementation("io.insert-koin:koin-androidx-compose:4.2.1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
 }
