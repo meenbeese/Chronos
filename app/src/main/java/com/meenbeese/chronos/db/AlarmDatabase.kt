@@ -13,15 +13,25 @@ abstract class AlarmDatabase : RoomDatabase() {
     abstract fun alarmDao(): AlarmDao
 
     companion object {
+        private const val DATABASE_NAME = "alarm_database"
+
         @Volatile
         private var INSTANCE: AlarmDatabase? = null
 
         fun getDatabase(context: Context): AlarmDatabase {
             return INSTANCE ?: synchronized(this) {
+                val appContext = context.applicationContext
+                val deviceContext = appContext.createDeviceProtectedStorageContext()
+                if (!deviceContext.databaseList().contains(DATABASE_NAME) &&
+                    appContext.databaseList().contains(DATABASE_NAME)
+                ) {
+                    deviceContext.moveDatabaseFrom(appContext, DATABASE_NAME)
+                }
+
                 val instance = Room.databaseBuilder(
-                    context.applicationContext,
+                    deviceContext,
                     AlarmDatabase::class.java,
-                    "alarm_database"
+                    DATABASE_NAME
                 ).build()
                 INSTANCE = instance
                 instance

@@ -91,12 +91,17 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".receivers.AlarmReceiver" />
+        <receiver
+            android:name=".receivers.AlarmReceiver"
+            android:directBootAware="true" />
         <receiver android:name=".receivers.TimerReceiver" />
-        <receiver android:name=".receivers.RestoreOnBootReceiver"
+        <receiver
+            android:name=".receivers.RestoreOnBootReceiver"
+            android:directBootAware="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

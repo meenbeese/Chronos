@@ -3,6 +3,8 @@ package com.meenbeese.chronos.db
 import android.app.Application
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,6 +25,7 @@ class TimerAlarmRepository(
     private val alarmRepository: AlarmRepository
 ) {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     private val _alarms = MutableLiveData<List<AlarmData>>(emptyList())
     val alarms: LiveData<List<AlarmData>> get() = _alarms
@@ -42,11 +45,19 @@ class TimerAlarmRepository(
     }
 
     private fun observeAlarms() {
-        alarmRepository.getAll().observeForever(alarmObserver)
+        if (Looper.getMainLooper().isCurrentThread) {
+            alarmRepository.getAll().observeForever(alarmObserver)
+        } else {
+            mainHandler.post { alarmRepository.getAll().observeForever(alarmObserver) }
+        }
     }
 
     fun clear() {
-        alarmRepository.getAll().removeObserver(alarmObserver)
+        if (Looper.getMainLooper().isCurrentThread) {
+            alarmRepository.getAll().removeObserver(alarmObserver)
+        } else {
+            mainHandler.post { alarmRepository.getAll().removeObserver(alarmObserver) }
+        }
     }
 
     suspend fun insertAlarm(alarm: AlarmEntity): Long {
