@@ -1,1 +1,9 @@
-<p><i>Chronos</i> is a simple, quick, and intuitive alarm clock with many useful features:</p><p><br></p><ul><li>Custom backgrounds & ringtones</li><li>No unnecessary permissions</li><li>Dark, Light, AMOLED themes</li><li>Granular controls everywhere</li><li>Unique, minimal, efficient design</li><li>Portrait and landscape orientation</li><li>Countless default ringtones</li></ul>
+Chronos is a simple, quick, and intuitive alarm clock with many useful features:
+
+- Custom backgrounds & ringtones
+- No unnecessary permissions
+- Dark, Light, AMOLED themes
+- Granular controls everywhere
+- Unique, minimal, efficient design
+- Portrait and landscape orientation
+- Countless default ringtones
