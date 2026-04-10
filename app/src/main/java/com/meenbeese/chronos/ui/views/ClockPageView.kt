@@ -31,7 +31,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -62,7 +61,7 @@ import kotlin.time.Clock
 fun ClockPageView(
     isTablet: Boolean,
     timeZones: List<String>,
-    backgroundPainter: Painter,
+    background: ImageUtils.ClockBackground,
     pageIndicatorVisible: Boolean,
     navigateToNearestAlarm: () -> Unit,
     modifier: Modifier = Modifier
@@ -75,28 +74,46 @@ fun ClockPageView(
     val bottomPadding = if (isTablet) 16.dp else 56.dp
     val textColorArgb by produceState(
         initialValue = Color.White.toArgb(),
-        key1 = backgroundPainter
+        key1 = background
     ) {
         value = ImageUtils
-            .getContrastingTextColorFromBg(context)
+            .getContrastingTextColorFromBg(context, background)
             .toArgb()
     }
 
     Box(
         modifier = modifier.fillMaxWidth()
     ) {
-        Image(
-            painter = backgroundPainter,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.matchParentSize()
-        )
+        when (background) {
+            is ImageUtils.ClockBackground.Image -> {
+                Image(
+                    painter = background.painter,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.matchParentSize()
+                )
 
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .background(Color.Black.copy(alpha = backgroundDimConstant))
-        )
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(Color.Black.copy(alpha = backgroundDimConstant))
+                )
+            }
+            is ImageUtils.ClockBackground.Solid -> {
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(background.color)
+                )
+            }
+            ImageUtils.ClockBackground.None -> {
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(MaterialTheme.colorScheme.background)
+                )
+            }
+        }
 
         HorizontalPager(
             state = pagerState,

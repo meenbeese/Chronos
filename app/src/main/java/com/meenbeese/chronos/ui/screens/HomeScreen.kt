@@ -68,7 +68,7 @@ fun HomeScreen(
     var showAlarmDialog by remember { mutableStateOf(false) }
     var showTimerDialog by remember { mutableStateOf(false) }
 
-    val clockBackground = ImageUtils.rememberBackgroundPainterState(isAlarm = false)
+    val clockBackground = ImageUtils.rememberClockBackground(isAlarm = false)
 
     val timeZoneEnabled by Preferences.TIME_ZONE_ENABLED.getFlow(context).collectAsState(initial = false)
     val selectedZonesCsv by Preferences.TIME_ZONES.getFlow(context).collectAsState(initial = "")
@@ -141,16 +141,14 @@ fun HomeScreen(
 
     if (isTablet || isLandscape) {
         Row(modifier = modifier.fillMaxSize()) {
-            clockBackground?.let { painter ->
-                ClockPageView(
-                    isTablet = true,
-                    timeZones = selectedZones,
-                    backgroundPainter = painter,
-                    pageIndicatorVisible = selectedZones.size > 1,
-                    navigateToNearestAlarm = handleNavigateToNearestAlarm,
-                    modifier = Modifier.weight(1f).fillMaxHeight()
-                )
-            }
+            ClockPageView(
+                isTablet = true,
+                timeZones = selectedZones,
+                background = clockBackground,
+                pageIndicatorVisible = selectedZones.size > 1,
+                navigateToNearestAlarm = handleNavigateToNearestAlarm,
+                modifier = Modifier.weight(1f).fillMaxHeight()
+            )
 
             Box(
                 modifier = Modifier
@@ -185,16 +183,14 @@ fun HomeScreen(
         }
     } else {
         Box(modifier = modifier.fillMaxSize()) {
-            clockBackground?.let { painter ->
-                ClockPageView(
-                    isTablet = false,
-                    timeZones = selectedZones,
-                    backgroundPainter = painter,
-                    pageIndicatorVisible = selectedZones.size > 1,
-                    navigateToNearestAlarm = handleNavigateToNearestAlarm,
-                    modifier = Modifier.fillMaxHeight(0.5f + 0.05f)
-                )
-            }
+            ClockPageView(
+                isTablet = false,
+                timeZones = selectedZones,
+                background = clockBackground,
+                pageIndicatorVisible = selectedZones.size > 1,
+                navigateToNearestAlarm = handleNavigateToNearestAlarm,
+                modifier = Modifier.fillMaxHeight(0.5f + 0.05f)
+            )
 
             HomeBottomSheet(
                 tabs = homeTabs,
