@@ -23,3 +23,12 @@
 -keepclassmembers class com.google.android.material.textfield.TextInputLayout {
     <fields>;
 }
+
+-keepattributes Signature, InnerClasses, EnclosingMethod
+
+-keep class com.google.gson.reflect.TypeToken { *; }
+-keep class * extends com.google.gson.reflect.TypeToken
+-keep class **$* extends com.google.gson.reflect.TypeToken { *; }
+
+-keep class dev.alexdametto.compose_emoji_picker.** { *; }
+-keepclassmembers class dev.alexdametto.compose_emoji_picker.** { *; }
