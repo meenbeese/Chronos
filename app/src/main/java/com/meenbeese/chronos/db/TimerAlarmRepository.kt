@@ -6,6 +6,7 @@ import android.os.Build
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 
 import com.meenbeese.chronos.data.AlarmData
 import com.meenbeese.chronos.data.Preferences
@@ -29,17 +30,23 @@ class TimerAlarmRepository(
     private val _timers = MutableLiveData<List<TimerData>>(emptyList())
     val timers: LiveData<List<TimerData>> get() = _timers
 
+    private val alarmObserver = Observer<List<AlarmEntity>> { entities ->
+        _alarms.postValue(
+            entities.map { it.toData() }
+        )
+    }
+
     init {
         observeAlarms()
         loadTimers()
     }
 
     private fun observeAlarms() {
-        alarmRepository.getAll().observeForever { entities ->
-            _alarms.postValue(
-                entities.map { it.toData() }
-            )
-        }
+        alarmRepository.getAll().observeForever(alarmObserver)
+    }
+
+    fun clear() {
+        alarmRepository.getAll().removeObserver(alarmObserver)
     }
 
     suspend fun insertAlarm(alarm: AlarmEntity): Long {

@@ -8,6 +8,7 @@ import com.meenbeese.chronos.db.TimerAlarmRepository
 import com.meenbeese.chronos.utils.MediaManager
 
 import org.koin.dsl.module
+import org.koin.dsl.onClose
 
 @UnstableApi
 val appModule = module {
@@ -15,5 +16,5 @@ val appModule = module {
     single { AlarmDatabase.getDatabase(get()) }
     single { get<AlarmDatabase>().alarmDao() }
     single { AlarmRepository(get()) }
-    single { TimerAlarmRepository(get(), get()) }
+    single { TimerAlarmRepository(get(), get()) } onClose { it?.clear() }
 }
