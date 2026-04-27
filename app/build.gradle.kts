@@ -91,7 +91,7 @@ dependencies {
 
     implementation("androidx.compose.ui:ui:1.10.6")
     implementation("androidx.compose.ui:ui-tooling-preview:1.10.6")
-    implementation("androidx.compose.animation:animation:1.10.6")
+    implementation("androidx.compose.animation:animation:1.11.0")
     implementation("androidx.compose.foundation:foundation:1.10.6")
     implementation("androidx.compose.runtime:runtime:1.10.6")
     implementation("androidx.compose.runtime:runtime-livedata:1.10.6")
